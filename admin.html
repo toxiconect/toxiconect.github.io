@@ -1,1 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOXIC Admin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{background:#050807;color:#fff;font-family:Inter,sans-serif;margin:0;padding:0;min-height:100vh}
+.card{background:linear-gradient(145deg,#0f1a14,#0a0f0c);border:1px solid rgba(0,255,102,0.12);border-radius:16px;padding:16px;margin-bottom:12px}
+.btn{background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-weight:700;padding:12px;border-radius:12px;border:none;cursor:pointer;font-size:13px}
+.btn:active{transform:scale(0.97)}
+.btn-sm{padding:8px 14px;font-size:12px;width:auto}
+.btn-red{background:linear-gradient(135deg,#EF4444,#DC2626);color:#fff}
+.btn-yellow{background:linear-gradient(135deg,#FBBF24,#F59E0B);color:#000}
+.btn-gray{background:rgba(255,255,255,0.06);color:#ccc;border:1px solid rgba(255,255,255,0.1)}
+.inp{background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 12px;color:#fff;width:100%;font-size:13px;outline:none}
+.inp:focus{border-color:rgba(0,255,102,0.5)}
+.g{color:#00FF66}
+.tab{padding:10px 16px;border-radius:12px;font-size:12px;font-weight:700;border:none;cursor:pointer;margin-right:6px;background:rgba(255,255,255,0.04);color:#888;white-space:nowrap}
+.tab.on{background:#00FF66;color:#000}
+.stat{background:linear-gradient(145deg,rgba(0,255,102,0.06),rgba(0,0,0,0.3));border:1px solid rgba(0,255,102,0.15);border-radius:14px;padding:14px;text-align:center}
+.badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;display:inline-block}
+.bp{background:rgba(251,191,36,0.15);color:#FBBF24}
+.ba{background:rgba(0,255,102,0.15);color:#00FF66}
+.br{background:rgba(239,68,68,0.15);color:#EF4444}
+.row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.lbl{font-size:10px;color:#666;margin:0}
+.val{font-size:12px;color:#ddd;margin:3px 0 0;font-weight:500}
+.divider{height:1px;background:rgba(255,255,255,0.05);margin:10px 0}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+var SB_URL = 'https://uaeyjqfwqxhgbhrvlbdr.supabase.co';
+var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZXlqcWZ3cXhoZ2JocnZsYmRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NjgzMTEsImV4cCI6MjEwNTE0NDMxMX0.gmxzj18TuS6Zckjf7d41uBUFMHfsUxl92e-QoI-a-rc';
+var PWD = "802301";
+var sb = null;
+var st = { login: false, users: [], deps: [], wd: [], tab: "dash", search: "" };
 
+function initSupabase() {
+  try {
+    if (window.supabase && window.supabase.createClient) {
+      sb = window.supabase.createClient(SB_URL, SB_KEY);
+      return true;
+    }
+  } catch(e) { console.log('Supabase init error:', e); }
+  return false;
+}
+
+function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;") }
+function fmt(n){ return Number(n||0).toFixed(2) }
+
+function render(){
+  var el = document.getElementById("app");
+  if (!sb) {
+    el.innerHTML = '<div style="padding:40px;text-align:center"><div class="card"><p style="color:#EF4444;font-size:14px">⚠️ Supabase load failed. Check internet & refresh.</p><button class="btn" style="margin-top:12px" onclick="location.reload()">🔄 Refresh</button></div></div>';
+    return;
+  }
+  if (!st.login) {
+    el.innerHTML = '<div style="padding:80px 24px;max-width:400px;margin:0 auto"><div class="card" style="padding:28px"><div style="text-align:center;margin-bottom:24px"><div style="width:64px;height:64px;background:linear-gradient(135deg,#00FF66,#10B981);border-radius:20px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 30px rgba(0,255,102,0.4)">🔐</div><h1 class="g" style="font-size:22px;font-weight:900;margin:0 0 4px;letter-spacing:1px">TOXIC</h1><p style="font-size:10px;color:#666;margin:0;letter-spacing:3px">ADMIN PANEL</p></div><input type="password" id="pw" class="inp" placeholder="Enter Admin Password" style="margin-bottom:12px" onkeypress="if(event.key===\'Enter\')login()"><button class="btn" style="width:100%" onclick="login()">ACCESS CONTROL CENTER</button><p style="text-align:center;font-size:10px;color:#444;margin:16px 0 0">Authorized personnel only</p></div></div>';
+    return;
+  }
+  el.innerHTML = '<div style="padding:16px;max-width:520px;margin:0 auto">' + panel() + '</div>';
+}
+
+function panel(){
+  var tu = st.users.length;
+  var pd = st.deps.filter(function(d){ return d.status === "pending" }).length;
+  var td = st.deps.filter(function(d){ return d.status === "approved" }).reduce(function(a,b){ return a + Number(b.amount||0) }, 0);
+  var tw = st.wd.filter(function(d){ return d.status === "pending" }).length;
+  var h = '<div class="row" style="margin-bottom:16px"><div><h1 class="g" style="font-size:18px;font-weight:900;margin:0;letter-spacing:1px">TOXIC ADMIN</h1><p style="font-size:10px;color:#666;margin:2px 0 0">Supabase · Live</p></div><button class="btn btn-sm" style="background:rgba(239,68,68,0.15);color:#EF4444;border:1px solid rgba(239,68,68,0.3)" onclick="logout()">Logout</button></div>';
+  h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">';
+  h += '<div class="stat"><p style="font-size:9px;color:#666;margin:0 0 6px;letter-spacing:1px">USERS</p><p class="g" style="font-size:26px;font-weight:900;margin:0">' + tu + '</p></div>';
+  h += '<div class="stat"><p style="font-size:9px;color:#666;margin:0 0 6px;letter-spacing:1px">PENDING DEP</p><p style="color:#FBBF24;font-size:26px;font-weight:900;margin:0">' + pd + '</p></div>';
+  h += '<div class="stat"><p style="font-size:9px;color:#666;margin:0 0 6px;letter-spacing:1px">APPROVED</p><p class="g" style="font-size:22px;font-weight:900;margin:0">$' + td.toFixed(0) + '</p></div>';
+  h += '<div class="stat"><p style="font-size:9px;color:#666;margin:0 0 6px;letter-spacing:1px">PENDING WDL</p><p style="color:#FBBF24;font-size:26px;font-weight:900;margin:0">' + tw + '</p></div>';
+  h += '</div>';
+  h += '<div style="overflow-x:auto;margin-bottom:16px;padding-bottom:4px">';
+  h += '<button class="tab ' + (st.tab==="dash"?"on":"") + '" onclick="sw(\'dash\')">Overview</button>';
+  h += '<button class="tab ' + (st.tab==="users"?"on":"") + '" onclick="sw(\'users\')">Users (' + tu + ')</button>';
+  h += '<button class="tab ' + (st.tab==="deps"?"on":"") + '" onclick="sw(\'deps\')">Deposits (' + pd + ')</button>';
+  h += '<button class="tab ' + (st.tab==="wd"?"on":"") + '" onclick="sw(\'wd\')">Withdrawals (' + tw + ')</button>';
+  h += '<button class="tab ' + (st.tab==="plans"?"on":"") + '" onclick="sw(\'plans\')">Plans</button>';
+  h += '</div>';
+  if (st.tab==="dash") h += dashV();
+  if (st.tab==="users") h += usersV();
+  if (st.tab==="deps") h += depsV();
+  if (st.tab==="wd") h += wdV();
+  if (st.tab==="plans") h += plansV();
+  h += '<button class="btn btn-gray" style="width:100%;margin-top:12px" onclick="refresh()">🔄 Refresh Data</button>';
+  return h;
+}
+
+function dashV(){
+  return '<div class="card"><p style="font-size:10px;color:#666;letter-spacing:2px;margin:0 0 12px">SYSTEM STATUS</p>'
+    + '<div class="row"><span class="lbl">Database</span><span class="badge ba">SUPABASE</span></div>'
+    + '<div class="row"><span class="lbl">Admin Password</span><span class="val">802301</span></div>'
+    + '<div class="row"><span class="lbl">Platform</span><span class="badge ba">LIVE</span></div>'
+    + '</div>';
+}
+
+function usersV(){
+  var list = st.users.slice();
+  if (st.search) list = list.filter(function(u){ return (u.username||"").toLowerCase().indexOf(st.search.toLowerCase()) > -1 || String(u.user_id||"").indexOf(st.search) > -1 });
+  if (list.length === 0) return '<div class="card" style="text-align:center;color:#666;padding:40px">No users found</div>';
+  var h = '<input class="inp" placeholder="🔍 Search username or ID" style="margin-bottom:12px" oninput="st.search=this.value;render()" value="' + esc(st.search) + '">';
+  for (var i=0; i<list.length; i++){
+    var u = list[i];
+    h += '<div class="card">';
+    h += '<div class="row"><div><p style="font-weight:800;margin:0;font-size:15px">' + esc(u.username||"?") + '</p><p class="lbl" style="margin:4px 0 0">ID: ' + esc(u.user_id) + '</p><p class="lbl" style="margin:2px 0 0">' + esc(u.email||"—") + '</p></div><div style="text-align:right"><p class="g" style="font-size:22px;font-weight:900;margin:0">$' + fmt(u.balance) + '</p><p class="lbl" style="margin:2px 0 0">BALANCE</p></div></div>';
+    h += '<div class="divider"></div>';
+    h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px;margin-bottom:10px">';
+    h += '<div><p class="lbl">Phone</p><p class="val">' + esc(u.phone||"—") + '</p></div>';
+    h += '<div><p class="lbl">Referral</p><p class="val">' + esc(u.referral_code||"—") + '</p></div>';
+    h += '<div><p class="lbl">Referred By</p><p class="val">' + esc(u.referred_by||"—") + '</p></div>';
+    h += '<div><p class="lbl">Joined</p><p class="val">' + (u.joined_at?String(u.joined_at).slice(0,10):"—") + '</p></div>';
+    h += '</div>';
+    h += '<div class="divider"></div>';
+    h += '<div style="background:rgba(0,255,102,0.04);border:1px solid rgba(0,255,102,0.15);border-radius:12px;padding:10px;margin-bottom:10px">';
+    h += '<p style="font-size:10px;color:#00FF66;font-weight:700;margin:0 0 6px;letter-spacing:1px">📊 PLAN DETAILS</p>';
+    if (u.active_plan) {
+      h += '<div class="row"><span class="lbl">Active Plan</span><span class="val g" style="font-weight:700">' + esc(u.plan_name||u.active_plan) + '</span></div>';
+      h += '<div class="row"><span class="lbl">Invested</span><span class="val">$' + fmt(u.plan_deposit) + '</span></div>';
+      h += '<div class="row"><span class="lbl">Daily Return</span><span class="val g">$' + fmt(u.plan_daily) + '</span></div>';
+      h += '<div class="row"><span class="lbl">Days Collected</span><span class="val">' + Number(u.days_collected||0) + ' / 40</span></div>';
+      h += '<div class="row" style="margin-bottom:0"><span class="lbl">Expires</span><span class="val">' + (u.plan_expires?String(u.plan_expires).slice(0,10):"—") + '</span></div>';
+    } else {
+      h += '<p style="font-size:11px;color:#888;margin:0;text-align:center">No active plan</p>';
+    }
+    h += '</div>';
+    h += '<div style="display:flex;gap:6px;margin-bottom:6px"><input type="number" id="b' + i + '" class="inp" style="flex:1" placeholder="Set balance"><button class="btn btn-sm" onclick="setBal(\'' + esc(u.user_id) + '\',' + i + ')">SET</button></div>';
+    h += '<div style="display:flex;gap:6px"><button class="btn btn-sm btn-yellow" style="flex:1" onclick="bonus(\'' + esc(u.user_id) + '\')">+ Bonus</button>';
+    h += '<button class="btn btn-sm ' + (u.is_banned?"btn-red":"btn-gray") + '" style="flex:1" onclick="toggleBan(\'' + esc(u.user_id) + '\',' + (u.is_banned?true:false) + ')">' + (u.is_banned?"Unban":"Ban") + '</button></div>';
+    h += '</div>';
+  }
+  return h;
+}
+
+function depsV(){
+  var list = st.deps.slice();
+  if (list.length === 0) return '<div class="card" style="text-align:center;color:#666;padding:40px">No deposits yet</div>';
+  var h = '';
+  for (var i=0; i<list.length; i++){
+    var d = list[i]; var s = String(d.status||"pending");
+    var bd = s==="approved"?"ba":s==="rejected"?"br":"bp";
+    h += '<div class="card">';
+    h += '<div class="row"><div><p style="font-weight:700;margin:0;font-size:14px">' + esc(d.username||"?") + '</p><p class="lbl" style="margin:4px 0 0">' + esc(d.user_id) + '</p></div><div style="text-align:right"><p class="g" style="font-size:22px;font-weight:900;margin:0">$' + fmt(d.amount) + '</p><span class="badge ' + bd + '" style="margin-top:4px">' + s.toUpperCase() + '</span></div></div>';
+    h += '<div class="divider"></div>';
+    h += '<div style="font-size:11px"><p class="lbl">Method</p><p class="val">' + esc(d.method||"—") + '</p><p class="lbl" style="margin-top:6px">UTR / TxHash</p><p class="val" style="word-break:break-all">' + esc(d.ref||"—") + '</p></div>';
+    if (s === "pending") {
+      h += '<div class="divider"></div>';
+      h += '<div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="appDep(' + d.id + ',\'' + esc(d.user_id) + '\',' + Number(d.amount) + ')">✅ APPROVE</button><button class="btn btn-red btn-sm" onclick="rejDep(' + d.id + ')">REJECT</button></div>';
+    }
+    h += '</div>';
+  }
+  return h;
+}
+
+function wdV(){
+  var list = st.wd.slice();
+  if (list.length === 0) return '<div class="card" style="text-align:center;color:#666;padding:40px">No withdrawals yet</div>';
+  var h = '';
+  for (var i=0; i<list.length; i++){
+    var d = list[i]; var s = String(d.status||"pending");
+    var bd = s==="approved"?"ba":s==="rejected"?"br":"bp";
+    h += '<div class="card">';
+    h += '<div class="row"><div><p style="font-weight:700;margin:0;font-size:14px">' + esc(d.username||"?") + '</p><p class="lbl" style="margin:4px 0 0">' + esc(d.user_id) + '</p></div><div style="text-align:right"><p style="color:#EF4444;font-size:22px;font-weight:900;margin:0">$' + fmt(d.amount) + '</p><span class="badge ' + bd + '" style="margin-top:4px">' + s.toUpperCase() + '</span></div></div>';
+    h += '<div class="divider"></div>';
+    h += '<div style="font-size:11px"><p class="lbl">Address</p><p class="val" style="word-break:break-all">' + esc(d.address||"—") + '</p></div>';
+    if (s === "pending") {
+      h += '<div class="divider"></div>';
+      h += '<div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="appWd(' + d.id + ')">✅ MARK PAID</button><button class="btn btn-red btn-sm" onclick="rejWd(' + d.id + ')">REJECT</button></div>';
+    }
+    h += '</div>';
+  }
+  return h;
+}
+
+function plansV(){
+  var list = st.users.filter(function(u){ return u.active_plan });
+  if (list.length === 0) return '<div class="card" style="text-align:center;color:#666;padding:40px">No active plans</div>';
+  var h = '';
+  for (var i=0; i<list.length; i++){
+    var u = list[i];
+    h += '<div class="card"><div class="row"><div><p style="font-weight:800;margin:0;font-size:14px">' + esc(u.username) + '</p><p class="lbl" style="margin:4px 0 0">' + esc(u.user_id) + '</p></div><div style="text-align:right"><p class="g" style="font-weight:900;font-size:14px;margin:0">' + esc(u.plan_name||u.active_plan) + '</p><p class="lbl" style="margin:2px 0 0">ACTIVE</p></div></div>';
+    h += '<div class="divider"></div>';
+    h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px">';
+    h += '<div><p class="lbl">Invested</p><p class="val g">$' + fmt(u.plan_deposit) + '</p></div>';
+    h += '<div><p class="lbl">Daily</p><p class="val g">$' + fmt(u.plan_daily) + '</p></div>';
+    h += '<div><p class="lbl">Days</p><p class="val">' + Number(u.days_collected||0) + ' / 40</p></div>';
+    h += '<div><p class="lbl">Expires</p><p class="val">' + (u.plan_expires?String(u.plan_expires).slice(0,10):"—") + '</p></div>';
+    h += '</div></div>';
+  }
+  return h;
+}
+
+function login(){
+  var p = document.getElementById("pw").value;
+  if (p !== PWD) return alert("Wrong password");
+  st.login = true;
+  refresh();
+}
+function logout(){ if (confirm("Logout?")) { st.login = false; render(); } }
+function sw(t){ st.tab = t; render(); }
+
+async function refresh(){
+  if (!sb) return;
+  try {
+    var u = await sb.from("users").select("*").order("id", {ascending: false});
+    if (u.data) st.users = u.data;
+    var d = await sb.from("deposits").select("*").order("id", {ascending: false});
+    if (d.data) st.deps = d.data;
+    var w = await sb.from("withdrawals").select("*").order("id", {ascending: false});
+    if (w.data) st.wd = w.data;
+  } catch(e){ console.log(e) }
+  render();
+}
+
+async function setBal(uid, i){
+  var v = document.getElementById("b" + i).value;
+  if (v === "") return alert("Enter amount");
+  var r = await sb.from("users").update({balance: parseFloat(v)}).eq("user_id", uid);
+  if (!r.error) { alert("✅ Balance updated"); refresh(); }
+  else alert("❌ Failed: " + r.error.message);
+}
+
+async function bonus(uid){
+  var v = prompt("Enter bonus amount ($):");
+  if (!v) return;
+  var u = st.users.find(function(x){ return x.user_id === uid });
+  if (!u) return alert("User not found");
+  var newBal = Number(u.balance||0) + parseFloat(v);
+  var r = await sb.from("users").update({balance: newBal}).eq("user_id", uid);
+  if (!r.error) { alert("✅ Bonus $" + v + " added"); refresh(); }
+  else alert("❌ Failed");
+}
+
+async function toggleBan(uid, current){
+  var r = await sb.from("users").update({is_banned: !current}).eq("user_id", uid);
+  if (!r.error) { alert(current?"✅ User Unbanned":"🚫 User Banned"); refresh(); }
+  else alert("❌ Failed");
+}
+
+async function appDep(depId, uid, amt){
+  if (!confirm("Approve deposit of $" + amt + "?")) return;
+  var r1 = await sb.from("deposits").update({status: "approved"}).eq("id", depId);
+  if (r1.error) return alert("❌ Failed: " + r1.error.message);
+  var u = st.users.find(function(x){ return x.user_id === uid });
+  if (u) {
+    var newBal = Number(u.balance||0) + Number(amt);
+    await sb.from("users").update({balance: newBal}).eq("user_id", uid);
+  }
+  alert("✅ Approved & Balance Credited");
+  refresh();
+}
+
+async function rejDep(id){
+  if (!confirm("Reject this deposit?")) return;
+  var r = await sb.from("deposits").update({status: "rejected"}).eq("id", id);
+  if (!r.error) { alert("Rejected"); refresh(); }
+  else alert("❌ Failed");
+}
+
+async function appWd(id){
+  if (!confirm("Mark as paid?")) return;
+  var r = await sb.from("withdrawals").update({status: "approved"}).eq("id", id);
+  if (!r.error) { alert("Marked as Paid"); refresh(); }
+  else alert("❌ Failed");
+}
+
+async function rejWd(id){
+  if (!confirm("Reject this withdrawal?")) return;
+  var r = await sb.from("withdrawals").update({status: "rejected"}).eq("id", id);
+  if (!r.error) { alert("Rejected"); refresh(); }
+  else alert("❌ Failed");
+}
+
+if (initSupabase()) {
+  render();
+} else {
+  setTimeout(function(){
+    if (initSupabase()) { render(); }
+    else {
+      document.getElementById("app").innerHTML = '<div style="padding:40px;text-align:center"><div class="card"><p style="color:#EF4444;font-size:14px">⚠️ Supabase load failed. Check internet & refresh.</p><button class="btn" style="margin-top:12px" onclick="location.reload()">🔄 Refresh</button></div></div>';
+    }
+  }, 1500);
+}
+</script>
+</body>
+</html>
