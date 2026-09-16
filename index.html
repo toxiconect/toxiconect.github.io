@@ -29,13 +29,15 @@ body { background: #050807; color: #fff; font-family: 'Inter', sans-serif; min-h
 .input-dark::placeholder { color: #4B5563; }
 .hide-scroll::-webkit-scrollbar { display: none; }
 .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 8px 4px; border-radius: 12px; transition: all 0.2s; cursor: pointer; }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 8px 2px; border-radius: 12px; transition: all 0.2s; cursor: pointer; position: relative; }
 .nav-item.active { color: #00FF66; }
-.nav-item.active .nav-icon { background: rgba(0,255,102,0.15); }
-.nav-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 20px; transition: all 0.2s; }
+.nav-item.active::after { content: ''; position: absolute; bottom: 0; left: 20%; right: 20%; height: 2px; background: #00FF66; border-radius: 2px; box-shadow: 0 0 10px rgba(0,255,102,0.6); }
+.nav-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.nav-item.logout-item { color: #EF4444; }
 .fade-in { animation: fadeIn 0.3s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-.plan-card { background: linear-gradient(160deg, rgba(0,0,0,0.6), rgba(10,20,15,0.9)); border: 1px solid rgba(0,255,102,0.1); border-radius: 1rem; padding: 1rem; position: relative; overflow: hidden; }
+.plan-card { background: linear-gradient(160deg, rgba(0,0,0,0.6), rgba(10,20,15,0.9)); border: 1px solid rgba(0,255,102,0.1); border-radius: 1rem; padding: 1rem; position: relative; overflow: hidden; cursor: pointer; transition: all 0.2s; }
+.plan-card:active { transform: scale(0.97); border-color: rgba(0,255,102,0.3); }
 .plan-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #00FF66, transparent); opacity: 0.5; }
 .step-circle { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-weight: 700; transition: all 0.3s; }
 .step-active { background: #00FF66; color: #000; box-shadow: 0 0 20px rgba(0,255,102,0.5); }
@@ -43,6 +45,9 @@ body { background: #050807; color: #fff; font-family: 'Inter', sans-serif; min-h
 .step-done { background: #10B981; color: #000; }
 .level-box { background: rgba(0,0,0,0.4); border: 1px dashed rgba(0,255,102,0.15); border-radius: 1rem; padding: 1.5rem; text-align: center; }
 .you-box { background: linear-gradient(145deg, rgba(0,255,102,0.15), rgba(16,185,129,0.05)); border: 1.5px solid rgba(0,255,102,0.4); border-radius: 1rem; padding: 1.5rem; text-align: center; }
+.nav-svg { width: 20px; height: 20px; stroke-width: 2; }
+.modal-anim { animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes modalIn { from { opacity: 0; transform: scale(0.85) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 </style>
 </head>
 <body>
@@ -63,48 +68,41 @@ const CONFIG = {
   minDeposit: 2,
   minWithdraw: 5,
   withdrawFee: 0.05,
-  signupBonus: 1,
-  telegramBot: 'ToxicBot'
+  telegramBot: 'TOXICONECT_BOT'
 };
 
 const PLANS = [
-  { id:'l1', name:'BRONZE', deposit:1, daily:0.10, total:4.00, color:'#CD7F32' },
-  { id:'l2', name:'SILVER', deposit:3, daily:0.36, total:14.40, color:'#C0C0C0' },
-  { id:'l3', name:'GOLD', deposit:5, daily:0.70, total:28.00, color:'#FFD700' },
-  { id:'l4', name:'ELITE', deposit:10, daily:1.60, total:64.00, color:'#22D3EE' },
-  { id:'l5', name:'ULTRA', deposit:20, daily:3.50, total:140.00, color:'#A855F7' },
-  { id:'l6', name:'LEGEND', deposit:50, daily:9.00, total:360.00, color:'#00FF66' },
-  { id:'l7', name:'MASTER', deposit:100, daily:18.50, total:740.00, color:'#EF4444' },
-  { id:'l8', name:'GRANDMASTER', deposit:200, daily:38.00, total:1520.00, color:'#EC4899' },
-  { id:'l9', name:'MYTHIC', deposit:500, daily:97.50, total:3900.00, color:'#6366F1' },
-  { id:'l10', name:'IMMORTAL', deposit:1000, daily:200.00, total:8000.00, color:'#FEF08A' },
-  { id:'l11', name:'TITAN', deposit:2000, daily:410.00, total:16400.00, color:'#3B82F6' },
-  { id:'l12', name:'GODFATHER', deposit:5000, daily:1050.00, total:42000.00, color:'#00FF66' }
+  { id:'l1', name:'BRONZE', deposit:1, daily:0.10, total:4.00, color:'#CD7F32', icon:'🥉' },
+  { id:'l2', name:'SILVER', deposit:3, daily:0.36, total:14.40, color:'#C0C0C0', icon:'🥈' },
+  { id:'l3', name:'GOLD', deposit:5, daily:0.70, total:28.00, color:'#FFD700', icon:'🥇' },
+  { id:'l4', name:'ELITE', deposit:10, daily:1.60, total:64.00, color:'#22D3EE', icon:'💎' },
+  { id:'l5', name:'ULTRA', deposit:20, daily:3.50, total:140.00, color:'#A855F7', icon:'👑' },
+  { id:'l6', name:'LEGEND', deposit:50, daily:9.00, total:360.00, color:'#00FF66', icon:'🏆' },
+  { id:'l7', name:'MASTER', deposit:100, daily:18.50, total:740.00, color:'#EF4444', icon:'⚔️' },
+  { id:'l8', name:'GRANDMASTER', deposit:200, daily:38.00, total:1520.00, color:'#EC4899', icon:'🎯' },
+  { id:'l9', name:'MYTHIC', deposit:500, daily:97.50, total:3900.00, color:'#6366F1', icon:'🔥' },
+  { id:'l10', name:'IMMORTAL', deposit:1000, daily:200.00, total:8000.00, color:'#FEF08A', icon:'⚡' },
+  { id:'l11', name:'TITAN', deposit:2000, daily:410.00, total:16400.00, color:'#3B82F6', icon:'⭐' },
+  { id:'l12', name:'GODFATHER', deposit:5000, daily:1050.00, total:42000.00, color:'#00FF66', icon:'👑' }
 ];
 
-// ==================== STATE ====================
 let S = {
   user: JSON.parse(localStorage.getItem('toxic_user') || 'null'),
   tab: 'dashboard',
   signupStep: 1,
   signupData: { country:'', firstName:'', lastName:'', email:'', phone:'', username:'', password:'' },
-  transactions: JSON.parse(localStorage.getItem('toxic_tx') || '[]')
+  transactions: JSON.parse(localStorage.getItem('toxic_tx') || '[]'),
+  selectedPlan: null
 };
+let selM = 0;
 
 function save() {
   localStorage.setItem('toxic_user', JSON.stringify(S.user));
   localStorage.setItem('toxic_tx', JSON.stringify(S.transactions));
 }
-
-// ==================== HELPERS ====================
 function $(id){ return document.getElementById(id); }
-function fmt(n){ return Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-function short(n){ 
-  if(n >= 1000) return (n/1000).toFixed(1)+'K';
-  return n.toString();
-}
+function fmt(n){ return Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 
-// ==================== RENDER ROOT ====================
 function render() {
   const app = $('app');
   if (!S.user) {
@@ -112,7 +110,7 @@ function render() {
     else { app.innerHTML = renderSignup(); }
     return;
   }
-  app.innerHTML = renderMain();
+  app.innerHTML = renderMain() + renderPlanModal();
 }
 
 // ==================== SIGN IN ====================
@@ -140,32 +138,21 @@ function renderSignIn() {
       <button onclick="doSignIn()" class="w-full btn-green py-4 rounded-2xl text-[15px] font-bold glow-green">Sign In</button>
       <p class="text-center text-sm text-gray-500 pt-2">No account? <span onclick="goSignup()" class="text-toxic font-bold cursor-pointer">Create one</span></p>
     </div>
-    <div class="mt-auto pt-8 text-center">
-      <p class="text-[10px] text-gray-600 tracking-widest">© 2026 ${CONFIG.brand} · SECURE ACCESS</p>
-    </div>
   </div>`;
 }
 
-// ==================== SIGNUP WIZARD ====================
+// ==================== SIGNUP ====================
 function renderSignup() {
   const step = S.signupStep;
   return `
   <div class="min-h-screen flex flex-col" style="background: radial-gradient(circle at 50% 0%, rgba(0,255,102,0.08) 0%, transparent 55%), #050807;">
-    
-    <!-- Banner -->
     <div class="relative w-full h-44 overflow-hidden flex-shrink-0">
       <img src="${CONFIG.banner}" class="w-full h-full object-cover opacity-70">
       <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(5,8,7,0.3) 0%, rgba(5,8,7,0.98) 100%);"></div>
-      <div class="absolute bottom-4 left-5">
-        <h1 class="text-3xl font-black text-toxic tracking-widest text-3d">${CONFIG.brand}</h1>
-      </div>
-      <div class="absolute top-4 right-4 glass px-3 py-1.5 rounded-full">
-        <span class="text-[10px] text-toxic font-bold tracking-wider">🌐 EN</span>
-      </div>
+      <div class="absolute bottom-4 left-5"><h1 class="text-3xl font-black text-toxic tracking-widest text-3d">${CONFIG.brand}</h1></div>
+      <div class="absolute top-4 right-4 glass px-3 py-1.5 rounded-full"><span class="text-[10px] text-toxic font-bold tracking-wider">🌐 EN</span></div>
     </div>
-
     <div class="px-5 pb-10 flex-1">
-      <!-- Referral box -->
       <div class="glass-card mb-5 py-4 flex items-center gap-3" style="border-color: rgba(0,255,102,0.2);">
         <span class="text-toxic text-lg">👤</span>
         <div>
@@ -173,8 +160,6 @@ function renderSignup() {
           <p class="text-sm font-bold">Network Channel</p>
         </div>
       </div>
-
-      <!-- Steps -->
       <div class="flex items-center justify-between mb-6 px-2 relative">
         <div class="absolute top-5 left-8 right-8 h-[2px] bg-white/5"></div>
         ${[1,2,3].map(n => {
@@ -186,12 +171,9 @@ function renderSignup() {
           </div>`;
         }).join('')}
       </div>
-
-      <!-- Step Content -->
       <div class="glass-card p-6">
         ${step === 1 ? renderStep1() : step === 2 ? renderStep2() : renderStep3()}
       </div>
-
       <p class="text-center text-xs text-gray-600 mt-6">© 2026 ${CONFIG.brand} · Back to home</p>
     </div>
   </div>`;
@@ -227,19 +209,10 @@ function renderStep2() {
       <span class="text-xs font-bold">${S.signupData.country || 'India (+91)'}</span>
     </div>
     <div class="grid grid-cols-2 gap-3 mb-4">
-      <div>
-        <label class="text-[10px] text-gray-500 tracking-wider font-bold block mb-2">FIRST NAME</label>
-        <input class="input-dark" id="fn" placeholder="First Name" value="${S.signupData.firstName||''}">
-      </div>
-      <div>
-        <label class="text-[10px] text-gray-500 tracking-wider font-bold block mb-2">LAST NAME</label>
-        <input class="input-dark" id="ln" placeholder="Last Name" value="${S.signupData.lastName||''}">
-      </div>
+      <div><label class="text-[10px] text-gray-500 tracking-wider font-bold block mb-2">FIRST NAME</label><input class="input-dark" id="fn" placeholder="First Name" value="${S.signupData.firstName||''}"></div>
+      <div><label class="text-[10px] text-gray-500 tracking-wider font-bold block mb-2">LAST NAME</label><input class="input-dark" id="ln" placeholder="Last Name" value="${S.signupData.lastName||''}"></div>
     </div>
-    <div class="mb-4">
-      <label class="text-[10px] text-gray-500 tracking-wider font-bold block mb-2">E-MAIL</label>
-      <input class="input-dark" id="em" type="email" placeholder="you@example.com" value="${S.signupData.email||''}">
-    </div>
+    <div class="mb-4"><label class="text-[10px] text-gray-500 tracking-wider font-bold block mb-2">E-MAIL</label><input class="input-dark" id="em" type="email" placeholder="you@example.com" value="${S.signupData.email||''}"></div>
     <div class="mb-6">
       <label class="text-[10px] text-gray-500 tracking-wider font-bold block mb-2">WHATSAPP</label>
       <div class="flex gap-2">
@@ -280,12 +253,11 @@ function renderStep3() {
   `;
 }
 
-// ==================== MAIN APP ====================
+// ==================== MAIN ====================
 function renderMain() {
   const u = S.user;
   return `
   <div class="min-h-screen pb-28 relative max-w-md mx-auto">
-    <!-- Header -->
     <header class="px-5 py-4 flex justify-between items-center sticky top-0 z-40" style="background: rgba(5,8,7,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0,255,102,0.06);">
       <h1 class="text-lg font-black text-toxic tracking-[0.2em] text-3d">${CONFIG.brand}</h1>
       <div class="flex items-center gap-2">
@@ -296,36 +268,41 @@ function renderMain() {
         <div class="w-9 h-9 rounded-full bg-toxic flex items-center justify-center text-black font-bold text-sm">${u.username[0].toUpperCase()}</div>
       </div>
     </header>
-
     <main class="px-4 pt-4 fade-in">${renderTab()}</main>
-
-    <!-- Support FAB -->
     <a href="${CONFIG.support}" target="_blank" class="fixed bottom-28 right-4 w-14 h-14 rounded-full bg-toxic flex items-center justify-center text-black text-2xl glow-green-strong z-50">💬</a>
-
-    <!-- Bottom Nav -->
-    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto z-50" style="background: rgba(5,8,7,0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(0,255,102,0.08);">
+    <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto z-50" style="background: rgba(5,8,7,0.97); backdrop-filter: blur(20px); border-top: 1px solid rgba(0,255,102,0.08);">
       <div class="flex justify-around items-center py-2 px-1">
-        ${navBtn('dashboard','📊','Dashboard')}
-        ${navBtn('plans','📈','Invest')}
-        ${navBtn('active','📋','Active')}
-        ${navBtn('wallet','💳','Wallet')}
-        ${navBtn('history','📜','History')}
-        ${navBtn('team','👥','Team')}
+        ${navItem('dashboard','Dashboard','M3 5h7v7H3zM14 5h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z')}
+        ${navItem('plans','INVEST','M3 17l6-6 4 4 8-8M21 7v6h-6')}
+        ${navItem('active','Active plans','M3 7h18v14H3zM3 7l3-3h12l3 3M12 11v6M9 14h6')}
+        ${navItem('history','Transactions','M4 4h16v16H4zM8 9h8M8 13h8M8 17h5')}
+        ${navItem('team','Team','M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 7a4 4 0 100 8 4 4 0 000-8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75')}
+        ${logoutItem()}
       </div>
     </nav>
   </div>`;
 }
 
-function navBtn(id, icon, label) {
+function navItem(id, label, path) {
   const active = S.tab === id;
   return `<div class="nav-item ${active?'active':''}" onclick="setTab('${id}')">
-    <div class="nav-icon">${icon}</div>
-    <span class="text-[9px] font-bold mt-0.5 tracking-wide">${label}</span>
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="nav-svg" stroke-linecap="round" stroke-linejoin="round"><path d="${path}"/></svg>
+    </div>
+    <span class="text-[9px] font-semibold mt-0.5 tracking-wide">${label}</span>
   </div>`;
 }
 
-function setTab(t){ S.tab = t; render(); window.scrollTo(0,0); }
+function logoutItem() {
+  return `<div class="nav-item logout-item" onclick="doLogout()">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="nav-svg" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+    </div>
+    <span class="text-[9px] font-semibold mt-0.5 tracking-wide">Logout</span>
+  </div>`;
+}
 
+function setTab(t){ S.tab = t; S.selectedPlan = null; render(); window.scrollTo(0,0); }
 function renderTab() {
   switch(S.tab) {
     case 'dashboard': return dashTab();
@@ -334,7 +311,6 @@ function renderTab() {
     case 'wallet': return walletTab();
     case 'history': return historyTab();
     case 'team': return teamTab();
-    case 'share': return shareTab();
   }
 }
 
@@ -343,10 +319,8 @@ function dashTab() {
   const u = S.user;
   const ceilingPct = u.activated > 0 ? ((u.earned / u.ceiling) * 100) : 0;
   const refLink = `https://t.me/${CONFIG.telegramBot}?start=${u.referralCode}`;
-
   return `
     <div class="space-y-3.5">
-      <!-- Banner -->
       <div class="relative w-full h-48 rounded-3xl overflow-hidden" style="border:1px solid rgba(0,255,102,0.15);">
         <img src="${CONFIG.banner}" class="absolute inset-0 w-full h-full object-cover">
         <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(5,8,7,0.95) 100%);"></div>
@@ -359,8 +333,6 @@ function dashTab() {
           <span class="text-[10px] font-bold text-toxic">LIVE</span>
         </div>
       </div>
-
-      <!-- Earnings Balance -->
       <div class="glass-card card-gradient">
         <div class="flex justify-between items-start mb-4">
           <div>
@@ -372,18 +344,15 @@ function dashTab() {
             <span class="text-[9px] font-bold text-toxic">LIVE</span>
           </div>
         </div>
-        <!-- Bar chart -->
         <div class="flex items-end gap-1.5 h-16 mb-4 px-1">
           ${[20,35,28,50,42,65,55,80,70,95].map((h,i)=>`<div class="flex-1 rounded-t" style="height:${h}%; background: linear-gradient(180deg, #00FF66, rgba(0,255,102,0.2)); opacity: ${0.4+i*0.06}"></div>`).join('')}
         </div>
         <p class="text-xs text-gray-500 mb-4">Plan earnings — separate from referral</p>
         <div class="flex items-center gap-3">
           <p class="text-[10px] text-gray-500 flex-1">🛡️ Plan earnings — separate from referral</p>
-          <button class="btn-green px-5 py-3 rounded-xl text-xs font-black tracking-wide flex items-center gap-2">WITHDRAW EARNINGS ↗</button>
+          <button onclick="setTab('wallet')" class="btn-green px-5 py-3 rounded-xl text-xs font-black tracking-wide flex items-center gap-2">WITHDRAW EARNINGS ↗</button>
         </div>
       </div>
-
-      <!-- Referral Balance -->
       <div class="glass-card flex items-center gap-4">
         <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl" style="background:rgba(0,255,102,0.08); border:1px solid rgba(0,255,102,0.15);">👥</div>
         <div class="flex-1">
@@ -391,12 +360,8 @@ function dashTab() {
           <p class="text-3xl font-black mono text-white">$${fmt(u.referralBalance)}</p>
           <p class="text-[10px] text-gray-600">Network commissions — not mined</p>
         </div>
-        <div class="w-11 h-11 rounded-full flex items-center justify-center" style="background:rgba(0,255,102,0.08); border:1px solid rgba(0,255,102,0.2);">
-          <span class="text-toxic text-lg">→</span>
-        </div>
+        <div class="w-11 h-11 rounded-full flex items-center justify-center" style="background:rgba(0,255,102,0.08); border:1px solid rgba(0,255,102,0.2);"><span class="text-toxic text-lg">→</span></div>
       </div>
-
-      <!-- Earnings Ceiling -->
       <div class="glass-card">
         <div class="flex justify-between items-start mb-5">
           <p class="text-[10px] text-toxic-dim tracking-[0.15em] font-bold">⚡ EARNINGS CEILING</p>
@@ -408,9 +373,7 @@ function dashTab() {
               <circle cx="18" cy="18" r="15.9155" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="2.5"/>
               <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#00FF66" stroke-width="2.5" stroke-dasharray="${ceilingPct}, 100" stroke-linecap="round"/>
             </svg>
-            <div class="absolute inset-0 flex items-center justify-center">
-              <span class="text-sm font-black text-toxic mono">${ceilingPct.toFixed(1)}%</span>
-            </div>
+            <div class="absolute inset-0 flex items-center justify-center"><span class="text-sm font-black text-toxic mono">${ceilingPct.toFixed(1)}%</span></div>
           </div>
           <div class="flex-1 space-y-2.5">
             <div class="flex justify-between text-xs"><span class="text-gray-500">Activated</span><span class="mono text-white font-bold">$${fmt(u.activated)}</span></div>
@@ -419,8 +382,6 @@ function dashTab() {
           </div>
         </div>
       </div>
-
-      <!-- Referral Link -->
       <div class="glass-card">
         <p class="text-[10px] text-gray-500 tracking-[0.15em] font-bold mb-3">🔗 YOUR REFERRAL LINK</p>
         <div class="flex items-center gap-2">
@@ -428,9 +389,6 @@ function dashTab() {
           <button onclick="copyText('${refLink}')" class="btn-green px-4 py-3 rounded-xl text-[11px] font-black">📋 Copy</button>
         </div>
       </div>
-
-      <!-- Logout -->
-      <button onclick="doLogout()" class="w-full py-4 rounded-2xl text-sm font-bold" style="background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); color:#EF4444;">Logout</button>
     </div>`;
 }
 
@@ -443,7 +401,7 @@ function plansTab() {
         <div class="flex justify-between items-start">
           <div>
             <h2 class="text-3xl font-black mb-2">Choose the plan</h2>
-            <p class="text-xs text-gray-500">Tap a plan to go straight to payment.<br>Fixed amount per plan.</p>
+            <p class="text-xs text-gray-500">Tap a plan to see full details.<br>Fixed amount per plan.</p>
           </div>
           <div class="glass px-2.5 py-1 rounded-full flex items-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-toxic animate-pulse"></span>
@@ -455,35 +413,108 @@ function plansTab() {
           <p class="mono text-lg font-black text-toxic">$${fmt(S.user.balance)}</p>
         </div>
       </div>
-
       <div class="grid grid-cols-2 gap-3">
         ${PLANS.map((p,i) => `
-          <div class="plan-card">
+          <div class="plan-card" onclick="openPlan('${p.id}')">
             <div class="flex justify-between items-start mb-3">
               <p class="text-[9px] text-gray-500 tracking-widest font-bold">PLAN</p>
-              <div class="w-6 h-6 rounded-full flex items-center justify-center" style="background:rgba(0,255,102,0.1); border:1px solid rgba(0,255,102,0.2);">
-                <span class="text-toxic text-[10px]">→</span>
-              </div>
+              <div class="w-6 h-6 rounded-full flex items-center justify-center" style="background:rgba(0,255,102,0.1); border:1px solid rgba(0,255,102,0.2);"><span class="text-toxic text-[10px]">→</span></div>
             </div>
-            <p class="text-[10px] font-bold mb-1" style="color:${p.color}">${p.name}</p>
+            <p class="text-[10px] font-bold mb-1" style="color:${p.color}">${p.icon} ${p.name}</p>
             <p class="mono text-2xl font-black text-white mb-1">$${p.deposit}.00</p>
             <p class="text-[9px] text-gray-600 tracking-wider mb-3">PLAN AMOUNT</p>
             <div class="flex items-center gap-1 mb-2">
               <span class="text-toxic text-xs">💰</span>
-              <p class="mono text-xs font-bold text-toxic">$${p.daily.toFixed(2)} / dia</p>
+              <p class="mono text-xs font-bold text-toxic">$${p.daily.toFixed(2)} / daily</p>
             </div>
-            <div class="pt-2 border-t border-white/5">
-              <p class="text-[10px] text-gray-500">⚡ 40 days</p>
-            </div>
-            <button onclick="invest('${p.id}')" class="w-full mt-3 py-2 rounded-lg text-[11px] font-black" style="background:linear-gradient(135deg, ${p.color}22, ${p.color}11); border:1px solid ${p.color}44; color:${p.color};">Invest Now</button>
+            <div class="pt-2 border-t border-white/5"><p class="text-[10px] text-gray-500">⚡ 40 days</p></div>
           </div>
         `).join('')}
       </div>
     </div>`;
 }
 
-// ==================== ACTIVE PLANS ====================
+// ==================== PLAN DETAIL MODAL ====================
+function openPlan(id) {
+  S.selectedPlan = PLANS.find(p => p.id === id);
+  render();
+  document.body.style.overflow = 'hidden';
+}
+
+function closePlan() {
+  S.selectedPlan = null;
+  render();
+  document.body.style.overflow = '';
+}
+
+function renderPlanModal() {
+  if (!S.selectedPlan) return '';
+  const p = S.selectedPlan;
+  const roi = ((p.daily / p.deposit) * 100).toFixed(2);
+  const canAfford = S.user.balance >= p.deposit;
+  return `
+  <div class="fixed inset-0 z-[100] flex items-center justify-center p-4" style="background:rgba(0,0,0,0.85); backdrop-filter: blur(8px);" onclick="closePlan()">
+    <div class="glass-card w-full max-w-md modal-anim" onclick="event.stopPropagation()" style="border-color:${p.color}55; max-height:90vh; overflow-y:auto;">
+      
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-[10px] tracking-widest text-gray-500 font-bold">PLAN DETAILS</span>
+        <button onclick="closePlan()" class="w-8 h-8 rounded-full glass flex items-center justify-center text-gray-400 text-xl leading-none">×</button>
+      </div>
+
+      <div class="text-center mb-5">
+        <div class="w-20 h-20 rounded-2xl mx-auto mb-3 flex items-center justify-center" style="background:${p.color}22; border:1px solid ${p.color}55; box-shadow: 0 0 30px ${p.color}44;">
+          <span class="text-4xl">${p.icon}</span>
+        </div>
+        <h2 class="text-3xl font-black" style="color:${p.color}; text-shadow: 0 0 20px ${p.color}88;">${p.name}</h2>
+        <p class="text-xs text-gray-500 mt-2 tracking-widest">40-DAY INVESTMENT PLAN</p>
+      </div>
+
+      <div class="rounded-2xl p-4 mb-4 text-center" style="background:linear-gradient(135deg, ${p.color}15, transparent); border:1px solid ${p.color}33;">
+        <p class="text-[10px] text-gray-500 tracking-widest mb-1">TOTAL RETURN</p>
+        <p class="mono text-4xl font-black text-white">$${p.total.toFixed(2)}</p>
+        <p class="text-[10px] text-toxic mt-1">${roi}% ROI per day</p>
+      </div>
+
+      <div class="space-y-2.5 mb-5">
+        <div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.4);">
+          <span class="text-xs text-gray-500">💰 Deposit Amount</span>
+          <span class="mono font-black text-white text-sm">$${p.deposit.toFixed(2)}</span>
+        </div>
+        <div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.4);">
+          <span class="text-xs text-gray-500">📈 Daily Return</span>
+          <span class="mono font-black text-toxic text-sm">$${p.daily.toFixed(2)}</span>
+        </div>
+        <div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.4);">
+          <span class="text-xs text-gray-500">📊 Daily ROI</span>
+          <span class="mono font-black text-toxic text-sm">${roi}%</span>
+        </div>
+        <div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.4);">
+          <span class="text-xs text-gray-500">⚡ Duration</span>
+          <span class="mono font-black text-white text-sm">40 Days</span>
+        </div>
+        <div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.4);">
+          <span class="text-xs text-gray-500">🏦 Your Balance</span>
+          <span class="mono font-black ${canAfford ? 'text-toxic' : 'text-red-400'} text-sm">$${fmt(S.user.balance)}</span>
+        </div>
+      </div>
+
+      ${canAfford ? `
+        <button onclick="closePlan();invest('${p.id}')" class="w-full btn-green py-4 rounded-2xl text-sm font-black glow-green mb-3">
+          INVEST NOW — $${p.deposit.toFixed(2)}
+        </button>
+      ` : `
+        <button onclick="closePlan();setTab('wallet')" class="w-full py-4 rounded-2xl text-sm font-black mb-3" style="background:linear-gradient(135deg, #EF4444, #DC2626); color:#fff;">
+          ⚠️ INSUFFICIENT BALANCE — ADD FUNDS
+        </button>
+      `}
+      <button onclick="closePlan()" class="w-full py-3 rounded-2xl text-xs font-bold" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#9CA3AF;">Cancel</button>
+    </div>
+  </div>`;
+}
+
+// ==================== ACTIVE ====================
 function activeTab() {
+  const plans = (S.user.activePlans || []);
   return `
     <div class="space-y-4">
       <div class="glass-card">
@@ -495,31 +526,43 @@ function activeTab() {
           </div>
         </div>
         <p class="text-[10px] text-gray-500 tracking-wider font-bold mb-2">ACTIVE INVESTMENTS</p>
-        <p class="text-4xl font-black text-white">0 <span class="text-2xl text-gray-500">plans</span></p>
+        <p class="text-4xl font-black text-white">${plans.length} <span class="text-2xl text-gray-500">plans</span></p>
       </div>
-
-      <div class="glass-card" style="border-color:rgba(0,255,102,0.15);">
-        <div class="flex items-start justify-between mb-4">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-2xl flex items-center justify-center" style="background:rgba(0,255,102,0.08); border:1px solid rgba(0,255,102,0.15);">📦</div>
-            <div>
-              <p class="text-[9px] text-gray-500 tracking-widest font-bold mb-1">PROGRESS</p>
-              <p class="text-lg font-black">NO INVESTMENTS</p>
+      ${plans.length === 0 ? `
+        <div class="glass-card" style="border-color:rgba(0,255,102,0.15);">
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-2xl flex items-center justify-center" style="background:rgba(0,255,102,0.08); border:1px solid rgba(0,255,102,0.15);">📦</div>
+              <div>
+                <p class="text-[9px] text-gray-500 tracking-widest font-bold mb-1">PROGRESS</p>
+                <p class="text-lg font-black">NO INVESTMENTS</p>
+              </div>
             </div>
           </div>
-          <div class="relative w-16 h-16">
-            <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
-              <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="3"/>
-              <circle cx="18" cy="18" r="15" fill="none" stroke="#00FF66" stroke-width="3" stroke-dasharray="0, 100"/>
-            </svg>
-            <div class="absolute inset-0 flex items-center justify-center">
-              <span class="text-xs font-black text-white">0%</span>
+          <p class="text-xs text-gray-500 mb-4 leading-relaxed">You don't have any active investments yet. Start now and watch your profits grow!</p>
+          <button onclick="setTab('plans')" class="btn-green w-full py-3.5 rounded-xl text-sm font-black flex items-center justify-center gap-2">+ VIEW PLANS</button>
+        </div>
+      ` : plans.map((p, i) => `
+        <div class="glass-card">
+          <div class="flex justify-between items-center mb-3">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">${p.icon}</span>
+              <div>
+                <p class="font-black text-sm" style="color:${p.color}">${p.name}</p>
+                <p class="text-[10px] text-gray-500">Daily: $${p.daily.toFixed(2)}</p>
+              </div>
             </div>
+            <span class="text-[9px] px-2 py-1 rounded-full bg-toxic/20 text-toxic font-bold">ACTIVE</span>
+          </div>
+          <div class="flex justify-between text-[10px] text-gray-500 mb-2">
+            <span>Day ${p.daysCollected || 0} / 40</span>
+            <span>$${((p.daysCollected||0) * p.daily).toFixed(2)} / $${p.total.toFixed(2)}</span>
+          </div>
+          <div class="w-full h-1.5 rounded-full bg-white/5 overflow-hidden">
+            <div class="h-full bg-toxic" style="width:${((p.daysCollected||0)/40)*100}%"></div>
           </div>
         </div>
-        <p class="text-xs text-gray-500 mb-4 leading-relaxed">You don't have any active investments yet. Start now and watch your profits grow!</p>
-        <button onclick="setTab('plans')" class="btn-green w-full py-3.5 rounded-xl text-sm font-black flex items-center justify-center gap-2">+ VIEW PLANS</button>
-      </div>
+      `).join('')}
     </div>`;
 }
 
@@ -531,29 +574,22 @@ function walletTab() {
       <div class="glass-card">
         <p class="text-[10px] text-toxic-dim tracking-[0.2em] font-bold mb-3">💳 DEPOSIT FUNDS</p>
         <h2 class="text-xl font-black mb-4">Add Balance</h2>
-
         <div class="flex gap-2 overflow-x-auto hide-scroll pb-2 mb-4">
           ${['UPI','USDT BEP20','USDT TRC20','BTC BEP20'].map((m,i)=>`
             <button onclick="selMethod(${i})" id="m-${i}" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap ${i===0?'bg-toxic text-black':'bg-white/5 text-gray-400'}">${m}</button>
           `).join('')}
         </div>
-
         <div class="rounded-2xl p-4 mb-4" style="background:rgba(0,0,0,0.4); border:1px dashed rgba(0,255,102,0.2);">
           <p class="text-[10px] text-gray-500 tracking-wider font-bold mb-2 text-center">SEND TO</p>
           <p id="payAddr" class="mono text-xs text-toxic text-center break-all mb-3">${CONFIG.upi}</p>
-          <div class="flex justify-center">
-            <div class="bg-white p-2 rounded-2xl">
-              <img id="qrImg" src="${upiQr}" class="w-36 h-36">
-            </div>
-          </div>
+          <div class="flex justify-center"><div class="bg-white p-2 rounded-2xl"><img id="qrImg" src="${upiQr}" class="w-36 h-36"></div></div>
           <p class="text-[10px] text-gray-500 text-center mt-3">Rate: 1 USDT = ₹90 INR</p>
         </div>
-
         <input type="number" id="depAmt" class="input-dark mb-3" placeholder="Amount (INR)">
-        <input type="text" id="depUtr" maxlength="12" class="input-dark mb-3" placeholder="12-Digit UTR Number">
-        <button onclick="submitDeposit()" class="btn-green w-full py-4 rounded-2xl text-sm font-black">Submit UTR for Verification</button>
+        <div id="utrWrap"><input type="text" id="depUtr" maxlength="12" class="input-dark mb-3" placeholder="12-Digit UTR Number"></div>
+        <div id="txWrap" style="display:none;"><input type="text" id="depTx" class="input-dark mb-3" placeholder="TxHash (Transaction Hash)"></div>
+        <button onclick="submitDeposit()" id="depBtn" class="btn-green w-full py-4 rounded-2xl text-sm font-black">Submit UTR for Verification</button>
       </div>
-
       <div class="glass-card">
         <p class="text-[10px] text-toxic-dim tracking-[0.2em] font-bold mb-3">💸 WITHDRAW FUNDS</p>
         <h2 class="text-xl font-black mb-4">Request Payout</h2>
@@ -565,7 +601,6 @@ function walletTab() {
     </div>`;
 }
 
-let selM = 0;
 function selMethod(i) {
   selM = i;
   document.querySelectorAll('[id^="m-"]').forEach((el,idx) => {
@@ -575,6 +610,8 @@ function selMethod(i) {
   $('payAddr').innerText = addrs[i];
   const data = i === 0 ? encodeURIComponent('upi://pay?pa='+CONFIG.upi+'&pn='+CONFIG.upiName+'&cu=INR') : addrs[i];
   $('qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${data}`;
+  if (i === 0) { $('utrWrap').style.display = 'block'; $('txWrap').style.display = 'none'; $('depBtn').innerText = 'Submit UTR for Verification'; }
+  else { $('utrWrap').style.display = 'none'; $('txWrap').style.display = 'block'; $('depBtn').innerText = 'Submit TxHash for Verification'; }
 }
 
 // ==================== HISTORY ====================
@@ -594,7 +631,6 @@ function historyTab() {
           <input placeholder="Search by TRX" class="bg-transparent outline-none text-sm w-full text-white placeholder-gray-600">
         </div>
       </div>
-
       <div class="glass-card">
         <div class="flex items-start gap-3">
           <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(0,255,102,0.08); border:1px solid rgba(0,255,102,0.15);">🕐</div>
@@ -609,7 +645,6 @@ function historyTab() {
           </div>
         </div>
       </div>
-
       ${tx.length === 0 ? `
         <div class="glass-card text-center py-12">
           <div class="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style="background:rgba(0,255,102,0.08); border:1px solid rgba(0,255,102,0.15);">💼</div>
@@ -620,7 +655,7 @@ function historyTab() {
         <div class="glass-card flex justify-between items-center">
           <div>
             <p class="font-bold text-sm capitalize">${t.type}</p>
-            <p class="text-[10px] text-gray-500">${t.method} • ${t.utr || ''}</p>
+            <p class="text-[10px] text-gray-500">${t.method} • ${t.ref || t.utr || ''}</p>
           </div>
           <div class="text-right">
             <p class="mono font-black text-toxic">+$${fmt(t.amount)}</p>
@@ -651,22 +686,17 @@ function teamTab() {
           <div class="w-12 h-12 rounded-2xl flex items-center justify-center" style="background:rgba(0,255,102,0.08); border:1px solid rgba(0,255,102,0.15);">🔗</div>
         </div>
       </div>
-
       <div class="grid grid-cols-2 gap-3">
         ${statCard('👤+','TOTAL REFERRALS','0','People')}
         ${statCard('📈','ACTIVE REFERRALS','0','People')}
         ${statCard('📊','TOTAL INVESTMENT VOLUME','$0.00','Volume')}
         ${statCard('👥','TOTAL INACTIVE','0','People')}
       </div>
-
       <div class="glass-card">
         <div class="flex items-center gap-3 mb-5">
           <div class="w-11 h-11 rounded-2xl flex items-center justify-center" style="background:rgba(0,255,102,0.08); border:1px solid rgba(0,255,102,0.15);">👥</div>
           <h3 class="text-lg font-black">Your Network</h3>
         </div>
-
-        <button class="w-full py-3.5 rounded-2xl mb-6 text-sm font-black text-toxic tracking-wider" style="background:rgba(0,255,102,0.08); border:1px solid rgba(0,255,102,0.2);">RECOLHER TUDO 💰</button>
-
         <div class="flex flex-col items-center">
           <div class="you-box w-full mb-0">
             <div class="w-12 h-12 rounded-full mx-auto mb-2 flex items-center justify-center" style="background:rgba(0,255,102,0.15); border:2px solid #00FF66;">👤</div>
@@ -678,31 +708,13 @@ function teamTab() {
             <div class="glass-card w-full mb-0 py-4">
               <div class="flex items-center gap-3 mb-4">
                 <div class="w-11 h-11 rounded-2xl flex items-center justify-center" style="background:rgba(0,255,102,0.08); border:1px solid rgba(0,255,102,0.15);">👥</div>
-                <div>
-                  <p class="font-black text-sm">LEVEL ${l}</p>
-                  <p class="text-[10px] text-gray-500">0 people</p>
-                </div>
+                <div><p class="font-black text-sm">LEVEL ${l}</p><p class="text-[10px] text-gray-500">0 people</p></div>
               </div>
-              <div class="level-box py-6">
-                <p class="text-2xl mb-2 opacity-40">👤</p>
-                <p class="text-xs text-gray-600">No users</p>
-              </div>
+              <div class="level-box py-6"><p class="text-2xl mb-2 opacity-40">👤</p><p class="text-xs text-gray-600">No users</p></div>
             </div>
           `).join('')}
         </div>
       </div>
-
-      <div class="glass-card" style="border-color:rgba(0,255,102,0.15);">
-        <div class="flex items-start gap-3 mb-4">
-          <div class="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:rgba(0,255,102,0.08); border:1px solid rgba(0,255,102,0.15);">🎁</div>
-          <div>
-            <p class="font-black text-lg leading-tight mb-1">The more you invite, the more you <span class="text-toxic">grow.</span></p>
-            <p class="text-xs text-gray-500">Earn exclusive benefits with your network.</p>
-          </div>
-        </div>
-        <button class="w-full py-3 rounded-2xl text-sm font-bold flex items-center justify-center gap-2" style="background:rgba(0,255,102,0.05); border:1px solid rgba(0,255,102,0.15);">ℹ️ HOW IT WORKS</button>
-      </div>
-
       <button onclick="copyText('${refLink}')" class="w-full py-4 rounded-2xl flex items-center justify-between px-5 btn-green glow-green">
         <div class="flex items-center gap-3">
           <span class="text-2xl">🔗</span>
@@ -723,19 +735,6 @@ function statCard(icon, label, value, unit) {
     <p class="mono text-2xl font-black text-white">${value}</p>
     <p class="text-[10px] text-gray-600 mt-1">${unit}</p>
   </div>`;
-}
-
-// ==================== SHARE ====================
-function shareTab() {
-  const refLink = `https://t.me/${CONFIG.telegramBot}?start=${S.user.referralCode}`;
-  return `
-    <div class="glass-card text-center py-8">
-      <div class="text-6xl mb-4">🔗</div>
-      <h2 class="text-2xl font-black mb-2">Share & Earn</h2>
-      <p class="text-sm text-gray-500 mb-6 max-w-xs mx-auto">Share your referral link with friends and earn up to 10 levels of commission!</p>
-      <button onclick="copyText('${refLink}')" class="btn-green w-full py-4 rounded-2xl text-sm font-black glow-green mb-3">📋 Copy Referral Link</button>
-      <a href="https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=Join%20TOXIC!" target="_blank" class="block w-full py-4 rounded-2xl text-sm font-black" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);">📤 Share on Telegram</a>
-    </div>`;
 }
 
 // ==================== ACTIONS ====================
@@ -793,13 +792,9 @@ function doSignIn() {
   const u = $('signinUser').value.trim();
   const p = $('signinPass').value;
   if (!u || !p) return alert('Enter username and password');
-  // Check localStorage for existing user
   const existing = JSON.parse(localStorage.getItem('toxic_user') || 'null');
-  if (existing && existing.username === u) {
-    S.user = existing;
-  } else {
-    createUser(u);
-  }
+  if (existing && existing.username === u) { S.user = existing; }
+  else { createUser(u); }
   S.tab = 'dashboard';
   save(); render();
 }
@@ -820,6 +815,7 @@ function invest(id) {
   S.user.invested += p.deposit;
   S.user.activated += p.deposit;
   S.user.ceiling = S.user.activated * 2;
+  if (!S.user.activePlans) S.user.activePlans = [];
   S.user.activePlans.push({ ...p, daysCollected: 0, started: Date.now() });
   save(); render();
   alert(`✅ Invested $${p.deposit} in ${p.name}!\nDaily: $${p.daily}`);
@@ -827,16 +823,23 @@ function invest(id) {
 
 function submitDeposit() {
   const amt = parseFloat($('depAmt').value);
-  const utr = $('depUtr').value.trim();
+  const isCrypto = selM !== 0;
+  const utr = $('depUtr') ? $('depUtr').value.trim() : '';
+  const tx = $('depTx') ? $('depTx').value.trim() : '';
+  const ref = isCrypto ? tx : utr;
   if (!amt || amt < CONFIG.minDeposit) return alert(`Minimum deposit is $${CONFIG.minDeposit}`);
-  if (utr.length !== 12) return alert('Enter valid 12-digit UTR');
+  if (isCrypto && !ref) return alert('Please enter TxHash');
+  if (!isCrypto && utr.length !== 12) return alert('Enter valid 12-digit UTR');
   S.transactions.push({
-    id: Date.now(), type: 'deposit', amount: amt, utr,
+    id: Date.now(), type: 'deposit', amount: amt,
+    utr: !isCrypto ? utr : '', ref: ref,
     status: 'pending', method: ['UPI','USDT BEP20','USDT TRC20','BTC BEP20'][selM],
     user: S.user.id, date: new Date().toISOString()
   });
   save();
-  $('depAmt').value = ''; $('depUtr').value = '';
+  $('depAmt').value = '';
+  if ($('depUtr')) $('depUtr').value = '';
+  if ($('depTx')) $('depTx').value = '';
   alert('✅ Deposit submitted!\n\nYour payment will be verified manually. Balance will be credited within 24 hours.');
 }
 
@@ -858,10 +861,8 @@ function submitWithdraw() {
 }
 
 function copyText(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    alert('✅ Copied to clipboard!');
-  }).catch(() => {
-    // Fallback
+  navigator.clipboard.writeText(text).then(() => { alert('✅ Copied to clipboard!'); })
+  .catch(() => {
     const el = document.createElement('textarea');
     el.value = text; document.body.appendChild(el); el.select();
     document.execCommand('copy'); document.body.removeChild(el);
@@ -869,7 +870,7 @@ function copyText(text) {
   });
 }
 
-// ==================== TELEGRAM AUTO LOGIN ====================
+// ==================== TELEGRAM ====================
 try {
   if (window.Telegram?.WebApp) {
     window.Telegram.WebApp.ready();
@@ -883,7 +884,6 @@ try {
   }
 } catch(e){ console.log('TG not available'); }
 
-// ==================== BOOT ====================
 if (!S.user) S.tab = 'signup';
 render();
 </script>
