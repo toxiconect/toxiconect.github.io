@@ -1,1 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TOXIC - Web3 Investment</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+* { -webkit-tap-highlight-color: transparent; }
+body { background: #050807; color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh; overflow-x: hidden; }
+.mono { font-family: 'JetBrains Mono', monospace; letter-spacing: -0.5px; }
+.glass { background: rgba(15,25,20,0.85); backdrop-filter: blur(20px); border: 1px solid rgba(0,255,102,0.08); }
+.glass-card { background: linear-gradient(145deg, rgba(18,28,22,0.9), rgba(10,15,12,0.95)); border: 1px solid rgba(0,255,102,0.08); border-radius: 1.25rem; padding: 1.25rem; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.8); }
+.text-3d { text-shadow: 0 0 20px rgba(0,255,102,0.4); }
+.text-toxic { color: #00FF66; }
+.text-toxic-dim { color: #10B981; }
+.bg-toxic { background: #00FF66; }
+.glow-green { box-shadow: 0 0 20px rgba(0,255,102,0.3); }
+.glow-green-strong { box-shadow: 0 0 40px rgba(0,255,102,0.5); }
+.btn-green { background: linear-gradient(135deg, #00FF66 0%, #10B981 100%); color: #000; font-weight: 700; transition: all 0.2s; }
+.btn-green:active { transform: scale(0.97); }
+.card-gradient { background: linear-gradient(160deg, rgba(16,185,129,0.15) 0%, rgba(10,15,12,0.95) 60%); }
+.input-dark { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.08); border-radius: 0.9rem; padding: 0.95rem 1rem; color: #fff; outline: none; width: 100%; font-size: 15px; }
+.input-dark:focus { border-color: rgba(0,255,102,0.5); }
+.input-dark::placeholder { color: #4B5563; }
+.hide-scroll::-webkit-scrollbar { display: none; }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 8px 2px; border-radius: 12px; cursor: pointer; position: relative; }
+.nav-item.active { color: #00FF66; }
+.nav-item.active::after { content: ''; position: absolute; bottom: 0; left: 20%; right: 20%; height: 2px; background: #00FF66; border-radius: 2px; }
+.nav-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.nav-item.logout-item { color: #EF4444; }
+.fade-in { animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.plan-card { background: linear-gradient(160deg, rgba(0,0,0,0.6), rgba(10,20,15,0.9)); border: 1px solid rgba(0,255,102,0.1); border-radius: 1rem; padding: 1rem; position: relative; overflow: hidden; cursor: pointer; transition: all 0.2s; }
+.plan-card:active { transform: scale(0.97); }
+.step-circle { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.step-active { background: #00FF66; color: #000; box-shadow: 0 0 20px rgba(0,255,102,0.5); }
+.step-inactive { background: rgba(255,255,255,0.05); color: #4B5563; border: 1px solid rgba(255,255,255,0.08); }
+.step-done { background: #10B981; color: #000; }
+.nav-svg { width: 20px; height: 20px; stroke-width: 2; }
+.modal-anim { animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes modalIn { from { opacity: 0; transform: scale(0.85) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.active-plan-card { background: linear-gradient(145deg, rgba(0,255,102,0.12), rgba(10,20,15,0.95)); border: 1.5px solid rgba(0,255,102,0.35); border-radius: 1.25rem; padding: 1.25rem; position: relative; overflow: hidden; }
+.active-plan-card::before { content: ''; position: absolute; top: -50%; right: -30%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(0,255,102,0.15), transparent 70%); }
+.pulse-dot { animation: pulseDot 1.5s infinite; }
+@keyframes pulseDot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+.timer-glow { text-shadow: 0 0 20px rgba(0,255,102,0.6); }
+.collect-btn { background: linear-gradient(135deg, #00FF66 0%, #10B981 100%); color: #000; font-weight: 900; box-shadow: 0 0 30px rgba(0,255,102,0.5); animation: collectPulse 2s infinite; }
+@keyframes collectPulse { 0%, 100% { box-shadow: 0 0 20px rgba(0,255,102,0.4); } 50% { box-shadow: 0 0 40px rgba(0,255,102,0.8); } }
+.collect-btn:disabled { background: rgba(255,255,255,0.05); color: #666; box-shadow: none; animation: none; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+var CONFIG = {
+  brand: 'TOXIC',
+  banner: 'https://i.postimg.cc/Wz818VcZ/1789133259079.png',
+  support: 'https://t.me/Toxiconect',
+  upi: 'alamasif2124-1@oksbi',
+  upiName: 'Asif Alam',
+  usdtBep20: '0xd39ca01aaf830911553c4f06510665b34fb793d0',
+  usdtTrc20: 'TMqeccMCttEYBQoLVnEWSs1KSHBhFgaexq',
+  btcBep20: '0xd39ca01aaf830911553c4f06510665b34fb793d0',
+  minDeposit: 2,
+  minWithdraw: 5,
+  withdrawFee: 0.05,
+  telegramBot: 'TOXICONECT_BOT',
+  sbUrl: 'https://uaeyjqfwqxhgbhrvlbdr.supabase.co',
+  sbKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZXlqcWZ3cXhoZ2JocnZsYmRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NjgzMTEsImV4cCI6MjEwNTE0NDMxMX0.gmxzj18TuS6Zckjf7d41uBUFMHfsUxl92e-QoI-a-rc'
+};
 
+var sb = null;
+try { if (window.supabase && window.supabase.createClient) sb = window.supabase.createClient(CONFIG.sbUrl, CONFIG.sbKey); } catch(e){}
+
+var PLANS = [
+  { id:'l1', name:'BRONZE', deposit:1, daily:0.10, total:4.00, color:'#CD7F32', icon:'🥉' },
+  { id:'l2', name:'SILVER', deposit:3, daily:0.36, total:14.40, color:'#C0C0C0', icon:'🥈' },
+  { id:'l3', name:'GOLD', deposit:5, daily:0.70, total:28.00, color:'#FFD700', icon:'🥇' },
+  { id:'l4', name:'ELITE', deposit:10, daily:1.60, total:64.00, color:'#22D3EE', icon:'💎' },
+  { id:'l5', name:'ULTRA', deposit:20, daily:3.50, total:140.00, color:'#A855F7', icon:'👑' },
+  { id:'l6', name:'LEGEND', deposit:50, daily:9.00, total:360.00, color:'#00FF66', icon:'🏆' },
+  { id:'l7', name:'MASTER', deposit:100, daily:18.50, total:740.00, color:'#EF4444', icon:'⚔️' },
+  { id:'l8', name:'GRANDMASTER', deposit:200, daily:38.00, total:1520.00, color:'#EC4899', icon:'🎯' },
+  { id:'l9', name:'MYTHIC', deposit:500, daily:97.50, total:3900.00, color:'#6366F1', icon:'🔥' },
+  { id:'l10', name:'IMMORTAL', deposit:1000, daily:200.00, total:8000.00, color:'#FEF08A', icon:'⚡' },
+  { id:'l11', name:'TITAN', deposit:2000, daily:410.00, total:16400.00, color:'#3B82F6', icon:'⭐' },
+  { id:'l12', name:'GODFATHER', deposit:5000, daily:1050.00, total:42000.00, color:'#00FF66', icon:'👑' }
+];
+
+var S = {
+  user: JSON.parse(localStorage.getItem('toxic_user') || 'null'),
+  tab: 'dashboard',
+  signupStep: 1,
+  signupData: { country:'', firstName:'', lastName:'', email:'', phone:'', username:'', password:'' },
+  transactions: JSON.parse(localStorage.getItem('toxic_tx') || '[]'),
+  selectedPlan: null,
+  showProfile: false
+};
+
+function save() {
+  localStorage.setItem('toxic_user', JSON.stringify(S.user));
+  localStorage.setItem('toxic_tx', JSON.stringify(S.transactions));
+}
+function $(id){ return document.getElementById(id); }
+function fmt(n){ return Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+
+function render() {
+  var app = $('app');
+  if (!S.user) {
+    if (S.tab === 'signin') { app.innerHTML = renderSignIn(); }
+    else { app.innerHTML = renderSignup(); }
+    return;
+  }
+  app.innerHTML = renderMain() + renderPlanModal() + renderProfileModal();
+}
+
+// ===== TIMER UPDATER (NO RE-RENDER) =====
+function updateTimers() {
+  if (!S.user || !S.user.active_plan) return;
+  var el1 = $('dash-timer'); var el2 = $('active-timer');
+  var btn1 = $('dash-collect'); var btn2 = $('active-collect');
+  if (!el1 && !el2) return;
+  var p = PLANS.find(function(x){ return x.id === S.user.active_plan });
+  if (!p) return;
+  var started = new Date(S.user.plan_started).getTime();
+  var nextCollect = started + ((Number(S.user.days_collected)||0) + 1) * 24 * 60 * 60 * 1000;
+  var remaining = nextCollect - Date.now();
+  var ready = remaining <= 0;
+  var txt;
+  if (ready) txt = 'READY';
+  else {
+    var hrs = Math.max(0, Math.floor(remaining / (1000*60*60)));
+    var mins = Math.max(0, Math.floor((remaining % (1000*60*60)) / (1000*60)));
+    var secs = Math.max(0, Math.floor((remaining % (1000*60)) / 1000));
+    txt = String(hrs).padStart(2,'0')+':'+String(mins).padStart(2,'0')+':'+String(secs).padStart(2,'0');
+  }
+  if (el1) el1.textContent = txt;
+  if (el2) el2.textContent = txt;
+  if (btn1) {
+    btn1.disabled = !ready;
+    btn1.textContent = ready ? ('💰 COLLECT $'+p.daily.toFixed(2)) : '⏳ WAIT FOR TIMER';
+  }
+  if (btn2) {
+    btn2.disabled = !ready;
+    btn2.textContent = ready ? ('💰 COLLECT $'+p.daily.toFixed(2)+' NOW') : '⏳ WAIT FOR TIMER';
+  }
+}
+setInterval(updateTimers, 1000);
+
+// ===== SYNC FROM SUPABASE =====
+async function syncUserData() {
+  if (!sb || !S.user || !S.user.user_id) return;
+  try {
+    var u = await sb.from("users").select("*").eq("user_id", S.user.user_id).limit(1);
+    if (u.data && u.data.length > 0) {
+      var f = u.data[0];
+      S.user.balance = Number(f.balance||0);
+      S.user.referral_balance = Number(f.referral_balance||0);
+      S.user.invested = Number(f.invested||0);
+      S.user.earned = Number(f.earned||0);
+      S.user.active_plan = f.active_plan;
+      S.user.plan_name = f.plan_name;
+      S.user.plan_deposit = Number(f.plan_deposit||0);
+      S.user.plan_daily = Number(f.plan_daily||0);
+      S.user.plan_started = f.plan_started;
+      S.user.plan_expires = f.plan_expires;
+      S.user.days_collected = Number(f.days_collected||0);
+      S.user.is_banned = f.is_banned;
+      save();
+    }
+    var d = await sb.from("deposits").select("*").eq("user_id", S.user.user_id).order("id",{ascending:false});
+    var w = await sb.from("withdrawals").select("*").eq("user_id", S.user.user_id).order("id",{ascending:false});
+    S.transactions = [];
+    if (d.data) d.data.forEach(function(x){ S.transactions.push({ type:'deposit', amount:Number(x.amount), method:x.method, status:x.status, date:x.created_at, ref:x.ref }); });
+    if (w.data) w.data.forEach(function(x){ S.transactions.push({ type:'withdrawal', amount:Number(x.amount), method:'USDT', status:x.status, date:x.created_at }); });
+    S.transactions.sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
+    save();
+  } catch(e){ console.log('Sync error', e); }
+}
+
+// ===== SIGN IN =====
+function renderSignIn() {
+  return '<div class="min-h-screen px-5 py-10 flex flex-col" style="background: radial-gradient(circle at 50% 0%, rgba(0,255,102,0.08) 0%, transparent 55%), #050807;"><div class="text-center mb-8 mt-6"><h1 class="text-4xl font-black text-toxic text-3d tracking-widest">TOXIC</h1><p class="text-gray-500 text-xs mt-2 tracking-widest">CAPITAL CONTROL</p></div><div class="glass-card p-6"><p class="text-[10px] text-gray-500 font-bold mb-3">WELCOME BACK</p><h2 class="text-2xl font-bold mb-5">Sign in</h2><input id="signinUser" class="input-dark mb-3" placeholder="Username"><input id="signinPass" type="password" class="input-dark mb-5" placeholder="Password"><button onclick="doSignIn()" class="w-full btn-green py-4 rounded-2xl text-sm font-bold glow-green">Sign In</button><p class="text-center text-sm text-gray-500 pt-4">No account? <span onclick="goSignup()" class="text-toxic font-bold cursor-pointer">Create one</span></p></div></div>';
+}
+
+// ===== SIGNUP =====
+function renderSignup() {
+  var step = S.signupStep;
+  var stepsHtml = [1,2,3].map(function(n){
+    var cls = step > n ? 'step-done' : (step === n ? 'step-active' : 'step-inactive');
+    var label = n === 1 ? 'COUNTRY' : n === 2 ? 'PERSONAL' : 'CREDENTIALS';
+    return '<div class="flex flex-col items-center gap-2 relative z-10"><div class="step-circle '+cls+'">'+(step > n ? '✓' : n)+'</div><span class="text-[9px] font-bold tracking-wider '+(step >= n ? 'text-toxic' : 'text-gray-600')+'">'+label+'</span></div>';
+  }).join('');
+  return '<div class="min-h-screen flex flex-col" style="background: radial-gradient(circle at 50% 0%, rgba(0,255,102,0.08) 0%, transparent 55%), #050807;"><div class="relative w-full h-44 overflow-hidden"><img src="'+CONFIG.banner+'" class="w-full h-full object-cover opacity-70"><div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(5,8,7,0.3) 0%, rgba(5,8,7,0.98) 100%);"></div><div class="absolute bottom-4 left-5"><h1 class="text-3xl font-black text-toxic tracking-widest text-3d">TOXIC</h1></div></div><div class="px-5 pb-10"><div class="flex items-center justify-between mb-6 px-2 relative"><div class="absolute top-5 left-8 right-8 h-[2px] bg-white/5"></div>'+stepsHtml+'</div><div class="glass-card p-6">'+(step === 1 ? renderStep1() : step === 2 ? renderStep2() : renderStep3())+'</div></div></div>';
+}
+
+function renderStep1() {
+  var countries = ['India (+91)','Pakistan (+92)','Bangladesh (+880)','United States (+1)','United Kingdom (+44)','UAE (+971)','Saudi Arabia (+966)','Nigeria (+234)','Indonesia (+62)','Philippines (+63)','Vietnam (+84)','Nepal (+977)','Sri Lanka (+94)'];
+  var opts = countries.map(function(c){ return '<option '+(S.signupData.country===c?'selected':'')+'>'+c+'</option>'; }).join('');
+  return '<p class="text-[10px] text-gray-500 font-bold mb-2">STEP 1 / 3</p><h2 class="text-2xl font-bold mb-1">Choose your country</h2><p class="text-sm text-gray-500 mb-6">Select the country where you reside.</p><select id="countrySel" class="input-dark mb-6" onchange="saveCountry(this.value)"><option value="">Choose a country...</option>'+opts+'</select><button onclick="nextStep(2)" class="w-full btn-green py-4 rounded-2xl text-sm font-bold glow-green">Next →</button><p class="text-center text-xs text-gray-500 mt-4">Already have an account? <span onclick="goSignin()" class="text-yellow-400 font-bold cursor-pointer">Sign in</span></p>';
+}
+
+function renderStep2() {
+  return '<p class="text-[10px] text-gray-500 font-bold mb-2">STEP 2 / 3</p><h2 class="text-2xl font-bold mb-1">Personal Information</h2><p class="text-sm text-gray-500 mb-5">Tell us about yourself.</p><div class="grid grid-cols-2 gap-3 mb-3"><input class="input-dark" id="fn" placeholder="First Name" value="'+(S.signupData.firstName||'')+'"><input class="input-dark" id="ln" placeholder="Last Name" value="'+(S.signupData.lastName||'')+'"></div><input class="input-dark mb-3" id="em" type="email" placeholder="you@example.com" value="'+(S.signupData.email||'')+'"><input class="input-dark mb-6" id="ph" type="tel" placeholder="WhatsApp Number" value="'+(S.signupData.phone||'')+'"><div class="flex gap-3"><button onclick="nextStep(1)" class="flex-1 py-4 rounded-2xl font-bold text-sm" style="background:rgba(255,255,255,0.05);">← Back</button><button onclick="nextStep(3)" class="flex-1 btn-green py-4 rounded-2xl text-sm font-bold glow-green">Next →</button></div>';
+}
+
+function renderStep3() {
+  return '<p class="text-[10px] text-gray-500 font-bold mb-2">STEP 3 / 3</p><h2 class="text-2xl font-bold mb-1">Create your access</h2><p class="text-sm text-gray-500 mb-5">Set username and password.</p><input class="input-dark mb-3" id="un" placeholder="Username" value="'+(S.signupData.username||'')+'"><input class="input-dark mb-3" id="pw" type="password" placeholder="Password"><input class="input-dark mb-6" id="pw2" type="password" placeholder="Confirm Password"><div class="flex gap-3"><button onclick="nextStep(2)" class="py-4 px-6 rounded-2xl font-bold text-sm" style="background:rgba(255,255,255,0.05);">← Back</button><button onclick="finishSignup()" class="flex-1 btn-green py-4 rounded-2xl text-sm font-bold glow-green">Finish →</button></div>';
+}
+
+// ===== MAIN =====
+function renderMain() {
+  var u = S.user;
+  return '<div class="min-h-screen pb-28 relative max-w-md mx-auto"><header class="px-5 py-4 flex justify-between items-center sticky top-0 z-40" style="background: rgba(5,8,7,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0,255,102,0.06);"><h1 class="text-lg font-black text-toxic tracking-widest">TOXIC</h1><div class="flex items-center gap-2"><div class="glass px-3 py-1.5 rounded-full flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-toxic pulse-dot"></span><span class="text-[10px] font-bold text-toxic">LIVE</span></div><div onclick="openProfile()" class="w-9 h-9 rounded-full bg-toxic flex items-center justify-center text-black font-bold text-sm cursor-pointer active:scale-95 transition-transform">'+u.username[0].toUpperCase()+'</div></div></header><main class="px-4 pt-4 fade-in">'+renderTab()+'</main><a href="'+CONFIG.support+'" target="_blank" class="fixed bottom-28 right-4 w-14 h-14 rounded-full bg-toxic flex items-center justify-center text-black text-2xl glow-green-strong z-50">💬</a><nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto z-50" style="background: rgba(5,8,7,0.97); backdrop-filter: blur(20px); border-top: 1px solid rgba(0,255,102,0.08);"><div class="flex justify-around items-center py-2 px-1">'+navItem('dashboard','Dashboard','M3 5h7v7H3zM14 5h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z')+navItem('plans','INVEST','M3 17l6-6 4 4 8-8M21 7v6h-6')+navItem('active','Active plans','M3 7h18v14H3zM3 7l3-3h12l3 3M12 11v6M9 14h6')+navItem('wallet','Wallet','M21 12V7H5a2 2 0 010-4h14v4M3 5v14a2 2 0 002 2h16v-5M18 12a2 2 0 000 4h4v-4h-4z')+navItem('history','History','M12 8v4l3 3M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8M3 3v5h5')+'<div class="nav-item logout-item" onclick="doLogout()"><div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="nav-svg" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg></div><span class="text-[9px] font-semibold mt-0.5 tracking-wide">Logout</span></div></div></nav></div>';
+}
+
+function navItem(id, label, path) {
+  var active = S.tab === id;
+  return '<div class="nav-item '+(active?'active':'')+'" onclick="setTab(\''+id+'\')"><div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="nav-svg" stroke-linecap="round" stroke-linejoin="round"><path d="'+path+'"/></svg></div><span class="text-[9px] font-semibold mt-0.5 tracking-wide">'+label+'</span></div>';
+}
+
+function setTab(t){
+  S.tab = t; S.selectedPlan = null;
+  render(); window.scrollTo(0,0);
+  if (S.user && S.user.user_id) { syncUserData().then(function(){ render(); }); }
+}
+function renderTab() {
+  if(S.tab==='dashboard')return dashTab();
+  if(S.tab==='plans')return plansTab();
+  if(S.tab==='active')return activeTab();
+  if(S.tab==='wallet')return walletTab();
+  if(S.tab==='history')return historyTab();
+  if(S.tab==='team')return teamTab();
+  return '';
+}
+
+// ===== DASHBOARD =====
+function dashTab() {
+  var u = S.user;
+  var refLink = 'https://t.me/'+CONFIG.telegramBot+'?start='+u.referral_code;
+  var bars = [20,35,28,50,42,65,55,80,70,95].map(function(h,i){return '<div class="flex-1 rounded-t" style="height:'+h+'%; background: linear-gradient(180deg, #00FF66, rgba(0,255,102,0.2)); opacity: '+(0.4+i*0.06)+'"></div>';}).join('');
+
+  var activeHtml = '';
+  if (u.active_plan) {
+    var p = PLANS.find(function(x){return x.id === u.active_plan});
+    if (p) {
+      var daysDone = Number(u.days_collected)||0;
+      var pct = (daysDone / 40) * 100;
+      activeHtml = '<div class="active-plan-card mb-3">'
+        + '<div class="flex justify-between items-start mb-3 relative z-10">'
+        + '<div class="flex items-center gap-3"><div class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:'+p.color+'22; border:1px solid '+p.color+'55;">'+p.icon+'</div>'
+        + '<div><p class="font-black text-sm" style="color:'+p.color+'">'+p.name+'</p><p class="text-[10px] text-gray-400">Daily: $'+p.daily.toFixed(2)+'</p></div></div>'
+        + '<div class="text-right"><div class="flex items-center gap-1.5 justify-end"><span class="w-1.5 h-1.5 rounded-full bg-toxic pulse-dot"></span><span class="text-[9px] font-bold text-toxic">ACTIVE</span></div>'
+        + '<p class="text-[10px] text-gray-500 mt-1">$'+fmt(u.plan_deposit)+' invested</p></div></div>'
+        + '<div style="height:1px;background:rgba(255,255,255,0.06);margin:10px 0;position:relative;z-index:10"></div>'
+        + '<p class="text-[10px] text-gray-500 font-bold mb-2 tracking-wider relative z-10">⏳ NEXT COLLECT IN</p>'
+        + '<p id="dash-timer" class="mono text-3xl font-black text-white timer-glow mb-3 relative z-10">--:--:--</p>'
+        + '<div class="flex justify-between text-[10px] text-gray-500 mb-2 relative z-10"><span>Day '+daysDone+' / 40</span><span>$'+(daysDone * p.daily).toFixed(2)+' / $'+p.total.toFixed(2)+'</span></div>'
+        + '<div class="w-full h-1.5 rounded-full bg-white/5 overflow-hidden mb-4 relative z-10"><div class="h-full" style="width:'+pct+'%;background:linear-gradient(90deg,#00FF66,#10B981)"></div></div>'
+        + '<button id="dash-collect" onclick="collectDaily()" class="collect-btn w-full py-4 rounded-2xl text-sm relative z-10">⏳ WAIT FOR TIMER</button>'
+        + '</div>';
+    }
+  } else {
+    activeHtml = '<div class="glass-card mb-3 text-center py-6"><p class="text-3xl mb-2">📊</p><p class="font-black mb-1">No Active Plan</p><p class="text-xs text-gray-500 mb-4">Buy a plan from Invest tab to start earning</p><button onclick="setTab(\'plans\')" class="btn-green px-6 py-3 rounded-xl text-xs font-black">VIEW PLANS →</button></div>';
+  }
+
+  return '<div class="space-y-3.5">'
+    + '<div class="relative w-full h-44 rounded-3xl overflow-hidden" style="border:1px solid rgba(0,255,102,0.15);">'
+    + '<img src="'+CONFIG.banner+'" class="absolute inset-0 w-full h-full object-cover">'
+    + '<div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(5,8,7,0.95) 100%);"></div>'
+    + '<div class="absolute bottom-4 left-5"><p class="text-xs text-gray-400">Welcome back,</p><h2 class="text-2xl font-black text-white text-3d">'+u.username+'</h2></div>'
+    + '</div>'
+    + '<div class="glass-card card-gradient">'
+    + '<p class="text-[10px] text-toxic-dim font-bold mb-2">📈 EARNINGS BALANCE</p>'
+    + '<p class="text-4xl font-black mono text-white">$'+fmt(u.balance)+'</p>'
+    + '<div class="flex items-end gap-1.5 h-14 my-3 px-1">'+bars+'</div>'
+    + '<button onclick="setTab(\'wallet\')" class="btn-green w-full py-3 rounded-xl text-xs font-black">WITHDRAW EARNINGS ↗</button>'
+    + '</div>'
+    + '<div>'
+    + '<p class="text-[10px] text-gray-500 font-bold mb-2 tracking-widest">📊 ACTIVE PLAN</p>'
+    + activeHtml
+    + '</div>'
+    + '<div class="glass-card">'
+    + '<p class="text-[10px] text-gray-500 font-bold mb-3 tracking-widest">🔗 YOUR REFERRAL LINK</p>'
+    + '<div class="flex items-center gap-2"><input readonly value="'+refLink+'" class="flex-1 mono text-[10px] bg-black/50 border border-white/5 rounded-xl px-3 py-3 text-toxic-dim truncate"><button onclick="copyText(\''+refLink+'\')" class="btn-green px-4 py-3 rounded-xl text-[11px] font-black">📋</button></div>'
+    + '</div>'
+    + '</div>';
+}
+
+// ===== PLANS =====
+function plansTab() {
+  var cards = PLANS.map(function(p){
+    var roi = ((p.daily/p.deposit)*100).toFixed(1);
+    return '<div class="plan-card" onclick="openPlan(\''+p.id+'\')">'
+      + '<div class="flex justify-between items-start mb-2"><p class="text-[9px] text-gray-500 tracking-widest font-bold">PLAN</p>'
+      + '<div class="w-6 h-6 rounded-full flex items-center justify-center" style="background:'+p.color+'15; border:1px solid '+p.color+'40;"><span style="color:'+p.color+';font-size:10px">→</span></div></div>'
+      + '<p class="text-[10px] font-bold mb-1" style="color:'+p.color+'">'+p.icon+' '+p.name+'</p>'
+      + '<p class="mono text-2xl font-black text-white mb-1">$'+p.deposit+'.00</p>'
+      + '<p class="text-[9px] text-gray-600 tracking-wider mb-2">PLAN AMOUNT</p>'
+      + '<div class="flex items-center gap-1 mb-1.5"><span class="text-toxic text-[10px]">💰</span><p class="mono text-[11px] font-bold text-toxic">$'+p.daily.toFixed(2)+' / daily</p></div>'
+      + '<div class="flex items-center gap-1 mb-2"><span class="text-[10px]">📊</span><p class="text-[10px] text-gray-400">'+roi+'% ROI / day</p></div>'
+      + '<div class="rounded-lg py-1.5 text-center mb-2" style="background:'+p.color+'10;border:1px solid '+p.color+'25;"><p class="text-[9px] text-gray-500">40-Day Total</p><p class="mono text-sm font-black" style="color:'+p.color+'">$'+p.total.toFixed(2)+'</p></div>'
+      + '<button onclick="event.stopPropagation();quickInvest(\''+p.id+'\')" class="w-full py-2 rounded-lg text-[11px] font-black" style="background:linear-gradient(135deg,'+p.color+'dd,'+p.color+'aa);color:#000;">⚡ INVEST NOW</button>'
+      + '</div>';
+  }).join('');
+  return '<div class="space-y-4">'
+    + '<div class="glass-card"><p class="text-[10px] text-toxic-dim font-bold mb-2">📈 INVESTMENT</p><h2 class="text-3xl font-black mb-2">Choose your plan</h2><p class="text-xs text-gray-500">40-day fixed cycle. Daily returns.</p>'
+    + '<div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between"><p class="text-[10px] text-gray-500">Available Balance</p><p class="mono text-lg font-black text-toxic">$'+fmt(S.user.balance)+'</p></div></div>'
+    + '<div class="grid grid-cols-2 gap-3">'+cards+'</div></div>';
+}
+
+function openPlan(id) { S.selectedPlan = PLANS.find(function(p){return p.id===id}); render(); document.body.style.overflow='hidden'; }
+function closePlan() { S.selectedPlan = null; render(); document.body.style.overflow=''; }
+
+function renderPlanModal() {
+  if (!S.selectedPlan) return '';
+  var p = S.selectedPlan;
+  var roi = ((p.daily/p.deposit)*100).toFixed(2);
+  var canAfford = S.user.balance >= p.deposit;
+  var btn = canAfford
+    ? '<button onclick="closePlan();invest(\''+p.id+'\')" class="w-full btn-green py-4 rounded-2xl text-sm font-black glow-green mb-3">⚡ INVEST NOW — $'+p.deposit.toFixed(2)+'</button>'
+    : '<button onclick="closePlan();setTab(\'wallet\')" class="w-full py-4 rounded-2xl text-sm font-black mb-3" style="background:linear-gradient(135deg, #FBBF24, #F59E0B); color:#000;">💰 ADD FUNDS TO INVEST</button>';
+  return '<div class="fixed inset-0 z-50 flex items-center justify-center p-4" style="background:rgba(0,0,0,0.88); backdrop-filter: blur(10px);" onclick="closePlan()">'
+    + '<div class="glass-card w-full max-w-md modal-anim" onclick="event.stopPropagation()" style="border-color:'+p.color+'55; max-height:90vh; overflow-y:auto;">'
+    + '<div class="flex justify-between items-center mb-4"><span class="text-[10px] text-gray-500 font-bold tracking-widest">PLAN DETAILS</span><button onclick="closePlan()" class="w-8 h-8 rounded-full glass flex items-center justify-center text-gray-400 text-xl">×</button></div>'
+    + '<div class="text-center mb-5"><div class="w-24 h-24 rounded-3xl mx-auto mb-3 flex items-center justify-center" style="background:'+p.color+'22; border:1.5px solid '+p.color+'66; box-shadow:0 0 40px '+p.color+'33;"><span class="text-5xl">'+p.icon+'</span></div><h2 class="text-3xl font-black" style="color:'+p.color+';text-shadow:0 0 20px '+p.color+'88;">'+p.name+'</h2></div>'
+    + '<div class="rounded-2xl p-4 mb-4 text-center" style="background:linear-gradient(135deg, '+p.color+'20, transparent); border:1px solid '+p.color+'44;">'
+    + '<p class="text-[10px] text-gray-500 mb-1 tracking-widest">TOTAL RETURN (40 DAYS)</p>'
+    + '<p class="mono text-4xl font-black text-white">$'+p.total.toFixed(2)+'</p>'
+    + '<p class="text-[10px] text-toxic mt-1">'+roi+'% ROI per day</p></div>'
+    + '<div class="space-y-2 mb-5">'
+    + '<div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.4);"><span class="text-xs text-gray-500">💰 Deposit</span><span class="mono font-black text-white text-sm">$'+p.deposit.toFixed(2)+'</span></div>'
+    + '<div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.4);"><span class="text-xs text-gray-500">📈 Daily Return</span><span class="mono font-black text-toxic text-sm">$'+p.daily.toFixed(2)+'</span></div>'
+    + '<div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.4);"><span class="text-xs text-gray-500">⚡ Duration</span><span class="mono font-black text-white text-sm">40 Days</span></div>'
+    + '<div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.4);"><span class="text-xs text-gray-500">🏦 Your Balance</span><span class="mono font-black '+(canAfford?'text-toxic':'text-yellow-400')+' text-sm">$'+fmt(S.user.balance)+'</span></div></div>'
+    + btn
+    + '<button onclick="closePlan()" class="w-full py-3 rounded-2xl text-xs font-bold" style="background:rgba(255,255,255,0.05); color:#9CA3AF;">Cancel</button>'
+    + '</div></div>';
+}
+
+function quickInvest(id) {
+  var p = PLANS.find(function(x){return x.id===id});
+  if (!p) return;
+  if (S.user.active_plan) return alert('⚠️ You already have an active plan!\n\nWait for it to complete.');
+  if (S.user.balance < p.deposit) {
+    if (confirm('💰 Insufficient balance!\n\nYou need $'+p.deposit.toFixed(2)+' but have $'+fmt(S.user.balance)+'.\n\nGo to Wallet to add funds?')) { setTab('wallet'); }
+    return;
+  }
+  invest(id);
+}
+
+// ===== ACTIVE =====
+function activeTab() {
+  var u = S.user;
+  if (!u.active_plan) return '<div class="glass-card text-center py-10"><div class="text-5xl mb-3 opacity-40">📦</div><p class="text-lg font-black mb-2">No Active Plans</p><p class="text-xs text-gray-500 mb-5">Choose a plan to start earning daily profits</p><button onclick="setTab(\'plans\')" class="btn-green px-8 py-3.5 rounded-xl text-sm font-black">+ BROWSE PLANS</button></div>';
+  var p = PLANS.find(function(x){return x.id === u.active_plan});
+  if (!p) return '<div class="glass-card text-center py-10"><p class="text-sm text-gray-500">Plan data unavailable</p></div>';
+  var daysDone = Number(u.days_collected)||0;
+  var pct = (daysDone/40)*100;
+  var totalEarned = daysDone * p.daily;
+  var remainingDays = 40 - daysDone;
+  return '<div class="space-y-4">'
+    + '<div class="glass-card" style="border-color:'+p.color+'33">'
+    + '<div class="flex items-center gap-3 mb-4"><div class="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl" style="background:'+p.color+'22;border:1px solid '+p.color+'55;">'+p.icon+'</div>'
+    + '<div class="flex-1"><p class="font-black text-lg" style="color:'+p.color+'">'+p.name+'</p><p class="text-[10px] text-gray-500">Active Plan · 40 Days</p></div>'
+    + '<span class="text-[9px] px-2.5 py-1 rounded-full bg-toxic/20 text-toxic font-bold">LIVE</span></div>'
+    + '<div style="height:1px;background:rgba(255,255,255,0.06);margin:10px 0"></div>'
+    + '<div class="grid grid-cols-2 gap-3 mb-4">'
+    + '<div class="rounded-xl p-3" style="background:rgba(0,0,0,0.4);"><p class="text-[9px] text-gray-500 mb-1">INVESTED</p><p class="mono text-base font-black text-white">$'+fmt(u.plan_deposit)+'</p></div>'
+    + '<div class="rounded-xl p-3" style="background:rgba(0,0,0,0.4);"><p class="text-[9px] text-gray-500 mb-1">EARNED</p><p class="mono text-base font-black text-toxic">$'+totalEarned.toFixed(2)+'</p></div>'
+    + '<div class="rounded-xl p-3" style="background:rgba(0,0,0,0.4);"><p class="text-[9px] text-gray-500 mb-1">DAILY</p><p class="mono text-base font-black text-toxic">$'+p.daily.toFixed(2)+'</p></div>'
+    + '<div class="rounded-xl p-3" style="background:rgba(0,0,0,0.4);"><p class="text-[9px] text-gray-500 mb-1">TOTAL TARGET</p><p class="mono text-base font-black text-white">$'+p.total.toFixed(2)+'</p></div>'
+    + '</div>'
+    + '<div class="rounded-2xl p-4 mb-4 text-center" style="background:linear-gradient(135deg, '+p.color+'15, transparent);border:1px solid '+p.color+'33;">'
+    + '<p class="text-[10px] text-gray-500 font-bold mb-2 tracking-widest">⏳ NEXT COLLECT IN</p>'
+    + '<p id="active-timer" class="mono text-3xl font-black text-white timer-glow mb-4">--:--:--</p>'
+    + '<button id="active-collect" onclick="collectDaily()" class="collect-btn w-full py-4 rounded-2xl text-sm">⏳ WAIT FOR TIMER</button></div>'
+    + '<div class="flex justify-between text-[10px] text-gray-500 mb-2"><span>Progress: Day '+daysDone+' / 40</span><span>'+remainingDays+' days left</span></div>'
+    + '<div class="w-full h-2 rounded-full bg-white/5 overflow-hidden"><div class="h-full" style="width:'+pct+'%;background:linear-gradient(90deg,#00FF66,#10B981);box-shadow:0 0 10px rgba(0,255,102,0.5)"></div></div>'
+    + '</div></div>';
+}
+
+// ===== WALLET =====
+function walletTab() {
+  var upiQr = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent('upi://pay?pa='+CONFIG.upi+'&pn='+CONFIG.upiName+'&cu=INR');
+  var methods = ['UPI','USDT BEP20','USDT TRC20','BTC BEP20'].map(function(m,i){
+    return '<button onclick="selMethod('+i+')" id="m-'+i+'" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap '+(i===0?'bg-toxic text-black':'bg-white/5 text-gray-400')+'">'+m+'</button>';
+  }).join('');
+  return '<div class="space-y-4">'
+    + '<div class="glass-card"><p class="text-[10px] text-toxic-dim font-bold mb-3 tracking-widest">💳 DEPOSIT FUNDS</p>'
+    + '<div class="flex gap-2 overflow-x-auto hide-scroll pb-2 mb-4">'+methods+'</div>'
+    + '<div class="rounded-2xl p-4 mb-4 text-center" style="background:rgba(0,0,0,0.4); border:1px dashed rgba(0,255,102,0.2);">'
+    + '<p class="text-[10px] text-gray-500 mb-2 tracking-widest">SEND TO</p>'
+    + '<p id="payAddr" class="mono text-xs text-toxic break-all mb-3">'+CONFIG.upi+'</p>'
+    + '<div class="flex justify-center"><div class="bg-white p-2 rounded-2xl"><img id="qrImg" src="'+upiQr+'" class="w-36 h-36"></div></div></div>'
+    + '<input type="number" id="depAmt" class="input-dark mb-3" placeholder="Amount">'
+    + '<div id="utrWrap"><input type="text" id="depUtr" maxlength="12" class="input-dark mb-3" placeholder="12-Digit UTR"></div>'
+    + '<div id="txWrap" style="display:none;"><input type="text" id="depTx" class="input-dark mb-3" placeholder="TxHash"></div>'
+    + '<button onclick="submitDeposit()" id="depBtn" class="btn-green w-full py-4 rounded-2xl text-sm font-black">Submit UTR</button></div>'
+    + '<div class="glass-card"><p class="text-[10px] text-toxic-dim font-bold mb-3 tracking-widest">💸 WITHDRAW FUNDS</p>'
+    + '<input type="number" id="wdAmt" class="input-dark mb-3" placeholder="Min $'+CONFIG.minWithdraw+'">'
+    + '<input type="text" id="wdAddr" class="input-dark mb-3" placeholder="USDT Address">'
+    + '<p class="text-[10px] text-gray-500 mb-3">Min $'+CONFIG.minWithdraw+' · 5% fee</p>'
+    + '<button onclick="submitWithdraw()" class="w-full py-4 rounded-2xl text-sm font-black" style="background:rgba(255,255,255,0.05);">Request Withdrawal</button></div></div>';
+}
+
+var selM = 0;
+function selMethod(i) {
+  selM = i;
+  var els = document.querySelectorAll('[id^="m-"]');
+  for(var x=0;x<els.length;x++){ els[x].className = 'px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap '+(x===i?'bg-toxic text-black':'bg-white/5 text-gray-400'); }
+  var addrs = [CONFIG.upi, CONFIG.usdtBep20, CONFIG.usdtTrc20, CONFIG.btcBep20];
+  $('payAddr').innerText = addrs[i];
+  var data = i === 0 ? encodeURIComponent('upi://pay?pa='+CONFIG.upi+'&pn='+CONFIG.upiName+'&cu=INR') : addrs[i];
+  $('qrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+data;
+  if (i === 0) { $('utrWrap').style.display='block'; $('txWrap').style.display='none'; $('depBtn').innerText='Submit UTR'; }
+  else { $('utrWrap').style.display='none'; $('txWrap').style.display='block'; $('depBtn').innerText='Submit TxHash'; }
+}
+
+// ===== HISTORY =====
+function historyTab() {
+  var tx = S.transactions;
+  var h = '<div class="glass-card text-center mb-3"><p class="text-[10px] text-gray-500 mb-2 tracking-widest">TOTAL TRANSACTIONS</p><p class="text-4xl font-black text-white">'+tx.length+'</p></div>';
+  if (tx.length === 0) return h + '<div class="glass-card text-center py-12"><div class="text-4xl mb-3 opacity-40">📋</div><p class="text-lg font-black mb-2">No transactions yet</p><p class="text-xs text-gray-500">Your activity will appear here</p></div>';
+  return h + tx.map(function(t){
+    var col = t.type === 'deposit' ? 'text-toxic' : 'text-red-400';
+    var sign = t.type === 'deposit' ? '+' : '-';
+    var badge = t.status === 'pending' ? 'bg-yellow-400/10 text-yellow-400' : (t.status === 'approved' ? 'bg-toxic/20 text-toxic' : 'bg-red-500/20 text-red-400');
+    var label = t.type === 'daily_collect' ? 'Daily Reward' : t.type;
+    var sign2 = t.type === 'daily_collect' ? '+' : sign;
+    var col2 = t.type === 'daily_collect' ? 'text-toxic' : col;
+    return '<div class="glass-card flex justify-between items-center mb-2"><div><p class="font-bold text-sm capitalize">'+label+'</p><p class="text-[10px] text-gray-500">'+t.method+'</p></div><div class="text-right"><p class="mono font-black '+col2+'">'+sign2+'$'+fmt(t.amount)+'</p><span class="text-[9px] px-2 py-1 rounded-full '+badge+'">'+t.status+'</span></div></div>';
+  }).join('');
+}
+
+// ===== TEAM =====
+function teamTab() {
+  var u = S.user;
+  var refLink = 'https://t.me/'+CONFIG.telegramBot+'?start='+u.referral_code;
+  return '<div class="space-y-4">'
+    + '<div class="glass-card"><p class="text-[10px] text-toxic-dim font-bold mb-2 tracking-widest">👥 YOUR NETWORK</p><h2 class="text-2xl font-black leading-tight mb-2">Build your network<br>and <span class="text-toxic">grow together.</span></h2><p class="text-xs text-gray-500">Earn up to 10 levels of commission</p></div>'
+    + '<button onclick="copyText(\''+refLink+'\')" class="w-full py-4 rounded-2xl flex items-center justify-center gap-3 btn-green glow-green"><span class="text-2xl">🔗</span><div class="text-left"><p class="font-black text-sm">INVITE FRIENDS</p><p class="text-[10px] opacity-70">Share your link</p></div></button>'
+    + '<div class="glass-card"><p class="text-[10px] text-gray-500 font-bold mb-3 tracking-widest">💎 COMMISSION LEVELS</p>'
+    + '<div class="grid grid-cols-3 gap-2 text-center text-[10px]">'
+    + '<div class="rounded-lg p-2" style="background:rgba(0,255,102,0.06);"><p class="text-gray-500">L1</p><p class="text-toxic font-black mt-1">10%</p></div>'
+    + '<div class="rounded-lg p-2" style="background:rgba(0,255,102,0.06);"><p class="text-gray-500">L2</p><p class="text-toxic font-black mt-1">5%</p></div>'
+    + '<div class="rounded-lg p-2" style="background:rgba(0,255,102,0.06);"><p class="text-gray-500">L3</p><p class="text-toxic font-black mt-1">2%</p></div>'
+    + '<div class="rounded-lg p-2" style="background:rgba(255,255,255,0.03);"><p class="text-gray-500">L4-L10</p><p class="text-gray-400 font-black mt-1">1%</p></div>'
+    + '</div></div></div>';
+}
+
+// ===== PROFILE MODAL =====
+function openProfile() { S.showProfile = true; render(); document.body.style.overflow = 'hidden'; }
+function closeProfile() { S.showProfile = false; render(); document.body.style.overflow = ''; }
+
+function renderProfileModal() {
+  if (!S.showProfile || !S.user) return '';
+  var u = S.user;
+  return '<div class="fixed inset-0 z-50 flex items-center justify-center p-4" style="background:rgba(0,0,0,0.9); backdrop-filter: blur(10px);" onclick="closeProfile()">'
+    + '<div class="glass-card w-full max-w-md modal-anim" onclick="event.stopPropagation()" style="max-height:90vh; overflow-y:auto;">'
+    + '<div class="flex justify-between items-center mb-5"><span class="text-[10px] text-gray-500 font-bold tracking-widest">MY PROFILE</span><button onclick="closeProfile()" class="w-8 h-8 rounded-full glass flex items-center justify-center text-gray-400 text-xl">×</button></div>'
+    + '<div class="text-center mb-6"><div class="w-20 h-20 rounded-full bg-toxic flex items-center justify-center text-black font-black text-3xl mx-auto mb-3 glow-green">'+u.username[0].toUpperCase()+'</div>'
+    + '<h2 class="text-2xl font-black text-white">'+u.username+'</h2><p class="text-[10px] text-gray-500 mt-1">ID: '+u.user_id+'</p></div>'
+    + '<div class="space-y-2 mb-4">'
+    + '<div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.4);"><span class="text-xs text-gray-500">📧 Email</span><span class="text-xs text-white font-medium">'+(u.email||'—')+'</span></div>'
+    + '<div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.4);"><span class="text-xs text-gray-500">📱 Phone</span><span class="text-xs text-white font-medium">'+(u.phone||'—')+'</span></div>'
+    + '<div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.4);"><span class="text-xs text-gray-500">🎫 Referral</span><span class="text-xs text-toxic font-mono font-bold">'+(u.referral_code||'—')+'</span></div>'
+    + '<div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.4);"><span class="text-xs text-gray-500">💰 Balance</span><span class="text-xs text-toxic font-mono font-bold">$'+fmt(u.balance)+'</span></div>'
+    + '<div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.4);"><span class="text-xs text-gray-500">📅 Joined</span><span class="text-xs text-white font-medium">'+(u.joined_at?String(u.joined_at).slice(0,10):'—')+'</span></div>'
+    + '</div>'
+    + '<div class="divider" style="height:1px;background:rgba(255,255,255,0.06);margin:16px 0"></div>'
+    + '<p class="text-[10px] text-gray-500 font-bold mb-3 tracking-widest">🔐 CHANGE PASSWORD</p>'
+    + '<input type="password" id="oldPw" class="input-dark mb-3" placeholder="Current Password">'
+    + '<input type="password" id="newPw" class="input-dark mb-3" placeholder="New Password (min 4 chars)">'
+    + '<input type="password" id="newPw2" class="input-dark mb-4" placeholder="Confirm New Password">'
+    + '<button onclick="changePassword()" class="btn-green w-full py-3 rounded-2xl text-sm font-black mb-3">UPDATE PASSWORD</button>'
+    + '<button onclick="closeProfile();doLogout()" class="w-full py-3 rounded-2xl text-xs font-bold" style="background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3); color:#EF4444;">🚪 Logout</button>'
+    + '</div></div>';
+}
+
+function changePassword() {
+  var oldPw = $('oldPw').value;
+  var newPw = $('newPw').value;
+  var newPw2 = $('newPw2').value;
+  if (!oldPw || !newPw || !newPw2) return alert('Fill all fields');
+  if (newPw.length < 4) return alert('New password must be 4+ characters');
+  if (newPw !== newPw2) return alert('Passwords do not match');
+
+  var stored = localStorage.getItem('toxic_pwd_' + S.user.user_id);
+  if (stored && stored !== oldPw) return alert('❌ Current password is incorrect');
+  if (!stored && oldPw.length < 4) return alert('❌ Current password incorrect');
+
+  localStorage.setItem('toxic_pwd_' + S.user.user_id, newPw);
+  $('oldPw').value = ''; $('newPw').value = ''; $('newPw2').value = '';
+  alert('✅ Password updated successfully!');
+}
+
+// ===== ACTIONS =====
+function goSignup(){ S.tab='signup'; S.signupStep=1; render(); }
+function goSignin(){ S.tab='signin'; render(); }
+function saveCountry(v){ S.signupData.country = v; }
+
+function nextStep(n) {
+  if (n === 2) {
+    if (!S.signupData.country && $('countrySel')) S.signupData.country = $('countrySel').value;
+    if (!S.signupData.country) return alert('Please select a country');
+  }
+  if (n === 3) {
+    S.signupData.firstName = $('fn').value;
+    S.signupData.lastName = $('ln').value;
+    S.signupData.email = $('em').value;
+    S.signupData.phone = $('ph').value;
+    if (!S.signupData.firstName || !S.signupData.email) return alert('Fill Name and Email');
+  }
+  S.signupStep = n;
+  render();
+}
+
+async function finishSignup() {
+  var un = $('un').value.trim();
+  var pw = $('pw').value;
+  var pw2 = $('pw2').value;
+  if (!un || un.length < 3) return alert('Username 3+ chars');
+  if (!pw || pw.length < 4) return alert('Password 4+ chars');
+  if (pw !== pw2) return alert('Passwords do not match');
+
+  var userId = 'TG' + Date.now();
+  var refCode = 'TOXIC' + Math.floor(1000 + Math.random()*9000);
+
+  S.user = {
+    user_id: userId, username: un, email: S.signupData.email || '', phone: S.signupData.phone || '',
+    balance: 0, referral_balance: 0, invested: 0, activated: 0, earned: 0, ceiling: 0,
+    active_plan: null, plan_name: null, plan_deposit: 0, plan_daily: 0,
+    plan_started: null, plan_expires: null, days_collected: 0,
+    referral_code: refCode, referred_by: null, is_banned: false,
+    joined_at: new Date().toISOString(), active_plans: []
+  };
+
+  localStorage.setItem('toxic_pwd_' + userId, pw);
+
+  if (sb) {
+    try {
+      await sb.from("users").insert([{
+        user_id: userId, username: un, email: S.signupData.email || '', phone: S.signupData.phone || '',
+        balance: 0, referral_balance: 0, invested: 0, referral_code: refCode, is_banned: false
+      }]);
+    } catch(e){ console.log('Insert error', e); }
+  }
+
+  S.tab = 'dashboard';
+  save(); render();
+  alert('✅ Welcome to TOXIC!\n\nAccount created successfully.');
+}
+
+async function doSignIn() {
+  var u = $('signinUser').value.trim();
+  var p = $('signinPass').value;
+  if (!u || !p) return alert('Enter username and password');
+
+  var existing = JSON.parse(localStorage.getItem('toxic_user') || 'null');
+  if (existing && existing.username === u) {
+    var stored = localStorage.getItem('toxic_pwd_' + existing.user_id);
+    if (stored && stored !== p) return alert('❌ Incorrect password');
+    S.user = existing;
+    if (!S.user.active_plans) S.user.active_plans = [];
+    S.tab = 'dashboard';
+    save();
+    await syncUserData();
+    render();
+    return;
+  }
+
+  if (sb) {
+    try {
+      var result = await sb.from("users").select("*").eq("username", u).limit(1);
+      if (result.data && result.data.length > 0) {
+        S.user = result.data[0];
+        if (!S.user.active_plans) S.user.active_plans = [];
+        S.tab = 'dashboard';
+        save();
+        await syncUserData();
+        render();
+        return;
+      }
+    } catch(e){ console.log('Login error', e); }
+  }
+  alert('⚠️ User not found. Please sign up first.');
+}
+
+function doLogout() {
+  if (!confirm('Logout from TOXIC?')) return;
+  localStorage.removeItem('toxic_user');
+  S.user = null; S.showProfile = false; S.tab = 'signin'; render();
+}
+
+async function invest(id) {
+  var p = PLANS.find(function(x){return x.id===id});
+  if (!p) return;
+  if (S.user.active_plan) return alert('⚠️ You already have an active plan!');
+  if (S.user.balance < p.deposit) return alert('💰 Insufficient balance.\n\nPlease add funds first.');
+
+  var now = new Date();
+  var expires = new Date(now.getTime() + 40*24*60*60*1000);
+
+  S.user.balance = Number(S.user.balance) - p.deposit;
+  S.user.invested = Number(S.user.invested||0) + p.deposit;
+  S.user.active_plan = p.id;
+  S.user.plan_name = p.name;
+  S.user.plan_deposit = p.deposit;
+  S.user.plan_daily = p.daily;
+  S.user.plan_started = now.toISOString();
+  S.user.plan_expires = expires.toISOString();
+  S.user.days_collected = 0;
+  if (!S.user.active_plans) S.user.active_plans = [];
+  S.user.active_plans.push({ id:p.id, plan_name:p.name, daily:p.daily, total:p.total, color:p.color, icon:p.icon, days_collected:0, started_at: now.toISOString() });
+
+  if (sb) {
+    try {
+      await sb.from("users").update({
+        balance: S.user.balance, invested: S.user.invested,
+        active_plan: p.id, plan_name: p.name, plan_deposit: p.deposit, plan_daily: p.daily,
+        plan_started: S.user.plan_started, plan_expires: S.user.plan_expires, days_collected: 0
+      }).eq("user_id", S.user.user_id);
+    } catch(e){ console.log(e); }
+  }
+
+  save(); render();
+  alert('🎉 INVESTMENT SUCCESSFUL!\n\nPlan: '+p.name+'\nInvested: $'+p.deposit.toFixed(2)+'\nDaily: $'+p.daily.toFixed(2)+'\n\n⏰ First collect in 24 hours!');
+}
+
+async function collectDaily() {
+  if (!S.user.active_plan) return alert('No active plan');
+  var p = PLANS.find(function(x){return x.id === S.user.active_plan});
+  if (!p) return;
+
+  var started = new Date(S.user.plan_started).getTime();
+  var nextCollect = started + ((Number(S.user.days_collected)||0) + 1) * 24 * 60 * 60 * 1000;
+  if (Date.now() < nextCollect) return alert('⏳ Not ready yet. Wait for the timer.');
+  if ((Number(S.user.days_collected)||0) >= 40) return alert('Plan completed!');
+
+  var reward = p.daily;
+  S.user.balance = Number(S.user.balance||0) + reward;
+  S.user.earned = Number(S.user.earned||0) + reward;
+  S.user.days_collected = (Number(S.user.days_collected)||0) + 1;
+
+  S.transactions.unshift({ type:'daily_collect', amount: reward, status:'approved', method: p.name, date: new Date().toISOString() });
+
+  var completed = S.user.days_collected >= 40;
+  if (completed) {
+    S.user.active_plan = null;
+    S.user.plan_started = null;
+    S.user.days_collected = 0;
+    S.user.active_plans = [];
+  }
+
+  if (sb) {
+    try {
+      await sb.from("users").update({
+        balance: S.user.balance, earned: S.user.earned,
+        days_collected: S.user.days_collected, active_plan: S.user.active_plan
+      }).eq("user_id", S.user.user_id);
+    } catch(e){ console.log(e); }
+  }
+
+  save(); render();
+  if (completed) alert('🎉 PLAN COMPLETED!\n\nYou collected: $'+reward.toFixed(2)+'\n\nTotal earned: $'+p.total.toFixed(2));
+  else alert('💰 COLLECTED $'+reward.toFixed(2)+'!\n\nDay '+S.user.days_collected+' / 40');
+}
+
+async function submitDeposit() {
+  var amt = parseFloat($('depAmt').value);
+  var isCrypto = selM !== 0;
+  var utr = $('depUtr') ? $('depUtr').value.trim() : '';
+  var tx = $('depTx') ? $('depTx').value.trim() : '';
+  var ref = isCrypto ? tx : utr;
+  if (!amt || amt < CONFIG.minDeposit) return alert('Min deposit $'+CONFIG.minDeposit);
+  if (isCrypto && !ref) return alert('Enter TxHash');
+  if (!isCrypto && utr.length !== 12) return alert('Enter valid 12-digit UTR');
+  var method = ['UPI','USDT BEP20','USDT TRC20','BTC BEP20'][selM];
+
+  S.transactions.unshift({ type:'deposit', amount:amt, ref:ref, status:'pending', method:method, date: new Date().toISOString() });
+
+  if (sb) {
+    try {
+      await sb.from("deposits").insert([{ user_id: S.user.user_id, username: S.user.username, amount: amt, method: method, ref: ref, status: 'pending' }]);
+    } catch(e){ console.log(e); }
+  }
+
+  save();
+  $('depAmt').value='';
+  if ($('depUtr')) $('depUtr').value='';
+  if ($('depTx')) $('depTx').value='';
+  alert('✅ Deposit submitted!\n\nAdmin will verify within 24 hours.');
+}
+
+async function submitWithdraw() {
+  var amt = parseFloat($('wdAmt').value);
+  var addr = $('wdAddr').value.trim();
+  if (!amt || amt < CONFIG.minWithdraw) return alert('Min withdrawal $'+CONFIG.minWithdraw);
+  if (!addr) return alert('Enter USDT address');
+  if (S.user.balance < amt) return alert('Insufficient balance');
+  var fee = amt * CONFIG.withdrawFee;
+  S.user.balance -= amt;
+
+  S.transactions.unshift({ type:'withdrawal', amount:amt-fee, status:'pending', method:'USDT', date: new Date().toISOString() });
+
+  if (sb) {
+    try {
+      await sb.from("withdrawals").insert([{ user_id: S.user.user_id, username: S.user.username, amount: amt - fee, address: addr, status: 'pending' }]);
+      await sb.from("users").update({balance: S.user.balance}).eq("user_id", S.user.user_id);
+    } catch(e){ console.log(e); }
+  }
+
+  save(); render();
+  alert('✅ Withdrawal requested!\n\nAmount: $'+fmt(amt-fee)+'\n(5% fee: $'+fmt(fee)+')');
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(function(){alert('✅ Copied!')}).catch(function(){
+    var el = document.createElement('textarea'); el.value = text; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); alert('✅ Copied!');
+  });
+}
+
+// ===== INIT =====
+try { if (window.Telegram && window.Telegram.WebApp) { window.Telegram.WebApp.ready(); window.Telegram.WebApp.expand(); } } catch(e){}
+
+if (!S.user) S.tab = 'signup';
+
+(async function init(){
+  if (S.user && S.user.user_id) { await syncUserData(); }
+  render();
+  updateTimers();
+})();
+
+// Auto-sync every 30s
+setInterval(async function(){
+  if (S.user && S.user.user_id) {
+    await syncUserData();
+    if (S.tab === 'history') render();
+  }
+}, 30000);
+</script>
+</body>
+</html>
