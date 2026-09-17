@@ -1,1 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>TOXIC</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+body{background:#050907;background-image:radial-gradient(ellipse at top,rgba(0,255,102,0.08),transparent 50%),radial-gradient(ellipse at bottom right,rgba(16,185,129,0.05),transparent 50%);background-attachment:fixed;color:#fff;font-family:Inter,sans-serif;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.mono{font-family:'JetBrains Mono',monospace;font-feature-settings:'tnum'}
+.glass{background:rgba(11,18,15,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(0,255,102,0.08)}
+.glass-card{background:linear-gradient(145deg,rgba(13,24,18,0.98),rgba(7,13,10,0.99));border:1px solid rgba(0,255,102,0.1);border-radius:20px;padding:20px;box-shadow:0 24px 48px -24px rgba(0,0,0,0.9),inset 0 1px 0 rgba(0,255,102,0.05);position:relative;overflow:hidden}
+.text-3d{text-shadow:0 2px 0 rgba(0,255,102,0.4),0 0 30px rgba(0,255,102,0.5)}
+.text-toxic{color:#00FF66}
+.bg-toxic{background:#00FF66}
+.glow{box-shadow:0 0 30px rgba(0,255,102,0.35)}
+.glow-strong{box-shadow:0 0 60px rgba(0,255,102,0.55)}
+.btn-green{background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-weight:800;letter-spacing:0.3px;transition:all 0.15s;position:relative;overflow:hidden}
+.btn-green:active{transform:scale(0.97)}
+.card-gradient{background:linear-gradient(160deg,rgba(0,255,102,0.14),rgba(9,14,11,0.99) 65%)}
+.inp{background:rgba(0,0,0,0.55);border:1.5px solid rgba(0,255,102,0.12);border-radius:14px;padding:14px 16px;color:#fff;outline:none;width:100%;font-size:15px;font-family:inherit;transition:all 0.2s}
+.inp:focus{border-color:rgba(0,255,102,0.6);box-shadow:0 0 0 4px rgba(0,255,102,0.08)}
+.inp::placeholder{color:#4B5563}
+.nav{position:fixed;bottom:0;left:0;right:0;max-width:448px;margin:0 auto;z-index:50;background:rgba(5,9,7,0.98);backdrop-filter:blur(30px);border-top:1px solid rgba(0,255,102,0.1);padding:8px 4px calc(8px + env(safe-area-inset-bottom))}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px;border-radius:14px;cursor:pointer;color:#6B7280;transition:all 0.2s;position:relative}
+.nav-item.active{color:#00FF66}
+.nav-item.active::before{content:'';position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:28px;height:3px;background:#00FF66;border-radius:0 0 3px 3px;box-shadow:0 0 12px #00FF66}
+.plan-card{background:linear-gradient(160deg,rgba(0,0,0,0.75),rgba(9,18,14,0.98));border:1.5px solid rgba(0,255,102,0.12);border-radius:20px;padding:16px;position:relative;overflow:hidden;cursor:pointer;transition:all 0.25s}
+.plan-card:active{transform:scale(0.97)}
+.plan-card.locked{opacity:0.65;cursor:default}
+.plan-card.locked::after{content:'✓ ACTIVE';position:absolute;top:12px;right:12px;background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-size:9px;font-weight:900;padding:5px 10px;border-radius:20px;box-shadow:0 0 20px rgba(0,255,102,0.7);z-index:10;letter-spacing:0.5px}
+.plan-active{background:linear-gradient(145deg,rgba(0,255,102,0.16),rgba(7,14,10,0.99) 75%);border:1.5px solid rgba(0,255,102,0.45);border-radius:22px;padding:20px;position:relative;overflow:hidden}
+.plan-active::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(0,255,102,0.25),transparent 70%);pointer-events:none}
+.avatar{background:linear-gradient(135deg,#00FF66,#10B981);padding:2px;border-radius:50%;position:relative}
+.avatar-in{background:#050907;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;color:#00FF66;overflow:hidden}
+.avatar-in img{width:100%;height:100%;object-fit:cover}
+.btn-invest{background:linear-gradient(180deg,#00FF66,#10B981);color:#000;font-weight:900;border-radius:12px;border:none;padding:11px;width:100%;cursor:pointer;font-size:11px;letter-spacing:0.4px;box-shadow:0 4px 0 #0a5c3a,0 6px 20px rgba(0,255,102,0.4);transition:all 0.1s;position:relative;z-index:20}
+.btn-invest:active{transform:translateY(3px);box-shadow:0 1px 0 #0a5c3a,0 2px 8px rgba(0,255,102,0.3)}
+.btn-invest.locked{background:linear-gradient(180deg,#2a2a2a,#1a1a1a);color:#666;cursor:not-allowed;box-shadow:0 4px 0 #0a0a0a}
+.collect-btn{background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-weight:900;box-shadow:0 0 35px rgba(0,255,102,0.55);animation:cpa 2s infinite;transition:all 0.2s}
+@keyframes cpa{0%,100%{box-shadow:0 0 20px rgba(0,255,102,0.4)}50%{box-shadow:0 0 50px rgba(0,255,102,0.9)}}
+.collect-btn:disabled{background:rgba(255,255,255,0.05);color:#6B7280;box-shadow:none;animation:none;cursor:not-allowed}
+.pdot{animation:pd 1.5s infinite}
+@keyframes pd{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
+.timer-glow{text-shadow:0 0 30px rgba(0,255,102,0.8)}
+.modal-in{animation:min 0.35s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes min{from{opacity:0;transform:scale(0.9) translateY(30px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.loading{position:fixed;inset:0;background:#050907;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.6s,visibility 0.6s}
+.loading.hide{opacity:0;visibility:hidden}
+.l-logo{font-size:60px;font-weight:900;color:#00FF66;letter-spacing:0.3em;animation:ll 1.5s infinite;text-shadow:0 0 40px #00FF66}
+@keyframes ll{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.06);opacity:0.85}}
+.l-bar{width:200px;height:3px;background:rgba(0,255,102,0.15);border-radius:3px;margin-top:28px;overflow:hidden}
+.l-fill{height:100%;background:linear-gradient(90deg,#00FF66,#10B981);animation:lf 1.6s forwards}
+@keyframes lf{to{width:100%}}
+.live-b{position:fixed;bottom:100px;left:12px;right:12px;max-width:420px;margin:0 auto;background:linear-gradient(135deg,rgba(9,18,14,0.98),rgba(5,12,8,0.99));backdrop-filter:blur(20px);border:1px solid rgba(0,255,102,0.45);border-radius:16px;padding:12px 16px;z-index:45;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s;transform:translateY(180%);opacity:0;display:flex;align-items:center;gap:12px;box-shadow:0 15px 40px rgba(0,255,102,0.25)}
+.live-b.show{transform:translateY(0);opacity:1}
+.l-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00FF66,#10B981);display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;font-size:15px;flex-shrink:0}
+.l-tx{font-size:11px;color:#ddd;line-height:1.4;flex:1}
+.l-tx b{color:#00FF66;font-weight:800}
+.toast{position:fixed;bottom:165px;left:50%;transform:translateX(-50%) translateY(40px);background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-weight:800;padding:12px 24px;border-radius:14px;font-size:13px;z-index:70;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 15px 45px rgba(0,255,102,0.6);opacity:0;pointer-events:none;max-width:88%;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.nbadge{position:absolute;top:-5px;right:-5px;background:#EF4444;color:#fff;font-size:9px;font-weight:900;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid #050907;box-shadow:0 0 10px rgba(239,68,68,0.6)}
+.nitem{padding:16px;background:rgba(0,0,0,0.4);border-radius:14px;margin-bottom:10px;border-left:3px solid #10B981;transition:all 0.2s}
+.nitem.warning{border-left-color:#FBBF24;background:rgba(251,191,36,0.07)}
+.nitem.bonus{border-left-color:#00FF66;background:rgba(0,255,102,0.07)}
+.nitem.update{border-left-color:#60A5FA;background:rgba(96,165,250,0.07)}
+.nitem.unread{box-shadow:0 0 20px rgba(0,255,102,0.18)}
+.chart-bar{border-radius:6px 6px 0 0;transition:all 0.3s ease;position:relative;min-height:3px}
+.chart-bar.today{background:linear-gradient(180deg,#00FF66,#10B981);box-shadow:0 0 20px rgba(0,255,102,0.7)}
+.chart-bar.other{background:linear-gradient(180deg,rgba(0,255,102,0.5),rgba(0,255,102,0.1))}
+.news-ticker{background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.2);border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:10px;overflow:hidden}
+.news-scroll{white-space:nowrap;display:inline-block;animation:newsAnim 22s linear infinite}
+@keyframes newsAnim{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+</style>
+</head>
+<body>
+<div class="loading" id="loading"><div class="l-logo">TOXIC</div><div class="l-bar"><div class="l-fill"></div></div></div>
+<div class="live-b" id="liveB"><div class="l-av" id="lAv">R</div><div class="l-tx" id="lTx">Loading...</div></div>
+<div class="toast" id="toast"></div>
+<div id="app"></div>
 
+<script>
+const CFG={
+  banner:'https://i.postimg.cc/Wz818VcZ/1789133259079.png',
+  support:'https://t.me/Toxiconect',
+  upi:'alamasif2124-1@oksbi',upiName:'Asif Alam',
+  usdtBep20:'0xd39ca01aaf830911553c4f06510665b34fb793d0',
+  usdtTrc20:'TMqeccMCttEYBQoLVnEWSs1KSHBhFgaexq',
+  btcBep20:'0xd39ca01aaf830911553c4f06510665b34fb793d0',
+  inrRate:90,minDep:2,minWd:5,fee:5,
+  appUrl:'https://toxiconect.github.io',
+  sbUrl:'https://uaeyjqfwqxhgbhrvlbdr.supabase.co',
+  sbKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZXlqcWZ3cXhoZ2JocnZsYmRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NjgzMTEsImV4cCI6MjEwNTE0NDMxMX0.gmxzj18TuS6Zckjf7d41uBUFMHfsUxl92e-QoI-a-rc'
+};
+const sb=window.supabase?window.supabase.createClient(CFG.sbUrl,CFG.sbKey):null;
+
+const I18N={
+  en:{
+    dash:"Dashboard",invest:"INVEST",active:"Active",wallet:"Wallet",history:"History",team:"Team",
+    totalBal:"TOTAL BALANCE",withEarn:"WITHDRAW EARNINGS ↗",refBal:"REFERRAL",activePlans:"ACTIVE PLANS",
+    calcTitle:"INVESTMENT CALCULATOR",calcSub:"Estimate your returns in real-time ($1 - $5000)",days:"Days",estReturn:"Total Return",
+    newsHeading:"ANNOUNCEMENT",wdTimeNotice:"⚡ Processing Time: Withdrawals are processed within 1 to 24 hours.",
+    ldrTitle:"🏆 REFERRAL LEADERBOARD",top10:"Top Affiliates This Week",invFriends:"INVITE FRIENDS",shareTg:"SHARE ON TELEGRAM",
+    welcome:"Welcome back",langName:"Language"
+  },
+  hi:{
+    dash:"डैशबोर्ड",invest:"निवेश",active:"सक्रिय",wallet:"वॉलेट",history:"इतिहास",team:"टीम",
+    totalBal:"कुल बैलेंस",withEarn:"कमाई निकालें ↗",refBal:"रेफरल बोनस",activePlans:"सक्रिय प्लान्स",
+    calcTitle:"निवेश कैलकुलेटर",calcSub:"अपनी आय का लाइव अनुमान लगाएं ($1 - $5000)",days:"दिन",estReturn:"कुल रिटर्न",
+    newsHeading:"सूचना",wdTimeNotice:"⚡ निकासी समय: निकासी 1 से 24 घंटे के अंदर प्रोसेस होती है।",
+    ldrTitle:"🏆 रेफरल लीडरबोर्ड",top10:"इस सप्ताह के शीर्ष प्रमोटर",invFriends:"मित्रों को आमंत्रित करें",shareTg:"टेलीग्राम पर शेयर करें",
+    welcome:"स्वागत है",langName:"भाषा"
+  },
+  ur:{
+    dash:"ڈیش بورڈ",invest:"سرمایہ کاری",active:"فعال پلان",wallet:"والیٹ",history:"تاریخ",team:"ٹیم",
+    totalBal:"کل بیلنس",withEarn:"رقم نکلوائیں ↗",refBal:"ریفرل بونس",activePlans:"فعال پلانز",
+    calcTitle:"انویسٹمنٹ کیلکولیٹر",calcSub:"اپنے منافع کا لائیو تخمینہ لگائیں ($1 - $5000)",days:"دن",estReturn:"کل منافع",
+    newsHeading:"اعلانات",wdTimeNotice:"⚡ نکالنے کا وقت: نکلوانے کی درخواست 1 سے 24 گھنٹے میں مکمل ہوگی۔",
+    ldrTitle:"🏆 ریفرل لیڈر بورڈ",top10:"اس ہفتے کے بہترین پروموٹرز",invFriends:"دوستوں کو مدعو کریں",shareTg:"ٹیلیگرام پر شیئر کریں",
+    welcome:"خوش آمدید",langName:"زبان"
+  },
+  bn:{
+    dash:"ড্যাশবোর্ড",invest:"বিনিয়োগ",active:"সক্রিয়",wallet:"ওয়ালেট",history:"ইতিহাস",team:"টিম",
+    totalBal:"মোট ব্যালেন্স",withEarn:"উত্তোলন করুন ↗",refBal:"রেফারেল বোনাস",activePlans:"সক্রিয় প্ল্যান",
+    calcTitle:"বিনিয়োগ ক্যালকুলেটর",calcSub:"আপনার মোট লাভের হিসাব করুন ($১ - $৫০০০)",days:"দিন",estReturn:"মোট লাভ",
+    newsHeading:"সংবাদ",wdTimeNotice:"⚡ উত্তোলনের সময়: উত্তোলন ১ থেকে ২৪ ঘণ্টার মধ্যে প্রসেস করা হবে।",
+    ldrTitle:"🏆 রেফারেল লিডারবোর্ড",top10:"এই সপ্তাহের শীর্ষ প্রবর্তক",invFriends:"বন্ধুদের আমন্ত্রণ জানান",shareTg:"টেলিগ্রামে শেয়ার করুন",
+    welcome:"স্বাগতম",langName:"ভাষা"
+  },
+  ar:{
+    dash:"لوحة التحكم",invest:"استثمار",active:"النشطة",wallet:"المحفظة",history:"السجل",team:"الفريق",
+    totalBal:"إجمالي الرصيد",withEarn:"سحب الأرباح ↗",refBal:"أرباح الإحالة",activePlans:"الخطط النشطة",
+    calcTitle:"حاسبة الاستثمار",calcSub:"احسب عوائدك بدقة بالغة ($1 - $5000)",days:"أيام",estReturn:"إجمالي العائد",
+    newsHeading:"إعلان هام",wdTimeNotice:"⚡ مدة المعالجة: تتم معالجة السحوبات خلال 1 إلى 24 ساعة.",
+    ldrTitle:"🏆 قائمة المتصدرين للإحالات",top10:"أفضل الأعضاء هذا الأسبوع",invFriends:"دعوة الأصدقاء",shareTg:"مشاركة على تيليجرام",
+    welcome:"مرحباً بك",langName:"اللغة"
+  }
+};
+
+const NEWS_LIST=[
+  "🚀 Fast UPI and Instant Crypto withdrawal processing is live!",
+  "💎 Auto-daily credit is active 24/7. Collect daily rewards on time!",
+  "⚡ Withdrawal processing time: 1 to 24 hours guaranteed.",
+  "🎁 Multi-level referral bonuses are unlocked across all 10 tiers!"
+];
+
+const LEADERBOARD_DATA=[
+  {u:'cryptoking_99',c:'🇮🇳',vol:18450,r:1},
+  {u:'dubai_trader',c:'🇦🇪',vol:14200,r:2},
+  {u:'ali_khan',c:'🇵🇰',vol:11900,r:3},
+  {u:'rahul_v',c:'🇮🇳',vol:8320,r:4},
+  {u:'hasan_dhaka',c:'🇧🇩',vol:6750,r:5}
+];
+
+const PLANS=[
+  {id:'l1',n:'BRONZE',d:1,dly:0.10,t:4.00,c:'#CD7F32',i:'🥉'},
+  {id:'l2',n:'SILVER',d:3,dly:0.36,t:14.40,c:'#C0C0C0',i:'🥈'},
+  {id:'l3',n:'GOLD',d:5,dly:0.70,t:28.00,c:'#FFD700',i:'🥇'},
+  {id:'l4',n:'ELITE',d:10,dly:1.60,t:64.00,c:'#22D3EE',i:'💎'},
+  {id:'l5',n:'ULTRA',d:20,dly:3.50,t:140.00,c:'#A855F7',i:'👑'},
+  {id:'l6',n:'LEGEND',d:50,dly:9.00,t:360.00,c:'#00FF66',i:'🏆'},
+  {id:'l7',n:'MASTER',d:100,dly:18.50,t:740.00,c:'#EF4444',i:'⚔️'},
+  {id:'l8',n:'GRANDMASTER',d:200,dly:38.00,t:1520.00,c:'#EC4899',i:'🎯'},
+  {id:'l9',n:'MYTHIC',d:500,dly:97.50,t:3900.00,c:'#6366F1',i:'🔥'},
+  {id:'l10',n:'IMMORTAL',d:1000,dly:200.00,t:8000.00,c:'#FEF08A',i:'⚡'},
+  {id:'l11',n:'TITAN',d:2000,dly:410.00,t:16400.00,c:'#3B82F6',i:'⭐'},
+  {id:'l12',n:'GODFATHER',d:5000,dly:1050.00,t:42000.00,c:'#00FF66',i:'👑'}
+];
+const DAY=86400000;
+
+let S={
+  user:JSON.parse(localStorage.getItem('t_user')||'null'),
+  plans:JSON.parse(localStorage.getItem('t_plans')||'[]'),
+  tx:JSON.parse(localStorage.getItem('t_tx')||'[]'),
+  notifs:[],
+  tab:'dashboard',
+  step:1,
+  sd:{country:'',firstName:'',lastName:'',email:'',phone:'',username:'',password:'',referredBy:null},
+  selPlan:null,showProfile:false,showNotifs:false,
+  calcAmt:50,
+  lang:localStorage.getItem('t_lang')||'en',
+  wdMethod:'USDT'
+};
+try{const up=new URLSearchParams(location.search);const rf=up.get('ref');if(rf)S.sd.referredBy=rf}catch(e){}
+
+const $=id=>document.getElementById(id);
+const fmt=n=>Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const nextC=p=>new Date(p.started_at).getTime()+(Number(p.days_collected)||0)*DAY;
+const isActive=pid=>S.plans.some(p=>p.plan_id===pid&&Number(p.days_collected)<40&&p.status!=='completed');
+const refLink=()=>S.user?CFG.appUrl+'/?ref='+S.user.referral_code:CFG.appUrl;
+
+/* HIGH COMPATIBILITY TOUCH VIBRATION ENGINE */
+function haptic(type='light'){
+  try{
+    const tg=window.Telegram?.WebApp;
+    if(tg&&tg.HapticFeedback){
+      if(type==='success'||type==='warning'||type==='error'){
+        tg.HapticFeedback.notificationOccurred(type);
+      }else{
+        tg.HapticFeedback.impactOccurred(type==='medium'?'medium':'light');
+      }
+    }
+  }catch(e){}
+
+  try{
+    if(typeof navigator!=='undefined'&&navigator.vibrate){
+      if(type==='success'){
+        navigator.vibrate([45, 50, 45]);
+      }else if(type==='warning'||type==='error'){
+        navigator.vibrate([80, 50, 80]);
+      }else if(type==='medium'){
+        navigator.vibrate(55);
+      }else{
+        navigator.vibrate(40);
+      }
+    }
+  }catch(e){}
+}
+
+/* INSTANT GLOBAL TOUCH VIBRATION ON ANY INTERACTIVE ELEMENT */
+document.addEventListener('pointerdown',(e)=>{
+  const hit=e.target.closest('button, .nav-item, .plan-card, [onclick], input[type="range"], select');
+  if(hit){
+    haptic('light');
+  }
+},{passive:true,capture:true});
+
+function animateCount(elem,start,end,duration=700,prefix='$'){
+  if(!elem)return;
+  const range=end-start;
+  let startTime=null;
+  function step(t){
+    if(!startTime)startTime=t;
+    const progress=Math.min((t-startTime)/duration,1);
+    const curr=start+(range*progress);
+    elem.textContent=prefix+fmt(curr);
+    if(progress<1)requestAnimationFrame(step);
+    else elem.textContent=prefix+fmt(end);
+  }
+  requestAnimationFrame(step);
+}
+
+function launchConfetti(){
+  try{
+    if(typeof confetti==='function'){
+      confetti({particleCount:100,spread:80,origin:{y:0.6},colors:['#00FF66','#10B981','#FFD700','#ffffff']});
+    }
+  }catch(e){}
+}
+
+function save(){
+  localStorage.setItem('t_user',JSON.stringify(S.user));
+  localStorage.setItem('t_plans',JSON.stringify(S.plans));
+  localStorage.setItem('t_tx',JSON.stringify(S.tx));
+  localStorage.setItem('t_lang',S.lang);
+}
+function toast(m){
+  const el=$('toast');if(!el)return;
+  el.textContent=m;el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),3000);
+}
+
+function applyLangDirection(){
+  if(S.lang==='ar'||S.lang==='ur'){
+    document.documentElement.dir='rtl';
+  } else {
+    document.documentElement.dir='ltr';
+  }
+}
+
+async function loadNotifs(){
+  if(!sb||!S.user)return;
+  try{
+    const r=await sb.from('notifications').select('*').eq('user_id',S.user.user_id).order('id',{ascending:false}).limit(50);
+    if(r.data)S.notifs=r.data;
+  }catch(e){}
+}
+const unread=()=>S.notifs.filter(n=>!n.is_read).length;
+async function markRead(){
+  if(!sb||!S.user)return;
+  haptic('medium');
+  const un=S.notifs.filter(n=>!n.is_read);
+  for(const n of un){await sb.from('notifications').update({is_read:true}).eq('id',n.id);}
+  await sb.from('users').update({unread_count:0}).eq('user_id',S.user.user_id);
+  S.user.unread_count=0;S.notifs.forEach(n=>n.is_read=true);save();render();
+}
+
+async function autoCredit(){
+  if(!S.user)return;
+  let tot=0;const now=Date.now();
+  for(const pl of S.plans){
+    if(pl.status==='completed')continue;
+    let days=Number(pl.days_collected)||0;
+    if(days>=40){pl.status='completed';continue;}
+    const st=new Date(pl.started_at).getTime();
+    const passed=Math.floor((now-st)/DAY);
+    const max=Math.min(passed+1,40);
+    const pend=max-days;
+    if(pend>0){
+      pl.days_collected=days+pend;
+      const rw=pend*Number(pl.dly||pl.daily);
+      S.user.balance=Number(S.user.balance||0)+rw;
+      S.user.earned=Number(S.user.earned||0)+rw;
+      tot+=rw;
+      if(pl.days_collected>=40){
+        pl.status='completed';
+        launchConfetti();
+      }
+      S.tx.unshift({type:'daily_collect',amount:rw,status:'approved',method:pl.plan_name+' x'+pend,date:new Date().toISOString(),plan_id:pl.plan_id});
+      if(sb){try{await sb.from('user_plans').update({days_collected:pl.days_collected,status:pl.status}).eq('id',pl.id);}catch(e){}}
+    }
+  }
+  if(tot>0){
+    save();
+    if(sb){try{await sb.from('users').update({balance:S.user.balance,earned:S.user.earned}).eq('user_id',S.user.user_id);}catch(e){}}
+    setTimeout(()=>toast('💰 +$'+fmt(tot)+' Auto-Credited!'),1200);
+  }
+}
+
+const NAMES=['Rahul','Priya','Ahmed','Sara','Vikram','Anjali','Kiran','Ravi','Neha','Amit','Rohan','Sneha'];
+const CITIES=['Mumbai','Delhi','Karachi','Dhaka','Lahore','Bangalore','Chennai','Kolkata'];
+function showLive(){
+  const b=$('liveB');if(!b)return;
+  const n=NAMES[Math.floor(Math.random()*NAMES.length)];
+  const c=CITIES[Math.floor(Math.random()*CITIES.length)];
+  const opts=[' just earned <b>$'+[0.10,0.36,0.70,1.60,3.50,9.00][Math.floor(Math.random()*6)].toFixed(2)+'</b>',' invested in <b>'+['BRONZE','SILVER','GOLD','ELITE','ULTRA','LEGEND'][Math.floor(Math.random()*6)]+'</b>',' just joined TOXIC 🎉'];
+  $('lAv').textContent=n[0];
+  $('lTx').innerHTML='<b>'+n+'</b> from '+c+opts[Math.floor(Math.random()*opts.length)];
+  b.classList.add('show');
+  setTimeout(()=>b.classList.remove('show'),4500);
+  setTimeout(showLive,15000+Math.random()*10000);
+}
+
+function render(){
+  applyLangDirection();
+  const a=$('app');
+  if(!S.user){a.innerHTML=S.tab==='signin'?loginUI():signupUI();return;}
+  a.innerHTML=mainUI()+planModal()+profileModal()+notifsModal();
+  updateDyn();
+}
+
+function updateDyn(){
+  if(!S.user)return;
+  document.querySelectorAll('[data-timer]').forEach(el=>{
+    const pid=el.getAttribute('data-timer');
+    const p=S.plans.find(x=>String(x.id)===String(pid));
+    if(!p)return;
+    const rem=nextC(p)-Date.now();
+    if(rem<=0){el.textContent='READY';el.classList.add('text-toxic');}
+    else{
+      const h=Math.max(0,Math.floor(rem/3600000));
+      const m=Math.max(0,Math.floor((rem%3600000)/60000));
+      const s=Math.max(0,Math.floor((rem%60000)/1000));
+      el.textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+      el.classList.remove('text-toxic');
+    }
+  });
+  document.querySelectorAll('[data-collect]').forEach(btn=>{
+    const pid=btn.getAttribute('data-collect');
+    const p=S.plans.find(x=>String(x.id)===String(pid));
+    if(!p)return;
+    const ready=Date.now()>=nextC(p)&&Number(p.days_collected)<40;
+    btn.disabled=!ready;
+    if(ready)btn.textContent='💰 COLLECT $'+Number(p.dly||p.daily).toFixed(2);
+    else if(Number(p.days_collected)>=40)btn.textContent='✅ COMPLETED';
+    else btn.textContent='⏳ WAITING FOR DAILY COLLECT';
+  });
+  const b=$('nb');const un=unread();
+  if(b){if(un>0){b.textContent=un;b.style.display='flex';}else b.style.display='none';}
+}
+setInterval(updateDyn,1000);
+
+/* SECURE DUAL SYNC: DEPOSITS & WITHDRAWALS PARITY */
+async function syncUser(){
+  if(!sb||!S.user)return;
+  try{
+    const u=await sb.from('users').select('*').eq('user_id',S.user.user_id).limit(1);
+    if(u.data&&u.data[0]){
+      const f=u.data[0];
+      const oldB=Number(S.user.balance||0);
+      S.user.balance=Number(f.balance||0);
+      S.user.referral_balance=Number(f.referral_balance||0);
+      S.user.invested=Number(f.invested||0);
+      S.user.earned=Number(f.earned||0);
+      if(f.avatar)S.user.avatar=f.avatar;
+      save();
+      if($('bal')&&oldB!==S.user.balance){
+        animateCount($('bal'),oldB,S.user.balance);
+      }
+    }
+    const p=await sb.from('user_plans').select('*').eq('user_id',S.user.user_id).order('id',{ascending:false});
+    if(p.data)S.plans=p.data;
+
+    const d=await sb.from('deposits').select('*').eq('user_id',S.user.user_id).order('id',{ascending:false});
+    const w=await sb.from('withdrawals').select('*').eq('user_id',S.user.user_id).order('id',{ascending:false});
+    
+    const list=[];
+    if(d.data)d.data.forEach(x=>list.push({type:'deposit',amount:Number(x.amount),method:x.method,status:x.status,date:x.created_at}));
+    if(w.data)w.data.forEach(x=>{
+      const mText=x.method || (x.address ? (x.address.includes(':') ? x.address.split(':')[0] : 'USDT') : 'USDT');
+      list.push({type:'withdrawal',amount:Number(x.amount),method:mText,status:x.status,date:x.created_at,address:x.address});
+    });
+
+    S.tx.forEach(loc=>{
+      if(loc.status==='pending' && !list.some(r=>r.date===loc.date && r.type===loc.type)){
+        list.push(loc);
+      }
+    });
+
+    list.sort((a,b)=>new Date(b.date)-new Date(a.date));
+    S.tx=list;
+    await loadNotifs();
+    save();
+  }catch(e){}
+}
+
+function userAvatar(u,size=36,fontSize=13){
+  if(u&&u.avatar){
+    return `<div class="avatar-in" style="width:${size}px;height:${size}px"><img src="${u.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"></div>`;
+  }
+  const init=(u&&u.username)?u.username[0].toUpperCase():'T';
+  return `<div class="avatar-in" style="width:${size}px;height:${size}px;font-size:${fontSize}px">${init}</div>`;
+}
+
+function handleAvatarUpload(event){
+  const file=event.target.files[0];
+  if(!file)return;
+  if(file.size>2.5*1024*1024)return alert('Photo must be less than 2.5MB');
+  const reader=new FileReader();
+  reader.onload=async function(e){
+    const base64=e.target.result;
+    S.user.avatar=base64;
+    save();
+    haptic('success');
+    toast('✅ Profile Photo Updated!');
+    render();
+    if(sb&&S.user){
+      try{await sb.from('users').update({avatar:base64}).eq('user_id',S.user.user_id);}catch(err){}
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function loginUI(){
+  return `<div class="min-h-screen px-5 py-10 flex flex-col" style="background:radial-gradient(circle at 50% 0%,rgba(0,255,102,0.14),transparent 55%),#050907">
+    <div class="text-center mb-8 mt-6"><h1 class="text-5xl font-black text-toxic text-3d tracking-widest">TOXIC</h1><p class="text-gray-500 text-[10px] mt-3 tracking-[0.4em]">CAPITAL CONTROL</p></div>
+    <div class="glass-card p-6">
+      <p class="text-[10px] text-gray-500 font-bold mb-3 tracking-widest">WELCOME BACK</p>
+      <h2 class="text-2xl font-black mb-6">Sign in to your account</h2>
+      <input id="lu" class="inp mb-3" placeholder="Username">
+      <input id="lp" type="password" class="inp mb-6" placeholder="Password">
+      <button onclick="doLogin()" class="w-full btn-green py-4 rounded-2xl text-sm glow">SIGN IN</button>
+      <p class="text-center text-sm text-gray-500 pt-5">No account? <span onclick="S.tab='signup';render()" class="text-toxic font-bold cursor-pointer">Create one →</span></p>
+    </div>
+  </div>`;
+}
+
+function signupUI(){
+  const step=S.step;
+  const steps=[1,2,3].map(n=>{
+    const bg=step>n?'#10B981':step===n?'#00FF66':'rgba(255,255,255,0.06)';
+    const tc=step>=n?'#000':'#4B5563';
+    return `<div style="width:46px;height:46px;border-radius:14px;background:${bg};color:${tc};display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;box-shadow:${step===n?'0 0 25px #00FF66':'none'};transition:all 0.3s">${step>n?'✓':n}</div>`;
+  }).join('');
+  return `<div class="min-h-screen flex flex-col" style="background:radial-gradient(circle at 50% 0%,rgba(0,255,102,0.14),transparent 55%),#050907">
+    <div class="relative w-full h-48 overflow-hidden"><img src="${CFG.banner}" style="width:100%;height:100%;object-fit:cover;opacity:0.75"><div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,9,7,0.3),rgba(5,9,7,0.98))"></div><div style="position:absolute;bottom:18px;left:22px"><h1 class="text-3xl font-black text-toxic tracking-widest text-3d">TOXIC</h1></div></div>
+    <div class="px-5 pb-10"><div class="flex items-center justify-center gap-4 mb-7">${steps}</div>
+      <div class="glass-card p-6">${step===1?step1():step===2?step2():step3()}</div>
+    </div>
+  </div>`;
+}
+
+function step1(){
+  const cs=['India (+91)','Pakistan (+92)','Bangladesh (+880)','United States (+1)','UAE (+971)','Saudi Arabia (+966)','Nigeria (+234)','Indonesia (+62)','Philippines (+63)','Nepal (+977)'];
+  const ops=cs.map(c=>`<option ${S.sd.country===c?'selected':''}>${c}</option>`).join('');
+  const rn=S.sd.referredBy?`<div style="border-radius:14px;padding:14px;margin-bottom:16px;background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.3)"><p style="font-size:10px;color:#888;margin:0">Referred by</p><p class="text-toxic mono" style="font-weight:900;font-size:13px;margin:4px 0 0">${esc(S.sd.referredBy)}</p></div>`:'';
+  return `${rn}<p style="font-size:10px;color:#666;font-weight:700;margin:0 0 8px;letter-spacing:2px">STEP 1 / 3</p>
+    <h2 class="text-2xl font-black mb-1">Choose your country</h2><p class="text-sm text-gray-500 mb-6">Select your country.</p>
+    <select id="cs" class="inp mb-6" onchange="S.sd.country=this.value"><option value="">Choose a country...</option>${ops}</select>
+    <button onclick="S.step=2;if($('cs').value)S.sd.country=$('cs').value;render()" class="w-full btn-green py-4 rounded-2xl text-sm glow">NEXT →</button>
+    <p class="text-center text-xs text-gray-500 mt-4">Already have an account? <span onclick="S.tab='signin';render()" class="text-yellow-400 font-bold">Sign in</span></p>`;
+}
+function step2(){
+  return `<p style="font-size:10px;color:#666;font-weight:700;margin:0 0 8px;letter-spacing:2px">STEP 2 / 3</p>
+    <h2 class="text-2xl font-black mb-1">Personal Info</h2><p class="text-sm text-gray-500 mb-5">Tell us about you.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px"><input class="inp" id="fn" placeholder="First Name" value="${S.sd.firstName||''}"><input class="inp" id="ln" placeholder="Last Name" value="${S.sd.lastName||''}"></div>
+    <input class="inp mb-3" id="em" type="email" placeholder="you@example.com" value="${S.sd.email||''}">
+    <input class="inp mb-6" id="ph" type="tel" placeholder="WhatsApp Number" value="${S.sd.phone||''}">
+    <div style="display:flex;gap:12px"><button onclick="S.step=1;render()" style="flex:1;padding:16px;border-radius:16px;background:rgba(255,255,255,0.05);font-weight:700;font-size:13px;border:none;color:#fff;cursor:pointer">← BACK</button><button onclick="goStep3()" style="flex:1;padding:16px;border-radius:16px;font-weight:800;font-size:13px;border:none;cursor:pointer" class="btn-green">NEXT →</button></div>`;
+}
+function step3(){
+  return `<p style="font-size:10px;color:#666;font-weight:700;margin:0 0 8px;letter-spacing:2px">STEP 3 / 3</p>
+    <h2 class="text-2xl font-black mb-1">Create Access</h2><p class="text-sm text-gray-500 mb-5">Set username & password.</p>
+    <input class="inp mb-3" id="un" placeholder="Username" value="${S.sd.username||''}">
+    <input class="inp mb-3" id="pw" type="password" placeholder="Password">
+    <input class="inp mb-6" id="pw2" type="password" placeholder="Confirm Password">
+    <div style="display:flex;gap:12px"><button onclick="S.step=2;render()" style="padding:16px 22px;border-radius:16px;background:rgba(255,255,255,0.05);font-weight:700;font-size:13px;border:none;color:#fff;cursor:pointer">← BACK</button><button onclick="finishSignup()" style="flex:1;padding:16px;border-radius:16px;font-weight:800;font-size:13px;border:none;cursor:pointer" class="btn-green">FINISH →</button></div>`;
+}
+function goStep3(){
+  S.sd.firstName=$('fn').value;S.sd.lastName=$('ln').value;S.sd.email=$('em').value;S.sd.phone=$('ph').value;
+  if(!S.sd.firstName||!S.sd.email)return alert('Fill Name and Email');
+  S.step=3;render();
+}
+async function finishSignup(){
+  const un=$('un').value.trim(),pw=$('pw').value,pw2=$('pw2').value;
+  if(!un||un.length<3)return alert('Username 3+ chars');
+  if(!pw||pw.length<4)return alert('Password 4+ chars');
+  if(pw!==pw2)return alert('Passwords do not match');
+  const uid='TG'+Date.now();
+  const rc='TOXIC'+Math.floor(1000+Math.random()*9000);
+  S.user={user_id:uid,username:un,email:S.sd.email||'',phone:S.sd.phone||'',avatar:'',balance:0,referral_balance:0,invested:0,earned:0,referral_code:rc,referred_by:S.sd.referredBy,is_banned:false,joined_at:new Date().toISOString()};
+  S.plans=[];
+  localStorage.setItem('t_pwd_'+uid,pw);
+  if(sb){
+    try{
+      await sb.from('users').insert([{user_id:uid,username:un,email:S.sd.email||'',phone:S.sd.phone||'',balance:0,referral_balance:0,invested:0,referral_code:rc,referred_by:S.sd.referredBy,is_banned:false}]);
+      if(S.sd.referredBy){
+        try{
+          const r=await sb.from('users').select('*').eq('referral_code',S.sd.referredBy).limit(1);
+          if(r.data&&r.data[0]){
+            const ref=r.data[0];
+            await sb.from('users').update({referral_balance:Number(ref.referral_balance||0)+0.10}).eq('user_id',ref.user_id);
+          }
+        }catch(e){}
+      }
+    }catch(e){}
+  }
+  haptic('success');
+  S.tab='dashboard';save();render();
+}
+async function doLogin(){
+  const u=$('lu').value.trim(),p=$('lp').value;
+  if(!u||!p)return alert('Enter credentials');
+  const ex=JSON.parse(localStorage.getItem('t_user')||'null');
+  if(ex&&ex.username===u){
+    const st=localStorage.getItem('t_pwd_'+ex.user_id);
+    if(st&&st!==p)return alert('❌ Wrong password');
+    S.user=ex;S.plans=JSON.parse(localStorage.getItem('t_plans')||'[]');S.tab='dashboard';save();
+    haptic('success');
+    await syncUser();await autoCredit();render();return;
+  }
+  if(sb){
+    try{
+      const r=await sb.from('users').select('*').eq('username',u).limit(1);
+      if(r.data&&r.data[0]){S.user=r.data[0];S.tab='dashboard';save();haptic('success');await syncUser();await autoCredit();render();return;}
+    }catch(e){}
+  }
+  alert('⚠️ User not found. Sign up first.');
+}
+function logout(){
+  haptic('warning');
+  if(!confirm('Logout?'))return;
+  localStorage.removeItem('t_user');localStorage.removeItem('t_plans');
+  S.user=null;S.plans=[];S.tab='signin';render();
+}
+
+/* MAIN SHELL */
+function mainUI(){
+  const u=S.user;
+  const t=I18N[S.lang]||I18N.en;
+  return `<div class="min-h-screen pb-28 relative max-w-md mx-auto">
+    <header style="padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:40;background:rgba(5,9,7,0.95);backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,255,102,0.08)">
+      <h1 class="text-toxic text-3d" style="font-size:20px;font-weight:900;letter-spacing:0.25em;margin:0">TOXIC</h1>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div onclick="S.showNotifs=true;render()" style="position:relative;cursor:pointer;padding:4px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <div id="nb" class="nbadge" style="display:none">0</div>
+        </div>
+        <div class="glass" style="padding:6px 12px;border-radius:20px;display:flex;align-items:center;gap:6px">
+          <span style="width:6px;height:6px;border-radius:50%;display:inline-block" class="bg-toxic pdot"></span>
+          <span style="font-size:10px;font-weight:800" class="text-toxic">LIVE</span>
+        </div>
+        <div onclick="S.showProfile=true;render()" class="avatar" style="cursor:pointer;width:40px;height:40px">
+          ${userAvatar(u,36,13)}
+        </div>
+      </div>
+    </header>
+    <main style="padding:16px">${renderTab()}</main>
+    <a href="${CFG.support}" target="_blank" style="position:fixed;bottom:110px;right:16px;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#000;font-size:24px;z-index:40;text-decoration:none" class="bg-toxic glow-strong">💬</a>
+    <nav class="nav"><div style="display:flex;justify-content:space-around;align-items:center">
+      ${nav('dashboard',t.dash,'M3 5h7v7H3zM14 5h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z')}
+      ${nav('plans',t.invest,'M3 17l6-6 4 4 8-8M21 7v6h-6')}
+      ${nav('active',t.active,'M3 7h18v14H3zM3 7l3-3h12l3 3M12 11v6M9 14h6')}
+      ${nav('wallet',t.wallet,'M21 12V7H5a2 2 0 010-4h14v4M3 5v14a2 2 0 002 2h16v-5M18 12a2 2 0 000 4h4v-4h-4z')}
+      ${nav('history',t.history,'M12 8v4l3 3M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8M3 3v5h5')}
+      ${nav('team',t.team,'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 7a4 4 0 100 8 4 4 0 000-8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75')}
+    </div></nav>
+  </div>`;
+}
+function nav(id,l,path){
+  const a=S.tab===id;
+  return `<div class="nav-item ${a?'active':''}" onclick="setTab('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:22px;height:22px;stroke-width:2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${path}"/></svg><span style="font-size:9px;font-weight:700;letter-spacing:0.3px">${l}</span></div>`;
+}
+function setTab(t){S.tab=t;S.selPlan=null;window.scrollTo(0,0);render();if(S.user)syncUser().then(updateDyn);}
+function renderTab(){
+  if(S.tab==='dashboard')return dashUI();
+  if(S.tab==='plans')return plansUI();
+  if(S.tab==='active')return activeUI();
+  if(S.tab==='wallet')return walletUI();
+  if(S.tab==='history')return historyUI();
+  if(S.tab==='team')return teamUI();
+  return '';
+}
+
+function newsBannerUI(){
+  const t=I18N[S.lang]||I18N.en;
+  const items=NEWS_LIST.join('  •  ');
+  return `<div class="news-ticker">
+    <span style="font-size:10px;font-weight:900;color:#00FF66;display:flex;align-items:center;gap:4px">📢 ${t.newsHeading}:</span>
+    <div style="flex:1;overflow:hidden"><div class="news-scroll mono" style="font-size:11px;color:#ddd">${items}</div></div>
+  </div>`;
+}
+
+function dashUI(){
+  const u=S.user,rl=refLink();
+  const t=I18N[S.lang]||I18N.en;
+  const ap=S.plans.filter(p=>Number(p.days_collected)<40&&p.status!=='completed');
+  const bars=[20,35,28,50,42,65,55,80,70,95].map((h,i)=>`<div style="flex:1;border-radius:4px 4px 0 0;height:${h}%;background:linear-gradient(180deg,#00FF66,rgba(0,255,102,0.15));opacity:${0.4+i*0.06}"></div>`).join('');
+  
+  let plansHTML='';
+  if(ap.length===0){
+    plansHTML=`<div class="glass-card" style="text-align:center;padding:36px 20px;margin-bottom:12px"><div style="font-size:42px;opacity:0.5;margin-bottom:10px">📊</div><p style="font-weight:900;font-size:15px;margin:0 0 6px">No Active Plans</p><p style="font-size:12px;color:#888;margin:0 0 18px">Choose a plan to start earning</p><button onclick="setTab('plans')" class="btn-green" style="padding:12px 28px;border-radius:14px;font-size:12px;border:none;cursor:pointer">BROWSE PLANS →</button></div>`;
+  } else {
+    plansHTML=ap.map(pl=>{
+      const p=PLANS.find(x=>x.id===pl.plan_id)||{c:'#00FF66',i:'💰',dly:pl.daily,t:pl.total,n:pl.plan_name};
+      const days=Number(pl.days_collected)||0;
+      const pct=(days/40)*100;
+      const earned=days*Number(pl.dly||pl.daily);
+      return `<div class="plan-active" style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:14px;position:relative;z-index:1">
+          <div style="display:flex;gap:12px;align-items:center">
+            <div style="width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;background:${p.c}25;border:1px solid ${p.c}66">${p.i}</div>
+            <div><p style="font-weight:900;font-size:16px;color:${p.c};margin:0">${p.n}</p><p style="font-size:10px;color:#888;margin:2px 0 0">Invested $${fmt(pl.deposit)}</p></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;display:inline-block" class="bg-toxic pdot"></span><span style="font-size:9px;font-weight:900" class="text-toxic">LIVE</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;position:relative;z-index:1">
+          <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px"><p style="font-size:9px;color:#888;margin:0 0 4px;letter-spacing:0.5px">TODAY'S EARNING</p><p class="mono" style="font-size:18px;font-weight:900;color:${p.c};margin:0">+$${Number(pl.dly||pl.daily).toFixed(2)}</p></div>
+          <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px"><p style="font-size:9px;color:#888;margin:0 0 4px;letter-spacing:0.5px">EARNED</p><p class="mono text-toxic" style="font-size:18px;font-weight:900;margin:0">$${earned.toFixed(2)}</p></div>
+        </div>
+        <div style="background:linear-gradient(135deg,${p.c}20,transparent);border:1px solid ${p.c}44;border-radius:18px;padding:14px;margin-bottom:12px;position:relative;z-index:1">
+          <p style="font-size:9px;color:#888;font-weight:800;text-align:center;margin:0 0 6px;letter-spacing:1px">⏳ NEXT COLLECT IN</p>
+          <p class="mono timer-glow" style="font-size:26px;font-weight:900;text-align:center;margin:0 0 14px" data-timer="${pl.id}">--:--:--</p>
+          <button data-collect="${pl.id}" onclick="collect(${pl.id})" class="collect-btn" style="width:100%;padding:14px;border-radius:14px;font-size:13px;border:none">⏳ WAITING FOR DAILY COLLECT</button>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:#888;margin-bottom:8px;position:relative;z-index:1"><span>Day ${days} / 40</span><span>$${earned.toFixed(2)} / $${Number(pl.t||pl.total).toFixed(2)}</span></div>
+        <div style="width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,0.05);overflow:hidden;position:relative;z-index:1"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,${p.c},#10B981);box-shadow:0 0 12px ${p.c}88"></div></div>
+      </div>`;
+    }).join('');
+  }
+
+  return `<div style="display:flex;flex-direction:column;gap:14px">
+    ${newsBannerUI()}
+    <div style="position:relative;width:100%;height:180px;border-radius:24px;overflow:hidden;border:1px solid rgba(0,255,102,0.2)">
+      <img src="${CFG.banner}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.2),rgba(5,9,7,0.96))"></div>
+      <div style="position:absolute;bottom:16px;left:20px"><p style="font-size:12px;color:#aaa;margin:0">${t.welcome},</p><h2 class="text-3d" style="font-size:24px;font-weight:900;margin:2px 0 0">${u.username}</h2></div>
+    </div>
+    <div class="glass-card card-gradient">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <p style="font-size:10px;color:#10B981;font-weight:800;margin:0;letter-spacing:1.5px">💎 ${t.totalBal}</p>
+        <div style="display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;display:inline-block" class="bg-toxic pdot"></span><span style="font-size:9px;font-weight:800" class="text-toxic">LIVE</span></div>
+      </div>
+      <p id="bal" class="mono" style="font-size:38px;font-weight:900;margin:0 0 12px;letter-spacing:-1px">$${fmt(u.balance)}</p>
+      <div style="display:flex;align-items:flex-end;gap:6px;height:56px;margin:12px 4px">${bars}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px"><p style="font-size:9px;color:#888;margin:0 0 4px;letter-spacing:0.5px">${t.refBal}</p><p id="refb" class="mono text-toxic" style="font-size:15px;font-weight:900;margin:0">$${fmt(u.referral_balance)}</p></div>
+        <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px"><p style="font-size:9px;color:#888;margin:0 0 4px;letter-spacing:0.5px">${t.activePlans}</p><p id="pc" class="mono" style="font-size:15px;font-weight:900;margin:0">${ap.length}</p></div>
+      </div>
+      <button onclick="setTab('wallet')" class="btn-green" style="width:100%;padding:14px;border-radius:14px;font-size:12px;border:none;cursor:pointer">${t.withEarn}</button>
+    </div>
+    ${chartUI()}
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><p style="font-size:10px;color:#888;font-weight:800;margin:0;letter-spacing:1.5px">📈 MY ACTIVE PLANS</p><span style="font-size:10px;font-weight:800" class="text-toxic">${ap.length} active</span></div>
+      ${plansHTML}
+    </div>
+    <div class="glass-card">
+      <p style="font-size:10px;color:#888;font-weight:800;margin:0 0 12px;letter-spacing:1.5px">🔗 YOUR REFERRAL LINK</p>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input readonly value="${rl}" class="mono" style="flex:1;font-size:10px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:13px;color:#10B981">
+        <button onclick="copy('${rl}')" class="btn-green" style="padding:13px 16px;border-radius:12px;font-size:12px;border:none;cursor:pointer">📋</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function chartUI(){
+  const days=[];
+  const today=new Date();today.setHours(0,0,0,0);
+  for(let i=6;i>=0;i--){
+    const d=new Date(today.getTime()-i*DAY);
+    days.push({d:d,e:0,count:0});
+  }
+  S.plans.forEach(pl=>{
+    const start=new Date(pl.started_at);start.setHours(0,0,0,0);
+    const dailyEarn=Number(pl.dly||pl.daily)||0;
+    const maxDays=Math.min(Number(pl.days_collected)||0,40);
+    days.forEach(day=>{
+      const diff=Math.floor((day.d.getTime()-start.getTime())/DAY);
+      if(diff>=0 && diff<maxDays){
+        day.e+=dailyEarn;
+        day.count+=1;
+      }
+    });
+  });
+  const max=Math.max(...days.map(x=>x.e),0.01);
+  const dayNames=['S','M','T','W','T','F','S'];
+  const bars=days.map((d,i)=>{
+    const pct=(d.e/max)*100;
+    const h=pct<8&&d.e>0?8:pct;
+    const isToday=i===6;
+    return `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;min-width:36px">
+      <div style="width:100%;display:flex;align-items:flex-end;justify-content:center;height:80px">
+        <div class="chart-bar ${isToday?'today':'other'}" style="width:80%;height:${h}%"></div>
+      </div>
+      <span style="font-size:9px;${isToday?'color:#00FF66;font-weight:900':'color:#666'}">${dayNames[d.d.getDay()]}</span>
+      <span class="mono" style="font-size:8px;color:#00FF66;font-weight:700">$${d.e.toFixed(2)}</span>
+    </div>`;
+  }).join('');
+  const todayE=days[6].e;
+  const weekE=days.reduce((a,b)=>a+b.e,0);
+  const todayCount=days[6].count;
+  return `<div class="glass-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <p style="font-size:10px;color:#888;font-weight:800;margin:0;letter-spacing:1.5px">📊 PORTFOLIO · LAST 7 DAYS</p>
+      <p class="mono text-toxic" style="font-size:10px;font-weight:800;margin:0">+$${fmt(weekE)}</p>
+    </div>
+    <div style="display:flex;align-items:flex-end;gap:8px;min-width:100%;padding:0 4px">${bars}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px">
+      <div style="background:rgba(0,0,0,0.4);border-radius:14px;padding:12px;text-align:center">
+        <p style="font-size:9px;color:#888;margin:0 0 4px;letter-spacing:0.5px">TODAY'S EARNING</p>
+        <p class="mono text-toxic" style="font-size:17px;font-weight:900;margin:0">+$${fmt(todayE)}</p>
+      </div>
+      <div style="background:rgba(0,0,0,0.4);border-radius:14px;padding:12px;text-align:center">
+        <p style="font-size:9px;color:#888;margin:0 0 4px;letter-spacing:0.5px">COLLECTIONS TODAY</p>
+        <p class="mono" style="font-size:17px;font-weight:900;margin:0">${todayCount}</p>
+      </div>
+    </div>
+  </div>`;
+}
+
+function calcUI(){
+  const t=I18N[S.lang]||I18N.en;
+  const amt=Math.min(Math.max(Number(S.calcAmt||50),1),5000);
+  const dlyRate=amt>=5000?0.21:amt>=2000?0.205:amt>=1000?0.20:amt>=500?0.195:amt>=200?0.19:amt>=100?0.185:amt>=50?0.18:amt>=10?0.16:0.12;
+  const dly=(amt*dlyRate).toFixed(2);
+  const tot=(amt*dlyRate*40).toFixed(2);
+  const netProfit=(tot-amt).toFixed(2);
+
+  return `<div class="glass-card" style="border:1.5px solid rgba(0,255,102,0.35);box-shadow:0 0 25px rgba(0,255,102,0.1)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <p style="font-size:10px;color:#10B981;font-weight:800;margin:0;letter-spacing:1px">🧮 ${t.calcTitle}</p>
+      <span class="mono text-toxic" style="font-size:11px;font-weight:800">40 ${t.days}</span>
+    </div>
+    <p style="font-size:11px;color:#888;margin:0 0 14px">${t.calcSub}</p>
+    
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px">
+      <span style="font-size:12px;color:#888">Amount ($1 - $5000):</span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="text-toxic font-black">$</span>
+        <input type="number" id="calcAmtInput" min="1" max="5000" value="${amt}" class="mono inp" style="width:105px;padding:8px 10px;text-align:right;font-size:16px;font-weight:900" oninput="onCalcNumInput(this.value)">
+      </div>
+    </div>
+    <input type="range" id="calcSlider" min="1" max="5000" step="1" value="${amt}" style="width:100%;accent-color:#00FF66;cursor:pointer;margin-bottom:18px" oninput="onCalcSlider(this.value)">
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+      <div style="background:rgba(0,0,0,0.5);padding:12px 6px;border-radius:14px;border:1px solid rgba(0,255,102,0.15)">
+        <p style="font-size:9px;color:#888;margin:0 0 4px">Daily Return</p>
+        <p id="cDaily" class="mono text-toxic" style="font-size:13px;font-weight:900;margin:0">+$${dly}</p>
+      </div>
+      <div style="background:rgba(0,0,0,0.5);padding:12px 6px;border-radius:14px;border:1px solid rgba(255,215,0,0.25)">
+        <p style="font-size:9px;color:#888;margin:0 0 4px">${t.estReturn}</p>
+        <p id="cTot" class="mono" style="font-size:13px;font-weight:900;color:#FFD700;margin:0">$${tot}</p>
+      </div>
+      <div style="background:rgba(0,0,0,0.5);padding:12px 6px;border-radius:14px;border:1px solid rgba(16,185,129,0.2)">
+        <p style="font-size:9px;color:#888;margin:0 0 4px">Net Profit</p>
+        <p id="cNet" class="mono" style="font-size:13px;font-weight:900;color:#10B981;margin:0">+$${netProfit}</p>
+      </div>
+    </div>
+  </div>`;
+}
+
+function onCalcSlider(val){
+  S.calcAmt=Number(val);
+  if($('calcAmtInput'))$('calcAmtInput').value=val;
+  renderCalcVals();
+}
+function onCalcNumInput(val){
+  const n=Math.min(Math.max(Number(val||1),1),5000);
+  S.calcAmt=n;
+  if($('calcSlider'))$('calcSlider').value=n;
+  renderCalcVals();
+}
+
+function renderCalcVals(){
+  const amt=Math.min(Math.max(Number(S.calcAmt||50),1),5000);
+  const dlyRate=amt>=5000?0.21:amt>=2000?0.205:amt>=1000?0.20:amt>=500?0.195:amt>=200?0.19:amt>=100?0.185:amt>=50?0.18:amt>=10?0.16:0.12;
+  const dly=(amt*dlyRate).toFixed(2);
+  const tot=(amt*dlyRate*40).toFixed(2);
+  const netProfit=(tot-amt).toFixed(2);
+  if($('cDaily'))$('cDaily').innerText='+$'+dly;
+  if($('cTot'))$('cTot').innerText='$'+tot;
+  if($('cNet'))$('cNet').innerText='+$'+netProfit;
+}
+
+function plansUI(){
+  const cards=PLANS.map(p=>{
+    const roi=((p.dly/p.d)*100).toFixed(1);
+    const active=isActive(p.id);
+    const btn=active?'<button class="btn-invest locked" disabled>🔒 ALREADY ACTIVE</button>':`<button onclick="event.stopPropagation();quickInvest('${p.id}')" class="btn-invest">⚡ INVEST NOW</button>`;
+    return `<div class="plan-card ${active?'locked':''}" onclick="${active?'':`openPlan('${p.id}')`}">
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px;position:relative;z-index:1">
+        <p style="font-size:9px;color:#888;font-weight:800;margin:0;letter-spacing:1px">PLAN</p>
+        <div style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:${p.c}18;border:1px solid ${p.c}55"><span style="color:${p.c};font-size:11px">→</span></div>
+      </div>
+      <p style="font-size:11px;font-weight:900;color:${p.c};margin:0 0 8px;position:relative;z-index:1">${p.i} ${p.n}</p>
+      <p class="mono" style="font-size:26px;font-weight:900;margin:0 0 2px;position:relative;z-index:1">$${p.d}.00</p>
+      <p style="font-size:9px;color:#666;margin:0 0 10px;position:relative;z-index:1">PLAN AMOUNT</p>
+      <p class="mono text-toxic" style="font-size:11px;font-weight:800;margin:0 0 4px;position:relative;z-index:1">💰 $${p.dly.toFixed(2)} / day</p>
+      <p style="font-size:10px;color:#888;margin:0 0 10px;position:relative;z-index:1">📊 ${roi}% ROI / day</p>
+      <div style="background:${p.c}12;border:1px solid ${p.c}30;border-radius:10px;padding:8px;text-align:center;margin-bottom:10px;position:relative;z-index:1">
+        <p style="font-size:9px;color:#666;margin:0">40-Day Total</p>
+        <p class="mono" style="font-size:14px;font-weight:900;color:${p.c};margin:2px 0 0">$${p.t.toFixed(2)}</p>
+      </div>
+      ${btn}
+    </div>`;
+  }).join('');
+  return `<div style="display:flex;flex-direction:column;gap:16px">
+    <div class="glass-card">
+      <p style="font-size:10px;color:#10B981;font-weight:800;margin:0 0 8px;letter-spacing:1.5px">📈 INVESTMENT</p>
+      <h2 style="font-size:30px;font-weight:900;margin:0 0 4px;letter-spacing:-0.5px">Choose your plan</h2>
+      <p style="font-size:12px;color:#666;margin:0">40-day cycle · Daily returns</p>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;align-items:center">
+        <p style="font-size:10px;color:#888;margin:0;letter-spacing:0.5px">AVAILABLE BALANCE</p>
+        <p class="mono text-toxic" style="font-size:16px;font-weight:900;margin:0">$${fmt(S.user.balance)}</p>
+      </div>
+    </div>
+    ${calcUI()}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">${cards}</div>
+  </div>`;
+}
+function openPlan(id){if(isActive(id))return alert('🔒 Already active.');S.selPlan=PLANS.find(p=>p.id===id);render();}
+function closePlan(){S.selPlan=null;render();}
+function planModal(){
+  if(!S.selPlan)return '';
+  const p=S.selPlan;
+  const roi=((p.dly/p.d)*100).toFixed(2);
+  const can=Number(S.user.balance)>=p.d;
+  const btn=can?`<button onclick="closePlan();invest('${p.id}')" class="btn-green" style="width:100%;padding:16px;border-radius:16px;font-size:14px;margin-bottom:12px;border:none;cursor:pointer">⚡ INVEST NOW — $${p.d.toFixed(2)}</button>`:`<button onclick="closePlan();setTab('wallet')" style="width:100%;padding:16px;border-radius:16px;font-size:14px;margin-bottom:12px;border:none;background:linear-gradient(135deg,#FBBF24,#F59E0B);color:#000;font-weight:800;cursor:pointer">💰 ADD FUNDS TO INVEST</button>`;
+  return `<div style="position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px)" onclick="closePlan()">
+    <div class="glass-card modal-in" onclick="event.stopPropagation()" style="width:100%;max-width:440px;border-color:${p.c}66;max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><span style="font-size:10px;color:#888;font-weight:800;letter-spacing:1px">PLAN DETAILS</span><button onclick="closePlan()" style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.05);border:none;color:#aaa;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center">×</button></div>
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="width:100px;height:100px;border-radius:26px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:52px;background:${p.c}25;border:1.5px solid ${p.c}66;box-shadow:0 0 60px ${p.c}55">${p.i}</div>
+        <h2 style="font-size:30px;font-weight:900;color:${p.c};margin:0;letter-spacing:1px">${p.n}</h2>
+      </div>
+      <div style="background:linear-gradient(135deg,${p.c}25,transparent);border:1px solid ${p.c}55;border-radius:18px;padding:18px;text-align:center;margin-bottom:16px">
+        <p style="font-size:10px;color:#888;margin:0 0 4px;letter-spacing:1px">TOTAL RETURN · 40 DAYS</p>
+        <p class="mono" style="font-size:34px;font-weight:900;margin:0;letter-spacing:-1px">$${p.t.toFixed(2)}</p>
+        <p class="text-toxic" style="font-size:10px;margin:4px 0 0;font-weight:800">${roi}% ROI per day</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;padding:13px;background:rgba(0,0,0,0.45);border-radius:12px;font-size:12px"><span style="color:#888">💰 Deposit</span><span class="mono" style="font-weight:800">$${p.d.toFixed(2)}</span></div>
+        <div style="display:flex;justify-content:space-between;padding:13px;background:rgba(0,0,0,0.45);border-radius:12px;font-size:12px"><span style="color:#888">📈 Daily</span><span class="mono text-toxic" style="font-weight:800">$${p.dly.toFixed(2)}</span></div>
+        <div style="display:flex;justify-content:space-between;padding:13px;background:rgba(0,0,0,0.45);border-radius:12px;font-size:12px"><span style="color:#888">⚡ Duration</span><span class="mono" style="font-weight:800">40 Days</span></div>
+        <div style="display:flex;justify-content:space-between;padding:13px;background:rgba(0,0,0,0.45);border-radius:12px;font-size:12px"><span style="color:#888">🏦 Balance</span><span class="mono" style="font-weight:800;color:${can?'#00FF66':'#FBBF24'}">$${fmt(S.user.balance)}</span></div>
+      </div>
+      ${btn}
+      <button onclick="closePlan()" style="width:100%;padding:13px;border-radius:16px;background:rgba(255,255,255,0.05);color:#9CA3AF;font-size:12px;font-weight:800;border:none;cursor:pointer">Cancel</button>
+    </div>
+  </div>`;
+}
+function quickInvest(id){
+  if(isActive(id))return alert('🔒 Already active.');
+  const p=PLANS.find(x=>x.id===id);
+  if(!p)return;
+  if(Number(S.user.balance)<p.d){
+    if(confirm(`💰 Need: $${p.d.toFixed(2)}\nHave: $${fmt(S.user.balance)}\n\nAdd funds?`))setTab('wallet');
+    return;
+  }
+  invest(id);
+}
+async function invest(id){
+  const p=PLANS.find(x=>x.id===id);
+  if(!p)return;
+  if(isActive(id))return alert('🔒 Already active.');
+  if(Number(S.user.balance)<p.d)return alert('💰 Insufficient balance.');
+  const now=new Date();
+  let np={user_id:S.user.user_id,username:S.user.username,plan_id:p.id,plan_name:p.n,deposit:p.d,daily:p.dly,total:p.t,days_collected:0,status:'active',started_at:now.toISOString(),expires_at:new Date(now.getTime()+40*DAY).toISOString()};
+  S.user.balance=Number(S.user.balance)-p.d;
+  S.user.invested=Number(S.user.invested||0)+p.d;
+  if(sb){
+    try{
+      const r=await sb.from('user_plans').insert([np]).select();
+      if(r.data&&r.data[0])np=r.data[0];
+      await sb.from('users').update({balance:S.user.balance,invested:S.user.invested}).eq('user_id',S.user.user_id);
+    }catch(e){}
+  }
+  S.plans.unshift(np);
+  haptic('success');
+  save();render();
+  alert(`🎉 INVESTMENT SUCCESSFUL!\n\nPlan: ${p.n}\nInvested: $${p.d.toFixed(2)}\n\n💰 Collect your first daily reward now!`);
+}
+async function collect(pid){
+  const pl=S.plans.find(x=>String(x.id)===String(pid));
+  if(!pl)return;
+  if(Date.now()<nextC(pl))return alert('⏳ Not ready yet.');
+  if(Number(pl.days_collected)>=40)return alert('Completed!');
+  const rw=Number(pl.dly||pl.daily);
+  S.user.balance=Number(S.user.balance||0)+rw;
+  S.user.earned=Number(S.user.earned||0)+rw;
+  pl.days_collected=(Number(pl.days_collected)||0)+1;
+  const done=pl.days_collected>=40;
+  if(done)pl.status='completed';
+  S.tx.unshift({type:'daily_collect',amount:rw,status:'approved',method:pl.plan_name,date:new Date().toISOString(),plan_id:pl.plan_id});
+  if(sb){try{await sb.from('user_plans').update({days_collected:pl.days_collected,status:pl.status}).eq('id',pl.id);await sb.from('users').update({balance:S.user.balance,earned:S.user.earned}).eq('user_id',S.user.user_id);}catch(e){}}
+  
+  haptic('success');
+  if(done){
+    launchConfetti();
+  }
+  save();render();
+  if(done)alert(`🎉 PLAN COMPLETED!\n\nCollected $${rw.toFixed(2)}`);
+  else alert(`💰 COLLECTED $${rw.toFixed(2)}!\n\nDay ${pl.days_collected} / 40`);
+}
+
+function activeUI(){
+  const ap=S.plans.filter(p=>Number(p.days_collected)<40&&p.status!=='completed');
+  if(ap.length===0)return `<div class="glass-card" style="text-align:center;padding:52px 20px"><div style="font-size:52px;opacity:0.4;margin-bottom:14px">📦</div><p style="font-weight:900;font-size:17px;margin:0 0 8px">No Active Plans</p><p style="font-size:12px;color:#888;margin:0 0 22px">Buy a plan to start earning</p><button onclick="setTab('plans')" class="btn-green" style="padding:14px 34px;border-radius:14px;font-size:13px;border:none;cursor:pointer">+ BROWSE PLANS</button></div>`;
+  return `<div style="display:flex;flex-direction:column;gap:12px">${ap.map(pl=>{
+    const p=PLANS.find(x=>x.id===pl.plan_id)||{c:'#00FF66',i:'💰',dly:pl.daily,t:pl.total,n:pl.plan_name};
+    const days=Number(pl.days_collected)||0,pct=(days/40)*100,earned=days*Number(pl.dly||pl.daily);
+    return `<div class="plan-active">
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;position:relative;z-index:1">
+        <div style="width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:30px;background:${p.c}25;border:1px solid ${p.c}66">${p.i}</div>
+        <div style="flex:1"><p style="font-weight:900;color:${p.c};font-size:17px;margin:0">${p.n}</p><p style="font-size:10px;color:#888;margin:2px 0 0">Active · 40 Days</p></div>
+        <div style="display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;display:inline-block" class="bg-toxic pdot"></span><span style="font-size:9px;font-weight:900" class="text-toxic">LIVE</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;position:relative;z-index:1">
+        <div style="background:rgba(0,0,0,0.5);border-radius:14px;padding:13px"><p style="font-size:9px;color:#888;margin:0 0 4px">INVESTED</p><p class="mono" style="font-size:15px;font-weight:900;margin:0">$${fmt(pl.deposit)}</p></div>
+        <div style="background:rgba(0,0,0,0.5);border-radius:14px;padding:13px"><p style="font-size:9px;color:#888;margin:0 0 4px">EARNED</p><p class="mono text-toxic" style="font-size:15px;font-weight:900;margin:0">$${earned.toFixed(2)}</p></div>
+        <div style="background:rgba(0,0,0,0.5);border-radius:14px;padding:13px"><p style="font-size:9px;color:#888;margin:0 0 4px">DAILY</p><p class="mono text-toxic" style="font-size:15px;font-weight:900;margin:0">$${Number(pl.dly||pl.daily).toFixed(2)}</p></div>
+        <div style="background:rgba(0,0,0,0.5);border-radius:14px;padding:13px"><p style="font-size:9px;color:#888;margin:0 0 4px">TARGET</p><p class="mono" style="font-size:15px;font-weight:900;margin:0">$${Number(pl.t||pl.total).toFixed(2)}</p></div>
+      </div>
+      <div style="background:linear-gradient(135deg,${p.c}18,transparent);border:1px solid ${p.c}44;border-radius:18px;padding:16px;margin-bottom:14px;position:relative;z-index:1">
+        <p style="font-size:10px;color:#888;font-weight:800;text-align:center;margin:0 0 8px;letter-spacing:1px">⏳ NEXT COLLECT IN</p>
+        <p class="mono timer-glow" style="font-size:30px;font-weight:900;text-align:center;margin:0 0 16px" data-timer="${pl.id}">--:--:--</p>
+        <button data-collect="${pl.id}" onclick="collect(${pl.id})" class="collect-btn" style="width:100%;padding:16px;border-radius:16px;font-size:13px;border:none">⏳ WAITING FOR DAILY COLLECT</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:#888;margin-bottom:8px;position:relative;z-index:1"><span>Day ${days} / 40</span><span>${40-days} days left</span></div>
+      <div style="width:100%;height:8px;border-radius:4px;background:rgba(255,255,255,0.05);overflow:hidden;position:relative;z-index:1"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,${p.c},#10B981);box-shadow:0 0 12px ${p.c}88"></div></div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+/* WALLET: DUAL WITHDRAWAL (USDT & UPI) */
+function walletUI(){
+  const t=I18N[S.lang]||I18N.en;
+  const upiQR=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent('upi://pay?pa='+CFG.upi+'&pn='+CFG.upiName+'&cu=INR')}`;
+  const m=['UPI','USDT BEP20','USDT TRC20','BTC BEP20'];
+  const btns=m.map((x,i)=>`<button onclick="selM(${i})" id="m-${i}" style="padding:8px 16px;border-radius:999px;font-size:12px;font-weight:800;border:none;cursor:pointer;white-space:nowrap;transition:all 0.2s;${i===0?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.05);color:#888'}">${x}</button>`).join('');
+  
+  return `<div style="display:flex;flex-direction:column;gap:16px">
+    <div class="glass-card">
+      <p style="font-size:10px;color:#10B981;font-weight:800;margin:0 0 12px;letter-spacing:1.5px">💳 DEPOSIT FUNDS</p>
+      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px" class="hide-scroll">${btns}</div>
+      <div style="background:rgba(0,0,0,0.45);border:1px dashed rgba(0,255,102,0.25);border-radius:18px;padding:18px;text-align:center;margin-bottom:16px">
+        <p style="font-size:10px;color:#888;margin:0 0 8px;letter-spacing:1.5px">SEND TO</p>
+        <p id="payAddr" class="mono text-toxic" style="font-size:12px;margin:0 0 14px;word-break:break-all">${CFG.upi}</p>
+        <div style="display:flex;justify-content:center"><div style="background:#fff;padding:10px;border-radius:16px"><img id="qrImg" src="${upiQR}" style="width:150px;height:150px;display:block"></div></div>
+        <p id="rateNote" style="font-size:10px;color:#888;margin:14px 0 0">💱 Rate: 1 USDT = ₹${CFG.inrRate} INR</p>
+      </div>
+      <input type="number" id="depAmt" class="inp" placeholder="Enter Amount" style="margin-bottom:10px" oninput="convertAmt()">
+      <div id="convBox" style="display:none;background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.3);border-radius:14px;padding:12px;margin-bottom:12px;text-align:center">
+        <p style="font-size:10px;color:#888;margin:0;letter-spacing:0.5px">YOU WILL RECEIVE</p>
+        <p id="convUsd" class="mono text-toxic" style="font-size:20px;font-weight:900;margin:4px 0 0">$0.00 USDT</p>
+      </div>
+      <div id="utrWrap">
+        <input type="text" id="depUtr" maxlength="12" class="inp" placeholder="Enter 12-Digit UTR Number" style="margin-bottom:12px">
+      </div>
+      <div id="txWrap" style="display:none">
+        <input type="text" id="depTx" class="inp" placeholder="Enter Transaction Hash (TxHash)" style="margin-bottom:12px">
+      </div>
+      <button onclick="subDep()" id="depBtn" class="btn-green" style="width:100%;padding:16px;border-radius:16px;font-size:14px;border:none;cursor:pointer">Submit UTR for Verification</button>
+    </div>
+    
+    <div class="glass-card">
+      <p style="font-size:10px;color:#10B981;font-weight:800;margin:0 0 12px;letter-spacing:1.5px">💸 WITHDRAW FUNDS</p>
+      
+      <div style="background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.25);border-radius:12px;padding:10px 14px;margin-bottom:14px">
+        <p style="font-size:11px;color:#00FF66;font-weight:700;margin:0">${t.wdTimeNotice}</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+        <button id="wdTabUsdt" onclick="selWdMethod('USDT')" style="padding:10px;border-radius:12px;font-size:12px;font-weight:800;border:none;cursor:pointer;background:#00FF66;color:#000">USDT (Crypto)</button>
+        <button id="wdTabUpi" onclick="selWdMethod('UPI')" style="padding:10px;border-radius:12px;font-size:12px;font-weight:800;border:none;cursor:pointer;background:rgba(255,255,255,0.05);color:#888">UPI (INR)</button>
+      </div>
+
+      <input type="number" id="wdAmt" class="inp" placeholder="Enter Amount in USD (Min $${CFG.minWd})" style="margin-bottom:12px" oninput="calcWd()">
+      
+      <div id="feeBox" style="display:none;background:rgba(0,0,0,0.45);border-radius:14px;padding:12px;margin-bottom:12px;font-size:11px;color:#ccc">
+        <div style="display:flex;justify-content:space-between"><span>Fee (${CFG.fee}%)</span><span id="feeVal" class="mono">$0.00</span></div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px;font-weight:900"><span class="text-toxic">Net Receive (USD)</span><span id="netVal" class="mono text-toxic">$0.00</span></div>
+        <div id="upiCalcRow" style="display:none;justify-content:space-between;margin-top:6px;font-weight:900;border-top:1px solid rgba(255,255,255,0.08);padding-top:6px">
+          <span style="color:#FFD700">Receive in Bank / UPI</span><span id="netInrVal" class="mono" style="color:#FFD700">₹0.00</span>
+        </div>
+      </div>
+      
+      <div id="wdInputWrapper">
+        <input type="text" id="wdAddr" class="inp" placeholder="Enter USDT Address (BEP20 / TRC20)" style="margin-bottom:12px">
+      </div>
+      
+      <p style="font-size:10px;color:#666;margin:0 0 12px">Min $${CFG.minWd} · ${CFG.fee}% fee deduction · 1 USD = ₹${CFG.inrRate}</p>
+      <button onclick="subWd()" style="width:100%;padding:16px;border-radius:16px;font-size:14px;font-weight:800;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;cursor:pointer">Request Withdrawal</button>
+    </div>
+  </div>`;
+}
+
+function selWdMethod(m){
+  S.wdMethod=m;
+  const bUsdt=$('wdTabUsdt');const bUpi=$('wdTabUpi');const inp=$('wdAddr');
+  if(m==='USDT'){
+    if(bUsdt){bUsdt.style.background='#00FF66';bUsdt.style.color='#000';}
+    if(bUpi){bUpi.style.background='rgba(255,255,255,0.05)';bUpi.style.color='#888';}
+    if(inp)inp.placeholder="Enter USDT Address (BEP20 / TRC20)";
+    if($('upiCalcRow'))$('upiCalcRow').style.display='none';
+  } else {
+    if(bUpi){bUpi.style.background='#00FF66';bUpi.style.color='#000';}
+    if(bUsdt){bUsdt.style.background='rgba(255,255,255,0.05)';bUsdt.style.color='#888';}
+    if(inp)inp.placeholder="Enter your UPI ID (e.g. mobile@upi)";
+    calcWd();
+  }
+}
+
+let sM=0;
+function selM(i){
+  sM=i;
+  document.querySelectorAll('[id^="m-"]').forEach((el,x)=>{
+    el.style.background=x===i?'#00FF66':'rgba(255,255,255,0.05)';
+    el.style.color=x===i?'#000':'#888';
+  });
+  const addrs=[CFG.upi,CFG.usdtBep20,CFG.usdtTrc20,CFG.btcBep20];
+  $('payAddr').innerText=addrs[i];
+  const data=i===0?encodeURIComponent('upi://pay?pa='+CFG.upi+'&pn='+CFG.upiName+'&cu=INR'):addrs[i];
+  $('qrImg').src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+data;
+  if(i===0){
+    $('utrWrap').style.display='block';$('txWrap').style.display='none';
+    $('depBtn').innerText='Submit UTR for Verification';
+    $('rateNote').style.display='block';
+  } else {
+    $('utrWrap').style.display='none';$('txWrap').style.display='block';
+    $('depBtn').innerText='Submit TxHash for Verification';
+    $('rateNote').style.display='none';
+  }
+  convertAmt();
+}
+function convertAmt(){
+  const v=parseFloat($('depAmt').value||0);
+  if(sM===0&&v>0){$('convBox').style.display='block';$('convUsd').innerText='$'+(v/CFG.inrRate).toFixed(2)+' USDT';}
+  else $('convBox').style.display='none';
+}
+function calcWd(){
+  const v=parseFloat($('wdAmt').value||0);
+  if(v>=CFG.minWd){
+    $('feeBox').style.display='block';
+    const fee=v*CFG.fee/100;
+    const net=v*(100-CFG.fee)/100;
+    $('feeVal').innerText='$'+fee.toFixed(2);
+    $('netVal').innerText='$'+net.toFixed(2);
+    if(S.wdMethod==='UPI'){
+      $('upiCalcRow').style.display='flex';
+      $('netInrVal').innerText='₹'+(net*CFG.inrRate).toFixed(2)+' INR';
+    } else {
+      $('upiCalcRow').style.display='none';
+    }
+  } else $('feeBox').style.display='none';
+}
+
+async function subDep(){
+  const amt=parseFloat($('depAmt').value);
+  const isC=sM!==0;
+  const utr=$('depUtr')?$('depUtr').value.trim():'';
+  const tx=$('depTx')?$('depTx').value.trim():'';
+  const ref=isC?tx:utr;
+  if(!amt){return alert('Please enter amount');}
+  if(isC&&!ref){return alert('Please enter Transaction Hash');}
+  if(!isC&&utr.length!==12){return alert('Please enter valid 12-digit UTR Number');}
+  const method=['UPI','USDT BEP20','USDT TRC20','BTC BEP20'][sM];
+  const usdAmt=isC?amt:(amt/CFG.inrRate);
+  
+  S.tx.unshift({type:'deposit',amount:usdAmt,ref:ref,status:'pending',method:method,date:new Date().toISOString()});
+  if(sb){
+    try{
+      await sb.from('deposits').insert([{user_id:S.user.user_id,username:S.user.username,amount:usdAmt,method:method,ref:ref,status:'pending'}]);
+    }catch(e){}
+  }
+  save();
+  render();
+  $('depAmt').value='';if($('depUtr'))$('depUtr').value='';if($('depTx'))$('depTx').value='';
+  $('convBox').style.display='none';
+  haptic('success');
+  alert('✅ Deposit submitted!\n\nAdmin will verify within 24 hours.');
+}
+
+async function subWd(){
+  const amt=parseFloat($('wdAmt').value);
+  const addr=$('wdAddr').value.trim();
+  const method=S.wdMethod||'USDT';
+  if(!amt||amt<CFG.minWd)return alert('Minimum withdrawal is $'+CFG.minWd);
+  if(!addr){
+    return alert(method==='UPI'?'Please enter your UPI ID':'Please enter USDT address');
+  }
+  if(Number(S.user.balance)<amt)return alert('Insufficient balance');
+  
+  const fee=amt*CFG.fee/100;
+  const net=amt-fee;
+  S.user.balance-=amt;
+  
+  const nowIso = new Date().toISOString();
+  
+  S.tx.unshift({
+    type:'withdrawal',
+    amount:net,
+    status:'pending',
+    method:method,
+    address:addr,
+    date:nowIso
+  });
+  save();
+  render();
+  
+  if(sb){
+    try{
+      let res = await sb.from('withdrawals').insert([{
+        user_id: S.user.user_id,
+        username: S.user.username,
+        amount: net,
+        address: `${method}: ${addr}`,
+        method: method,
+        status: 'pending'
+      }]);
+      
+      if(res.error){
+        await sb.from('withdrawals').insert([{
+          user_id: S.user.user_id,
+          username: S.user.username,
+          amount: net,
+          address: `${method}: ${addr}`,
+          status: 'pending'
+        }]);
+      }
+      
+      await sb.from('users').update({balance:S.user.balance}).eq('user_id',S.user.user_id);
+    }catch(e){
+      console.warn('Withdrawal table insert note:', e);
+    }
+  }
+  
+  haptic('success');
+  const note=method==='UPI'?`₹${(net*CFG.inrRate).toFixed(2)} INR`: `$${fmt(net)}`;
+  alert(`✅ Withdrawal requested!\n\nMethod: ${method}\nYou will receive: ${note}`);
+}
+
+/* HISTORY TAB */
+function historyUI(){
+  const tx=S.tx;
+  const h=`<div class="glass-card" style="text-align:center;margin-bottom:12px"><p style="font-size:10px;color:#888;margin:0 0 8px;letter-spacing:1.5px">TOTAL TRANSACTIONS</p><p class="mono" style="font-size:34px;font-weight:900;margin:0">${tx.length}</p></div>`;
+  if(tx.length===0)return h+`<div class="glass-card" style="text-align:center;padding:52px 20px"><div style="font-size:42px;opacity:0.4;margin-bottom:14px">📋</div><p style="font-weight:900;font-size:17px;margin:0 0 6px">No transactions yet</p><p style="font-size:12px;color:#888;margin:0">Your activity will appear here</p></div>`;
+  
+  return h+tx.map(x=>{
+    const isWd=x.type==='withdrawal';
+    const isDly=x.type==='daily_collect';
+    const isC=!isWd;
+    const col=isC?'text-toxic':'text-red-400';
+    const sign=isC?'+':'-';
+    
+    let stBadge='background:rgba(251,191,36,0.15);color:#FBBF24';
+    if(x.status==='approved'||x.status==='completed') stBadge='background:rgba(0,255,102,0.15);color:#00FF66';
+    if(x.status==='rejected') stBadge='background:rgba(239,68,68,0.15);color:#EF4444';
+    
+    const label=isDly?'Daily Reward':(isWd?'Withdrawal':'Deposit');
+    let subInfo=esc(x.method||'');
+    if(isWd&&x.address&&!subInfo.includes(x.address)){
+      subInfo+=' • '+esc(x.address);
+    }
+    
+    return `<div class="glass-card" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:16px">
+      <div>
+        <p style="font-weight:800;font-size:13px;margin:0;text-transform:capitalize">${label}</p>
+        <p style="font-size:10px;color:#888;margin:4px 0 0;word-break:break-all">${subInfo}</p>
+      </div>
+      <div style="text-align:right">
+        <p class="mono font-black ${col}" style="margin:0;font-size:14px">${sign}$${fmt(x.amount)}</p>
+        <span style="font-size:9px;padding:3px 10px;border-radius:20px;${stBadge};font-weight:800;margin-top:6px;display:inline-block;text-transform:uppercase;letter-spacing:0.5px">${x.status||'pending'}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* TEAM WITH LEADERBOARD */
+function teamUI(){
+  const rl=refLink();
+  const t=I18N[S.lang]||I18N.en;
+
+  const lbRows=LEADERBOARD_DATA.map(item=>{
+    const medal=item.r===1?'🥇':item.r===2?'🥈':item.r===3?'🥉':`#${item.r}`;
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:12px;background:rgba(0,0,0,0.35);margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:15px;width:24px">${medal}</span>
+        <span style="font-size:12px;font-weight:800">${item.u}</span>
+        <span style="font-size:12px">${item.c}</span>
+      </div>
+      <span class="mono text-toxic" style="font-size:12px;font-weight:900">$${fmt(item.vol)}</span>
+    </div>`;
+  }).join('');
+
+  return `<div style="display:flex;flex-direction:column;gap:16px">
+    <div class="glass-card">
+      <p style="font-size:10px;color:#10B981;font-weight:800;margin:0 0 8px;letter-spacing:1.5px">👥 YOUR NETWORK</p>
+      <h2 style="font-size:24px;font-weight:900;margin:0 0 8px;line-height:1.25">Build your network<br>and <span class="text-toxic">grow together.</span></h2>
+      <p style="font-size:12px;color:#888;margin:0">Earn up to 10 levels of commission</p>
+    </div>
+    
+    <div class="glass-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <p style="font-size:10px;color:#FFD700;font-weight:800;margin:0;letter-spacing:1px">${t.ldrTitle}</p>
+        <span style="font-size:10px;color:#888">${t.top10}</span>
+      </div>
+      <div>${lbRows}</div>
+    </div>
+
+    <button onclick="copy('${rl}')" class="btn-green glow" style="width:100%;padding:18px;border-radius:18px;font-size:13px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:14px">
+      <span style="font-size:26px">🔗</span>
+      <div style="text-align:left"><p style="font-weight:900;font-size:13px;margin:0">${t.invFriends}</p><p style="font-size:10px;opacity:0.7;margin:2px 0 0">Share your app link</p></div>
+    </button>
+    <button onclick="shareTg()" style="width:100%;padding:18px;border-radius:18px;font-size:13px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:14px">
+      <span style="font-size:26px">📤</span>
+      <div style="text-align:left"><p style="font-weight:900;font-size:13px;margin:0">${t.shareTg}</p><p style="font-size:10px;opacity:0.7;margin:2px 0 0">Send to friends</p></div>
+    </button>
+    
+    <div class="glass-card">
+      <p style="font-size:10px;color:#888;font-weight:800;margin:0 0 14px;letter-spacing:1.5px">💎 COMMISSION LEVELS</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center;font-size:10px">
+        <div style="background:rgba(0,255,102,0.07);padding:12px;border-radius:12px"><p style="color:#888;margin:0">L1</p><p class="text-toxic" style="font-weight:900;margin:4px 0 0;font-size:14px">10%</p></div>
+        <div style="background:rgba(0,255,102,0.07);padding:12px;border-radius:12px"><p style="color:#888;margin:0">L2</p><p class="text-toxic" style="font-weight:900;margin:4px 0 0;font-size:14px">5%</p></div>
+        <div style="background:rgba(0,255,102,0.07);padding:12px;border-radius:12px"><p style="color:#888;margin:0">L3</p><p class="text-toxic" style="font-weight:900;margin:4px 0 0;font-size:14px">2%</p></div>
+        <div style="grid-column:span 3;background:rgba(255,255,255,0.03);padding:12px;border-radius:12px"><p style="color:#888;margin:0">Levels 4 – 10</p><p style="color:#ccc;font-weight:900;margin:4px 0 0;font-size:14px">1% each</p></div>
+      </div>
+    </div>
+  </div>`;
+}
+function shareTg(){
+  const link=refLink();
+  window.open('https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent('Join TOXIC and start earning daily! 🚀'),'_blank');
+}
+
+/* NOTIFICATIONS */
+function notifsModal(){
+  if(!S.showNotifs)return '';
+  const un=unread();
+  return `<div style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);overflow-y:auto" onclick="S.showNotifs=false;render()">
+    <div class="glass-card modal-in" onclick="event.stopPropagation()" style="max-width:440px;margin:20px auto;max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+        <h2 style="font-size:18px;font-weight:900;margin:0">🔔 Notifications${un>0?` <span style="font-size:11px;background:#EF4444;color:#fff;padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:900">${un} NEW</span>`:''}</h2>
+        <button onclick="S.showNotifs=false;render()" style="background:none;border:none;color:#888;font-size:26px;cursor:pointer;line-height:1">×</button>
+      </div>
+      ${un>0?`<button onclick="markRead()" class="btn-green" style="width:100%;padding:11px;border-radius:12px;font-size:12px;border:none;margin-bottom:14px;cursor:pointer">✓ MARK ALL AS READ</button>`:''}
+      ${S.notifs.length===0?`<div style="text-align:center;padding:44px 0;color:#666"><div style="font-size:44px;margin-bottom:12px;opacity:0.5">📭</div><p style="font-weight:700">No notifications yet</p><p style="font-size:11px;margin:4px 0 0">You'll see admin messages here</p></div>`:S.notifs.map(n=>{
+        const cls=n.type==='warning'?'warning':n.type==='bonus'?'bonus':n.type==='update'?'update':'';
+        return `<div class="nitem ${cls}${n.is_read?'':' unread'}">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <p style="font-weight:900;font-size:13px;margin:0">${esc(n.title||'Notification')}</p>
+            ${n.is_read?'':'<span style="font-size:9px;color:#EF4444;font-weight:900">● NEW</span>'}
+          </div>
+          <p style="font-size:12px;color:#ddd;margin:0;line-height:1.5">${esc(n.message)}</p>
+          <p style="font-size:9px;color:#666;margin:8px 0 0">${n.created_at?String(n.created_at).slice(0,16).replace('T',' '):''}</p>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+/* PROFILE MODAL */
+function profileModal(){
+  if(!S.showProfile||!S.user)return '';
+  const u=S.user,lang=S.lang||'en',t=I18N[lang]||I18N.en;
+  return `<div style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);overflow-y:auto" onclick="S.showProfile=false;render()">
+    <div class="glass-card modal-in" onclick="event.stopPropagation()" style="max-width:440px;margin:20px auto;max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <span style="font-size:10px;color:#888;font-weight:800;letter-spacing:1.5px">MY PROFILE</span>
+        <button onclick="S.showProfile=false;render()" style="background:none;border:none;color:#888;font-size:26px;cursor:pointer;line-height:1">×</button>
+      </div>
+      
+      <div style="text-align:center;margin-bottom:24px">
+        <div style="position:relative;display:inline-block">
+          <div class="avatar" style="width:84px;height:84px;cursor:pointer" onclick="$('avatarFileInput').click()">
+            ${userAvatar(u,80,30)}
+          </div>
+          <button onclick="$('avatarFileInput').click()" style="position:absolute;bottom:0;right:0;width:28px;height:28px;border-radius:50%;background:#00FF66;color:#000;border:2px solid #050907;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;box-shadow:0 0 10px rgba(0,255,102,0.6)">📷</button>
+          <input type="file" id="avatarFileInput" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)">
+        </div>
+        <h2 style="font-size:22px;font-weight:900;margin:14px 0 4px">${esc(u.username)}</h2>
+        <p style="font-size:10px;color:#888;margin:0">ID: ${esc(u.user_id)}</p>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+        ${pRow('📧 Email',u.email||'—')}
+        ${pRow('📱 Phone',u.phone||'—')}
+        ${pRow('🎫 Referral',u.referral_code||'—',1)}
+        ${pRow('💰 Balance','$'+fmt(u.balance),1)}
+        ${pRow('👥 Ref Bonus','$'+fmt(u.referral_balance),1)}
+        ${pRow('📅 Joined',u.joined_at?String(u.joined_at).slice(0,10):'—')}
+      </div>
+      
+      <div style="height:1px;background:rgba(255,255,255,0.08);margin:18px 0"></div>
+      <p style="font-size:10px;color:#888;font-weight:800;margin:0 0 12px;letter-spacing:1.5px">🌐 ${t.langName.toUpperCase()}</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px">
+        <button onclick="setLang('en')" style="padding:10px 6px;border-radius:12px;font-size:11px;font-weight:800;border:none;cursor:pointer;${lang==='en'?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.05);color:#888'}">🇬🇧 English</button>
+        <button onclick="setLang('hi')" style="padding:10px 6px;border-radius:12px;font-size:11px;font-weight:800;border:none;cursor:pointer;${lang==='hi'?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.05);color:#888'}">🇮🇳 हिंदी</button>
+        <button onclick="setLang('ur')" style="padding:10px 6px;border-radius:12px;font-size:11px;font-weight:800;border:none;cursor:pointer;${lang==='ur'?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.05);color:#888'}">🇵🇰 اردو</button>
+        <button onclick="setLang('bn')" style="padding:10px 6px;border-radius:12px;font-size:11px;font-weight:800;border:none;cursor:pointer;${lang==='bn'?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.05);color:#888'}">🇧🇩 বাংলা</button>
+        <button onclick="setLang('ar')" style="grid-column:span 2;padding:10px 6px;border-radius:12px;font-size:11px;font-weight:800;border:none;cursor:pointer;${lang==='ar'?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.05);color:#888'}">🇦🇪 العربية</button>
+      </div>
+
+      <div style="height:1px;background:rgba(255,255,255,0.08);margin:18px 0"></div>
+      <p style="font-size:10px;color:#888;font-weight:800;margin:0 0 12px;letter-spacing:1.5px">🔐 CHANGE PASSWORD</p>
+      <input type="password" id="oldPw" class="inp" placeholder="Current Password" style="margin-bottom:10px">
+      <input type="password" id="newPw" class="inp" placeholder="New Password" style="margin-bottom:10px">
+      <input type="password" id="newPw2" class="inp" placeholder="Confirm New Password" style="margin-bottom:16px">
+      <button onclick="changePw()" class="btn-green glow" style="width:100%;padding:13px;border-radius:16px;font-size:14px;border:none;margin-bottom:12px;cursor:pointer">UPDATE PASSWORD</button>
+      <button onclick="S.showProfile=false;logout()" style="width:100%;padding:13px;border-radius:16px;font-size:12px;font-weight:800;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#EF4444;cursor:pointer">🚪 Logout</button>
+    </div>
+  </div>`;
+}
+
+function pRow(l,v,green){
+  return `<div style="display:flex;justify-content:space-between;align-items:center;padding:13px;background:rgba(0,0,0,0.45);border-radius:12px"><span style="font-size:12px;color:#888">${l}</span><span class="mono" style="font-size:12px;font-weight:${green?'900':'500'};color:${green?'#00FF66':'#fff'}">${esc(v)}</span></div>`;
+}
+function setLang(l){S.lang=l;save();render();}
+
+function changePw(){
+  const o=$('oldPw').value,n=$('newPw').value,n2=$('newPw2').value;
+  if(!o||!n||!n2)return alert('Please fill all fields');
+  if(n.length<4)return alert('Password must be 4+ characters');
+  if(n!==n2)return alert('Passwords do not match');
+  const st=localStorage.getItem('t_pwd_'+S.user.user_id);
+  if(st&&st!==o)return alert('❌ Current password is incorrect');
+  localStorage.setItem('t_pwd_'+S.user.user_id,n);
+  $('oldPw').value='';$('newPw').value='';$('newPw2').value='';
+  haptic('success');
+  alert('✅ Password updated successfully!');
+}
+
+function copy(text){
+  navigator.clipboard.writeText(text).then(()=>{
+    haptic('success');toast('✅ Copied to Clipboard!');
+  }).catch(()=>{
+    const el=document.createElement('textarea');el.value=text;
+    document.body.appendChild(el);el.select();
+    document.execCommand('copy');document.body.removeChild(el);
+    haptic('success');toast('✅ Copied to Clipboard!');
+  });
+}
+
+try{if(window.Telegram&&window.Telegram.WebApp){window.Telegram.WebApp.ready();window.Telegram.WebApp.expand();}}catch(e){}
+if(!S.user)S.tab='signup';
+(async function(){
+  applyLangDirection();
+  if(S.user){await syncUser();await autoCredit();}
+  render();
+  setTimeout(()=>{const l=$('loading');if(l)l.classList.add('hide');},1200);
+  setTimeout(showLive,3500);
+})();
+setInterval(async()=>{if(S.user){await syncUser();updateDyn();}},30000);
+</script>
+</body>
+</html>
