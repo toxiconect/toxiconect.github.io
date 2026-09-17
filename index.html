@@ -1,1 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TOXIC - Web3 Investment</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:#060a09;background-image:radial-gradient(circle at 0% 0%,rgba(0,255,102,0.07) 0%,transparent 40%),radial-gradient(circle at 100% 100%,rgba(16,185,129,0.05) 0%,transparent 40%);background-attachment:fixed;color:#fff;font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+.mono{font-family:'JetBrains Mono',monospace;letter-spacing:-0.5px}
+.glass{background:rgba(12,20,17,0.85);backdrop-filter:blur(24px);border:1px solid rgba(0,255,102,0.08)}
+.glass-card{background:linear-gradient(145deg,rgba(14,26,20,0.95),rgba(8,14,11,0.98));border:1px solid rgba(0,255,102,0.09);border-radius:1.5rem;padding:1.25rem;box-shadow:0 20px 40px -20px rgba(0,0,0,0.9);position:relative}
+.text-3d{text-shadow:0 0 20px rgba(0,255,102,0.5)}
+.text-toxic{color:#00FF66}
+.text-toxic-dim{color:#10B981}
+.bg-toxic{background:#00FF66}
+.glow-green{box-shadow:0 0 24px rgba(0,255,102,0.35)}
+.glow-green-strong{box-shadow:0 0 50px rgba(0,255,102,0.55)}
+.btn-green{background:linear-gradient(135deg,#00FF66 0%,#10B981 100%);color:#000;font-weight:800;transition:all 0.15s}
+.btn-green:active{transform:scale(0.96)}
+.card-gradient{background:linear-gradient(160deg,rgba(0,255,102,0.12),rgba(10,15,12,0.98) 65%)}
+.input-dark{background:rgba(0,0,0,0.6);border:1.5px solid rgba(0,255,102,0.1);border-radius:1rem;padding:1rem;color:#fff;outline:none;width:100%;font-size:15px}
+.input-dark:focus{border-color:rgba(0,255,102,0.6)}
+.input-dark::placeholder{color:#4B5563}
+.hide-scroll::-webkit-scrollbar{display:none}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 2px;border-radius:14px;cursor:pointer;position:relative}
+.nav-item.active{color:#00FF66}
+.nav-item.active::after{content:'';position:absolute;bottom:-2px;left:22%;right:22%;height:3px;background:#00FF66;border-radius:3px;box-shadow:0 0 12px rgba(0,255,102,0.8)}
+.nav-icon{width:32px;height:32px;display:flex;align-items:center;justify-content:center}
+.nav-svg{width:20px;height:20px;stroke-width:2}
+.plan-card{background:linear-gradient(160deg,rgba(0,0,0,0.7),rgba(10,20,15,0.95));border:1.5px solid rgba(0,255,102,0.1);border-radius:1.25rem;padding:1rem;position:relative;overflow:hidden;cursor:pointer;transition:all 0.25s}
+.plan-card:active{transform:scale(0.96);border-color:rgba(0,255,102,0.4)}
+.plan-card.locked{opacity:0.7;cursor:default}
+.plan-card.locked::after{content:'🔒 ACTIVE';position:absolute;top:10px;right:10px;background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-size:9px;font-weight:900;padding:4px 8px;border-radius:20px;box-shadow:0 0 15px rgba(0,255,102,0.6);z-index:20}
+.step-circle{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:800}
+.step-active{background:#00FF66;color:#000;box-shadow:0 0 25px rgba(0,255,102,0.6)}
+.step-inactive{background:rgba(255,255,255,0.04);color:#4B5563;border:1.5px solid rgba(255,255,255,0.07)}
+.step-done{background:#10B981;color:#000}
+.modal-anim{animation:modalIn 0.35s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes modalIn{from{opacity:0;transform:scale(0.85) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.pulse-dot{animation:pulseDot 1.5s infinite}
+@keyframes pulseDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.85)}}
+.timer-glow{text-shadow:0 0 25px rgba(0,255,102,0.7)}
+.collect-btn{background:linear-gradient(135deg,#00FF66 0%,#10B981 100%);color:#000;font-weight:900;box-shadow:0 0 35px rgba(0,255,102,0.55);animation:collectPulse 2s infinite}
+@keyframes collectPulse{0%,100%{box-shadow:0 0 20px rgba(0,255,102,0.4)}50%{box-shadow:0 0 45px rgba(0,255,102,0.85)}}
+.collect-btn:disabled{background:rgba(255,255,255,0.05);color:#6B7280;box-shadow:none;animation:none;cursor:not-allowed}
+.plan-active-card{background:linear-gradient(145deg,rgba(0,255,102,0.14),rgba(8,16,12,0.98) 70%);border:1.5px solid rgba(0,255,102,0.4);border-radius:1.5rem;padding:1.25rem;position:relative;overflow:hidden}
+.avatar-ring{background:linear-gradient(135deg,#00FF66,#10B981);padding:2px;border-radius:9999px}
+.avatar-inner{background:#060a09;border-radius:9999px}
+.btn-invest-3d{background:linear-gradient(180deg,#00FF66 0%,#10B981 100%);color:#000;font-weight:900;border-radius:0.75rem;border:none;padding:10px;width:100%;cursor:pointer;font-size:11px;letter-spacing:0.3px;box-shadow:0 4px 0 #0a5c3a,0 6px 15px rgba(0,255,102,0.4),inset 0 1px 0 rgba(255,255,255,0.3);transition:all 0.1s;position:relative;z-index:20}
+.btn-invest-3d:active{transform:translateY(3px);box-shadow:0 1px 0 #0a5c3a,0 2px 8px rgba(0,255,102,0.3)}
+.btn-invest-3d.locked-btn{background:linear-gradient(180deg,#2a2a2a,#1a1a1a);color:#666;cursor:not-allowed;box-shadow:0 4px 0 #0a0a0a}
+/* Loading Screen */
+#loading{position:fixed;inset:0;background:#060a09;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.5s,visibility 0.5s}
+#loading.hide{opacity:0;visibility:hidden}
+.load-logo{font-size:56px;font-weight:900;color:#00FF66;letter-spacing:0.3em;text-shadow:0 0 30px rgba(0,255,102,0.8);animation:loadPulse 1.5s infinite}
+@keyframes loadPulse{0%,100%{transform:scale(1);text-shadow:0 0 30px rgba(0,255,102,0.8)}50%{transform:scale(1.05);text-shadow:0 0 60px rgba(0,255,102,1)}}
+.load-bar{width:180px;height:3px;background:rgba(0,255,102,0.15);border-radius:3px;margin-top:24px;overflow:hidden}
+.load-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#00FF66,#10B981);border-radius:3px;animation:loadBar 1.5s forwards}
+@keyframes loadBar{to{width:100%}}
+.load-text{color:#666;font-size:10px;letter-spacing:0.3em;margin-top:12px}
+/* Live Notification - Bottom position, above nav */
+#live-banner{position:fixed;bottom:95px;left:12px;right:12px;max-width:420px;margin:0 auto;background:linear-gradient(135deg,rgba(10,20,17,0.98),rgba(6,14,10,0.98));backdrop-filter:blur(20px);border:1px solid rgba(0,255,102,0.4);border-radius:1rem;padding:10px 14px;z-index:45;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s;transform:translateY(150%);opacity:0;display:flex;align-items:center;gap:10px;box-shadow:0 10px 30px rgba(0,255,102,0.25)}
+#live-banner.show{transform:translateY(0);opacity:1}
+.live-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#00FF66,#10B981);display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;font-size:14px;flex-shrink:0}
+.live-text{font-size:11px;color:#ddd;line-height:1.4;flex:1}
+.live-text b{color:#00FF66;font-weight:700}
+/* Toast - Bottom center, cleaner */
+#toast{position:fixed;bottom:160px;left:50%;transform:translateX(-50%) translateY(30px);background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-weight:800;padding:10px 20px;border-radius:1rem;font-size:12px;z-index:70;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 10px 40px rgba(0,255,102,0.5);opacity:0;pointer-events:none;max-width:85%;text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+/* Chart */
+.chart-wrap{overflow-x:auto;padding:4px 0}
+.chart-bar{transition:all 0.3s;min-width:22px}
+</style>
+</head>
+<body>
+<!-- LOADING SCREEN -->
+<div id="loading">
+  <div class="load-logo">TOXIC</div>
+  <div class="load-bar"><div class="load-bar-fill"></div></div>
+  <div class="load-text">INITIALIZING...</div>
+</div>
 
+<!-- LIVE NOTIFICATION BANNER (Bottom) -->
+<div id="live-banner">
+  <div class="live-avatar" id="lb-avatar">R</div>
+  <div class="live-text" id="lb-text">Loading...</div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<div id="app"></div>
+
+<script>
+/* ===== LANGUAGE ===== */
+var T = {
+  en: {
+    dashboard:'Dashboard', invest:'INVEST', active:'Active', wallet:'Wallet', history:'History', team:'Team',
+    welcome:'Welcome back', totalBalance:'TOTAL BALANCE', referral:'REFERRAL', activePlans:'ACTIVE PLANS',
+    withdraw:'WITHDRAW EARNINGS', myActivePlans:'MY ACTIVE PLANS', refLink:'YOUR REFERRAL LINK',
+    noActivePlans:'No Active Plans', choosePlan:'Choose a plan to start earning', browsePlans:'BROWSE PLANS →',
+    todaysEarning:"TODAY'S EARNING", earned:'EARNED', daily:'DAILY', target:'TARGET', nextCollect:'NEXT COLLECT IN',
+    waiting:'WAITING FOR DAILY COLLECT', day:'Day', live:'LIVE',
+    chooseYourPlan:'Choose your plan', availableBalance:'AVAILABLE BALANCE', investNow:'INVEST NOW',
+    alreadyActive:'ALREADY ACTIVE', planAmount:'PLAN AMOUNT', dayTotal:'40-Day Total', roi:'ROI / day',
+    signIn:'SIGN IN', signUp:'Create one', welcomeBack:'WELCOME BACK', signInTitle:'Sign in to your account',
+    noAccount:'No account?', hasAccount:'Already have an account?', back:'BACK', next:'NEXT', finish:'FINISH',
+    step1:'Choose your country', step2:'Personal Information', step3:'Create your access',
+    yourNetwork:'YOUR NETWORK', buildNetwork:'Build your network and grow together', inviteFriends:'INVITE FRIENDS',
+    shareTelegram:'SHARE ON TELEGRAM', commissionLevels:'COMMISSION LEVELS',
+    deposit:'DEPOSIT FUNDS', withdrawFunds:'WITHDRAW FUNDS', requestWithdraw:'Request Withdrawal',
+    myProfile:'MY PROFILE', changePassword:'CHANGE PASSWORD', updatePassword:'UPDATE PASSWORD', logout:'Logout',
+    portfolio:'Portfolio Chart (Last 7 Days)', language:'Language', cancel:'Cancel',
+    totalReturn:'TOTAL RETURN · 40 DAYS', duration:'Duration', yourBalance:'Your Balance', addFunds:'ADD FUNDS TO INVEST'
+  },
+  hi: {
+    dashboard:'डैशबोर्ड', invest:'निवेश', active:'सक्रिय', wallet:'वॉलेट', history:'इतिहास', team:'टीम',
+    welcome:'वापसी पर स्वागत', totalBalance:'कुल बैलेंस', referral:'रेफ़रल', activePlans:'सक्रिय प्लान',
+    withdraw:'कमाई निकालें', myActivePlans:'मेरे सक्रिय प्लान', refLink:'आपका रेफ़रल लिंक',
+    noActivePlans:'कोई सक्रिय प्लान नहीं', choosePlan:'शुरू करने के लिए प्लान चुनें', browsePlans:'प्लान देखें →',
+    todaysEarning:'आज की कमाई', earned:'कमाया', daily:'रोज़ाना', target:'लक्ष्य', nextCollect:'अगला कलेक्ट',
+    waiting:'डेली कलेक्ट का इंतज़ार', day:'दिन', live:'लाइव',
+    chooseYourPlan:'अपना प्लान चुनें', availableBalance:'उपलब्ध बैलेंस', investNow:'निवेश करें',
+    alreadyActive:'पहले से सक्रिय', planAmount:'प्लान राशि', dayTotal:'40 दिन का कुल', roi:'रोज़ाना ROI',
+    signIn:'साइन इन', signUp:'अकाउंट बनाएं', welcomeBack:'वापसी पर स्वागत', signInTitle:'अपने अकाउंट में साइन इन करें',
+    noAccount:'अकाउंट नहीं है?', hasAccount:'पहले से अकाउंट है?', back:'पीछे', next:'आगे', finish:'पूरा करें',
+    step1:'अपना देश चुनें', step2:'व्यक्तिगत जानकारी', step3:'अपना पासवर्ड बनाएं',
+    yourNetwork:'आपका नेटवर्क', buildNetwork:'अपना नेटवर्क बनाएं और साथ बढ़ें', inviteFriends:'दोस्तों को बुलाएं',
+    shareTelegram:'टेलीग्राम पर शेयर करें', commissionLevels:'कमीशन लेवल',
+    deposit:'पैसे जमा करें', withdrawFunds:'पैसे निकालें', requestWithdraw:'निकासी का अनुरोध',
+    myProfile:'मेरी प्रोफाइल', changePassword:'पासवर्ड बदलें', updatePassword:'पासवर्ड अपडेट करें', logout:'लॉग आउट',
+    portfolio:'पोर्टफोलियो चार्ट (पिछले 7 दिन)', language:'भाषा', cancel:'रद्द करें',
+    totalReturn:'कुल रिटर्न · 40 दिन', duration:'अवधि', yourBalance:'आपका बैलेंस', addFunds:'निवेश के लिए पैसे जोड़ें'
+  }
+};
+function t(k){ var lang = localStorage.getItem('toxic_lang') || 'en'; return (T[lang] && T[lang][k]) || T.en[k] || k; }
+
+/* ===== CONFIG ===== */
+var CONFIG = {
+  brand:'TOXIC',
+  banner:'https://i.postimg.cc/Wz818VcZ/1789133259079.png',
+  support:'https://t.me/Toxiconect',
+  upi:'alamasif2124-1@oksbi',
+  upiName:'Asif Alam',
+  usdtBep20:'0xd39ca01aaf830911553c4f06510665b34fb793d0',
+  usdtTrc20:'TMqeccMCttEYBQoLVnEWSs1KSHBhFgaexq',
+  btcBep20:'0xd39ca01aaf830911553c4f06510665b34fb793d0',
+  minDeposit:2, minWithdraw:5, withdrawFee:0.05,
+  appUrl:'https://toxiconect.github.io',
+  sbUrl:'https://uaeyjqfwqxhgbhrvlbdr.supabase.co',
+  sbKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZXlqcWZ3cXhoZ2JocnZsYmRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NjgzMTEsImV4cCI6MjEwNTE0NDMxMX0.gmxzj18TuS6Zckjf7d41uBUFMHfsUxl92e-QoI-a-rc',
+  refBonus:0.10
+};
+
+var sb=null;
+try{ if(window.supabase && window.supabase.createClient) sb=window.supabase.createClient(CONFIG.sbUrl,CONFIG.sbKey); }catch(e){}
+
+var PLANS=[
+  {id:'l1',name:'BRONZE',deposit:1,daily:0.10,total:4.00,color:'#CD7F32',icon:'🥉',days:40},
+  {id:'l2',name:'SILVER',deposit:3,daily:0.36,total:14.40,color:'#C0C0C0',icon:'🥈',days:40},
+  {id:'l3',name:'GOLD',deposit:5,daily:0.70,total:28.00,color:'#FFD700',icon:'🥇',days:40},
+  {id:'l4',name:'ELITE',deposit:10,daily:1.60,total:64.00,color:'#22D3EE',icon:'💎',days:40},
+  {id:'l5',name:'ULTRA',deposit:20,daily:3.50,total:140.00,color:'#A855F7',icon:'👑',days:40},
+  {id:'l6',name:'LEGEND',deposit:50,daily:9.00,total:360.00,color:'#00FF66',icon:'🏆',days:40},
+  {id:'l7',name:'MASTER',deposit:100,daily:18.50,total:740.00,color:'#EF4444',icon:'⚔️',days:40},
+  {id:'l8',name:'GRANDMASTER',deposit:200,daily:38.00,total:1520.00,color:'#EC4899',icon:'🎯',days:40},
+  {id:'l9',name:'MYTHIC',deposit:500,daily:97.50,total:3900.00,color:'#6366F1',icon:'🔥',days:40},
+  {id:'l10',name:'IMMORTAL',deposit:1000,daily:200.00,total:8000.00,color:'#FEF08A',icon:'⚡',days:40},
+  {id:'l11',name:'TITAN',deposit:2000,daily:410.00,total:16400.00,color:'#3B82F6',icon:'⭐',days:40},
+  {id:'l12',name:'GODFATHER',deposit:5000,daily:1050.00,total:42000.00,color:'#00FF66',icon:'👑',days:40}
+];
+
+var DAY=24*60*60*1000;
+
+var S={
+  user:JSON.parse(localStorage.getItem('toxic_user')||'null'),
+  plans:JSON.parse(localStorage.getItem('toxic_plans')||'[]'),
+  transactions:JSON.parse(localStorage.getItem('toxic_tx')||'[]'),
+  tab:'dashboard', signupStep:1,
+  signupData:{country:'',firstName:'',lastName:'',email:'',phone:'',username:'',password:'',referredBy:null},
+  selectedPlan:null, showProfile:false
+};
+
+try{
+  var urlParams=new URLSearchParams(window.location.search);
+  var refFromUrl=urlParams.get('ref');
+  if(refFromUrl) S.signupData.referredBy=refFromUrl;
+}catch(e){}
+
+function save(){
+  localStorage.setItem('toxic_user',JSON.stringify(S.user));
+  localStorage.setItem('toxic_plans',JSON.stringify(S.plans));
+  localStorage.setItem('toxic_tx',JSON.stringify(S.transactions));
+}
+function $(id){return document.getElementById(id)}
+function fmt(n){return Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+
+function getNextCollect(plan){
+  var started=new Date(plan.started_at).getTime();
+  var days=Number(plan.days_collected)||0;
+  return started+(days*DAY);
+}
+function isPlanActive(planId){
+  return S.plans.some(function(p){return p.plan_id===planId && Number(p.days_collected)<40 && p.status!=='completed'});
+}
+function getRefLink(){
+  if(!S.user) return CONFIG.appUrl;
+  return CONFIG.appUrl+'/?ref='+S.user.referral_code;
+}
+
+function toast(msg){
+  var el=$('toast');
+  el.textContent=msg;
+  el.classList.add('show');
+  setTimeout(function(){el.classList.remove('show')},2500);
+}
+
+/* ===== AUTO CREDIT MISSED DAYS ===== */
+async function autoCreditMissedDays(){
+  if(!S.user) return;
+  var totalCredited=0;
+  var now=Date.now();
+  for(var i=0;i<S.plans.length;i++){
+    var pl=S.plans[i];
+    if(pl.status==='completed') continue;
+    var days=Number(pl.days_collected)||0;
+    if(days>=40){ pl.status='completed'; continue; }
+    var started=new Date(pl.started_at).getTime();
+    var daysPassed=Math.floor((now-started)/DAY);
+    var maxPossible=Math.min(daysPassed+1,40);
+    var pending=maxPossible-days;
+    if(pending>0){
+      pl.days_collected=days+pending;
+      var reward=pending*Number(pl.daily);
+      S.user.balance=Number(S.user.balance||0)+reward;
+      S.user.earned=Number(S.user.earned||0)+reward;
+      totalCredited+=reward;
+      if(pl.days_collected>=40) pl.status='completed';
+      S.transactions.unshift({
+        type:'daily_collect', amount:reward, status:'approved',
+        method:pl.plan_name+' x'+pending, date:new Date().toISOString()
+      });
+      if(sb){
+        try{ await sb.from("user_plans").update({days_collected:pl.days_collected,status:pl.status}).eq("id",pl.id); }catch(e){}
+      }
+    }
+  }
+  if(totalCredited>0){
+    save();
+    if(sb){
+      try{ await sb.from("users").update({balance:S.user.balance,earned:S.user.earned}).eq("user_id",S.user.user_id); }catch(e){}
+    }
+    setTimeout(function(){ toast('💰 +$'+fmt(totalCredited)+' Auto-Credited!'); },1200);
+  }
+}
+
+/* ===== LIVE NOTIFICATIONS ===== */
+var FAKE_NAMES=['Rahul','Priya','Ahmed','Sara','Vikram','Anjali','Kiran','Ravi','Neha','Amit','Rohan','Sneha','Arjun','Kavya','Sanjay','Ayesha'];
+var FAKE_CITIES=['Mumbai','Delhi','Karachi','Dhaka','Lahore','Bangalore','Chennai','Kolkata','Hyderabad','Pune'];
+var FAKE_MSGS=[
+  {t:'just earned', a:[0.10,0.36,0.70,1.60,3.50,9.00]},
+  {t:'invested in', p:['BRONZE','SILVER','GOLD','ELITE','ULTRA','LEGEND']},
+  {t:'just joined TOXIC', a:null},
+  {t:'withdrew', a:[5,10,25,50,100]}
+];
+function showLiveNotif(){
+  var banner=$('live-banner');
+  if(!banner) return;
+  var name=FAKE_NAMES[Math.floor(Math.random()*FAKE_NAMES.length)];
+  var city=FAKE_CITIES[Math.floor(Math.random()*FAKE_CITIES.length)];
+  var msg=FAKE_MSGS[Math.floor(Math.random()*FAKE_MSGS.length)];
+  var txt='';
+  if(msg.a && msg.a.length){
+    var amt=msg.a[Math.floor(Math.random()*msg.a.length)];
+    txt='<b>'+name+'</b> from '+city+' '+msg.t+' <b>$'+amt.toFixed(2)+'</b>';
+  } else if(msg.p){
+    var pl=msg.p[Math.floor(Math.random()*msg.p.length)];
+    txt='<b>'+name+'</b> from '+city+' '+msg.t+' <b>'+pl+'</b>';
+  } else {
+    txt='<b>'+name+'</b> from '+city+' '+msg.t+' 🎉';
+  }
+  $('lb-avatar').textContent=name[0];
+  $('lb-text').innerHTML=txt;
+  banner.classList.add('show');
+  setTimeout(function(){ banner.classList.remove('show'); },4500);
+  setTimeout(showLiveNotif, 14000 + Math.random()*10000);
+}
+
+/* ===== PORTFOLIO CHART ===== */
+function getPortfolioData(){
+  var days=[];
+  var today=new Date();
+  today.setHours(0,0,0,0);
+  for(var i=6;i>=0;i--){
+    var d=new Date(today.getTime()-i*DAY);
+    days.push({date:d, total:0});
+  }
+  S.transactions.forEach(function(tx){
+    if(tx.type!=='daily_collect') return;
+    var txDate=new Date(tx.date);
+    txDate.setHours(0,0,0,0);
+    var txTime=txDate.getTime();
+    for(var i=0;i<days.length;i++){
+      if(days[i].date.getTime()===txTime) days[i].total+=Number(tx.amount);
+    }
+  });
+  return days;
+}
+
+function renderPortfolioChart(){
+  var data=getPortfolioData();
+  var max=Math.max.apply(null, data.map(function(d){return d.total}));
+  if(max===0) max=1;
+  var dayNames=['S','M','T','W','T','F','S'];
+  var bars=data.map(function(d,i){
+    var pct=(d.total/max)*100;
+    if(pct<5 && d.total>0) pct=5;
+    var isToday=i===data.length-1;
+    return '<div class="flex flex-col items-center gap-1 flex-1">'
+      +'<div class="w-full flex items-end justify-center" style="height:80px">'
+      +'<div class="chart-bar rounded-t w-full" style="height:'+pct+'%;background:'+(isToday?'linear-gradient(180deg,#00FF66,#10B981)':'linear-gradient(180deg,rgba(0,255,102,0.6),rgba(0,255,102,0.15))')+';box-shadow:'+(isToday?'0 0 15px rgba(0,255,102,0.6)':'none')+'"></div>'
+      +'</div>'
+      +'<span class="text-[9px] '+(isToday?'text-toxic font-black':'text-gray-500')+'">'+dayNames[d.date.getDay()]+'</span>'
+      +'</div>';
+  }).join('');
+  var totalWeek=data.reduce(function(a,b){return a+b.total},0);
+  return '<div class="glass-card mb-3">'
+    +'<div class="flex justify-between items-center mb-3">'
+    +'<p class="text-[10px] text-gray-500 font-bold tracking-[0.2em]">📊 '+t('portfolio').toUpperCase()+'</p>'
+    +'<p class="text-[10px] text-toxic font-bold mono">+$'+fmt(totalWeek)+'</p>'
+    +'</div>'
+    +'<div class="chart-wrap"><div class="flex items-end gap-1.5" style="min-width:100%">'+bars+'</div></div>'
+    +'</div>';
+}
+
+/* ===== RENDER ===== */
+function render(){
+  var app=$('app');
+  if(!S.user){
+    if(S.tab==='signin') app.innerHTML=renderSignIn();
+    else app.innerHTML=renderSignup();
+    return;
+  }
+  app.innerHTML=renderMain()+renderPlanModal()+renderProfileModal();
+  updateDynamic();
+}
+
+function updateDynamic(){
+  if(!S.user) return;
+  document.querySelectorAll('[data-timer]').forEach(function(el){
+    var planId=el.getAttribute('data-timer');
+    var plan=S.plans.find(function(p){return String(p.id)===String(planId)});
+    if(!plan) return;
+    var nextCollect=getNextCollect(plan);
+    var rem=nextCollect-Date.now();
+    if(rem<=0){ el.textContent='READY NOW'; el.classList.add('text-toxic'); }
+    else{
+      var h=Math.max(0,Math.floor(rem/3600000));
+      var m=Math.max(0,Math.floor((rem%3600000)/60000));
+      var s=Math.max(0,Math.floor((rem%60000)/1000));
+      el.textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+      el.classList.remove('text-toxic');
+    }
+  });
+  document.querySelectorAll('[data-collect]').forEach(function(btn){
+    var planId=btn.getAttribute('data-collect');
+    var plan=S.plans.find(function(p){return String(p.id)===String(planId)});
+    if(!plan) return;
+    var ready=Date.now()>=getNextCollect(plan) && Number(plan.days_collected)<40;
+    btn.disabled=!ready;
+    if(ready) btn.textContent='💰 COLLECT $'+Number(plan.daily).toFixed(2);
+    else if(Number(plan.days_collected)>=40) btn.textContent='✅ COMPLETED';
+    else btn.textContent='⏳ '+t('waiting');
+  });
+  if($('bal-val')) $('bal-val').textContent='$'+fmt(S.user.balance);
+  if($('ref-val')) $('ref-val').textContent='$'+fmt(S.user.referral_balance);
+  if($('plans-count')) $('plans-count').textContent=S.plans.filter(function(p){return Number(p.days_collected)<40}).length;
+}
+setInterval(updateDynamic,1000);
+
+/* ===== SYNC ===== */
+async function syncUserData(){
+  if(!sb || !S.user || !S.user.user_id) return;
+  try{
+    var u=await sb.from("users").select("*").eq("user_id",S.user.user_id).limit(1);
+    if(u.data && u.data.length>0){
+      var f=u.data[0];
+      S.user.balance=Number(f.balance||0);
+      S.user.referral_balance=Number(f.referral_balance||0);
+      S.user.invested=Number(f.invested||0);
+      S.user.earned=Number(f.earned||0);
+      S.user.is_banned=f.is_banned;
+      save();
+    }
+    var p=await sb.from("user_plans").select("*").eq("user_id",S.user.user_id).order("id",{ascending:false});
+    if(p.data) S.plans=p.data;
+    var d=await sb.from("deposits").select("*").eq("user_id",S.user.user_id).order("id",{ascending:false});
+    var w=await sb.from("withdrawals").select("*").eq("user_id",S.user.user_id).order("id",{ascending:false});
+    S.transactions=[];
+    if(d.data) d.data.forEach(function(x){S.transactions.push({type:'deposit',amount:Number(x.amount),method:x.method,status:x.status,date:x.created_at})});
+    if(w.data) w.data.forEach(function(x){S.transactions.push({type:'withdrawal',amount:Number(x.amount),method:'USDT',status:x.status,date:x.created_at})});
+    S.transactions.sort(function(a,b){return new Date(b.date)-new Date(a.date)});
+    save();
+  }catch(e){}
+}
+
+/* ===== SIGN IN / SIGNUP ===== */
+function renderSignIn(){
+  return '<div class="min-h-screen px-5 py-10 flex flex-col" style="background:radial-gradient(circle at 50% 0%,rgba(0,255,102,0.12) 0%,transparent 55%),#060a09">'
+    +'<div class="text-center mb-8 mt-6"><h1 class="text-5xl font-black text-toxic text-3d tracking-[0.2em]">TOXIC</h1><p class="text-gray-500 text-[10px] mt-3 tracking-[0.4em]">CAPITAL CONTROL</p></div>'
+    +'<div class="glass-card p-6">'
+    +'<p class="text-[10px] text-gray-500 font-bold mb-3 tracking-[0.2em]">'+t('welcomeBack')+'</p>'
+    +'<h2 class="text-2xl font-black mb-6">'+t('signInTitle')+'</h2>'
+    +'<input id="signinUser" class="input-dark mb-3" placeholder="Username">'
+    +'<input id="signinPass" type="password" class="input-dark mb-6" placeholder="Password">'
+    +'<button onclick="doSignIn()" class="w-full btn-green py-4 rounded-2xl text-sm glow-green">'+t('signIn')+'</button>'
+    +'<p class="text-center text-sm text-gray-500 pt-5">'+t('noAccount')+' <span onclick="goSignup()" class="text-toxic font-bold cursor-pointer">'+t('signUp')+' →</span></p>'
+    +'</div></div>';
+}
+
+function renderSignup(){
+  var step=S.signupStep;
+  var stepsHtml=[1,2,3].map(function(n){
+    var cls=step>n?'step-done':(step===n?'step-active':'step-inactive');
+    return '<div class="flex flex-col items-center gap-2 relative z-10"><div class="step-circle '+cls+'">'+(step>n?'✓':n)+'</div></div>';
+  }).join('');
+  return '<div class="min-h-screen flex flex-col" style="background:radial-gradient(circle at 50% 0%,rgba(0,255,102,0.12) 0%,transparent 55%),#060a09">'
+    +'<div class="relative w-full h-44 overflow-hidden"><img src="'+CONFIG.banner+'" class="w-full h-full object-cover opacity-75"><div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(6,10,9,0.3) 0%,rgba(6,10,9,0.98) 100%)"></div><div class="absolute bottom-4 left-5"><h1 class="text-3xl font-black text-toxic tracking-[0.2em] text-3d">TOXIC</h1></div></div>'
+    +'<div class="px-5 pb-10"><div class="flex items-center justify-center gap-4 mb-6 relative">'+stepsHtml+'</div>'
+    +'<div class="glass-card p-6">'+(step===1?renderStep1():step===2?renderStep2():renderStep3())+'</div></div></div>';
+}
+
+function renderStep1(){
+  var countries=['India (+91)','Pakistan (+92)','Bangladesh (+880)','United States (+1)','United Kingdom (+44)','UAE (+971)','Saudi Arabia (+966)','Nigeria (+234)','Indonesia (+62)','Philippines (+63)','Vietnam (+84)','Nepal (+977)','Sri Lanka (+94)'];
+  var opts=countries.map(function(c){return '<option '+(S.signupData.country===c?'selected':'')+'>'+c+'</option>'}).join('');
+  var refNote=S.signupData.referredBy?'<div class="rounded-xl p-3 mb-4" style="background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.25)"><p class="text-[10px] text-gray-400 mb-1">Referred by</p><p class="text-xs text-toxic font-black font-mono">'+S.signupData.referredBy+'</p></div>':'';
+  return refNote+'<p class="text-[10px] text-gray-500 font-bold mb-2 tracking-[0.2em]">STEP 1 / 3</p><h2 class="text-2xl font-black mb-1">'+t('step1')+'</h2><p class="text-sm text-gray-500 mb-6">Select country.</p>'
+    +'<select id="countrySel" class="input-dark mb-6" onchange="saveCountry(this.value)"><option value="">Choose...</option>'+opts+'</select>'
+    +'<button onclick="nextStep(2)" class="w-full btn-green py-4 rounded-2xl text-sm glow-green">'+t('next')+' →</button>'
+    +'<p class="text-center text-xs text-gray-500 mt-4">'+t('hasAccount')+' <span onclick="goSignin()" class="text-yellow-400 font-bold cursor-pointer">'+t('signIn')+'</span></p>';
+}
+
+function renderStep2(){
+  return '<p class="text-[10px] text-gray-500 font-bold mb-2 tracking-[0.2em]">STEP 2 / 3</p><h2 class="text-2xl font-black mb-1">'+t('step2')+'</h2><p class="text-sm text-gray-500 mb-5">Tell us about you.</p>'
+    +'<div class="grid grid-cols-2 gap-3 mb-3"><input class="input-dark" id="fn" placeholder="First Name" value="'+(S.signupData.firstName||'')+'"><input class="input-dark" id="ln" placeholder="Last Name" value="'+(S.signupData.lastName||'')+'"></div>'
+    +'<input class="input-dark mb-3" id="em" type="email" placeholder="you@example.com" value="'+(S.signupData.email||'')+'">'
+    +'<input class="input-dark mb-6" id="ph" type="tel" placeholder="WhatsApp Number" value="'+(S.signupData.phone||'')+'">'
+    +'<div class="flex gap-3"><button onclick="nextStep(1)" class="flex-1 py-4 rounded-2xl font-bold text-sm" style="background:rgba(255,255,255,0.05)">← '+t('back')+'</button><button onclick="nextStep(3)" class="flex-1 btn-green py-4 rounded-2xl text-sm glow-green">'+t('next')+' →</button></div>';
+}
+
+function renderStep3(){
+  return '<p class="text-[10px] text-gray-500 font-bold mb-2 tracking-[0.2em]">STEP 3 / 3</p><h2 class="text-2xl font-black mb-1">'+t('step3')+'</h2><p class="text-sm text-gray-500 mb-5">Username & password.</p>'
+    +'<input class="input-dark mb-3" id="un" placeholder="Username" value="'+(S.signupData.username||'')+'">'
+    +'<input class="input-dark mb-3" id="pw" type="password" placeholder="Password">'
+    +'<input class="input-dark mb-6" id="pw2" type="password" placeholder="Confirm Password">'
+    +'<div class="flex gap-3"><button onclick="nextStep(2)" class="py-4 px-6 rounded-2xl font-bold text-sm" style="background:rgba(255,255,255,0.05)">← '+t('back')+'</button><button onclick="finishSignup()" class="flex-1 btn-green py-4 rounded-2xl text-sm glow-green">'+t('finish')+' →</button></div>';
+}
+
+function renderMain(){
+  var u=S.user;
+  return '<div class="min-h-screen pb-28 relative max-w-md mx-auto">'
+    +'<header class="px-5 py-4 flex justify-between items-center sticky top-0 z-40" style="background:rgba(6,10,9,0.92);backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,255,102,0.06)">'
+    +'<h1 class="text-xl font-black text-toxic tracking-[0.25em] text-3d">TOXIC</h1>'
+    +'<div class="flex items-center gap-3"><div class="glass px-3 py-1.5 rounded-full flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-toxic pulse-dot"></span><span class="text-[10px] font-bold text-toxic tracking-wider">LIVE</span></div>'
+    +'<div onclick="openProfile()" class="avatar-ring cursor-pointer active:scale-95"><div class="avatar-inner w-9 h-9 flex items-center justify-center text-toxic font-black text-sm">'+u.username[0].toUpperCase()+'</div></div>'
+    +'</div></header>'
+    +'<main class="px-4 pt-4">'+renderTab()+'</main>'
+    +'<a href="'+CONFIG.support+'" target="_blank" class="fixed bottom-28 right-4 w-14 h-14 rounded-full bg-toxic flex items-center justify-center text-black text-2xl glow-green-strong z-40">💬</a>'
+    +'<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto z-50" style="background:rgba(6,10,9,0.97);backdrop-filter:blur(24px);border-top:1px solid rgba(0,255,102,0.08)">'
+    +'<div class="flex justify-around items-center py-2 px-1">'
+    +navItem('dashboard',t('dashboard'),'M3 5h7v7H3zM14 5h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z')
+    +navItem('plans',t('invest'),'M3 17l6-6 4 4 8-8M21 7v6h-6')
+    +navItem('active',t('active'),'M3 7h18v14H3zM3 7l3-3h12l3 3M12 11v6M9 14h6')
+    +navItem('wallet',t('wallet'),'M21 12V7H5a2 2 0 010-4h14v4M3 5v14a2 2 0 002 2h16v-5M18 12a2 2 0 000 4h4v-4h-4z')
+    +navItem('history',t('history'),'M12 8v4l3 3M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8M3 3v5h5')
+    +navItem('team',t('team'),'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 7a4 4 0 100 8 4 4 0 000-8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75')
+    +'</div></nav></div>';
+}
+
+function navItem(id,label,path){
+  var active=S.tab===id;
+  return '<div class="nav-item '+(active?'active':'')+'" onclick="setTab(\''+id+'\')"><div class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="nav-svg" stroke-linecap="round" stroke-linejoin="round"><path d="'+path+'"/></svg></div><span class="text-[9px] font-semibold mt-0.5 tracking-wide">'+label+'</span></div>';
+}
+
+function setTab(t2){
+  S.tab=t2; S.selectedPlan=null;
+  window.scrollTo(0,0);
+  render();
+  if(S.user && S.user.user_id){
+    syncUserData().then(function(){ updateDynamic(); });
+  }
+}
+
+function renderTab(){
+  if(S.tab==='dashboard') return dashTab();
+  if(S.tab==='plans') return plansTab();
+  if(S.tab==='active') return activeTab();
+  if(S.tab==='wallet') return walletTab();
+  if(S.tab==='history') return historyTab();
+  if(S.tab==='team') return teamTab();
+  return '';
+}
+
+function dashTab(){
+  var u=S.user;
+  var refLink=getRefLink();
+  var bars=[20,35,28,50,42,65,55,80,70,95].map(function(h,i){return '<div class="flex-1 rounded-t" style="height:'+h+'%;background:linear-gradient(180deg,#00FF66,rgba(0,255,102,0.15));opacity:'+(0.4+i*0.06)+'"></div>'}).join('');
+  var activePlans=S.plans.filter(function(p){return Number(p.days_collected)<40 && p.status!=='completed'});
+
+  var plansHtml='';
+  if(activePlans.length===0){
+    plansHtml='<div class="glass-card mb-3 text-center py-8"><div class="text-4xl mb-3 opacity-50">📊</div><p class="font-black mb-1">'+t('noActivePlans')+'</p><p class="text-xs text-gray-500 mb-5">'+t('choosePlan')+'</p><button onclick="setTab(\'plans\')" class="btn-green px-6 py-3 rounded-xl text-xs glow-green">'+t('browsePlans')+'</button></div>';
+  } else {
+    plansHtml=activePlans.map(function(pl){
+      var plan=PLANS.find(function(x){return x.id===pl.plan_id})||{color:'#00FF66',icon:'💰',daily:pl.daily,total:pl.total,name:pl.plan_name};
+      var days=Number(pl.days_collected)||0;
+      var pct=(days/40)*100;
+      var earned=days*Number(pl.daily);
+      return '<div class="plan-active-card mb-3">'
+        +'<div class="flex justify-between items-start mb-3 relative z-10"><div class="flex items-center gap-3"><div class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl" style="background:'+plan.color+'25;border:1px solid '+plan.color+'66">'+plan.icon+'</div>'
+        +'<div><p class="font-black text-base" style="color:'+plan.color+'">'+plan.name+'</p><p class="text-[10px] text-gray-400">Invested $'+fmt(pl.deposit)+'</p></div></div>'
+        +'<div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-toxic pulse-dot"></span><span class="text-[9px] font-black text-toxic">LIVE</span></div></div>'
+        +'<div class="grid grid-cols-2 gap-2 mb-3 relative z-10">'
+        +'<div class="rounded-xl p-3" style="background:rgba(0,0,0,0.45)"><p class="text-[9px] text-gray-500 mb-1">'+t('todaysEarning')+'</p><p class="mono text-lg font-black" style="color:'+plan.color+'">+$'+Number(pl.daily).toFixed(2)+'</p></div>'
+        +'<div class="rounded-xl p-3" style="background:rgba(0,0,0,0.45)"><p class="text-[9px] text-gray-500 mb-1">'+t('earned')+'</p><p class="mono text-lg font-black text-toxic">$'+earned.toFixed(2)+'</p></div></div>'
+        +'<div class="rounded-2xl p-3 mb-3 relative z-10" style="background:linear-gradient(135deg,'+plan.color+'18,transparent);border:1px solid '+plan.color+'33">'
+        +'<p class="text-[9px] text-gray-500 font-bold mb-1 text-center">⏳ '+t('nextCollect')+'</p>'
+        +'<p class="mono text-2xl font-black text-center timer-glow mb-3" data-timer="'+pl.id+'">--:--:--</p>'
+        +'<button data-collect="'+pl.id+'" onclick="collectPlan('+pl.id+')" class="collect-btn w-full py-3.5 rounded-xl text-sm">⏳ '+t('waiting')+'</button></div>'
+        +'<div class="flex justify-between text-[10px] text-gray-500 mb-1.5 relative z-10"><span>'+t('day')+' '+days+' / 40</span><span>$'+earned.toFixed(2)+' / $'+Number(pl.total).toFixed(2)+'</span></div>'
+        +'<div class="w-full h-1.5 rounded-full bg-white/5 overflow-hidden relative z-10"><div class="h-full" style="width:'+pct+'%;background:linear-gradient(90deg,'+plan.color+',#10B981)"></div></div>'
+        +'</div>';
+    }).join('');
+  }
+
+  return '<div class="space-y-3.5">'
+    +'<div class="relative w-full h-44 rounded-3xl overflow-hidden" style="border:1px solid rgba(0,255,102,0.18)">'
+    +'<img src="'+CONFIG.banner+'" class="absolute inset-0 w-full h-full object-cover">'
+    +'<div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(0,0,0,0.2) 0%,rgba(6,10,9,0.96) 100%)"></div>'
+    +'<div class="absolute bottom-4 left-5"><p class="text-xs text-gray-400 tracking-wider">'+t('welcome')+',</p><h2 class="text-2xl font-black text-white text-3d">'+u.username+'</h2></div></div>'
+    +'<div class="glass-card card-gradient">'
+    +'<div class="flex justify-between items-center mb-2"><p class="text-[10px] text-toxic-dim font-bold tracking-[0.2em]">💎 '+t('totalBalance')+'</p><div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-toxic pulse-dot"></span><span class="text-[9px] text-toxic font-bold">LIVE</span></div></div>'
+    +'<p id="bal-val" class="text-4xl font-black mono text-white mb-1">$'+fmt(u.balance)+'</p>'
+    +'<div class="flex items-end gap-1.5 h-14 my-3 px-1">'+bars+'</div>'
+    +'<div class="grid grid-cols-2 gap-2">'
+    +'<div class="rounded-xl p-2.5" style="background:rgba(0,0,0,0.4)"><p class="text-[9px] text-gray-500 mb-1">'+t('referral')+'</p><p id="ref-val" class="mono text-sm font-black text-toxic">$'+fmt(u.referral_balance)+'</p></div>'
+    +'<div class="rounded-xl p-2.5" style="background:rgba(0,0,0,0.4)"><p class="text-[9px] text-gray-500 mb-1">'+t('activePlans')+'</p><p id="plans-count" class="mono text-sm font-black text-white">'+activePlans.length+'</p></div></div>'
+    +'<button onclick="setTab(\'wallet\')" class="btn-green w-full py-3 rounded-xl text-xs mt-3 glow-green">'+t('withdraw')+' ↗</button></div>'
+    +renderPortfolioChart()
+    +'<div><div class="flex justify-between items-center mb-2"><p class="text-[10px] text-gray-500 font-bold tracking-[0.2em]">📈 '+t('myActivePlans')+'</p><span class="text-[10px] text-toxic font-bold">'+activePlans.length+' active</span></div>'+plansHtml+'</div>'
+    +'<div class="glass-card"><p class="text-[10px] text-gray-500 font-bold mb-3 tracking-[0.2em]">🔗 '+t('refLink')+'</p>'
+    +'<div class="flex items-center gap-2"><input readonly value="'+refLink+'" class="flex-1 mono text-[10px] bg-black/60 border border-white/5 rounded-xl px-3 py-3 text-toxic-dim truncate"><button onclick="copyText(\''+refLink+'\')" class="btn-green px-4 py-3 rounded-xl text-[11px]">📋</button></div></div></div>';
+}
+
+function plansTab(){
+  var cards=PLANS.map(function(p){
+    var roi=((p.daily/p.deposit)*100).toFixed(1);
+    var active=isPlanActive(p.id);
+    var lockedClass=active?'locked':'';
+    var btnHtml=active
+      ?'<button class="btn-invest-3d locked-btn" disabled>🔒 '+t('alreadyActive')+'</button>'
+      :'<button onclick="event.stopPropagation();quickInvest(\''+p.id+'\')" class="btn-invest-3d">⚡ '+t('investNow')+'</button>';
+    return '<div class="plan-card '+lockedClass+'" onclick="'+(active?'':'openPlan(\''+p.id+'\')')+'">'
+      +'<div class="flex justify-between items-start mb-2 relative z-10"><p class="text-[9px] text-gray-500 tracking-[0.2em] font-bold">PLAN</p>'
+      +'<div class="w-6 h-6 rounded-full flex items-center justify-center" style="background:'+p.color+'18;border:1px solid '+p.color+'55"><span style="color:'+p.color+';font-size:10px">→</span></div></div>'
+      +'<p class="text-[11px] font-black mb-1.5 relative z-10" style="color:'+p.color+'">'+p.icon+' '+p.name+'</p>'
+      +'<p class="mono text-2xl font-black text-white mb-0.5 relative z-10">$'+p.deposit+'.00</p>'
+      +'<p class="text-[9px] text-gray-600 tracking-wider mb-2 relative z-10">'+t('planAmount')+'</p>'
+      +'<div class="flex items-center gap-1 mb-1 relative z-10"><span class="text-[10px]">💰</span><p class="mono text-[11px] font-bold text-toxic">$'+p.daily.toFixed(2)+' / day</p></div>'
+      +'<div class="flex items-center gap-1 mb-2 relative z-10"><span class="text-[10px]">📊</span><p class="text-[10px] text-gray-400">'+roi+'% '+t('roi')+'</p></div>'
+      +'<div class="rounded-lg py-1.5 text-center mb-2 relative z-10" style="background:'+p.color+'12;border:1px solid '+p.color+'30"><p class="text-[9px] text-gray-500">'+t('dayTotal')+'</p><p class="mono text-sm font-black" style="color:'+p.color+'">$'+p.total.toFixed(2)+'</p></div>'
+      +btnHtml
+      +'</div>';
+  }).join('');
+  return '<div class="space-y-4">'
+    +'<div class="glass-card"><p class="text-[10px] text-toxic-dim font-bold mb-2 tracking-[0.2em]">📈 INVESTMENT</p><h2 class="text-3xl font-black mb-2">'+t('chooseYourPlan')+'</h2><p class="text-xs text-gray-500">40-day cycle · Daily returns</p>'
+    +'<div class="mt-4 pt-4 border-t border-white/5 flex items-center justify-between"><p class="text-[10px] text-gray-500 tracking-wider">'+t('availableBalance')+'</p><p class="mono text-lg font-black text-toxic">$'+fmt(S.user.balance)+'</p></div></div>'
+    +'<div class="grid grid-cols-2 gap-3">'+cards+'</div></div>';
+}
+
+function openPlan(id){
+  if(isPlanActive(id)) return alert('🔒 Already active plan.');
+  S.selectedPlan=PLANS.find(function(p){return p.id===id});
+  render();
+  document.body.style.overflow='hidden';
+}
+function closePlan(){S.selectedPlan=null;render();document.body.style.overflow=''}
+
+function renderPlanModal(){
+  if(!S.selectedPlan) return '';
+  var p=S.selectedPlan;
+  var roi=((p.daily/p.deposit)*100).toFixed(2);
+  var canAfford=Number(S.user.balance)>=p.deposit;
+  var btn=canAfford
+    ?'<button onclick="closePlan();invest(\''+p.id+'\')" class="w-full btn-green py-4 rounded-2xl text-sm glow-green mb-3">⚡ '+t('investNow')+' — $'+p.deposit.toFixed(2)+'</button>'
+    :'<button onclick="closePlan();setTab(\'wallet\')" class="w-full py-4 rounded-2xl text-sm font-black mb-3" style="background:linear-gradient(135deg,#FBBF24,#F59E0B);color:#000">💰 '+t('addFunds')+'</button>';
+  return '<div class="fixed inset-0 z-50 flex items-center justify-center p-4" style="background:rgba(0,0,0,0.9);backdrop-filter:blur(12px)" onclick="closePlan()">'
+    +'<div class="glass-card w-full max-w-md modal-anim" onclick="event.stopPropagation()" style="border-color:'+p.color+'66;max-height:90vh;overflow-y:auto">'
+    +'<div class="flex justify-between items-center mb-4"><span class="text-[10px] text-gray-500 font-bold tracking-[0.2em]">PLAN DETAILS</span><button onclick="closePlan()" class="w-8 h-8 rounded-full glass flex items-center justify-center text-gray-400 text-xl">×</button></div>'
+    +'<div class="text-center mb-5"><div class="w-24 h-24 rounded-3xl mx-auto mb-3 flex items-center justify-center" style="background:'+p.color+'25;border:1.5px solid '+p.color+'66;box-shadow:0 0 50px '+p.color+'44"><span class="text-5xl">'+p.icon+'</span></div><h2 class="text-3xl font-black" style="color:'+p.color+'">'+p.name+'</h2></div>'
+    +'<div class="rounded-2xl p-4 mb-4 text-center" style="background:linear-gradient(135deg,'+p.color+'25,transparent);border:1px solid '+p.color+'55">'
+    +'<p class="text-[10px] text-gray-500 mb-1 tracking-[0.2em]">'+t('totalReturn')+'</p>'
+    +'<p class="mono text-4xl font-black text-white">$'+p.total.toFixed(2)+'</p>'
+    +'<p class="text-[10px] text-toxic mt-1 font-bold">'+roi+'% ROI/day</p></div>'
+    +'<div class="space-y-2 mb-5">'
+    +'<div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.4)"><span class="text-xs text-gray-500">💰 '+t('deposit')+'</span><span class="mono font-black text-white text-sm">$'+p.deposit.toFixed(2)+'</span></div>'
+    +'<div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.4)"><span class="text-xs text-gray-500">📈 '+t('daily')+'</span><span class="mono font-black text-toxic text-sm">$'+p.daily.toFixed(2)+'</span></div>'
+    +'<div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.4)"><span class="text-xs text-gray-500">⚡ '+t('duration')+'</span><span class="mono font-black text-white text-sm">40 Days</span></div>'
+    +'<div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.4)"><span class="text-xs text-gray-500">🏦 '+t('yourBalance')+'</span><span class="mono font-black '+(canAfford?'text-toxic':'text-yellow-400')+' text-sm">$'+fmt(S.user.balance)+'</span></div></div>'
+    +btn+'<button onclick="closePlan()" class="w-full py-3 rounded-2xl text-xs font-bold" style="background:rgba(255,255,255,0.05);color:#9CA3AF">'+t('cancel')+'</button>'
+    +'</div></div>';
+}
+
+function quickInvest(id){
+  if(isPlanActive(id)) return alert('🔒 Already active.');
+  var p=PLANS.find(function(x){return x.id===id});
+  if(!p) return;
+  if(Number(S.user.balance)<p.deposit){
+    if(confirm('💰 Insufficient balance!\n\nNeed: $'+p.deposit.toFixed(2)+'\nHave: $'+fmt(S.user.balance)+'\n\nAdd funds?')) setTab('wallet');
+    return;
+  }
+  invest(id);
+}
+
+function activeTab(){
+  var activePlans=S.plans.filter(function(p){return Number(p.days_collected)<40 && p.status!=='completed'});
+  if(activePlans.length===0) return '<div class="glass-card text-center py-12"><div class="text-5xl mb-3 opacity-40">📦</div><p class="text-lg font-black mb-2">'+t('noActivePlans')+'</p><p class="text-xs text-gray-500 mb-5">'+t('choosePlan')+'</p><button onclick="setTab(\'plans\')" class="btn-green px-8 py-3.5 rounded-xl text-sm glow-green">'+t('browsePlans')+'</button></div>';
+
+  var html='<div class="space-y-3">';
+  activePlans.forEach(function(pl){
+    var plan=PLANS.find(function(x){return x.id===pl.plan_id})||{color:'#00FF66',icon:'💰',daily:pl.daily,total:pl.total,name:pl.plan_name};
+    var days=Number(pl.days_collected)||0;
+    var pct=(days/40)*100;
+    var earned=days*Number(pl.daily);
+    var remDays=40-days;
+    html+='<div class="plan-active-card">'
+      +'<div class="flex items-center gap-3 mb-4 relative z-10"><div class="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl" style="background:'+plan.color+'25;border:1px solid '+plan.color+'66">'+plan.icon+'</div>'
+      +'<div class="flex-1"><p class="font-black text-lg" style="color:'+plan.color+'">'+plan.name+'</p><p class="text-[10px] text-gray-500">Active · 40 Days</p></div>'
+      +'<div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-toxic pulse-dot"></span><span class="text-[9px] font-black text-toxic">LIVE</span></div></div>'
+      +'<div class="grid grid-cols-2 gap-3 mb-4 relative z-10">'
+      +'<div class="rounded-xl p-3" style="background:rgba(0,0,0,0.45)"><p class="text-[9px] text-gray-500 mb-1">Invested</p><p class="mono text-base font-black text-white">$'+fmt(pl.deposit)+'</p></div>'
+      +'<div class="rounded-xl p-3" style="background:rgba(0,0,0,0.45)"><p class="text-[9px] text-gray-500 mb-1">'+t('earned')+'</p><p class="mono text-base font-black text-toxic">$'+earned.toFixed(2)+'</p></div>'
+      +'<div class="rounded-xl p-3" style="background:rgba(0,0,0,0.45)"><p class="text-[9px] text-gray-500 mb-1">'+t('daily')+'</p><p class="mono text-base font-black text-toxic">$'+Number(pl.daily).toFixed(2)+'</p></div>'
+      +'<div class="rounded-xl p-3" style="background:rgba(0,0,0,0.45)"><p class="text-[9px] text-gray-500 mb-1">'+t('target')+'</p><p class="mono text-base font-black text-white">$'+Number(pl.total).toFixed(2)+'</p></div></div>'
+      +'<div class="rounded-2xl p-4 mb-3 relative z-10" style="background:linear-gradient(135deg,'+plan.color+'15,transparent);border:1px solid '+plan.color+'44">'
+      +'<p class="text-[10px] text-gray-500 font-bold mb-2 text-center">⏳ '+t('nextCollect')+'</p>'
+      +'<p class="mono text-3xl font-black text-white timer-glow mb-4 text-center" data-timer="'+pl.id+'">--:--:--</p>'
+      +'<button data-collect="'+pl.id+'" onclick="collectPlan('+pl.id+')" class="collect-btn w-full py-4 rounded-2xl text-sm">⏳ '+t('waiting')+'</button></div>'
+      +'<div class="flex justify-between text-[10px] text-gray-500 mb-2 relative z-10"><span>'+t('day')+' '+days+' / 40</span><span>'+remDays+' days left</span></div>'
+      +'<div class="w-full h-2 rounded-full bg-white/5 overflow-hidden relative z-10"><div class="h-full" style="width:'+pct+'%;background:linear-gradient(90deg,'+plan.color+',#10B981)"></div></div>'
+      +'</div>';
+  });
+  html+='</div>';
+  return html;
+}
+
+function walletTab(){
+  var upiQr='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent('upi://pay?pa='+CONFIG.upi+'&pn='+CONFIG.upiName+'&cu=INR');
+  var methods=['UPI','USDT BEP20','USDT TRC20','BTC BEP20'].map(function(m,i){
+    return '<button onclick="selMethod('+i+')" id="m-'+i+'" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap '+(i===0?'bg-toxic text-black':'bg-white/5 text-gray-400')+'">'+m+'</button>';
+  }).join('');
+  return '<div class="space-y-4">'
+    +'<div class="glass-card"><p class="text-[10px] text-toxic-dim font-bold mb-3 tracking-[0.2em]">💳 '+t('deposit')+'</p>'
+    +'<div class="flex gap-2 overflow-x-auto hide-scroll pb-2 mb-4">'+methods+'</div>'
+    +'<div class="rounded-2xl p-4 mb-4 text-center" style="background:rgba(0,0,0,0.45);border:1px dashed rgba(0,255,102,0.25)">'
+    +'<p class="text-[10px] text-gray-500 mb-2 tracking-[0.2em]">SEND TO</p>'
+    +'<p id="payAddr" class="mono text-xs text-toxic break-all mb-3">'+CONFIG.upi+'</p>'
+    +'<div class="flex justify-center"><div class="bg-white p-2 rounded-2xl"><img id="qrImg" src="'+upiQr+'" class="w-36 h-36"></div></div></div>'
+    +'<input type="number" id="depAmt" class="input-dark mb-3" placeholder="Amount">'
+    +'<div id="utrWrap"><input type="text" id="depUtr" maxlength="12" class="input-dark mb-3" placeholder="12-Digit UTR"></div>'
+    +'<div id="txWrap" style="display:none"><input type="text" id="depTx" class="input-dark mb-3" placeholder="TxHash"></div>'
+    +'<button onclick="submitDeposit()" id="depBtn" class="btn-green w-full py-4 rounded-2xl text-sm glow-green">Submit UTR</button></div>'
+    +'<div class="glass-card"><p class="text-[10px] text-toxic-dim font-bold mb-3 tracking-[0.2em]">💸 '+t('withdrawFunds')+'</p>'
+    +'<input type="number" id="wdAmt" class="input-dark mb-3" placeholder="Min $'+CONFIG.minWithdraw+'">'
+    +'<input type="text" id="wdAddr" class="input-dark mb-3" placeholder="USDT Address">'
+    +'<p class="text-[10px] text-gray-500 mb-3">Min $'+CONFIG.minWithdraw+' · 5% fee</p>'
+    +'<button onclick="submitWithdraw()" class="w-full py-4 rounded-2xl text-sm font-black" style="background:rgba(255,255,255,0.06)">'+t('requestWithdraw')+'</button></div></div>';
+}
+
+var selM=0;
+function selMethod(i){
+  selM=i;
+  var els=document.querySelectorAll('[id^="m-"]');
+  for(var x=0;x<els.length;x++) els[x].className='px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap '+(x===i?'bg-toxic text-black':'bg-white/5 text-gray-400');
+  var addrs=[CONFIG.upi,CONFIG.usdtBep20,CONFIG.usdtTrc20,CONFIG.btcBep20];
+  $('payAddr').innerText=addrs[i];
+  var data=i===0?encodeURIComponent('upi://pay?pa='+CONFIG.upi+'&pn='+CONFIG.upiName+'&cu=INR'):addrs[i];
+  $('qrImg').src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+data;
+  if(i===0){$('utrWrap').style.display='block';$('txWrap').style.display='none';$('depBtn').innerText='Submit UTR'}
+  else{$('utrWrap').style.display='none';$('txWrap').style.display='block';$('depBtn').innerText='Submit TxHash'}
+}
+
+function historyTab(){
+  var tx=S.transactions;
+  var h='<div class="glass-card text-center mb-3"><p class="text-[10px] text-gray-500 mb-2 tracking-[0.2em]">TOTAL TRANSACTIONS</p><p class="text-4xl font-black text-white">'+tx.length+'</p></div>';
+  if(tx.length===0) return h+'<div class="glass-card text-center py-12"><div class="text-4xl mb-3 opacity-40">📋</div><p class="text-lg font-black mb-2">No transactions</p><p class="text-xs text-gray-500">Your activity will appear here</p></div>';
+  return h+tx.map(function(x){
+    var isCredit=x.type==='deposit'||x.type==='daily_collect';
+    var col=isCredit?'text-toxic':'text-red-400';
+    var sign=isCredit?'+':'-';
+    var badge=x.status==='pending'?'bg-yellow-400/10 text-yellow-400':(x.status==='approved'?'bg-toxic/20 text-toxic':'bg-red-500/20 text-red-400');
+    var label=x.type==='daily_collect'?'Daily Reward':x.type;
+    return '<div class="glass-card flex justify-between items-center mb-2"><div><p class="font-bold text-sm capitalize">'+label+'</p><p class="text-[10px] text-gray-500">'+x.method+'</p></div><div class="text-right"><p class="mono font-black '+col+'">'+sign+'$'+fmt(x.amount)+'</p><span class="text-[9px] px-2 py-1 rounded-full '+badge+'">'+x.status+'</span></div></div>';
+  }).join('');
+}
+
+function teamTab(){
+  var u=S.user;
+  var refLink=getRefLink();
+  return '<div class="space-y-4">'
+    +'<div class="glass-card"><p class="text-[10px] text-toxic-dim font-bold mb-2 tracking-[0.2em]">👥 '+t('yourNetwork')+'</p><h2 class="text-2xl font-black leading-tight mb-2">'+t('buildNetwork')+'</h2><p class="text-xs text-gray-500">Earn up to 10 levels commission</p></div>'
+    +'<button onclick="copyText(\''+refLink+'\')" class="w-full py-4 rounded-2xl flex items-center justify-center gap-3 btn-green glow-green"><span class="text-2xl">🔗</span><div class="text-left"><p class="font-black text-sm">'+t('inviteFriends')+'</p><p class="text-[10px] opacity-70">Share your app link</p></div></button>'
+    +'<button onclick="shareRef()" class="w-full py-4 rounded-2xl flex items-center justify-center gap-3" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1)"><span class="text-2xl">📤</span><div class="text-left"><p class="font-black text-sm">'+t('shareTelegram')+'</p><p class="text-[10px] opacity-70">Send to friends</p></div></button>'
+    +'<div class="glass-card"><p class="text-[10px] text-gray-500 font-bold mb-3 tracking-[0.2em]">💎 '+t('commissionLevels')+'</p>'
+    +'<div class="grid grid-cols-3 gap-2 text-center text-[10px]">'
+    +'<div class="rounded-lg p-2.5" style="background:rgba(0,255,102,0.07)"><p class="text-gray-500">L1</p><p class="text-toxic font-black mt-1">10%</p></div>'
+    +'<div class="rounded-lg p-2.5" style="background:rgba(0,255,102,0.07)"><p class="text-gray-500">L2</p><p class="text-toxic font-black mt-1">5%</p></div>'
+    +'<div class="rounded-lg p-2.5" style="background:rgba(0,255,102,0.07)"><p class="text-gray-500">L3</p><p class="text-toxic font-black mt-1">2%</p></div>'
+    +'<div class="rounded-lg p-2.5 col-span-3" style="background:rgba(255,255,255,0.03)"><p class="text-gray-500">Levels 4 – 10</p><p class="text-gray-300 font-black mt-1">1% each</p></div></div></div></div>';
+}
+
+function shareRef(){
+  var link=getRefLink();
+  var txt='Join TOXIC and start earning daily! 🚀\n\n'+link;
+  window.open('https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent(txt),'_blank');
+}
+
+function openProfile(){S.showProfile=true;render();document.body.style.overflow='hidden'}
+function closeProfile(){S.showProfile=false;render();document.body.style.overflow=''}
+
+function renderProfileModal(){
+  if(!S.showProfile || !S.user) return '';
+  var u=S.user;
+  var lang=localStorage.getItem('toxic_lang')||'en';
+  return '<div class="fixed inset-0 z-50 flex items-center justify-center p-4" style="background:rgba(0,0,0,0.92);backdrop-filter:blur(12px)" onclick="closeProfile()">'
+    +'<div class="glass-card w-full max-w-md modal-anim" onclick="event.stopPropagation()" style="max-height:90vh;overflow-y:auto">'
+    +'<div class="flex justify-between items-center mb-5"><span class="text-[10px] text-gray-500 font-bold tracking-[0.2em]">'+t('myProfile')+'</span><button onclick="closeProfile()" class="w-8 h-8 rounded-full glass flex items-center justify-center text-gray-400 text-xl">×</button></div>'
+    +'<div class="text-center mb-6"><div class="avatar-ring inline-block"><div class="avatar-inner w-20 h-20 flex items-center justify-center text-toxic font-black text-3xl">'+u.username[0].toUpperCase()+'</div></div>'
+    +'<h2 class="text-2xl font-black text-white mt-3">'+u.username+'</h2><p class="text-[10px] text-gray-500 mt-1 tracking-wider">ID: '+u.user_id+'</p></div>'
+    +'<div class="space-y-2 mb-4">'
+    +'<div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.45)"><span class="text-xs text-gray-500">📧 Email</span><span class="text-xs text-white">'+(u.email||'—')+'</span></div>'
+    +'<div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.45)"><span class="text-xs text-gray-500">📱 Phone</span><span class="text-xs text-white">'+(u.phone||'—')+'</span></div>'
+    +'<div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.45)"><span class="text-xs text-gray-500">🎫 Referral</span><span class="text-xs text-toxic font-mono font-bold">'+(u.referral_code||'—')+'</span></div>'
+    +'<div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.45)"><span class="text-xs text-gray-500">💰 Balance</span><span class="text-xs text-toxic font-mono font-black">$'+fmt(u.balance)+'</span></div>'
+    +'<div class="flex justify-between items-center p-3 rounded-xl" style="background:rgba(0,0,0,0.45)"><span class="text-xs text-gray-500">📅 Joined</span><span class="text-xs text-white">'+(u.joined_at?String(u.joined_at).slice(0,10):'—')+'</span></div></div>'
+    +'<div style="height:1px;background:rgba(255,255,255,0.06);margin:16px 0"></div>'
+    +'<p class="text-[10px] text-gray-500 font-bold mb-3 tracking-[0.2em]">🌐 '+t('language')+'</p>'
+    +'<div class="grid grid-cols-2 gap-2 mb-4">'
+    +'<button onclick="setLang(\'en\')" class="py-3 rounded-xl text-xs font-bold '+(lang==='en'?'bg-toxic text-black':'bg-white/5 text-gray-400')+'">🇬🇧 English</button>'
+    +'<button onclick="setLang(\'hi\')" class="py-3 rounded-xl text-xs font-bold '+(lang==='hi'?'bg-toxic text-black':'bg-white/5 text-gray-400')+'">🇮🇳 हिंदी</button></div>'
+    +'<div style="height:1px;background:rgba(255,255,255,0.06);margin:16px 0"></div>'
+    +'<p class="text-[10px] text-gray-500 font-bold mb-3 tracking-[0.2em]">🔐 '+t('changePassword')+'</p>'
+    +'<input type="password" id="oldPw" class="input-dark mb-3" placeholder="Current Password">'
+    +'<input type="password" id="newPw" class="input-dark mb-3" placeholder="New Password">'
+    +'<input type="password" id="newPw2" class="input-dark mb-4" placeholder="Confirm New Password">'
+    +'<button onclick="changePassword()" class="btn-green w-full py-3 rounded-2xl text-sm mb-3 glow-green">'+t('updatePassword')+'</button>'
+    +'<button onclick="closeProfile();doLogout()" class="w-full py-3 rounded-2xl text-xs font-bold" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#EF4444">🚪 '+t('logout')+'</button>'
+    +'</div></div>';
+}
+
+function setLang(l){
+  localStorage.setItem('toxic_lang',l);
+  render();
+}
+
+function changePassword(){
+  var oldPw=$('oldPw').value,newPw=$('newPw').value,newPw2=$('newPw2').value;
+  if(!oldPw||!newPw||!newPw2) return alert('Fill all fields');
+  if(newPw.length<4) return alert('Min 4 chars');
+  if(newPw!==newPw2) return alert('Passwords do not match');
+  var stored=localStorage.getItem('toxic_pwd_'+S.user.user_id);
+  if(stored && stored!==oldPw) return alert('❌ Wrong current password');
+  localStorage.setItem('toxic_pwd_'+S.user.user_id,newPw);
+  $('oldPw').value=''; $('newPw').value=''; $('newPw2').value='';
+  alert('✅ Password updated!');
+}
+
+/* ===== ACTIONS ===== */
+function goSignup(){S.tab='signup';S.signupStep=1;render()}
+function goSignin(){S.tab='signin';render()}
+function saveCountry(v){S.signupData.country=v}
+
+function nextStep(n){
+  if(n===2){
+    if(!S.signupData.country && $('countrySel')) S.signupData.country=$('countrySel').value;
+    if(!S.signupData.country) return alert('Select country');
+  }
+  if(n===3){
+    S.signupData.firstName=$('fn').value;
+    S.signupData.lastName=$('ln').value;
+    S.signupData.email=$('em').value;
+    S.signupData.phone=$('ph').value;
+    if(!S.signupData.firstName || !S.signupData.email) return alert('Fill Name and Email');
+  }
+  S.signupStep=n;
+  render();
+}
+
+async function finishSignup(){
+  var un=$('un').value.trim(), pw=$('pw').value, pw2=$('pw2').value;
+  if(!un || un.length<3) return alert('Username 3+ chars');
+  if(!pw || pw.length<4) return alert('Password 4+ chars');
+  if(pw!==pw2) return alert('Passwords do not match');
+
+  var userId='TG'+Date.now();
+  var refCode='TOXIC'+Math.floor(1000+Math.random()*9000);
+
+  S.user={user_id:userId,username:un,email:S.signupData.email||'',phone:S.signupData.phone||'',balance:0,referral_balance:0,invested:0,activated:0,earned:0,ceiling:0,referral_code:refCode,referred_by:S.signupData.referredBy,is_banned:false,joined_at:new Date().toISOString()};
+  S.plans=[];
+  localStorage.setItem('toxic_pwd_'+userId,pw);
+
+  if(sb){
+    try{
+      await sb.from("users").insert([{user_id:userId,username:un,email:S.signupData.email||'',phone:S.signupData.phone||'',balance:0,referral_balance:0,invested:0,referral_code:refCode,referred_by:S.signupData.referredBy,is_banned:false}]);
+      // Referral bonus
+      if(S.signupData.referredBy){
+        try{
+          var refUser=await sb.from("users").select("*").eq("referral_code",S.signupData.referredBy).limit(1);
+          if(refUser.data && refUser.data.length>0){
+            var referrer=refUser.data[0];
+            var newRefBal=Number(referrer.referral_balance||0)+CONFIG.refBonus;
+            await sb.from("users").update({referral_balance:newRefBal}).eq("user_id",referrer.user_id);
+          }
+        }catch(e){}
+      }
+    }catch(e){}
+  }
+  S.tab='dashboard';
+  save();
+  render();
+}
+
+async function doSignIn(){
+  var u=$('signinUser').value.trim(), p=$('signinPass').value;
+  if(!u||!p) return alert('Enter username and password');
+  var existing=JSON.parse(localStorage.getItem('toxic_user')||'null');
+  if(existing && existing.username===u){
+    var stored=localStorage.getItem('toxic_pwd_'+existing.user_id);
+    if(stored && stored!==p) return alert('❌ Incorrect password');
+    S.user=existing;
+    S.plans=JSON.parse(localStorage.getItem('toxic_plans')||'[]');
+    S.tab='dashboard'; save();
+    await syncUserData();
+    await autoCreditMissedDays();
+    render();
+    return;
+  }
+  if(sb){
+    try{
+      var result=await sb.from("users").select("*").eq("username",u).limit(1);
+      if(result.data && result.data.length>0){
+        S.user=result.data[0];
+        S.tab='dashboard'; save();
+        await syncUserData();
+        await autoCreditMissedDays();
+        render();
+        return;
+      }
+    }catch(e){}
+  }
+  alert('⚠️ User not found. Sign up first.');
+}
+
+function doLogout(){
+  if(!confirm('Logout from TOXIC?')) return;
+  localStorage.removeItem('toxic_user');
+  localStorage.removeItem('toxic_plans');
+  S.user=null; S.plans=[]; S.showProfile=false; S.tab='signin';
+  render();
+}
+
+async function invest(id){
+  var p=PLANS.find(function(x){return x.id===id});
+  if(!p) return;
+  if(isPlanActive(id)) return alert('🔒 Already active.');
+  if(Number(S.user.balance)<p.deposit) return alert('💰 Insufficient balance.');
+  var now=new Date();
+  var newPlan={user_id:S.user.user_id,username:S.user.username,plan_id:p.id,plan_name:p.name,deposit:p.deposit,daily:p.daily,total:p.total,days_collected:0,status:'active',started_at:now.toISOString(),expires_at:new Date(now.getTime()+40*DAY).toISOString()};
+  S.user.balance=Number(S.user.balance)-p.deposit;
+  S.user.invested=Number(S.user.invested||0)+p.deposit;
+  if(sb){
+    try{
+      var r=await sb.from("user_plans").insert([newPlan]).select();
+      if(r.data && r.data[0]) newPlan=r.data[0];
+      await sb.from("users").update({balance:S.user.balance,invested:S.user.invested}).eq("user_id",S.user.user_id);
+    }catch(e){}
+  }
+  S.plans.unshift(newPlan);
+  save(); render();
+  alert('🎉 INVESTMENT SUCCESSFUL!\n\nPlan: '+p.name+'\nInvested: $'+p.deposit.toFixed(2)+'\n\n💰 Collect daily reward now!');
+}
+
+async function collectPlan(planId){
+  var pl=S.plans.find(function(x){return String(x.id)===String(planId)});
+  if(!pl) return;
+  var plan=PLANS.find(function(x){return x.id===pl.plan_id})||{daily:pl.daily,name:pl.plan_name};
+  if(Date.now()<getNextCollect(pl)) return alert('⏳ Not ready yet.');
+  if((Number(pl.days_collected)||0)>=40) return alert('Completed!');
+  var reward=Number(pl.daily);
+  S.user.balance=Number(S.user.balance||0)+reward;
+  S.user.earned=Number(S.user.earned||0)+reward;
+  pl.days_collected=(Number(pl.days_collected)||0)+1;
+  var completed=pl.days_collected>=40;
+  if(completed) pl.status='completed';
+  S.transactions.unshift({type:'daily_collect',amount:reward,status:'approved',method:plan.name,date:new Date().toISOString()});
+  if(sb){
+    try{
+      await sb.from("user_plans").update({days_collected:pl.days_collected,status:pl.status}).eq("id",pl.id);
+      await sb.from("users").update({balance:S.user.balance,earned:S.user.earned}).eq("user_id",S.user.user_id);
+    }catch(e){}
+  }
+  save(); render();
+  if(completed) alert('🎉 PLAN COMPLETED!\n\nCollected $'+reward.toFixed(2));
+  else alert('💰 COLLECTED $'+reward.toFixed(2)+'!\n\nDay '+pl.days_collected+' / 40');
+}
+
+async function submitDeposit(){
+  var amt=parseFloat($('depAmt').value);
+  var isCrypto=selM!==0;
+  var utr=$('depUtr')?$('depUtr').value.trim():'';
+  var tx=$('depTx')?$('depTx').value.trim():'';
+  var ref=isCrypto?tx:utr;
+  if(!amt || amt<CONFIG.minDeposit) return alert('Min deposit $'+CONFIG.minDeposit);
+  if(isCrypto && !ref) return alert('Enter TxHash');
+  if(!isCrypto && utr.length!==12) return alert('Enter valid 12-digit UTR');
+  var method=['UPI','USDT BEP20','USDT TRC20','BTC BEP20'][selM];
+  S.transactions.unshift({type:'deposit',amount:amt,ref:ref,status:'pending',method:method,date:new Date().toISOString()});
+  if(sb){
+    try{ await sb.from("deposits").insert([{user_id:S.user.user_id,username:S.user.username,amount:amt,method:method,ref:ref,status:'pending'}]); }catch(e){}
+  }
+  save();
+  $('depAmt').value='';
+  if($('depUtr')) $('depUtr').value='';
+  if($('depTx')) $('depTx').value='';
+  alert('✅ Deposit submitted! Admin will verify within 24 hours.');
+}
+
+async function submitWithdraw(){
+  var amt=parseFloat($('wdAmt').value);
+  var addr=$('wdAddr').value.trim();
+  if(!amt || amt<CONFIG.minWithdraw) return alert('Min $'+CONFIG.minWithdraw);
+  if(!addr) return alert('Enter USDT address');
+  if(Number(S.user.balance)<amt) return alert('Insufficient balance');
+  var fee=amt*CONFIG.withdrawFee;
+  S.user.balance-=amt;
+  S.transactions.unshift({type:'withdrawal',amount:amt-fee,status:'pending',method:'USDT',date:new Date().toISOString()});
+  if(sb){
+    try{
+      await sb.from("withdrawals").insert([{user_id:S.user.user_id,username:S.user.username,amount:amt-fee,address:addr,status:'pending'}]);
+      await sb.from("users").update({balance:S.user.balance}).eq("user_id",S.user.user_id);
+    }catch(e){}
+  }
+  save(); render();
+  alert('✅ Withdrawal requested! Amount: $'+fmt(amt-fee));
+}
+
+function copyText(text){
+  navigator.clipboard.writeText(text).then(function(){alert('✅ Copied!')}).catch(function(){
+    var el=document.createElement('textarea');el.value=text;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);alert('✅ Copied!');
+  });
+}
+
+/* ===== INIT ===== */
+try{ if(window.Telegram && window.Telegram.WebApp){window.Telegram.WebApp.ready();window.Telegram.WebApp.expand();} }catch(e){}
+
+if(!S.user) S.tab='signup';
+
+(async function init(){
+  if(S.user && S.user.user_id){
+    await syncUserData();
+    await autoCreditMissedDays();
+  }
+  render();
+  setTimeout(function(){ var l=$('loading'); if(l) l.classList.add('hide'); },1200);
+  setTimeout(showLiveNotif,3500);
+})();
+
+setInterval(async function(){
+  if(S.user && S.user.user_id){
+    await syncUserData();
+    updateDynamic();
+    if(S.tab==='history') render();
+  }
+},30000);
+</script>
+</body>
+</html>
