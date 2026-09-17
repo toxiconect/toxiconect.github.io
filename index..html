@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>TOXIC</title>
+<title>TOXIC WEB3 CAPITAL CONTROL</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -918,7 +918,7 @@ function plansUI(){
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">${cards}</div>
   </div>`;
 }
-function openPlan(id){if(isActive(id))return customAlert('Plan Active', 'This plan is already currently running.', '🔒');S.selPlan=PLSS.find(p=>p.id===id)||PLANS.find(p=>p.id===id);render();}
+function openPlan(id){if(isActive(id))return customAlert('Plan Active', 'This plan is already currently running.', '🔒');S.selPlan=PLANS.find(p=>p.id===id);render();}
 function closePlan(){S.selPlan=null;render();}
 function planModal(){
   if(!S.selPlan)return '';
@@ -1416,7 +1416,7 @@ function teamUI(){
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center;font-size:10px">
         <div style="background:rgba(0,255,102,0.07);padding:12px;border-radius:12px"><p style="color:#888;margin:0">L1</p><p class="text-toxic" style="font-weight:900;margin:4px 0 0;font-size:14px">10%</p></div>
         <div style="background:rgba(0,255,102,0.07);padding:12px;border-radius:12px"><p style="color:#888;margin:0">L2</p><p class="text-toxic" style="font-weight:900;margin:4px 0 0;font-size:14px">5%</p></div>
-        <div style="background:rgba(0,255,102,0.07);padding:12px;border-radius:12px"><p style="color:#888;margin:0">L3</p><p class="text-toxic" style="font-weight:900;margin:0 0 4px;font-size:14px">2%</p></div>
+        <div style="background:rgba(0,255,102,0.07);padding:12px;border-radius:12px"><p style="color:#888;margin:0">L3</p><p class="text-toxic" style="font-weight:900;margin:4px 0 0;font-size:14px">2%</p></div>
         <div style="grid-column:span 3;background:rgba(255,255,255,0.03);padding:12px;border-radius:12px"><p style="color:#888;margin:0">Levels 4 – 10</p><p style="color:#ccc;font-weight:900;margin:4px 0 0;font-size:14px">1% each</p></div>
       </div>
     </div>
@@ -1487,7 +1487,7 @@ function profileModal(){
         <button onclick="setLang('hi')" style="padding:10px 6px;border-radius:12px;font-size:11px;font-weight:800;border:none;cursor:pointer;${lang==='hi'?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.05);color:#888'}">🇮🇳 हिंदी</button>
         <button onclick="setLang('ur')" style="padding:10px 6px;border-radius:12px;font-size:11px;font-weight:800;border:none;cursor:pointer;${lang==='ur'?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.05);color:#888'}">🇵🇰 اردو</button>
         <button onclick="setLang('bn')" style="padding:10px 6px;border-radius:12px;font-size:11px;font-weight:800;border:none;cursor:pointer;${lang==='bn'?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.05);color:#888'}">🇧🇩 বাংলা</button>
-        <button onclick="setLang('ar')" style="grid-column:span 2;padding:10px 6px;border-radius:12px;font-size:11px;font-weight:800;border:none;cursor:pointer;${lang==='ar'?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.05);color:#888'}">🇦🇪 العربية</button>
+        <button onclick="setLang('ar')" style="grid-call-column:span 2;padding:10px 6px;border-radius:12px;font-size:11px;font-weight:800;border:none;cursor:pointer;${lang==='ar'?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.05);color:#888'}">🇦🇪 العربية</button>
       </div>
 
       <div style="height:1px;background:rgba(255,255,255,0.08);margin:18px 0"></div>
@@ -1510,7 +1510,7 @@ function changePw(){
   const o=$('oldPw').value,n=$('newPw').value,n2=$('newPw2').value;
   if(!o||!n||!n2)return customAlert('Required', 'Please fill all password fields.', '⚠️');
   if(n.length<4)return customAlert('Too Short', 'Password must be at least 4 characters.', '⚠️');
-  if(n!==n2)return customAlert('Mismatch', 'New passwords do not match.', '⚠️');
+  if(n!==n2)return customAlert('Mismatch', 'Passwords do not match.', '⚠️');
   const st=localStorage.getItem('t_pwd_'+S.user.user_id);
   if(st&&st!==o)return customAlert('Error', 'Current password is incorrect.', '❌');
   localStorage.setItem('t_pwd_'+S.user.user_id,n);
