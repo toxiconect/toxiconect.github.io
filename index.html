@@ -1,1 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TOXIC</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#060a09;background-image:radial-gradient(circle at 0% 0%,rgba(0,255,102,0.07),transparent 40%),radial-gradient(circle at 100% 100%,rgba(16,185,129,0.05),transparent 40%);background-attachment:fixed;color:#fff;font-family:Inter,sans-serif;min-height:100vh;overflow-x:hidden}
+.mono{font-family:monospace}
+.glass-card{background:linear-gradient(145deg,rgba(14,26,20,0.95),rgba(8,14,11,0.98));border:1px solid rgba(0,255,102,0.09);border-radius:1.5rem;padding:1.25rem;box-shadow:0 20px 40px -20px #000;position:relative}
+.glass{background:rgba(12,20,17,0.85);backdrop-filter:blur(24px);border:1px solid rgba(0,255,102,0.08)}
+.text-toxic{color:#00FF66}.bg-toxic{background:#00FF66}
+.glow-green{box-shadow:0 0 24px rgba(0,255,102,0.35)}
+.glow-green-strong{box-shadow:0 0 50px rgba(0,255,102,0.55)}
+.btn-green{background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-weight:800;transition:all 0.15s}
+.btn-green:active{transform:scale(0.96)}
+.card-gradient{background:linear-gradient(160deg,rgba(0,255,102,0.12),rgba(10,15,12,0.98) 65%)}
+.input-dark{background:rgba(0,0,0,0.6);border:1.5px solid rgba(0,255,102,0.1);border-radius:1rem;padding:1rem;color:#fff;outline:none;width:100%;font-size:15px}
+.input-dark:focus{border-color:rgba(0,255,102,0.6)}
+.input-dark::placeholder{color:#4B5563}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 2px;border-radius:14px;cursor:pointer;position:relative;color:#666}
+.nav-item.active{color:#00FF66}
+.nav-item.active::after{content:'';position:absolute;bottom:-2px;left:22%;right:22%;height:3px;background:#00FF66;border-radius:3px;box-shadow:0 0 12px #00FF66}
+.plan-card{background:linear-gradient(160deg,rgba(0,0,0,0.7),rgba(10,20,15,0.95));border:1.5px solid rgba(0,255,102,0.1);border-radius:1.25rem;padding:1rem;position:relative;overflow:hidden;cursor:pointer;transition:all 0.25s}
+.plan-card.locked{opacity:0.7;cursor:default}
+.plan-card.locked::after{content:'🔒 ACTIVE';position:absolute;top:10px;right:10px;background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-size:9px;font-weight:900;padding:4px 8px;border-radius:20px;box-shadow:0 0 15px #00FF66;z-index:20}
+.plan-active-card{background:linear-gradient(145deg,rgba(0,255,102,0.14),rgba(8,16,12,0.98) 70%);border:1.5px solid rgba(0,255,102,0.4);border-radius:1.5rem;padding:1.25rem;position:relative;overflow:hidden}
+.avatar-ring{background:linear-gradient(135deg,#00FF66,#10B981);padding:2px;border-radius:9999px}
+.avatar-inner{background:#060a09;border-radius:9999px}
+.btn-invest-3d{background:linear-gradient(180deg,#00FF66,#10B981);color:#000;font-weight:900;border-radius:0.75rem;border:none;padding:10px;width:100%;cursor:pointer;font-size:11px;box-shadow:0 4px 0 #0a5c3a,0 6px 15px rgba(0,255,102,0.4);transition:all 0.1s;position:relative;z-index:20}
+.btn-invest-3d:active{transform:translateY(3px);box-shadow:0 1px 0 #0a5c3a}
+.btn-invest-3d.locked-btn{background:linear-gradient(180deg,#2a2a2a,#1a1a1a);color:#666;cursor:not-allowed;box-shadow:0 4px 0 #0a0a0a}
+.collect-btn{background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-weight:900;box-shadow:0 0 35px rgba(0,255,102,0.55);animation:cpulse 2s infinite}
+@keyframes cpulse{0%,100%{box-shadow:0 0 20px rgba(0,255,102,0.4)}50%{box-shadow:0 0 45px rgba(0,255,102,0.85)}}
+.collect-btn:disabled{background:rgba(255,255,255,0.05);color:#6B7280;box-shadow:none;animation:none;cursor:not-allowed}
+.pulse-dot{animation:pdot 1.5s infinite}
+@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.85)}}
+.timer-glow{text-shadow:0 0 25px rgba(0,255,102,0.7)}
+.text-3d{text-shadow:0 0 20px rgba(0,255,102,0.5)}
+#loading{position:fixed;inset:0;background:#060a09;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.5s,visibility 0.5s}
+#loading.hide{opacity:0;visibility:hidden}
+.load-logo{font-size:56px;font-weight:900;color:#00FF66;letter-spacing:0.3em;text-shadow:0 0 30px #00FF66;animation:lp 1.5s infinite}
+@keyframes lp{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.load-bar{width:180px;height:3px;background:rgba(0,255,102,0.15);border-radius:3px;margin-top:24px;overflow:hidden}
+.load-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#00FF66,#10B981);animation:lb 1.5s forwards}
+@keyframes lb{to{width:100%}}
+#live-banner{position:fixed;bottom:95px;left:12px;right:12px;max-width:420px;margin:0 auto;background:linear-gradient(135deg,#0a1411,#060e0a);backdrop-filter:blur(20px);border:1px solid rgba(0,255,102,0.4);border-radius:1rem;padding:10px 14px;z-index:45;transition:transform 0.4s,opacity 0.3s;transform:translateY(150%);opacity:0;display:flex;align-items:center;gap:10px;box-shadow:0 10px 30px rgba(0,255,102,0.25)}
+#live-banner.show{transform:translateY(0);opacity:1}
+.live-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#00FF66,#10B981);display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;font-size:14px;flex-shrink:0}
+.live-text{font-size:11px;color:#ddd;line-height:1.4;flex:1}
+.live-text b{color:#00FF66}
+#toast{position:fixed;bottom:160px;left:50%;transform:translateX(-50%) translateY(30px);background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-weight:800;padding:10px 20px;border-radius:1rem;font-size:12px;z-index:70;transition:all 0.4s;box-shadow:0 10px 40px rgba(0,255,102,0.5);opacity:0;pointer-events:none;max-width:85%;text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.chart-bar{transition:all 0.3s;border-radius:6px 6px 0 0}
+.notif-badge{position:absolute;top:-4px;right:-4px;background:#EF4444;color:#fff;font-size:9px;font-weight:900;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid #060a09}
+.notif-item{padding:14px;background:rgba(0,0,0,0.35);border-radius:12px;margin-bottom:10px;border-left:3px solid #10B981}
+.notif-item.warning{border-left-color:#FBBF24;background:rgba(251,191,36,0.06)}
+.notif-item.bonus{border-left-color:#00FF66;background:rgba(0,255,102,0.06)}
+.notif-item.update{border-left-color:#60A5FA;background:rgba(96,165,250,0.06)}
+.notif-item.unread{box-shadow:0 0 15px rgba(0,255,102,0.15)}
+.modal-anim{animation:mi 0.35s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes mi{from{opacity:0;transform:scale(0.85) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+</style>
+</head>
+<body>
+<div id="loading"><div class="load-logo">TOXIC</div><div class="load-bar"><div class="load-bar-fill"></div></div></div>
+<div id="live-banner"><div class="live-avatar" id="lb-avatar">R</div><div class="live-text" id="lb-text">Loading...</div></div>
+<div id="toast"></div>
+<div id="app"></div>
+<script>
+var CFG={
+  banner:'https://i.postimg.cc/Wz818VcZ/1789133259079.png',
+  support:'https://t.me/Toxiconect',
+  upi:'alamasif2124-1@oksbi',upiName:'Asif Alam',
+  usdtBep20:'0xd39ca01aaf830911553c4f06510665b34fb793d0',
+  usdtTrc20:'TMqeccMCttEYBQoLVnEWSs1KSHBhFgaexq',
+  btcBep20:'0xd39ca01aaf830911553c4f06510665b34fb793d0',
+  inrRate:90,minDeposit:2,minWithdraw:5,fee:5,
+  appUrl:'https://toxiconect.github.io',
+  sbUrl:'https://uaeyjqfwqxhgbhrvlbdr.supabase.co',
+  sbKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZXlqcWZ3cXhoZ2JocnZsYmRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NjgzMTEsImV4cCI6MjEwNTE0NDMxMX0.gmxzj18TuS6Zckjf7d41uBUFMHfsUxl92e-QoI-a-rc'
+};
+var sb=null;
+try{if(window.supabase)sb=window.supabase.createClient(CFG.sbUrl,CFG.sbKey)}catch(e){}
 
+var PLANS=[
+  {id:'l1',n:'BRONZE',d:1,dly:0.10,t:4.00,c:'#CD7F32',i:'🥉'},
+  {id:'l2',n:'SILVER',d:3,dly:0.36,t:14.40,c:'#C0C0C0',i:'🥈'},
+  {id:'l3',n:'GOLD',d:5,dly:0.70,t:28.00,c:'#FFD700',i:'🥇'},
+  {id:'l4',n:'ELITE',d:10,dly:1.60,t:64.00,c:'#22D3EE',i:'💎'},
+  {id:'l5',n:'ULTRA',d:20,dly:3.50,t:140.00,c:'#A855F7',i:'👑'},
+  {id:'l6',n:'LEGEND',d:50,dly:9.00,t:360.00,c:'#00FF66',i:'🏆'},
+  {id:'l7',n:'MASTER',d:100,dly:18.50,t:740.00,c:'#EF4444',i:'⚔️'},
+  {id:'l8',n:'GRANDMASTER',d:200,dly:38.00,t:1520.00,c:'#EC4899',i:'🎯'},
+  {id:'l9',n:'MYTHIC',d:500,dly:97.50,t:3900.00,c:'#6366F1',i:'🔥'},
+  {id:'l10',n:'IMMORTAL',d:1000,dly:200.00,t:8000.00,c:'#FEF08A',i:'⚡'},
+  {id:'l11',n:'TITAN',d:2000,dly:410.00,t:16400.00,c:'#3B82F6',i:'⭐'},
+  {id:'l12',n:'GODFATHER',d:5000,dly:1050.00,t:42000.00,c:'#00FF66',i:'👑'}
+];
+var DAY=86400000;
+var S={
+  user:JSON.parse(localStorage.getItem('t_user')||'null'),
+  plans:JSON.parse(localStorage.getItem('t_plans')||'[]'),
+  tx:JSON.parse(localStorage.getItem('t_tx')||'[]'),
+  notifs:[],
+  tab:'dashboard',
+  step:1,
+  sd:{country:'',firstName:'',lastName:'',email:'',phone:'',username:'',password:'',referredBy:null},
+  selPlan:null,showProfile:false,showNotifs:false
+};
+try{var up=new URLSearchParams(location.search);var rf=up.get('ref');if(rf)S.sd.referredBy=rf}catch(e){}
+
+function save(){
+  localStorage.setItem('t_user',JSON.stringify(S.user));
+  localStorage.setItem('t_plans',JSON.stringify(S.plans));
+  localStorage.setItem('t_tx',JSON.stringify(S.tx));
+}
+function $(id){return document.getElementById(id)}
+function fmt(n){return Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function nextC(p){return new Date(p.started_at).getTime()+(Number(p.days_collected)||0)*DAY}
+function isActive(pid){return S.plans.some(function(p){return p.plan_id===pid && Number(p.days_collected)<40 && p.status!=='completed'})}
+function refLink(){return S.user?CFG.appUrl+'/?ref='+S.user.referral_code:CFG.appUrl}
+
+function toast(m){var el=$('toast');if(!el)return;el.textContent=m;el.classList.add('show');setTimeout(function(){el.classList.remove('show')},3000)}
+
+async function loadNotifs(){
+  if(!sb||!S.user)return;
+  try{var r=await sb.from("notifications").select("*").eq("user_id",S.user.user_id).order("id",{ascending:false}).limit(50);if(r.data)S.notifs=r.data}catch(e){}
+}
+function unread(){return S.notifs.filter(function(n){return !n.is_read}).length}
+async function markRead(){
+  if(!sb||!S.user)return;
+  var un=S.notifs.filter(function(n){return !n.is_read});
+  for(var i=0;i<un.length;i++){await sb.from("notifications").update({is_read:true}).eq("id",un[i].id)}
+  await sb.from("users").update({unread_count:0}).eq("user_id",S.user.user_id);
+  S.user.unread_count=0;
+  S.notifs.forEach(function(n){n.is_read=true});
+  save();render();
+}
+
+async function autoCredit(){
+  if(!S.user)return;
+  var tot=0,now=Date.now();
+  for(var i=0;i<S.plans.length;i++){
+    var pl=S.plans[i];
+    if(pl.status==='completed')continue;
+    var days=Number(pl.days_collected)||0;
+    if(days>=40){pl.status='completed';continue}
+    var st=new Date(pl.started_at).getTime();
+    var passed=Math.floor((now-st)/DAY);
+    var max=Math.min(passed+1,40);
+    var pend=max-days;
+    if(pend>0){
+      pl.days_collected=days+pend;
+      var rw=pend*Number(pl.dly||pl.daily);
+      S.user.balance=Number(S.user.balance||0)+rw;
+      S.user.earned=Number(S.user.earned||0)+rw;
+      tot+=rw;
+      if(pl.days_collected>=40)pl.status='completed';
+      S.tx.unshift({type:'daily_collect',amount:rw,status:'approved',method:pl.plan_name+' x'+pend,date:new Date().toISOString()});
+      if(sb){try{await sb.from("user_plans").update({days_collected:pl.days_collected,status:pl.status}).eq("id",pl.id)}catch(e){}}
+    }
+  }
+  if(tot>0){
+    save();
+    if(sb){try{await sb.from("users").update({balance:S.user.balance,earned:S.user.earned}).eq("user_id",S.user.user_id)}catch(e){}}
+    setTimeout(function(){toast('💰 +$'+fmt(tot)+' Auto-Credited!')},1200);
+  }
+}
+
+var NAMES=['Rahul','Priya','Ahmed','Sara','Vikram','Anjali','Kiran','Ravi','Neha','Amit','Rohan','Sneha'];
+var CITIES=['Mumbai','Delhi','Karachi','Dhaka','Lahore','Bangalore','Chennai','Kolkata'];
+function showLive(){
+  var b=$('live-banner');if(!b)return;
+  var n=NAMES[Math.floor(Math.random()*NAMES.length)];
+  var c=CITIES[Math.floor(Math.random()*CITIES.length)];
+  var msgs=[' just earned <b>$'+[0.10,0.36,0.70,1.60,3.50,9.00][Math.floor(Math.random()*6)].toFixed(2)+'</b>',' invested in <b>'+['BRONZE','SILVER','GOLD','ELITE','ULTRA','LEGEND'][Math.floor(Math.random()*6)]+'</b>',' just joined TOXIC 🎉'];
+  $('lb-avatar').textContent=n[0];
+  $('lb-text').innerHTML='<b>'+n+'</b> from '+c+msgs[Math.floor(Math.random()*msgs.length)];
+  b.classList.add('show');
+  setTimeout(function(){b.classList.remove('show')},4500);
+  setTimeout(showLive,14000+Math.random()*10000);
+}
+
+function render(){
+  var a=$('app');
+  if(!S.user){a.innerHTML=S.tab==='signin'?loginUI():signupUI();return}
+  a.innerHTML=mainUI()+planModal()+profileModal()+notifsModal();
+  updateDyn();
+}
+function updateDyn(){
+  if(!S.user)return;
+  document.querySelectorAll('[data-timer]').forEach(function(el){
+    var pid=el.getAttribute('data-timer');
+    var p=S.plans.find(function(x){return String(x.id)===String(pid)});
+    if(!p)return;
+    var rem=nextC(p)-Date.now();
+    if(rem<=0){el.textContent='READY';el.classList.add('text-toxic')}
+    else{
+      var h=Math.max(0,Math.floor(rem/3600000));
+      var m=Math.max(0,Math.floor((rem%3600000)/60000));
+      var s=Math.max(0,Math.floor((rem%60000)/1000));
+      el.textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+      el.classList.remove('text-toxic');
+    }
+  });
+  document.querySelectorAll('[data-collect]').forEach(function(btn){
+    var pid=btn.getAttribute('data-collect');
+    var p=S.plans.find(function(x){return String(x.id)===String(pid)});
+    if(!p)return;
+    var ready=Date.now()>=nextC(p) && Number(p.days_collected)<40;
+    btn.disabled=!ready;
+    if(ready)btn.textContent='💰 COLLECT $'+Number(p.dly||p.daily).toFixed(2);
+    else if(Number(p.days_collected)>=40)btn.textContent='✅ COMPLETED';
+    else btn.textContent='⏳ WAITING FOR DAILY COLLECT';
+  });
+  if($('bal'))$('bal').textContent='$'+fmt(S.user.balance);
+  if($('refb'))$('refb').textContent='$'+fmt(S.user.referral_balance);
+  if($('pc'))$('pc').textContent=S.plans.filter(function(p){return Number(p.days_collected)<40}).length;
+  var un=unread();
+  var b=$('nb');
+  if(b){if(un>0){b.textContent=un;b.style.display='flex'}else b.style.display='none'}
+}
+setInterval(updateDyn,1000);
+
+async function syncUser(){
+  if(!sb||!S.user)return;
+  try{
+    var u=await sb.from("users").select("*").eq("user_id",S.user.user_id).limit(1);
+    if(u.data&&u.data[0]){
+      var f=u.data[0];
+      S.user.balance=Number(f.balance||0);
+      S.user.referral_balance=Number(f.referral_balance||0);
+      S.user.invested=Number(f.invested||0);
+      S.user.earned=Number(f.earned||0);
+      save();
+    }
+    var p=await sb.from("user_plans").select("*").eq("user_id",S.user.user_id).order("id",{ascending:false});
+    if(p.data)S.plans=p.data;
+    var d=await sb.from("deposits").select("*").eq("user_id",S.user.user_id).order("id",{ascending:false});
+    var w=await sb.from("withdrawals").select("*").eq("user_id",S.user.user_id).order("id",{ascending:false});
+    S.tx=[];
+    if(d.data)d.data.forEach(function(x){S.tx.push({type:'deposit',amount:Number(x.amount),method:x.method,status:x.status,date:x.created_at})});
+    if(w.data)w.data.forEach(function(x){S.tx.push({type:'withdrawal',amount:Number(x.amount),method:'USDT',status:x.status,date:x.created_at})});
+    S.tx.sort(function(a,b){return new Date(b.date)-new Date(a.date)});
+    await loadNotifs();
+    save();
+  }catch(e){}
+}
+
+/* LOGIN */
+function loginUI(){
+  return '<div class="min-h-screen px-5 py-10 flex flex-col" style="background:radial-gradient(circle at 50% 0%,rgba(0,255,102,0.12),transparent 55%),#060a09">'
+    +'<div class="text-center mb-8 mt-6"><h1 class="text-5xl font-black text-toxic text-3d tracking-widest">TOXIC</h1><p class="text-gray-500 text-[10px] mt-3 tracking-[0.4em]">CAPITAL CONTROL</p></div>'
+    +'<div class="glass-card p-6"><p class="text-[10px] text-gray-500 font-bold mb-3 tracking-widest">WELCOME BACK</p><h2 class="text-2xl font-black mb-6">Sign in to your account</h2>'
+    +'<input id="lu" class="input-dark mb-3" placeholder="Username"><input id="lp" type="password" class="input-dark mb-6" placeholder="Password">'
+    +'<button onclick="doLogin()" class="w-full btn-green py-4 rounded-2xl text-sm glow-green">SIGN IN</button>'
+    +'<p class="text-center text-sm text-gray-500 pt-5">No account? <span onclick="S.tab=\'signup\';render()" class="text-toxic font-bold cursor-pointer">Create one →</span></p></div></div>';
+}
+function signupUI(){
+  var step=S.step;
+  var steps=[1,2,3].map(function(n){var c=step>n?'#10B981':step===n?'#00FF66':'rgba(255,255,255,0.06)';var tc=step>=n?'#000':'#4B5563';return '<div style="width:44px;height:44px;border-radius:14px;background:'+c+';color:'+tc+';display:flex;align-items:center;justify-content:center;font-weight:800;box-shadow:'+(step===n?'0 0 25px #00FF66':'none')+'">'+(step>n?'✓':n)+'</div>'}).join('');
+  return '<div class="min-h-screen flex flex-col" style="background:radial-gradient(circle at 50% 0%,rgba(0,255,102,0.12),transparent 55%),#060a09">'
+    +'<div class="relative w-full h-44 overflow-hidden"><img src="'+CFG.banner+'" style="width:100%;height:100%;object-fit:cover;opacity:0.75"><div class="absolute inset-0" style="background:linear-gradient(180deg,rgba(6,10,9,0.3),rgba(6,10,9,0.98))"></div><div class="absolute" style="bottom:16px;left:20px"><h1 class="text-3xl font-black text-toxic tracking-widest text-3d">TOXIC</h1></div></div>'
+    +'<div class="px-5 pb-10"><div class="flex items-center justify-center gap-4 mb-6">'+steps+'</div><div class="glass-card p-6">'
+    +(step===1?step1():step===2?step2():step3())
+    +'</div></div></div>';
+}
+function step1(){
+  var cs=['India (+91)','Pakistan (+92)','Bangladesh (+880)','United States (+1)','UAE (+971)','Saudi Arabia (+966)','Nigeria (+234)','Indonesia (+62)','Philippines (+63)','Nepal (+977)'];
+  var ops=cs.map(function(c){return '<option '+(S.sd.country===c?'selected':'')+'>'+c+'</option>'}).join('');
+  var rn=S.sd.referredBy?'<div class="rounded-xl p-3 mb-4" style="background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.25)"><p style="font-size:10px;color:#888;margin:0">Referred by</p><p class="text-toxic font-black font-mono" style="font-size:12px;margin:4px 0 0">'+esc(S.sd.referredBy)+'</p></div>':'';
+  return rn+'<p style="font-size:10px;color:#666;font-weight:700;margin:0 0 8px;letter-spacing:2px">STEP 1 / 3</p><h2 class="text-2xl font-black mb-1">Choose your country</h2><p class="text-sm text-gray-500 mb-6">Select country.</p>'
+    +'<select id="cs" class="input-dark mb-6" onchange="S.sd.country=this.value"><option value="">Choose...</option>'+ops+'</select>'
+    +'<button onclick="S.step=2;if($(\'cs\').value)S.sd.country=$(\'cs\').value;render()" class="w-full btn-green py-4 rounded-2xl text-sm glow-green">NEXT →</button>'
+    +'<p class="text-center text-xs text-gray-500 mt-4">Already have an account? <span onclick="S.tab=\'signin\';render()" class="text-yellow-400 font-bold">Sign in</span></p>';
+}
+function step2(){
+  return '<p style="font-size:10px;color:#666;font-weight:700;margin:0 0 8px;letter-spacing:2px">STEP 2 / 3</p><h2 class="text-2xl font-black mb-1">Personal Info</h2><p class="text-sm text-gray-500 mb-5">Tell us about you.</p>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px"><input class="input-dark" id="fn" placeholder="First Name" value="'+(S.sd.firstName||'')+'"><input class="input-dark" id="ln" placeholder="Last Name" value="'+(S.sd.lastName||'')+'"></div>'
+    +'<input class="input-dark mb-3" id="em" type="email" placeholder="you@example.com" value="'+(S.sd.email||'')+'">'
+    +'<input class="input-dark mb-6" id="ph" type="tel" placeholder="WhatsApp Number" value="'+(S.sd.phone||'')+'">'
+    +'<div style="display:flex;gap:12px"><button onclick="S.step=1;render()" style="flex:1;padding:16px;border-radius:16px;background:rgba(255,255,255,0.05);font-weight:700;font-size:13px;border:none;color:#fff">← BACK</button><button onclick="goStep3()" style="flex:1;padding:16px;border-radius:16px;font-weight:700;font-size:13px;border:none" class="btn-green">NEXT →</button></div>';
+}
+function step3(){
+  return '<p style="font-size:10px;color:#666;font-weight:700;margin:0 0 8px;letter-spacing:2px">STEP 3 / 3</p><h2 class="text-2xl font-black mb-1">Create Access</h2><p class="text-sm text-gray-500 mb-5">Username & password.</p>'
+    +'<input class="input-dark mb-3" id="un" placeholder="Username" value="'+(S.sd.username||'')+'">'
+    +'<input class="input-dark mb-3" id="pw" type="password" placeholder="Password">'
+    +'<input class="input-dark mb-6" id="pw2" type="password" placeholder="Confirm Password">'
+    +'<div style="display:flex;gap:12px"><button onclick="S.step=2;render()" style="padding:16px 24px;border-radius:16px;background:rgba(255,255,255,0.05);font-weight:700;font-size:13px;border:none;color:#fff">← BACK</button><button onclick="finishSignup()" style="flex:1;padding:16px;border-radius:16px;font-weight:700;font-size:13px;border:none" class="btn-green">FINISH →</button></div>';
+}
+function goStep3(){
+  S.sd.firstName=$('fn').value;S.sd.lastName=$('ln').value;S.sd.email=$('em').value;S.sd.phone=$('ph').value;
+  if(!S.sd.firstName||!S.sd.email)return alert('Fill Name and Email');
+  S.step=3;render();
+}
+async function finishSignup(){
+  var un=$('un').value.trim(),pw=$('pw').value,pw2=$('pw2').value;
+  if(!un||un.length<3)return alert('Username 3+ chars');
+  if(!pw||pw.length<4)return alert('Password 4+ chars');
+  if(pw!==pw2)return alert('Passwords do not match');
+  var uid='TG'+Date.now();
+  var rc='TOXIC'+Math.floor(1000+Math.random()*9000);
+  S.user={user_id:uid,username:un,email:S.sd.email||'',phone:S.sd.phone||'',balance:0,referral_balance:0,invested:0,earned:0,referral_code:rc,referred_by:S.sd.referredBy,is_banned:false,joined_at:new Date().toISOString()};
+  S.plans=[];
+  localStorage.setItem('t_pwd_'+uid,pw);
+  if(sb){
+    try{
+      await sb.from("users").insert([{user_id:uid,username:un,email:S.sd.email||'',phone:S.sd.phone||'',balance:0,referral_balance:0,invested:0,referral_code:rc,referred_by:S.sd.referredBy,is_banned:false}]);
+      if(S.sd.referredBy){
+        try{
+          var r=await sb.from("users").select("*").eq("referral_code",S.sd.referredBy).limit(1);
+          if(r.data&&r.data[0]){
+            var ref=r.data[0];
+            await sb.from("users").update({referral_balance:Number(ref.referral_balance||0)+0.10}).eq("user_id",ref.user_id);
+          }
+        }catch(e){}
+      }
+    }catch(e){}
+  }
+  S.tab='dashboard';save();render();
+}
+async function doLogin(){
+  var u=$('lu').value.trim(),p=$('lp').value;
+  if(!u||!p)return alert('Enter credentials');
+  var ex=JSON.parse(localStorage.getItem('t_user')||'null');
+  if(ex&&ex.username===u){
+    var st=localStorage.getItem('t_pwd_'+ex.user_id);
+    if(st&&st!==p)return alert('❌ Wrong password');
+    S.user=ex;S.plans=JSON.parse(localStorage.getItem('t_plans')||'[]');S.tab='dashboard';save();
+    await syncUser();await autoCredit();render();return;
+  }
+  if(sb){
+    try{
+      var r=await sb.from("users").select("*").eq("username",u).limit(1);
+      if(r.data&&r.data[0]){S.user=r.data[0];S.tab='dashboard';save();await syncUser();await autoCredit();render();return}
+    }catch(e){}
+  }
+  alert('⚠️ User not found. Sign up first.');
+}
+function logout(){
+  if(!confirm('Logout?'))return;
+  localStorage.removeItem('t_user');localStorage.removeItem('t_plans');
+  S.user=null;S.plans=[];S.tab='signin';render();
+}
+
+/* MAIN */
+function mainUI(){
+  var u=S.user,un=unread();
+  return '<div class="min-h-screen pb-28 relative max-w-md mx-auto">'
+    +'<header class="px-5 py-4 flex justify-between items-center sticky top-0 z-40" style="background:rgba(6,10,9,0.92);backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,255,102,0.06)">'
+    +'<h1 class="text-xl font-black text-toxic tracking-widest text-3d">TOXIC</h1>'
+    +'<div class="flex items-center gap-3">'
+    +'<div onclick="S.showNotifs=true;render()" style="position:relative;cursor:pointer;padding:4px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>'
+    +(un>0?'<div id="nb" class="notif-badge">'+un+'</div>':'<div id="nb" class="notif-badge" style="display:none">0</div>')
+    +'</div>'
+    +'<div class="glass px-3 py-1.5 rounded-full flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-toxic pulse-dot"></span><span style="font-size:10px;font-weight:700" class="text-toxic">LIVE</span></div>'
+    +'<div onclick="S.showProfile=true;render()" class="avatar-ring cursor-pointer" style="cursor:pointer"><div class="avatar-inner w-9 h-9 flex items-center justify-center text-toxic font-black text-sm">'+u.username[0].toUpperCase()+'</div></div>'
+    +'</div></header>'
+    +'<main class="px-4 pt-4">'+renderTab()+'</main>'
+    +'<a href="'+CFG.support+'" target="_blank" style="position:fixed;bottom:110px;right:16px;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#000;font-size:24px;z-index:40" class="bg-toxic glow-green-strong">💬</a>'
+    +'<nav style="position:fixed;bottom:0;left:0;right:0;max-width:448px;margin:0 auto;z-index:50;background:rgba(6,10,9,0.97);backdrop-filter:blur(24px);border-top:1px solid rgba(0,255,102,0.08)">'
+    +'<div style="display:flex;justify-content:space-around;align-items:center;padding:8px 4px">'
+    +nav('dashboard','Dashboard','M3 5h7v7H3zM14 5h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z')
+    +nav('plans','INVEST','M3 17l6-6 4 4 8-8M21 7v6h-6')
+    +nav('active','Active','M3 7h18v14H3zM3 7l3-3h12l3 3M12 11v6M9 14h6')
+    +nav('wallet','Wallet','M21 12V7H5a2 2 0 010-4h14v4M3 5v14a2 2 0 002 2h16v-5M18 12a2 2 0 000 4h4v-4h-4z')
+    +nav('history','History','M12 8v4l3 3M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8M3 3v5h5')
+    +nav('team','Team','M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 7a4 4 0 100 8 4 4 0 000-8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75')
+    +'</div></nav></div>';
+}
+function nav(id,l,path){
+  var a=S.tab===id;
+  return '<div class="nav-item '+(a?'active':'')+'" onclick="setTab(\''+id+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:20px;height:20px;stroke-width:2" stroke-linecap="round" stroke-linejoin="round"><path d="'+path+'"/></svg><span style="font-size:9px;font-weight:600;margin-top:2px">'+l+'</span></div>';
+}
+function setTab(t){S.tab=t;S.selPlan=null;window.scrollTo(0,0);render();if(S.user)syncUser().then(updateDyn)}
+function renderTab(){
+  if(S.tab==='dashboard')return dashUI();
+  if(S.tab==='plans')return plansUI();
+  if(S.tab==='active')return activeUI();
+  if(S.tab==='wallet')return walletUI();
+  if(S.tab==='history')return historyUI();
+  if(S.tab==='team')return teamUI();
+  return '';
+}
+
+/* DASHBOARD */
+function dashUI(){
+  var u=S.user,rl=refLink();
+  var bars=[20,35,28,50,42,65,55,80,70,95].map(function(h,i){return '<div style="flex:1;border-radius:4px 4px 0 0;height:'+h+'%;background:linear-gradient(180deg,#00FF66,rgba(0,255,102,0.15));opacity:'+(0.4+i*0.06)+'"></div>'}).join('');
+  var ap=S.plans.filter(function(p){return Number(p.days_collected)<40&&p.status!=='completed'});
+  var plansHTML='';
+  if(ap.length===0){
+    plansHTML='<div class="glass-card mb-3 text-center" style="padding:32px 0"><div style="font-size:36px;opacity:0.5;margin-bottom:8px">📊</div><p class="font-bold">No Active Plans</p><p style="font-size:11px;color:#666;margin:4px 0 16px">Choose a plan to start earning</p><button onclick="setTab(\'plans\')" class="btn-green" style="padding:12px 24px;border-radius:12px;font-size:12px">BROWSE PLANS →</button></div>';
+  } else {
+    plansHTML=ap.map(function(pl){
+      var p=PLANS.find(function(x){return x.id===pl.plan_id})||{c:'#00FF66',i:'💰',dly:pl.daily,t:pl.total,n:pl.plan_name};
+      var days=Number(pl.days_collected)||0;
+      var pct=(days/40)*100;
+      var earned=days*Number(pl.dly||pl.daily);
+      return '<div class="plan-active-card mb-3">'
+        +'<div style="display:flex;justify-content:space-between;margin-bottom:12px"><div style="display:flex;gap:12px;align-items:center"><div style="width:48px;height:48px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;background:'+p.c+'25;border:1px solid '+p.c+'66">'+p.i+'</div><div><p class="font-black" style="color:'+p.c+';font-size:15px">'+p.n+'</p><p style="font-size:10px;color:#888">Invested $'+fmt(pl.deposit)+'</p></div></div><div style="display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;display:inline-block" class="bg-toxic pulse-dot"></span><span style="font-size:9px;font-weight:900" class="text-toxic">LIVE</span></div></div>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">'
+        +'<div style="background:rgba(0,0,0,0.45);border-radius:12px;padding:12px"><p style="font-size:9px;color:#888;margin:0 0 4px">TODAY\'S EARNING</p><p class="mono font-black" style="font-size:18px;color:'+p.c+';margin:0">+$'+Number(pl.dly||pl.daily).toFixed(2)+'</p></div>'
+        +'<div style="background:rgba(0,0,0,0.45);border-radius:12px;padding:12px"><p style="font-size:9px;color:#888;margin:0 0 4px">EARNED</p><p class="mono font-black text-toxic" style="font-size:18px;margin:0">$'+earned.toFixed(2)+'</p></div></div>'
+        +'<div style="background:linear-gradient(135deg,'+p.c+'18,transparent);border:1px solid '+p.c+'33;border-radius:16px;padding:12px;margin-bottom:12px">'
+        +'<p style="font-size:9px;color:#888;font-weight:700;text-align:center;margin:0 0 4px">⏳ NEXT COLLECT IN</p>'
+        +'<p class="mono font-black text-center timer-glow" style="font-size:24px;margin:0 0 12px" data-timer="'+pl.id+'">--:--:--</p>'
+        +'<button data-collect="'+pl.id+'" onclick="collect('+pl.id+')" class="collect-btn" style="width:100%;padding:14px;border-radius:12px;font-size:13px;border:none">⏳ WAITING FOR DAILY COLLECT</button></div>'
+        +'<div style="display:flex;justify-content:space-between;font-size:10px;color:#888;margin-bottom:6px"><span>Day '+days+' / 40</span><span>$'+earned.toFixed(2)+' / $'+Number(pl.t||pl.total).toFixed(2)+'</span></div>'
+        +'<div style="width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,0.05);overflow:hidden"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,'+p.c+',#10B981)"></div></div>'
+        +'</div>';
+    }).join('');
+  }
+  return '<div style="display:flex;flex-direction:column;gap:14px">'
+    +'<div style="position:relative;width:100%;height:176px;border-radius:24px;overflow:hidden;border:1px solid rgba(0,255,102,0.18)"><img src="'+CFG.banner+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.2),rgba(6,10,9,0.96))"></div><div style="position:absolute;bottom:16px;left:20px"><p style="font-size:12px;color:#aaa;margin:0">Welcome back,</p><h2 class="text-3d" style="font-size:24px;font-weight:900;margin:0">'+u.username+'</h2></div></div>'
+    +'<div class="glass-card card-gradient"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><p style="font-size:10px;color:#10B981;font-weight:700;margin:0">💎 TOTAL BALANCE</p><div style="display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;display:inline-block" class="bg-toxic pulse-dot"></span><span style="font-size:9px;font-weight:700" class="text-toxic">LIVE</span></div></div>'
+    +'<p id="bal" class="mono" style="font-size:36px;font-weight:900;margin:0 0 12px">$'+fmt(u.balance)+'</p>'
+    +'<div style="display:flex;align-items:flex-end;gap:6px;height:56px;margin:12px 4px">'+bars+'</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">'
+    +'<div style="background:rgba(0,0,0,0.4);border-radius:12px;padding:10px"><p style="font-size:9px;color:#888;margin:0 0 4px">REFERRAL</p><p id="refb" class="mono text-toxic" style="font-size:14px;font-weight:900;margin:0">$'+fmt(u.referral_balance)+'</p></div>'
+    +'<div style="background:rgba(0,0,0,0.4);border-radius:12px;padding:10px"><p style="font-size:9px;color:#888;margin:0 0 4px">ACTIVE PLANS</p><p id="pc" class="mono" style="font-size:14px;font-weight:900;margin:0">'+ap.length+'</p></div></div>'
+    +'<button onclick="setTab(\'wallet\')" class="btn-green" style="width:100%;padding:12px;border-radius:12px;font-size:12px;border:none">WITHDRAW EARNINGS ↗</button></div>'
+    +chartUI()
+    +'<div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><p style="font-size:10px;color:#888;font-weight:700;margin:0">📈 MY ACTIVE PLANS</p><span style="font-size:10px;font-weight:700" class="text-toxic">'+ap.length+' active</span></div>'+plansHTML+'</div>'
+    +'<div class="glass-card"><p style="font-size:10px;color:#888;font-weight:700;margin:0 0 12px">🔗 YOUR REFERRAL LINK</p><div style="display:flex;gap:8px;align-items:center"><input readonly value="'+rl+'" class="mono" style="flex:1;font-size:10px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:12px;color:#10B981"><button onclick="copy(\''+rl+'\')" class="btn-green" style="padding:12px;border-radius:12px;font-size:11px;border:none">📋</button></div></div></div>';
+}
+
+/* PORTFOLIO CHART - Last 7 days daily earning */
+function chartUI(){
+  var days=[],today=new Date();today.setHours(0,0,0,0);
+  for(var i=6;i>=0;i--){var d=new Date(today.getTime()-i*DAY);days.push({d:d,e:0,count:0})}
+  S.tx.forEach(function(tx){
+    if(tx.type!=='daily_collect')return;
+    var td=new Date(tx.date);td.setHours(0,0,0,0);
+    for(var i=0;i<days.length;i++){if(days[i].d.getTime()===td.getTime()){days[i].e+=Number(tx.amount);days[i].count++}}
+  });
+  var max=Math.max.apply(null,days.map(function(x){return x.e}))||1;
+  var dayNames=['S','M','T','W','T','F','S'];
+  var bars=days.map(function(d,i){
+    var pct=(d.e/max)*100;if(pct<5&&d.e>0)pct=5;
+    var isToday=i===6;
+    return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1"><div style="width:100%;display:flex;align-items:flex-end;justify-content:center;height:80px"><div class="chart-bar" style="width:100%;height:'+pct+'%;background:'+(isToday?'linear-gradient(180deg,#00FF66,#10B981)':'linear-gradient(180deg,rgba(0,255,102,0.6),rgba(0,255,102,0.15))')+';box-shadow:'+(isToday?'0 0 15px rgba(0,255,102,0.6)':'none')+'"></div></div><span style="font-size:9px" class="'+(isToday?'text-toxic font-black':'text-gray-500')+'">'+dayNames[d.d.getDay()]+'</span><span style="font-size:8px" class="text-toxic">$'+d.e.toFixed(2)+'</span></div>';
+  }).join('');
+  var todayE=days[6].e;
+  var weekE=days.reduce(function(a,b){return a+b.e},0);
+  var todayCount=days[6].count;
+  return '<div class="glass-card" style="margin-bottom:12px">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><p style="font-size:10px;color:#888;font-weight:700;margin:0">📊 PORTFOLIO · LAST 7 DAYS</p><p class="mono text-toxic" style="font-size:10px;font-weight:700;margin:0">+$'+fmt(weekE)+'</p></div>'
+    +'<div style="display:flex;align-items:flex-end;gap:6px;min-width:100%">'+bars+'</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">'
+    +'<div style="background:rgba(0,0,0,0.35);border-radius:12px;padding:10px;text-align:center"><p style="font-size:9px;color:#888;margin:0 0 4px">TODAY\'S EARNING</p><p class="mono text-toxic" style="font-size:16px;font-weight:900;margin:0">+$'+fmt(todayE)+'</p></div>'
+    +'<div style="background:rgba(0,0,0,0.35);border-radius:12px;padding:10px;text-align:center"><p style="font-size:9px;color:#888;margin:0 0 4px">COLLECTIONS TODAY</p><p class="mono" style="font-size:16px;font-weight:900;margin:0">'+todayCount+'</p></div>'
+    +'</div></div>';
+}
+
+/* PLANS */
+function plansUI(){
+  var cards=PLANS.map(function(p){
+    var roi=((p.dly/p.d).toFixed?((p.dly/p.d)*100).toFixed(1):0);
+    var active=isActive(p.id);
+    var btn=active?'<button class="btn-invest-3d locked-btn" disabled>🔒 ALREADY ACTIVE</button>':'<button onclick="event.stopPropagation();quickInvest(\''+p.id+'\')" class="btn-invest-3d">⚡ INVEST NOW</button>';
+    return '<div class="plan-card '+(active?'locked':'')+'" onclick="'+(active?'':'openPlan(\''+p.id+'\')')+'">'
+      +'<div style="display:flex;justify-content:space-between;margin-bottom:8px"><p style="font-size:9px;color:#888;font-weight:700;margin:0">PLAN</p><div style="width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:'+p.c+'18;border:1px solid '+p.c+'55"><span style="color:'+p.c+';font-size:10px">→</span></div></div>'
+      +'<p style="font-size:11px;font-weight:900;color:'+p.c+';margin:0 0 6px">'+p.i+' '+p.n+'</p>'
+      +'<p class="mono" style="font-size:24px;font-weight:900;margin:0 0 2px">$'+p.d+'.00</p>'
+      +'<p style="font-size:9px;color:#666;margin:0 0 8px">PLAN AMOUNT</p>'
+      +'<p class="mono text-toxic" style="font-size:11px;font-weight:700;margin:0 0 4px">💰 $'+p.dly.toFixed(2)+' / day</p>'
+      +'<p style="font-size:10px;color:#888;margin:0 0 8px">📊 '+roi+'% ROI / day</p>'
+      +'<div style="background:'+p.c+'12;border:1px solid '+p.c+'30;border-radius:8px;padding:6px;text-align:center;margin-bottom:8px"><p style="font-size:9px;color:#666;margin:0">40-Day Total</p><p class="mono" style="font-size:14px;font-weight:900;color:'+p.c+';margin:0">$'+p.t.toFixed(2)+'</p></div>'
+      +btn+'</div>';
+  }).join('');
+  return '<div style="display:flex;flex-direction:column;gap:16px"><div class="glass-card"><p style="font-size:10px;color:#10B981;font-weight:700;margin:0 0 8px">📈 INVESTMENT</p><h2 style="font-size:28px;font-weight:900;margin:0 0 4px">Choose your plan</h2><p style="font-size:12px;color:#666;margin:0">40-day cycle · Daily returns</p>'
+    +'<div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;align-items:center"><p style="font-size:10px;color:#888;margin:0">AVAILABLE BALANCE</p><p class="mono text-toxic" style="font-size:16px;font-weight:900;margin:0">$'+fmt(S.user.balance)+'</p></div></div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'+cards+'</div></div>';
+}
+function openPlan(id){
+  if(isActive(id))return alert('🔒 Already active.');
+  S.selPlan=PLANS.find(function(p){return p.id===id});render();
+}
+function closePlan(){S.selPlan=null;render()}
+function planModal(){
+  if(!S.selPlan)return '';
+  var p=S.selPlan;
+  var roi=((p.dly/p.d)*100).toFixed(2);
+  var can=Number(S.user.balance)>=p.d;
+  var btn=can?'<button onclick="closePlan();invest(\''+p.id+'\')" class="btn-green" style="width:100%;padding:16px;border-radius:16px;font-size:14px;margin-bottom:12px;border:none">⚡ INVEST NOW — $'+p.d.toFixed(2)+'</button>':'<button onclick="closePlan();setTab(\'wallet\')" style="width:100%;padding:16px;border-radius:16px;font-size:14px;margin-bottom:12px;border:none;background:linear-gradient(135deg,#FBBF24,#F59E0B);color:#000;font-weight:800">💰 ADD FUNDS TO INVEST</button>';
+  return '<div style="position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,0.9);backdrop-filter:blur(12px)" onclick="closePlan()"><div class="glass-card modal-anim" onclick="event.stopPropagation()" style="width:100%;max-width:448px;border-color:'+p.c+'66;max-height:90vh;overflow-y:auto">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><span style="font-size:10px;color:#888;font-weight:700">PLAN DETAILS</span><button onclick="closePlan()" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.05);border:none;color:#aaa;font-size:20px;cursor:pointer">×</button></div>'
+    +'<div style="text-align:center;margin-bottom:20px"><div style="width:96px;height:96px;border-radius:24px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:48px;background:'+p.c+'25;border:1.5px solid '+p.c+'66;box-shadow:0 0 50px '+p.c+'44">'+p.i+'</div><h2 style="font-size:28px;font-weight:900;color:'+p.c+';margin:0">'+p.n+'</h2></div>'
+    +'<div style="background:linear-gradient(135deg,'+p.c+'25,transparent);border:1px solid '+p.c+'55;border-radius:16px;padding:16px;text-align:center;margin-bottom:16px">'
+    +'<p style="font-size:10px;color:#888;margin:0 0 4px">TOTAL RETURN · 40 DAYS</p><p class="mono" style="font-size:32px;font-weight:900;margin:0">$'+p.t.toFixed(2)+'</p><p class="text-toxic" style="font-size:10px;margin:4px 0 0;font-weight:700">'+roi+'% ROI per day</p></div>'
+    +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">'
+    +'<div style="display:flex;justify-content:space-between;padding:12px;background:rgba(0,0,0,0.4);border-radius:12px;font-size:12px"><span style="color:#888">💰 Deposit</span><span class="mono" style="font-weight:700">$'+p.d.toFixed(2)+'</span></div>'
+    +'<div style="display:flex;justify-content:space-between;padding:12px;background:rgba(0,0,0,0.4);border-radius:12px;font-size:12px"><span style="color:#888">📈 Daily</span><span class="mono text-toxic" style="font-weight:700">$'+p.dly.toFixed(2)+'</span></div>'
+    +'<div style="display:flex;justify-content:space-between;padding:12px;background:rgba(0,0,0,0.4);border-radius:12px;font-size:12px"><span style="color:#888">⚡ Duration</span><span class="mono" style="font-weight:700">40 Days</span></div>'
+    +'<div style="display:flex;justify-content:space-between;padding:12px;background:rgba(0,0,0,0.4);border-radius:12px;font-size:12px"><span style="color:#888">🏦 Balance</span><span class="mono" style="font-weight:700;color:'+(can?'#00FF66':'#FBBF24')+'">$'+fmt(S.user.balance)+'</span></div></div>'
+    +btn+'<button onclick="closePlan()" style="width:100%;padding:12px;border-radius:16px;background:rgba(255,255,255,0.05);color:#9CA3AF;font-size:12px;font-weight:700;border:none">Cancel</button></div></div>';
+}
+function quickInvest(id){
+  if(isActive(id))return alert('🔒 Already active.');
+  var p=PLANS.find(function(x){return x.id===id});
+  if(!p)return;
+  if(Number(S.user.balance)<p.d){
+    if(confirm('💰 Need: $'+p.d.toFixed(2)+'\nHave: $'+fmt(S.user.balance)+'\n\nAdd funds?'))setTab('wallet');
+    return;
+  }
+  invest(id);
+}
+async function invest(id){
+  var p=PLANS.find(function(x){return x.id===id});
+  if(!p)return;
+  if(isActive(id))return alert('🔒 Already active.');
+  if(Number(S.user.balance)<p.d)return alert('💰 Insufficient balance.');
+  var now=new Date();
+  var np={user_id:S.user.user_id,username:S.user.username,plan_id:p.id,plan_name:p.n,deposit:p.d,daily:p.dly,total:p.t,days_collected:0,status:'active',started_at:now.toISOString(),expires_at:new Date(now.getTime()+40*DAY).toISOString()};
+  S.user.balance=Number(S.user.balance)-p.d;
+  S.user.invested=Number(S.user.invested||0)+p.d;
+  if(sb){
+    try{
+      var r=await sb.from("user_plans").insert([np]).select();
+      if(r.data&&r.data[0])np=r.data[0];
+      await sb.from("users").update({balance:S.user.balance,invested:S.user.invested}).eq("user_id",S.user.user_id);
+    }catch(e){}
+  }
+  S.plans.unshift(np);
+  save();render();
+  alert('🎉 INVESTMENT SUCCESSFUL!\n\nPlan: '+p.n+'\nInvested: $'+p.d.toFixed(2)+'\n\n💰 Collect your first daily reward now!');
+}
+async function collect(pid){
+  var pl=S.plans.find(function(x){return String(x.id)===String(pid)});
+  if(!pl)return;
+  if(Date.now()<nextC(pl))return alert('⏳ Not ready yet.');
+  if(Number(pl.days_collected)>=40)return alert('Completed!');
+  var rw=Number(pl.dly||pl.daily);
+  S.user.balance=Number(S.user.balance||0)+rw;
+  S.user.earned=Number(S.user.earned||0)+rw;
+  pl.days_collected=(Number(pl.days_collected)||0)+1;
+  var done=pl.days_collected>=40;
+  if(done)pl.status='completed';
+  S.tx.unshift({type:'daily_collect',amount:rw,status:'approved',method:pl.plan_name,date:new Date().toISOString()});
+  if(sb){try{await sb.from("user_plans").update({days_collected:pl.days_collected,status:pl.status}).eq("id",pl.id);await sb.from("users").update({balance:S.user.balance,earned:S.user.earned}).eq("user_id",S.user.user_id)}catch(e){}}
+  save();render();
+  if(done)alert('🎉 PLAN COMPLETED!\n\nCollected $'+rw.toFixed(2));
+  else alert('💰 COLLECTED $'+rw.toFixed(2)+'!\n\nDay '+pl.days_collected+' / 40');
+}
+
+/* ACTIVE */
+function activeUI(){
+  var ap=S.plans.filter(function(p){return Number(p.days_collected)<40&&p.status!=='completed'});
+  if(ap.length===0)return '<div class="glass-card text-center" style="padding:48px 20px"><div style="font-size:48px;opacity:0.4;margin-bottom:12px">📦</div><p class="font-black" style="font-size:17px;margin:0 0 8px">No Active Plans</p><p style="font-size:12px;color:#888;margin:0 0 20px">Buy a plan to start earning</p><button onclick="setTab(\'plans\')" class="btn-green" style="padding:14px 32px;border-radius:12px;font-size:13px;border:none">+ BROWSE PLANS</button></div>';
+  return '<div style="display:flex;flex-direction:column;gap:12px">'+ap.map(function(pl){
+    var p=PLANS.find(function(x){return x.id===pl.plan_id})||{c:'#00FF66',i:'💰',dly:pl.daily,t:pl.total,n:pl.plan_name};
+    var days=Number(pl.days_collected)||0,pct=(days/40)*100,earned=days*Number(pl.dly||pl.daily);
+    return '<div class="plan-active-card">'
+      +'<div style="display:flex;gap:12px;align-items:center;margin-bottom:16px"><div style="width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:30px;background:'+p.c+'25;border:1px solid '+p.c+'66">'+p.i+'</div><div style="flex:1"><p class="font-black" style="color:'+p.c+';font-size:17px;margin:0">'+p.n+'</p><p style="font-size:10px;color:#888;margin:2px 0 0">Active · 40 Days</p></div><div style="display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;display:inline-block" class="bg-toxic pulse-dot"></span><span style="font-size:9px;font-weight:900" class="text-toxic">LIVE</span></div></div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">'
+      +'<div style="background:rgba(0,0,0,0.45);border-radius:12px;padding:12px"><p style="font-size:9px;color:#888;margin:0 0 4px">INVESTED</p><p class="mono" style="font-size:15px;font-weight:900;margin:0">$'+fmt(pl.deposit)+'</p></div>'
+      +'<div style="background:rgba(0,0,0,0.45);border-radius:12px;padding:12px"><p style="font-size:9px;color:#888;margin:0 0 4px">EARNED</p><p class="mono text-toxic" style="font-size:15px;font-weight:900;margin:0">$'+earned.toFixed(2)+'</p></div>'
+      +'<div style="background:rgba(0,0,0,0.45);border-radius:12px;padding:12px"><p style="font-size:9px;color:#888;margin:0 0 4px">DAILY</p><p class="mono text-toxic" style="font-size:15px;font-weight:900;margin:0">$'+Number(pl.dly||pl.daily).toFixed(2)+'</p></div>'
+      +'<div style="background:rgba(0,0,0,0.45);border-radius:12px;padding:12px"><p style="font-size:9px;color:#888;margin:0 0 4px">TARGET</p><p class="mono" style="font-size:15px;font-weight:900;margin:0">$'+Number(pl.t||pl.total).toFixed(2)+'</p></div></div>'
+      +'<div style="background:linear-gradient(135deg,'+p.c+'15,transparent);border:1px solid '+p.c+'44;border-radius:16px;padding:16px;margin-bottom:12px">'
+      +'<p style="font-size:10px;color:#888;font-weight:700;text-align:center;margin:0 0 8px">⏳ NEXT COLLECT IN</p>'
+      +'<p class="mono timer-glow" style="font-size:28px;font-weight:900;text-align:center;margin:0 0 16px" data-timer="'+pl.id+'">--:--:--</p>'
+      +'<button data-collect="'+pl.id+'" onclick="collect('+pl.id+')" class="collect-btn" style="width:100%;padding:16px;border-radius:16px;font-size:13px;border:none">⏳ WAITING FOR DAILY COLLECT</button></div>'
+      +'<div style="display:flex;justify-content:space-between;font-size:10px;color:#888;margin-bottom:8px"><span>Day '+days+' / 40</span><span>'+(40-days)+' days left</span></div>'
+      +'<div style="width:100%;height:8px;border-radius:4px;background:rgba(255,255,255,0.05);overflow:hidden"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,'+p.c+',#10B981)"></div></div></div>';
+  }).join('')+'</div>';
+}
+
+/* WALLET - UPI to USD convert */
+function walletUI(){
+  var upiQR='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent('upi://pay?pa='+CFG.upi+'&pn='+CFG.upiName+'&cu=INR');
+  var m=['UPI','USDT BEP20','USDT TRC20','BTC BEP20'];
+  var btns=m.map(function(x,i){return '<button onclick="selM('+i+')" id="m-'+i+'" style="padding:8px 16px;border-radius:999px;font-size:12px;font-weight:700;border:none;cursor:pointer;white-space:nowrap;'+(i===0?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.05);color:#888')+'">'+x+'</button>'}).join('');
+  return '<div style="display:flex;flex-direction:column;gap:16px">'
+    +'<div class="glass-card"><p style="font-size:10px;color:#10B981;font-weight:700;margin:0 0 12px">💳 DEPOSIT FUNDS</p>'
+    +'<div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px" class="hide-scroll">'+btns+'</div>'
+    +'<div style="background:rgba(0,0,0,0.45);border:1px dashed rgba(0,255,102,0.25);border-radius:16px;padding:16px;text-align:center;margin-bottom:16px">'
+    +'<p style="font-size:10px;color:#888;margin:0 0 8px;letter-spacing:2px">SEND TO</p>'
+    +'<p id="payAddr" class="mono text-toxic" style="font-size:12px;margin:0 0 12px;word-break:break-all">'+CFG.upi+'</p>'
+    +'<div style="display:flex;justify-content:center"><div style="background:#fff;padding:8px;border-radius:16px"><img id="qrImg" src="'+upiQR+'" style="width:144px;height:144px"></div></div>'
+    +'<p id="rateNote" style="font-size:10px;color:#888;margin:12px 0 0">Rate: 1 USDT = ₹'+CFG.inrRate+' INR</p></div>'
+    +'<input type="number" id="depAmt" class="input-dark" placeholder="Amount" style="margin-bottom:8px" oninput="convertAmt()">'
+    +'<div id="convBox" style="display:none;background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.25);border-radius:12px;padding:10px;margin-bottom:12px;text-align:center">'
+    +'<p style="font-size:10px;color:#888;margin:0">You will receive</p>'
+    +'<p id="convUsd" class="mono text-toxic" style="font-size:18px;font-weight:900;margin:4px 0 0">$0.00 USDT</p></div>'
+    +'<div id="utrWrap"><input type="text" id="depUtr" maxlength="12" class="input-dark" placeholder="12-Digit UTR" style="margin-bottom:12px"></div>'
+    +'<div id="txWrap" style="display:none"><input type="text" id="depTx" class="input-dark" placeholder="TxHash" style="margin-bottom:12px"></div>'
+    +'<button onclick="subDep()" id="depBtn" class="btn-green" style="width:100%;padding:16px;border-radius:16px;font-size:14px;border:none">Submit UTR</button></div>'
+    +'<div class="glass-card"><p style="font-size:10px;color:#10B981;font-weight:700;margin:0 0 12px">💸 WITHDRAW FUNDS</p>'
+    +'<input type="number" id="wdAmt" class="input-dark" placeholder="Min $'+CFG.minWithdraw+'" style="margin-bottom:12px" oninput="calcWd()">'
+    +'<div id="feeBox" style="display:none;background:rgba(0,0,0,0.4);border-radius:12px;padding:10px;margin-bottom:12px;font-size:11px;color:#ccc">'
+    +'<div style="display:flex;justify-content:space-between"><span>Fee ('+CFG.fee+'%)</span><span id="feeVal">$0.00</span></div>'
+    +'<div style="display:flex;justify-content:space-between;margin-top:4px;font-weight:700"><span class="text-toxic">You receive</span><span id="netVal" class="text-toxic">$0.00</span></div></div>'
+    +'<input type="text" id="wdAddr" class="input-dark" placeholder="USDT Address" style="margin-bottom:12px">'
+    +'<p style="font-size:10px;color:#666;margin:0 0 12px">Min $'+CFG.minWithdraw+' · '+CFG.fee+'% fee</p>'
+    +'<button onclick="subWd()" style="width:100%;padding:16px;border-radius:16px;font-size:14px;font-weight:800;background:rgba(255,255,255,0.06);border:none;color:#fff">Request Withdrawal</button></div></div>';
+}
+var sM=0;
+function selM(i){
+  sM=i;
+  var els=document.querySelectorAll('[id^="m-"]');
+  for(var x=0;x<els.length;x++){
+    els[x].style.background=x===i?'#00FF66':'rgba(255,255,255,0.05)';
+    els[x].style.color=x===i?'#000':'#888';
+  }
+  var addrs=[CFG.upi,CFG.usdtBep20,CFG.usdtTrc20,CFG.btcBep20];
+  $('payAddr').innerText=addrs[i];
+  var data=i===0?encodeURIComponent('upi://pay?pa='+CFG.upi+'&pn='+CFG.upiName+'&cu=INR'):addrs[i];
+  $('qrImg').src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+data;
+  if(i===0){$('utrWrap').style.display='block';$('txWrap').style.display='none';$('depBtn').innerText='Submit UTR';$('rateNote').style.display='block'}
+  else{$('utrWrap').style.display='none';$('txWrap').style.display='block';$('depBtn').innerText='Submit TxHash';$('rateNote').style.display='none'}
+  convertAmt();
+}
+function convertAmt(){
+  var v=parseFloat($('depAmt').value||0);
+  if(sM===0 && v>0){
+    $('convBox').style.display='block';
+    $('convUsd').innerText='$'+(v/CFG.inrRate).toFixed(2)+' USDT';
+  } else $('convBox').style.display='none';
+}
+function calcWd(){
+  var v=parseFloat($('wdAmt').value||0);
+  if(v>=CFG.minWithdraw){
+    $('feeBox').style.display='block';
+    $('feeVal').innerText='$'+(v*CFG.fee/100).toFixed(2);
+    $('netVal').innerText='$'+(v*(100-CFG.fee)/100).toFixed(2);
+  } else $('feeBox').style.display='none';
+}
+async function subDep(){
+  var amt=parseFloat($('depAmt').value);
+  var isC=selM!==0;
+  var utr=$('depUtr')?$('depUtr').value.trim():'';
+  var tx=$('depTx')?$('depTx').value.trim():'';
+  var ref=isC?tx:utr;
+  if(!amt)return alert('Enter amount');
+  if(isC && !ref)return alert('Enter TxHash');
+  if(!isC && utr.length!==12)return alert('Enter 12-digit UTR');
+  var method=['UPI','USDT BEP20','USDT TRC20','BTC BEP20'][sM];
+  // For UPI, convert INR to USD equivalent for records
+  var usdAmt=isC?amt:(amt/CFG.inrRate);
+  S.tx.unshift({type:'deposit',amount:usdAmt,ref:ref,status:'pending',method:method,date:new Date().toISOString()});
+  if(sb){try{await sb.from("deposits").insert([{user_id:S.user.user_id,username:S.user.username,amount:usdAmt,method:method,ref:ref,status:'pending'}])}catch(e){}}
+  save();
+  $('depAmt').value='';if($('depUtr'))$('depUtr').value='';if($('depTx'))$('depTx').value='';
+  $('convBox').style.display='none';
+  alert('✅ Deposit submitted!');
+}
+async function subWd(){
+  var amt=parseFloat($('wdAmt').value);
+  var addr=$('wdAddr').value.trim();
+  if(!amt||amt<CFG.minWithdraw)return alert('Min $'+CFG.minWithdraw);
+  if(!addr)return alert('Enter USDT address');
+  if(Number(S.user.balance)<amt)return alert('Insufficient balance');
+  var fee=amt*CFG.fee/100;
+  S.user.balance-=amt;
+  S.tx.unshift({type:'withdrawal',amount:amt-fee,status:'pending',method:'USDT',date:new Date().toISOString()});
+  if(sb){try{await sb.from("withdrawals").insert([{user_id:S.user.user_id,username:S.user.username,amount:amt-fee,address:addr,status:'pending'}]);await sb.from("users").update({balance:S.user.balance}).eq("user_id",S.user.user_id)}catch(e){}}
+  save();render();
+  alert('✅ Withdrawal requested! You will receive $'+fmt(amt-fee));
+}
+
+/* HISTORY */
+function historyUI(){
+  var tx=S.tx;
+  var h='<div class="glass-card" style="text-align:center;margin-bottom:12px"><p style="font-size:10px;color:#888;margin:0 0 8px">TOTAL TRANSACTIONS</p><p class="mono" style="font-size:32px;font-weight:900;margin:0">'+tx.length+'</p></div>';
+  if(tx.length===0)return h+'<div class="glass-card text-center" style="padding:48px 20px"><div style="font-size:36px;opacity:0.4;margin-bottom:12px">📋</div><p class="font-black" style="font-size:17px;margin:0 0 4px">No transactions</p><p style="font-size:12px;color:#888;margin:0">Activity will appear here</p></div>';
+  return h+tx.map(function(x){
+    var isC=x.type==='deposit'||x.type==='daily_collect';
+    var col=isC?'text-toxic':'text-red-400';
+    var sign=isC?'+':'-';
+    var badge=x.status==='pending'?'background:rgba(251,191,36,0.15);color:#FBBF24':(x.status==='approved'?'background:rgba(0,255,102,0.15);color:#00FF66':'background:rgba(239,68,68,0.15);color:#EF4444');
+    var label=x.type==='daily_collect'?'Daily Reward':x.type;
+    return '<div class="glass-card" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div><p style="font-weight:700;font-size:13px;margin:0;text-transform:capitalize">'+label+'</p><p style="font-size:10px;color:#888;margin:4px 0 0">'+esc(x.method||'')+'</p></div><div style="text-align:right"><p class="mono font-black '+col+'" style="margin:0">'+sign+'$'+fmt(x.amount)+'</p><span style="font-size:9px;padding:3px 8px;border-radius:20px;'+badge+';font-weight:700;margin-top:4px;display:inline-block">'+x.status+'</span></div></div>';
+  }).join('');
+}
+
+/* TEAM */
+function teamUI(){
+  var rl=refLink();
+  return '<div style="display:flex;flex-direction:column;gap:16px">'
+    +'<div class="glass-card"><p style="font-size:10px;color:#10B981;font-weight:700;margin:0 0 8px">👥 YOUR NETWORK</p><h2 style="font-size:22px;font-weight:900;margin:0 0 8px;line-height:1.2">Build your network<br>and <span class="text-toxic">grow together.</span></h2><p style="font-size:12px;color:#888;margin:0">Earn up to 10 levels commission</p></div>'
+    +'<button onclick="copy(\''+rl+'\')" class="btn-green glow-green" style="width:100%;padding:16px;border-radius:16px;font-size:13px;border:none;display:flex;align-items:center;justify-content:center;gap:12px"><span style="font-size:24px">🔗</span><div style="text-align:left"><p style="font-weight:900;font-size:13px;margin:0">INVITE FRIENDS</p><p style="font-size:10px;opacity:0.7;margin:0">Share your app link</p></div></button>'
+    +'<button onclick="shareTg()" style="width:100%;padding:16px;border-radius:16px;font-size:13px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;display:flex;align-items:center;justify-content:center;gap:12px"><span style="font-size:24px">📤</span><div style="text-align:left"><p style="font-weight:900;font-size:13px;margin:0">SHARE ON TELEGRAM</p><p style="font-size:10px;opacity:0.7;margin:0">Send to friends</p></div></button>'
+    +'<div class="glass-card"><p style="font-size:10px;color:#888;font-weight:700;margin:0 0 12px">💎 COMMISSION LEVELS</p><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;font-size:10px">'
+    +'<div style="background:rgba(0,255,102,0.07);padding:10px;border-radius:8px"><p style="color:#888;margin:0">L1</p><p class="text-toxic" style="font-weight:900;margin:4px 0 0">10%</p></div>'
+    +'<div style="background:rgba(0,255,102,0.07);padding:10px;border-radius:8px"><p style="color:#888;margin:0">L2</p><p class="text-toxic" style="font-weight:900;margin:4px 0 0">5%</p></div>'
+    +'<div style="background:rgba(0,255,102,0.07);padding:10px;border-radius:8px"><p style="color:#888;margin:0">L3</p><p class="text-toxic" style="font-weight:900;margin:4px 0 0">2%</p></div>'
+    +'<div style="grid-column:span 3;background:rgba(255,255,255,0.03);padding:10px;border-radius:8px"><p style="color:#888;margin:0">Levels 4 – 10</p><p style="color:#ccc;font-weight:900;margin:4px 0 0">1% each</p></div></div></div></div>';
+}
+function shareTg(){
+  var link=refLink();
+  window.open('https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent('Join TOXIC and start earning daily! 🚀'),'_blank');
+}
+
+/* NOTIFICATIONS MODAL */
+function notifsModal(){
+  if(!S.showNotifs)return '';
+  var un=unread();
+  return '<div style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);overflow-y:auto" onclick="S.showNotifs=false;render()">'
+    +'<div class="glass-card modal-anim" onclick="event.stopPropagation()" style="max-width:448px;margin:20px auto;max-height:90vh;overflow-y:auto">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 style="font-size:18px;font-weight:900;margin:0">🔔 Notifications'+(un>0?' <span style="font-size:11px;background:#EF4444;color:#fff;padding:2px 8px;border-radius:10px;margin-left:6px">'+un+' new</span>':'')+'</h2><button onclick="S.showNotifs=false;render()" style="background:none;border:none;color:#888;font-size:24px;cursor:pointer">×</button></div>'
+    +(un>0?'<button onclick="markRead()" class="btn-green" style="width:100%;padding:10px;border-radius:12px;font-size:12px;border:none;margin-bottom:12px">✓ MARK ALL AS READ</button>':'')
+    +(S.notifs.length===0?'<div style="text-align:center;padding:40px 0;color:#666"><div style="font-size:36px;margin-bottom:12px">📭</div><p>No notifications yet</p></div>':S.notifs.map(function(n){
+      var cls=n.type==='warning'?'warning':n.type==='bonus'?'bonus':n.type==='update'?'update':'info';
+      return '<div class="notif-item '+cls+(n.is_read?'':' unread')+'"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><p style="font-weight:800;font-size:13px;margin:0">'+esc(n.title||'Notification')+'</p>'+(n.is_read?'':'<span style="font-size:9px;color:#EF4444;font-weight:700">NEW</span>')+'</div><p style="font-size:12px;color:#ddd;margin:0;line-height:1.5">'+esc(n.message)+'</p><p style="font-size:9px;color:#666;margin:8px 0 0">'+(n.created_at?String(n.created_at).slice(0,16).replace("T"," "):'')+'</p></div>';
+    }).join(''))
+    +'</div></div>';
+}
+
+/* PROFILE MODAL */
+function profileModal(){
+  if(!S.showProfile||!S.user)return '';
+  var u=S.user,lang=localStorage.getItem('t_lang')||'en';
+  return '<div style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);overflow-y:auto" onclick="S.showProfile=false;render()">'
+    +'<div class="glass-card modal-anim" onclick="event.stopPropagation()" style="max-width:448px;margin:20px auto;max-height:90vh;overflow-y:auto">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><span style="font-size:10px;color:#888;font-weight:700">MY PROFILE</span><button onclick="S.showProfile=false;render()" style="background:none;border:none;color:#888;font-size:24px;cursor:pointer">×</button></div>'
+    +'<div style="text-align:center;margin-bottom:24px"><div class="avatar-ring" style="display:inline-block"><div class="avatar-inner" style="width:80px;height:80px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900" class="text-toxic">'+u.username[0].toUpperCase()+'</div></div><h2 style="font-size:22px;font-weight:900;margin:12px 0 4px">'+esc(u.username)+'</h2><p style="font-size:10px;color:#888;margin:0">ID: '+esc(u.user_id)+'</p></div>'
+    +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">'
+    +profileRow('📧 Email',u.email||'—')
+    +profileRow('📱 Phone',u.phone||'—')
+    +profileRow('🎫 Referral',u.referral_code||'—',true)
+    +profileRow('💰 Balance','$'+fmt(u.balance),true)
+    +profileRow('👥 Referral Bonus','$'+fmt(u.referral_balance),true)
+    +profileRow('📅 Joined',u.joined_at?String(u.joined_at).slice(0,10):'—')
+    +'</div>'
+    +'<div style="height:1px;background:rgba(255,255,255,0.06);margin:16px 0"></div>'
+    +'<p style="font-size:10px;color:#888;font-weight:700;margin:0 0 12px">🌐 LANGUAGE</p>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">'
+    +'<button onclick="setLang(\'en\')" style="padding:12px;border-radius:12px;font-size:12px;font-weight:700;border:none;cursor:pointer;'+(lang==='en'?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.05);color:#888')+'">🇬🇧 English</button>'
+    +'<button onclick="setLang(\'hi\')" style="padding:12px;border-radius:12px;font-size:12px;font-weight:700;border:none;cursor:pointer;'+(lang==='hi'?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.05);color:#888')+'">🇮🇳 हिंदी</button></div>'
+    +'<div style="height:1px;background:rgba(255,255,255,0.06);margin:16px 0"></div>'
+    +'<p style="font-size:10px;color:#888;font-weight:700;margin:0 0 12px">🔐 CHANGE PASSWORD</p>'
+    +'<input type="password" id="oldPw" class="input-dark" placeholder="Current Password" style="margin-bottom:12px">'
+    +'<input type="password" id="newPw" class="input-dark" placeholder="New Password" style="margin-bottom:12px">'
+    +'<input type="password" id="newPw2" class="input-dark" placeholder="Confirm New Password" style="margin-bottom:16px">'
+    +'<button onclick="changePw()" class="btn-green glow-green" style="width:100%;padding:12px;border-radius:16px;font-size:14px;border:none;margin-bottom:12px">UPDATE PASSWORD</button>'
+    +'<button onclick="S.showProfile=false;logout()" style="width:100%;padding:12px;border-radius:16px;font-size:12px;font-weight:700;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#EF4444;cursor:pointer">🚪 Logout</button>'
+    +'</div></div>';
+}
+function profileRow(l,v,green){
+  return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(0,0,0,0.45);border-radius:12px"><span style="font-size:12px;color:#888">'+l+'</span><span class="mono" style="font-size:12px;font-weight:'+(green?'900':'500')+';color:'+(green?'#00FF66':'#fff')+'">'+esc(v)+'</span></div>';
+}
+function setLang(l){localStorage.setItem('t_lang',l);render()}
+function changePw(){
+  var o=$('oldPw').value,n=$('newPw').value,n2=$('newPw2').value;
+  if(!o||!n||!n2)return alert('Fill all fields');
+  if(n.length<4)return alert('Min 4 chars');
+  if(n!==n2)return alert('Passwords do not match');
+  var st=localStorage.getItem('t_pwd_'+S.user.user_id);
+  if(st&&st!==o)return alert('❌ Wrong current password');
+  localStorage.setItem('t_pwd_'+S.user.user_id,n);
+  $('oldPw').value='';$('newPw').value='';$('newPw2').value='';
+  alert('✅ Password updated!');
+}
+function copy(text){navigator.clipboard.writeText(text).then(function(){alert('✅ Copied!')}).catch(function(){var el=document.createElement('textarea');el.value=text;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);alert('✅ Copied!')})}
+
+/* INIT */
+try{if(window.Telegram&&window.Telegram.WebApp){window.Telegram.WebApp.ready();window.Telegram.WebApp.expand()}}catch(e){}
+if(!S.user)S.tab='signup';
+(async function init(){
+  if(S.user){await syncUser();await autoCredit()}
+  render();
+  setTimeout(function(){var l=$('loading');if(l)l.classList.add('hide')},1200);
+  setTimeout(showLive,3500);
+})();
+setInterval(async function(){if(S.user){await syncUser();updateDyn()}},30000);
+</script>
+</body>
+</html>
