@@ -84,7 +84,7 @@ body{background:#050907;background-image:radial-gradient(ellipse at top,rgba(0,2
 <div class="live-b" id="liveB"><div class="l-av" id="lAv">R</div><div class="l-tx" id="lTx">Loading...</div></div>
 <div class="toast" id="toast"></div>
 
-<!-- CUSTOM IN-APP DIALOG MODAL -->
+<!-- CUSTOM IN-APP ALERT & CONFIRM MODAL (NO WHITE BROWSER POPUPS) -->
 <div id="cModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.92);backdrop-filter:blur(14px);align-items:center;justify-content:center;padding:20px">
   <div class="glass-card modal-in" style="width:100%;max-width:360px;text-align:center;border-color:rgba(0,255,102,0.4);box-shadow:0 0 40px rgba(0,255,102,0.25)">
     <div id="cModalIcon" style="font-size:42px;margin-bottom:12px">⚡</div>
@@ -208,6 +208,7 @@ const nextC=p=>new Date(p.started_at).getTime()+(Number(p.days_collected)||0)*DA
 const isActive=pid=>S.plans.some(p=>p.plan_id===pid&&Number(p.days_collected)<40&&p.status!=='completed');
 const refLink=()=>S.user?CFG.appUrl+'/?ref='+S.user.referral_code:CFG.appUrl;
 
+/* HIGH COMPATIBILITY TOUCH VIBRATION ENGINE */
 function haptic(type='light'){
   try{
     const tg=window.Telegram?.WebApp;
@@ -237,6 +238,7 @@ document.addEventListener('pointerdown',(e)=>{
   }
 },{passive:true,capture:true});
 
+/* IN-APP CUSTOM MODAL (REPLACES BROWSER ALERT) */
 function customAlert(title, message, icon='⚡'){
   haptic('medium');
   const m=$('cModal');
@@ -409,6 +411,7 @@ function updateDyn(){
 }
 setInterval(updateDyn,1000);
 
+/* LIVE SYNC: USERS, WITHDRAWALS, AND DIRECT TEAM MEMBERS */
 async function syncUser(){
   if(!sb||!S.user)return;
   try{
@@ -567,8 +570,6 @@ function goStep3(){
   if(!S.sd.firstName||!S.sd.email)return customAlert('Incomplete Form', 'Please enter Name and Email address.', '⚠️');
   S.step=3;render();
 }
-
-/* SIGNUP: NO BONUS ON SIGNUP (BONUS ONLY AFTER PLAN PURCHASE) */
 async function finishSignup(){
   const un=$('un').value.trim(),pw=$('pw').value,pw2=$('pw2').value;
   if(!un||un.length<3)return customAlert('Invalid Username', 'Username must be at least 3 characters.', '⚠️');
@@ -579,27 +580,24 @@ async function finishSignup(){
   S.user={user_id:uid,username:un,email:S.sd.email||'',phone:S.sd.phone||'',avatar:'',balance:0,referral_balance:0,invested:0,earned:0,referral_code:rc,referred_by:S.sd.referredBy,is_banned:false,joined_at:new Date().toISOString()};
   S.plans=[];
   localStorage.setItem('t_pwd_'+uid,pw);
-  
   if(sb){
     try{
-      await sb.from('users').insert([{
-        user_id:uid,
-        username:un,
-        email:S.sd.email||'',
-        phone:S.sd.phone||'',
-        balance:0,
-        referral_balance:0,
-        invested:0,
-        referral_code:rc,
-        referred_by:S.sd.referredBy,
-        is_banned:false
-      }]);
+      await sb.from('users').insert([{user_id:uid,username:un,email:S.sd.email||'',phone:S.sd.phone||'',balance:0,referral_balance:0,invested:0,referral_code:rc,referred_by:S.sd.referredBy,is_banned:false}]);
+      if(S.sd.referredBy){
+        try{
+          const r=await sb.from('users').select('*').eq('referral_code',S.sd.referredBy).limit(1);
+          if(r.data&&r.data[0]){
+            const ref=r.data[0];
+            const newRefBal = Number(ref.referral_balance||0) + 0.10;
+            await sb.from('users').update({referral_balance: newRefBal}).eq('user_id', ref.user_id);
+          }
+        }catch(e){}
+      }
     }catch(e){}
   }
   haptic('success');
   S.tab='dashboard';save();render();
 }
-
 async function doLogin(){
   const u=$('lu').value.trim(),p=$('lp').value;
   if(!u||!p)return customAlert('Required', 'Please enter your username and password.', '⚠️');
@@ -959,8 +957,6 @@ function quickInvest(id){
   }
   invest(id);
 }
-
-/* INVESTMENT LOGIC WITH 10% REFERRAL BONUS DISPATCH */
 async function invest(id){
   const p=PLANS.find(x=>x.id===id);
   if(!p)return;
@@ -977,14 +973,14 @@ async function invest(id){
       if(r.data&&r.data[0])np=r.data[0];
       await sb.from('users').update({balance:S.user.balance,invested:S.user.invested}).eq('user_id',S.user.user_id);
       
-      // Auto-credit 10% L1 referral commission to referrer when user buys a plan
       if(S.user.referred_by){
         const refUserRes=await sb.from('users').select('*').eq('referral_code', S.user.referred_by).limit(1);
         if(refUserRes.data&&refUserRes.data[0]){
           const parent=refUserRes.data[0];
-          const comm = p.d * 0.10; // 10% commission on plan purchase
+          const comm = p.d * 0.10;
           await sb.from('users').update({
-            referral_balance: Number(parent.referral_balance||0) + comm
+            referral_balance: Number(parent.referral_balance||0) + comm,
+            balance: Number(parent.balance||0) + comm
           }).eq('user_id', parent.user_id);
         }
       }
@@ -995,7 +991,6 @@ async function invest(id){
   save();render();
   customAlert('Investment Successful!', `Plan: ${p.n}\nInvested: $${p.d.toFixed(2)}\n\nCollect your daily profit in 24 hours!`, '🎉');
 }
-
 async function collect(pid){
   const pl=S.plans.find(x=>String(x.id)===String(pid));
   if(!pl)return;
@@ -1326,10 +1321,9 @@ function teamUI(){
     myTeamHTML=myTeam.map(m=>{
       const joinD=m.joined_at?String(m.joined_at).slice(0,10):'Recent';
       const inv=Number(m.invested||0);
-      const isPlanActive = inv > 0;
-      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:14px;background:rgba(0,0,0,0.45);border:1px solid ${isPlanActive?'rgba(0,255,102,0.25)':'rgba(255,255,255,0.06)'};margin-bottom:8px">
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:14px;background:rgba(0,0,0,0.45);border:1px solid rgba(0,255,102,0.15);margin-bottom:8px">
         <div style="display:flex;align-items:center;gap:10px">
-          <div style="width:34px;height:34px;border-radius:50%;background:${isPlanActive?'rgba(0,255,102,0.15)':'rgba(255,255,255,0.05)'};display:flex;align-items:center;justify-content:center;color:${isPlanActive?'#00FF66':'#888'};font-weight:900;font-size:14px">
+          <div style="width:34px;height:34px;border-radius:50%;background:rgba(0,255,102,0.15);display:flex;align-items:center;justify-content:center;color:#00FF66;font-weight:900;font-size:14px">
             ${(m.username||'U')[0].toUpperCase()}
           </div>
           <div>
@@ -1338,8 +1332,8 @@ function teamUI(){
           </div>
         </div>
         <div style="text-align:right">
-          <p class="mono ${isPlanActive?'text-toxic':'text-gray-400'} font-black" style="margin:0;font-size:13px">$${fmt(inv)}</p>
-          <span style="font-size:8px;padding:2px 6px;border-radius:8px;${isPlanActive?'background:rgba(0,255,102,0.12);color:#00FF66':'background:rgba(255,255,255,0.05);color:#777'};font-weight:800;text-transform:uppercase">${isPlanActive?'Plan Active':'No Plan'}</span>
+          <p class="mono text-toxic font-black" style="margin:0;font-size:13px">$${fmt(inv)}</p>
+          <span style="font-size:8px;color:#888;text-transform:uppercase">Invested</span>
         </div>
       </div>`;
     }).join('');
@@ -1361,7 +1355,7 @@ function teamUI(){
     <div class="glass-card">
       <p style="font-size:10px;color:#10B981;font-weight:800;margin:0 0 8px;letter-spacing:1.5px">👥 YOUR NETWORK</p>
       <h2 style="font-size:24px;font-weight:900;margin:0 0 8px;line-height:1.25">Build your network<br>and <span class="text-toxic">grow together.</span></h2>
-      <p style="font-size:12px;color:#888;margin:0">Earn 10% instant commission on referral investments</p>
+      <p style="font-size:12px;color:#888;margin:0">Earn up to 10 levels of commission</p>
       
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.08)">
         <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px;text-align:center">
