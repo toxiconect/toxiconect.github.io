@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>TOXIC WEB3</title>
+<title>TOXIC</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -49,8 +49,8 @@ body{background:#050907;background-image:radial-gradient(ellipse at top,rgba(0,2
 .pdot{animation:pd 1.5s infinite}
 @keyframes pd{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
 .timer-glow{text-shadow:0 0 30px rgba(0,255,102,0.8)}
-.modal-in{animation:min 0.3s cubic-bezier(0.34,1.56,0.64,1)}
-@keyframes min{from{opacity:0;transform:scale(0.92) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-in{animation:min 0.35s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes min{from{opacity:0;transform:scale(0.9) translateY(30px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .loading{position:fixed;inset:0;background:#050907;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.6s,visibility 0.6s}
 .loading.hide{opacity:0;visibility:hidden}
 .l-logo{font-size:60px;font-weight:900;color:#00FF66;letter-spacing:0.3em;animation:ll 1.5s infinite;text-shadow:0 0 40px #00FF66}
@@ -77,7 +77,6 @@ body{background:#050907;background-image:radial-gradient(ellipse at top,rgba(0,2
 .news-ticker{background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.2);border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:10px;overflow:hidden}
 .news-scroll{white-space:nowrap;display:inline-block;animation:newsAnim 22s linear infinite}
 @keyframes newsAnim{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
-.stat-pill{background:rgba(0,255,102,0.06);border:1px solid rgba(0,255,102,0.2);border-radius:10px;padding:6px 10px;display:flex;align-items:center;gap:6px;font-size:11px}
 </style>
 </head>
 <body>
@@ -85,12 +84,12 @@ body{background:#050907;background-image:radial-gradient(ellipse at top,rgba(0,2
 <div class="live-b" id="liveB"><div class="l-av" id="lAv">R</div><div class="l-tx" id="lTx">Loading...</div></div>
 <div class="toast" id="toast"></div>
 
-<!-- 100% PURE IN-APP MODAL (BLOCKS ALL WHITE BROWSER POPUPS) -->
-<div id="cModal" style="display:none;position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);align-items:center;justify-content:center;padding:20px">
-  <div class="glass-card modal-in" style="width:100%;max-width:360px;text-align:center;border:1.5px solid rgba(0,255,102,0.4);box-shadow:0 0 45px rgba(0,255,102,0.25)">
+<!-- CUSTOM DARK NEON MODAL (REPLACES BROWSER ALERT) -->
+<div id="cModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.92);backdrop-filter:blur(14px);align-items:center;justify-content:center;padding:20px">
+  <div class="glass-card modal-in" style="width:100%;max-width:360px;text-align:center;border-color:rgba(0,255,102,0.4);box-shadow:0 0 40px rgba(0,255,102,0.25)">
     <div id="cModalIcon" style="font-size:42px;margin-bottom:12px">⚡</div>
-    <h3 id="cModalTitle" style="font-size:18px;font-weight:900;margin-bottom:8px;color:#00FF66;letter-spacing:0.5px">Notice</h3>
-    <div id="cModalMsg" style="font-size:13px;color:#e5e7eb;line-height:1.6;margin-bottom:20px;white-space:pre-line"></div>
+    <h3 id="cModalTitle" style="font-size:18px;font-weight:900;margin-bottom:8px;color:#00FF66">Notification</h3>
+    <div id="cModalMsg" style="font-size:13px;color:#ddd;line-height:1.6;margin-bottom:20px;white-space:pre-line"></div>
     <div id="cModalBtns" style="display:flex;gap:10px;justify-content:center"></div>
   </div>
 </div>
@@ -98,12 +97,9 @@ body{background:#050907;background-image:radial-gradient(ellipse at top,rgba(0,2
 <div id="app"></div>
 
 <script>
-/* ABSOLUTE OVERRIDE TO SUPPRESS WHITE BROWSER POPUPS GLOBALLY */
+/* GLOBAL OVERRIDE FOR BROWSER ALERT & CONFIRM */
 window.alert = function(msg) {
-  customAlert('Notification', String(msg||''), '⚡');
-};
-window.confirm = function(msg) {
-  return true; // Safe fallback if third-party libraries attempt native confirm
+  customAlert('Notification', msg, '⚡');
 };
 
 const CFG={
@@ -123,7 +119,7 @@ const sb=window.supabase?window.supabase.createClient(CFG.sbUrl,CFG.sbKey):null;
 const I18N={
   en:{
     dash:"Dashboard",invest:"INVEST",active:"Active",wallet:"Wallet",history:"History",team:"Team",
-    totalBal:"TOTAL BALANCE",withEarn:"WITHDRAW EARNINGS ↗",refBal:"REFERRAL EARNED",activePlans:"ACTIVE PLANS",
+    totalBal:"TOTAL BALANCE",withEarn:"WITHDRAW EARNINGS ↗",refBal:"REFERRAL",activePlans:"ACTIVE PLANS",
     calcTitle:"INVESTMENT CALCULATOR",calcSub:"Estimate your returns in real-time ($1 - $5000)",days:"Days",estReturn:"Total Return",
     newsHeading:"ANNOUNCEMENT",wdTimeNotice:"⚡ Processing Time: Withdrawals are processed within 1 to 24 hours.",
     ldrTitle:"🏆 TOP AFFILIATES LEADERBOARD",top10:"Global Top Referrers",myTeamTitle:"👥 MY DIRECT REFERRALS",
@@ -131,7 +127,7 @@ const I18N={
   },
   hi:{
     dash:"डैशबोर्ड",invest:"निवेश",active:"सक्रिय",wallet:"वॉलेट",history:"इतिहास",team:"टीम",
-    totalBal:"कुल बैलेंस",withEarn:"कमाई निकालें ↗",refBal:"रेफरल कमाई",activePlans:"सक्रिय प्लान्स",
+    totalBal:"कुल बैलेंस",withEarn:"कमाई निकालें ↗",refBal:"रेफरल बोनस",activePlans:"सक्रिय प्लान्स",
     calcTitle:"निवेश कैलकुलेटर",calcSub:"अपनी आय का लाइव अनुमान लगाएं ($1 - $5000)",days:"दिन",estReturn:"कुल रिटर्न",
     newsHeading:"सूचना",wdTimeNotice:"⚡ निकासी समय: निकासी 1 से 24 घंटे के अंदर प्रोसेस होती है।",
     ldrTitle:"🏆 शीर्ष रेफरल लीडरबोर्ड",top10:"ग्लोबल टॉप प्रमोटर",myTeamTitle:"👥 मेरी डायरेक्ट टीम",
@@ -139,7 +135,7 @@ const I18N={
   },
   ur:{
     dash:"ڈیش بورڈ",invest:"سرمایہ کاری",active:"فعال پلان",wallet:"والیٹ",history:"تاریخ",team:"ٹیم",
-    totalBal:"کل بیلنس",withEarn:"رقم نکلوائیں ↗",refBal:"ریفرل کمائی",activePlans:"فعال پلانز",
+    totalBal:"کل بیلنس",withEarn:"رقم نکلوائیں ↗",refBal:"ریفرل بونس",activePlans:"فعال پلانز",
     calcTitle:"انویسٹمنٹ کیلکولیٹر",calcSub:"اپنے منافع کا لائیو تخمینہ لگائیں ($1 - $5000)",days:"دن",estReturn:"کل منافع",
     newsHeading:"اعلانات",wdTimeNotice:"⚡ نکالنے کا وقت: نکلوانے کی درخواست 1 سے 24 گھنٹے میں مکمل ہوگی۔",
     ldrTitle:"🏆 ٹاپ ریفرل لیڈر بورڈ",top10:"عالمی ٹاپ پروموٹرز",myTeamTitle:"👥 میری ڈائریکٹ ٹیم",
@@ -165,9 +161,9 @@ const I18N={
 
 const NEWS_LIST=[
   "🚀 Fast UPI and Instant Crypto withdrawal processing is live!",
-  "💎 Auto-daily credit is active 24/7. Earn rewards every 24 hours.",
-  "⚡ Referral System: Earn an instant 10% cash bonus when your downline buys any plan!",
-  "🛡️ 100% Secure Web3 Rails with Automated Instant Payout Engine."
+  "💎 Auto-daily credit is active 24/7. Collect daily rewards on time!",
+  "⚡ Withdrawal processing time: 1 to 24 hours guaranteed.",
+  "🎁 Multi-level referral bonuses are unlocked across all 10 tiers!"
 ];
 
 const LEADERBOARD_DATA=[
@@ -246,7 +242,6 @@ document.addEventListener('pointerdown',(e)=>{
   }
 },{passive:true,capture:true});
 
-/* CUSTOM DIALOG FUNCTIONS */
 function customAlert(title, message, icon='⚡'){
   haptic('medium');
   const m=$('cModal');
@@ -254,7 +249,7 @@ function customAlert(title, message, icon='⚡'){
   $('cModalIcon').textContent=icon;
   $('cModalTitle').textContent=title;
   $('cModalMsg').textContent=message;
-  $('cModalBtns').innerHTML=`<button onclick="closeCModal()" class="btn-green" style="width:100%;padding:14px;border-radius:14px;font-size:13px;border:none;cursor:pointer">GOT IT</button>`;
+  $('cModalBtns').innerHTML=`<button onclick="closeCModal()" class="btn-green" style="width:100%;padding:13px;border-radius:14px;font-size:13px;border:none;cursor:pointer">GOT IT</button>`;
   m.style.display='flex';
 }
 function customConfirm(title, message, onConfirm, icon='❓'){
@@ -297,7 +292,7 @@ function animateCount(elem,start,end,duration=700,prefix='$'){
 function launchConfetti(){
   try{
     if(typeof confetti==='function'){
-      confetti({particleCount:110,spread:80,origin:{y:0.6},colors:['#00FF66','#10B981','#FFD700','#ffffff']});
+      confetti({particleCount:100,spread:80,origin:{y:0.6},colors:['#00FF66','#10B981','#FFD700','#ffffff']});
     }
   }catch(e){}
 }
@@ -369,18 +364,18 @@ async function autoCredit(){
   }
 }
 
-const NAMES=['Rahul','Priya','Ahmed','Sara','Vikram','Anjali','Kiran','Ravi','Neha','Amit','Rohan','Sneha','Faizan','Farhan'];
-const CITIES=['Mumbai','Delhi','Dubai','Karachi','Dhaka','Bangalore','London','Kolkata'];
+const NAMES=['Rahul','Priya','Ahmed','Sara','Vikram','Anjali','Kiran','Ravi','Neha','Amit','Rohan','Sneha'];
+const CITIES=['Mumbai','Delhi','Karachi','Dhaka','Lahore','Bangalore','Chennai','Kolkata'];
 function showLive(){
   const b=$('liveB');if(!b)return;
   const n=NAMES[Math.floor(Math.random()*NAMES.length)];
   const c=CITIES[Math.floor(Math.random()*CITIES.length)];
-  const opts=[' just withdrew <b>$'+[15.50,28.00,64.00,120.00,350.00][Math.floor(Math.random()*5)].toFixed(2)+'</b> via UPI',' invested in <b>'+['BRONZE','SILVER','GOLD','ELITE','ULTRA','LEGEND'][Math.floor(Math.random()*6)]+'</b>',' just earned 10% referral bonus 🎉'];
+  const opts=[' just earned <b>$'+[0.10,0.36,0.70,1.60,3.50,9.00][Math.floor(Math.random()*6)].toFixed(2)+'</b>',' invested in <b>'+['BRONZE','SILVER','GOLD','ELITE','ULTRA','LEGEND'][Math.floor(Math.random()*6)]+'</b>',' just joined TOXIC 🎉'];
   $('lAv').textContent=n[0];
   $('lTx').innerHTML='<b>'+n+'</b> from '+c+opts[Math.floor(Math.random()*opts.length)];
   b.classList.add('show');
   setTimeout(()=>b.classList.remove('show'),4500);
-  setTimeout(showLive,14000+Math.random()*8000);
+  setTimeout(showLive,15000+Math.random()*10000);
 }
 
 function render(){
@@ -504,7 +499,7 @@ function userAvatar(u,size=36,fontSize=13){
 function handleAvatarUpload(event){
   const file=event.target.files[0];
   if(!file)return;
-  if(file.size>2.5*1024*1024)return customAlert('Image Limit', 'Please choose a photo smaller than 2.5MB.', '⚠️');
+  if(file.size>2.5*1024*1024)return customAlert('Error', 'Photo must be less than 2.5MB', '⚠️');
   const reader=new FileReader();
   reader.onload=async function(e){
     const base64=e.target.result;
@@ -520,7 +515,6 @@ function handleAvatarUpload(event){
   reader.readAsDataURL(file);
 }
 
-/* LOGIN UI */
 function loginUI(){
   return `<div class="min-h-screen px-5 py-10 flex flex-col" style="background:radial-gradient(circle at 50% 0%,rgba(0,255,102,0.14),transparent 55%),#050907">
     <div class="text-center mb-8 mt-6"><h1 class="text-5xl font-black text-toxic text-3d tracking-widest">TOXIC</h1><p class="text-gray-500 text-[10px] mt-3 tracking-[0.4em]">CAPITAL CONTROL</p></div>
@@ -553,7 +547,7 @@ function signupUI(){
 function step1(){
   const cs=['India (+91)','Pakistan (+92)','Bangladesh (+880)','United States (+1)','UAE (+971)','Saudi Arabia (+966)','Nigeria (+234)','Indonesia (+62)','Philippines (+63)','Nepal (+977)'];
   const ops=cs.map(c=>`<option ${S.sd.country===c?'selected':''}>${c}</option>`).join('');
-  const rn=S.sd.referredBy?`<div style="border-radius:14px;padding:14px;margin-bottom:16px;background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.3)"><p style="font-size:10px;color:#888;margin:0">Invited by</p><p class="text-toxic mono" style="font-weight:900;font-size:13px;margin:4px 0 0">${esc(S.sd.referredBy)}</p></div>`:'';
+  const rn=S.sd.referredBy?`<div style="border-radius:14px;padding:14px;margin-bottom:16px;background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.3)"><p style="font-size:10px;color:#888;margin:0">Referred by</p><p class="text-toxic mono" style="font-weight:900;font-size:13px;margin:4px 0 0">${esc(S.sd.referredBy)}</p></div>`:'';
   return `${rn}<p style="font-size:10px;color:#666;font-weight:700;margin:0 0 8px;letter-spacing:2px">STEP 1 / 3</p>
     <h2 class="text-2xl font-black mb-1">Choose your country</h2><p class="text-sm text-gray-500 mb-6">Select your country.</p>
     <select id="cs" class="inp mb-6" onchange="S.sd.country=this.value"><option value="">Choose a country...</option>${ops}</select>
@@ -593,7 +587,6 @@ async function finishSignup(){
   S.plans=[];
   localStorage.setItem('t_pwd_'+uid,pw);
   
-  // Register user with referral tracking but NO signup bonus (10% granted ONLY upon purchasing a plan)
   if(sb){
     try{
       await sb.from('users').insert([{
@@ -710,7 +703,7 @@ function dashUI(){
   
   let plansHTML='';
   if(ap.length===0){
-    plansHTML=`<div class="glass-card" style="text-align:center;padding:36px 20px;margin-bottom:12px"><div style="font-size:42px;opacity:0.5;margin-bottom:10px">📊</div><p style="font-weight:900;font-size:15px;margin:0 0 6px">No Active Plans</p><p style="font-size:12px;color:#888;margin:0 0 18px">Choose a plan to start earning daily returns</p><button onclick="setTab('plans')" class="btn-green" style="padding:12px 28px;border-radius:14px;font-size:12px;border:none;cursor:pointer">BROWSE PLANS →</button></div>`;
+    plansHTML=`<div class="glass-card" style="text-align:center;padding:36px 20px;margin-bottom:12px"><div style="font-size:42px;opacity:0.5;margin-bottom:10px">📊</div><p style="font-weight:900;font-size:15px;margin:0 0 6px">No Active Plans</p><p style="font-size:12px;color:#888;margin:0 0 18px">Choose a plan to start earning</p><button onclick="setTab('plans')" class="btn-green" style="padding:12px 28px;border-radius:14px;font-size:12px;border:none;cursor:pointer">BROWSE PLANS →</button></div>`;
   } else {
     plansHTML=ap.map(pl=>{
       const p=PLANS.find(x=>x.id===pl.plan_id)||{c:'#00FF66',i:'💰',dly:pl.daily,t:pl.total,n:pl.plan_name};
@@ -1298,7 +1291,7 @@ function historyUI(){
   }).join('');
 }
 
-/* TRANSFER REFERRAL BONUS TO MAIN BALANCE */
+/* CLAIM REFERRAL TO MAIN BALANCE */
 async function claimRefToBal(){
   const rb=Number(S.user.referral_balance||0);
   if(rb<=0) return customAlert('Zero Balance', 'You have no referral balance to claim yet.', 'ℹ️');
@@ -1322,7 +1315,7 @@ async function claimRefToBal(){
   }, '🔄');
 }
 
-/* TEAM TAB WITH DOWNLINE DETAILS AND TRUST BADGES */
+/* TEAM TAB */
 function teamUI(){
   const rl=refLink();
   const t=I18N[S.lang]||I18N.en;
@@ -1331,9 +1324,9 @@ function teamUI(){
 
   let myTeamHTML='';
   if(myTeam.length===0){
-    myTeamHTML=`<div style="text-align:center;padding:26px 14px;background:rgba(0,0,0,0.3);border-radius:14px;border:1px dashed rgba(0,255,102,0.15)">
+    myTeamHTML=`<div style="text-align:center;padding:24px 10px;background:rgba(0,0,0,0.3);border-radius:14px;border:1px dashed rgba(0,255,102,0.15)">
       <p style="font-size:12px;color:#888;margin:0">No members have joined with your link yet.</p>
-      <p style="font-size:11px;color:#00FF66;margin:6px 0 0;font-weight:700">Share your link below to earn instant 10% commission on plan purchases!</p>
+      <p style="font-size:10px;color:#00FF66;margin:4px 0 0">Share your link below to earn 10% commission on plans!</p>
     </div>`;
   } else {
     myTeamHTML=myTeam.map(m=>{
@@ -1342,7 +1335,7 @@ function teamUI(){
       const isPlanActive = inv > 0;
       return `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:14px;background:rgba(0,0,0,0.45);border:1px solid ${isPlanActive?'rgba(0,255,102,0.25)':'rgba(255,255,255,0.06)'};margin-bottom:8px">
         <div style="display:flex;align-items:center;gap:10px">
-          <div style="width:36px;height:36px;border-radius:50%;background:${isPlanActive?'rgba(0,255,102,0.15)':'rgba(255,255,255,0.05)'};display:flex;align-items:center;justify-content:center;color:${isPlanActive?'#00FF66':'#888'};font-weight:900;font-size:14px">
+          <div style="width:34px;height:34px;border-radius:50%;background:${isPlanActive?'rgba(0,255,102,0.15)':'rgba(255,255,255,0.05)'};display:flex;align-items:center;justify-content:center;color:${isPlanActive?'#00FF66':'#888'};font-weight:900;font-size:14px">
             ${(m.username||'U')[0].toUpperCase()}
           </div>
           <div>
@@ -1372,26 +1365,23 @@ function teamUI(){
 
   return `<div style="display:flex;flex-direction:column;gap:16px">
     <div class="glass-card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <p style="font-size:10px;color:#10B981;font-weight:800;margin:0;letter-spacing:1.5px">👥 YOUR NETWORK</p>
-        <span class="stat-pill"><span class="bg-toxic pdot" style="width:6px;height:6px;border-radius:50%"></span> Instant 10% Rail</span>
-      </div>
+      <p style="font-size:10px;color:#10B981;font-weight:800;margin:0 0 8px;letter-spacing:1.5px">👥 YOUR NETWORK</p>
       <h2 style="font-size:24px;font-weight:900;margin:0 0 8px;line-height:1.25">Build your network<br>and <span class="text-toxic">grow together.</span></h2>
-      <p style="font-size:12px;color:#888;margin:0">Earn 10% instant cash commission whenever your referred members purchase any plan.</p>
+      <p style="font-size:12px;color:#888;margin:0">Earn 10% instant commission on referral investments</p>
       
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.08)">
         <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px;text-align:center">
           <p style="font-size:9px;color:#888;margin:0 0 4px">TOTAL MEMBERS</p>
-          <p class="mono text-toxic" style="font-size:22px;font-weight:900;margin:0">${myTeam.length}</p>
+          <p class="mono text-toxic" style="font-size:20px;font-weight:900;margin:0">${myTeam.length}</p>
         </div>
         <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px;text-align:center">
           <p style="font-size:9px;color:#888;margin:0 0 4px">REFERRAL EARNED</p>
-          <p class="mono text-toxic" style="font-size:22px;font-weight:900;margin:0">$${fmt(refBal)}</p>
+          <p class="mono text-toxic" style="font-size:20px;font-weight:900;margin:0">$${fmt(refBal)}</p>
         </div>
       </div>
       
       ${refBal > 0 ? `
-      <button onclick="claimRefToBal()" class="btn-green glow" style="width:100%;margin-top:14px;padding:13px;border-radius:14px;font-size:12px;border:none;cursor:pointer">
+      <button onclick="claimRefToBal()" class="btn-green glow" style="width:100%;margin-top:14px;padding:12px;border-radius:14px;font-size:12px;border:none;cursor:pointer">
         ⚡ CLAIM $${fmt(refBal)} TO MAIN BALANCE
       </button>` : ''}
     </div>
@@ -1399,7 +1389,7 @@ function teamUI(){
     <div class="glass-card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
         <p style="font-size:10px;color:#00FF66;font-weight:800;margin:0;letter-spacing:1px">${t.myTeamTitle}</p>
-        <span style="font-size:10px;font-weight:800" class="text-toxic">${myTeam.length} Active Members</span>
+        <span style="font-size:10px;font-weight:800" class="text-toxic">${myTeam.length} Members</span>
       </div>
       <div>${myTeamHTML}</div>
     </div>
@@ -1434,7 +1424,7 @@ function teamUI(){
 }
 function shareTg(){
   const link=refLink();
-  window.open('https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent('Join TOXIC and start earning automated daily crypto returns! 🚀'),'_blank');
+  window.open('https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent('Join TOXIC and start earning daily! 🚀'),'_blank');
 }
 
 /* NOTIFICATIONS */
@@ -1522,11 +1512,11 @@ function setLang(l){S.lang=l;save();render();}
 
 function changePw(){
   const o=$('oldPw').value,n=$('newPw').value,n2=$('newPw2').value;
-  if(!o||!n||!n2)return customAlert('Required', 'Please fill all password fields.', '⚠️');
-  if(n.length<4)return customAlert('Too Short', 'Password must be at least 4 characters.', '⚠️');
-  if(n!==n2)return customAlert('Mismatch', 'New passwords do not match.', '⚠️');
+  if(!o||!n||!n2)return customAlert('Required', 'Please fill all fields', '⚠️');
+  if(n.length<4)return customAlert('Too Short', 'Password must be 4+ characters', '⚠️');
+  if(n!==n2)return customAlert('Mismatch', 'Passwords do not match', '⚠️');
   const st=localStorage.getItem('t_pwd_'+S.user.user_id);
-  if(st&&st!==o)return customAlert('Error', 'Current password is incorrect.', '❌');
+  if(st&&st!==o)return customAlert('Error', 'Current password is incorrect', '❌');
   localStorage.setItem('t_pwd_'+S.user.user_id,n);
   $('oldPw').value='';$('newPw').value='';$('newPw2').value='';
   haptic('success');
