@@ -83,17 +83,6 @@ body{background:#050907;background-image:radial-gradient(ellipse at top,rgba(0,2
 <div class="loading" id="loading"><div class="l-logo">TOXIC</div><div class="l-bar"><div class="l-fill"></div></div></div>
 <div class="live-b" id="liveB"><div class="l-av" id="lAv">R</div><div class="l-tx" id="lTx">Loading...</div></div>
 <div class="toast" id="toast"></div>
-
-<!-- CUSTOM IN-APP ALERT & CONFIRM MODAL (NO WHITE BROWSER POPUPS) -->
-<div id="cModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.92);backdrop-filter:blur(14px);align-items:center;justify-content:center;padding:20px">
-  <div class="glass-card modal-in" style="width:100%;max-width:360px;text-align:center;border-color:rgba(0,255,102,0.4);box-shadow:0 0 40px rgba(0,255,102,0.25)">
-    <div id="cModalIcon" style="font-size:42px;margin-bottom:12px">⚡</div>
-    <h3 id="cModalTitle" style="font-size:18px;font-weight:900;margin-bottom:8px;color:#00FF66">Notification</h3>
-    <div id="cModalMsg" style="font-size:13px;color:#ddd;line-height:1.6;margin-bottom:20px;white-space:pre-line"></div>
-    <div id="cModalBtns" style="display:flex;gap:10px;justify-content:center"></div>
-  </div>
-</div>
-
 <div id="app"></div>
 
 <script>
@@ -208,7 +197,6 @@ const nextC=p=>new Date(p.started_at).getTime()+(Number(p.days_collected)||0)*DA
 const isActive=pid=>S.plans.some(p=>p.plan_id===pid&&Number(p.days_collected)<40&&p.status!=='completed');
 const refLink=()=>S.user?CFG.appUrl+'/?ref='+S.user.referral_code:CFG.appUrl;
 
-/* HIGH COMPATIBILITY TOUCH VIBRATION ENGINE */
 function haptic(type='light'){
   try{
     const tg=window.Telegram?.WebApp;
@@ -223,10 +211,15 @@ function haptic(type='light'){
 
   try{
     if(typeof navigator!=='undefined'&&navigator.vibrate){
-      if(type==='success') navigator.vibrate([45, 50, 45]);
-      else if(type==='warning'||type==='error') navigator.vibrate([80, 50, 80]);
-      else if(type==='medium') navigator.vibrate(55);
-      else navigator.vibrate(40);
+      if(type==='success'){
+        navigator.vibrate([45, 50, 45]);
+      }else if(type==='warning'||type==='error'){
+        navigator.vibrate([80, 50, 80]);
+      }else if(type==='medium'){
+        navigator.vibrate(55);
+      }else{
+        navigator.vibrate(40);
+      }
     }
   }catch(e){}
 }
@@ -237,36 +230,6 @@ document.addEventListener('pointerdown',(e)=>{
     haptic('light');
   }
 },{passive:true,capture:true});
-
-/* IN-APP CUSTOM MODAL (REPLACES BROWSER ALERT) */
-function customAlert(title, message, icon='⚡'){
-  haptic('medium');
-  const m=$('cModal');
-  $('cModalIcon').textContent=icon;
-  $('cModalTitle').textContent=title;
-  $('cModalMsg').textContent=message;
-  $('cModalBtns').innerHTML=`<button onclick="closeCModal()" class="btn-green" style="width:100%;padding:13px;border-radius:14px;font-size:13px;border:none;cursor:pointer">GOT IT</button>`;
-  m.style.display='flex';
-}
-function customConfirm(title, message, onConfirm, icon='❓'){
-  haptic('medium');
-  const m=$('cModal');
-  $('cModalIcon').textContent=icon;
-  $('cModalTitle').textContent=title;
-  $('cModalMsg').textContent=message;
-  $('cModalBtns').innerHTML=`
-    <button onclick="closeCModal()" style="flex:1;padding:12px;border-radius:14px;background:rgba(255,255,255,0.08);color:#ccc;border:none;cursor:pointer;font-size:13px;font-weight:700">Cancel</button>
-    <button id="cModalYesBtn" class="btn-green" style="flex:1;padding:12px;border-radius:14px;font-size:13px;border:none;cursor:pointer">Confirm</button>
-  `;
-  $('cModalYesBtn').onclick=()=>{
-    closeCModal();
-    onConfirm();
-  };
-  m.style.display='flex';
-}
-function closeCModal(){
-  $('cModal').style.display='none';
-}
 
 function animateCount(elem,start,end,duration=700,prefix='$'){
   if(!elem)return;
@@ -305,8 +268,11 @@ function toast(m){
 }
 
 function applyLangDirection(){
-  if(S.lang==='ar'||S.lang==='ur') document.documentElement.dir='rtl';
-  else document.documentElement.dir='ltr';
+  if(S.lang==='ar'||S.lang==='ur'){
+    document.documentElement.dir='rtl';
+  } else {
+    document.documentElement.dir='ltr';
+  }
 }
 
 async function loadNotifs(){
@@ -432,6 +398,7 @@ async function syncUser(){
     const p=await sb.from('user_plans').select('*').eq('user_id',S.user.user_id).order('id',{ascending:false});
     if(p.data)S.plans=p.data;
 
+    // Fetch Deposits and live Withdrawals
     const d=await sb.from('deposits').select('*').eq('user_id',S.user.user_id).order('id',{ascending:false});
     const w=await sb.from('withdrawals').select('*').eq('user_id',S.user.user_id).order('id',{ascending:false});
     
@@ -469,6 +436,7 @@ async function syncUser(){
     list.sort((a,b)=>new Date(b.date)-new Date(a.date));
     S.tx=list;
 
+    // Fetch Direct Team Members who used this user's referral code
     if(S.user.referral_code){
       const tm=await sb.from('users').select('username, joined_at, invested, balance').eq('referred_by', S.user.referral_code).order('joined_at',{ascending:false});
       if(tm.data){
@@ -494,7 +462,7 @@ function userAvatar(u,size=36,fontSize=13){
 function handleAvatarUpload(event){
   const file=event.target.files[0];
   if(!file)return;
-  if(file.size>2.5*1024*1024)return customAlert('Error', 'Photo must be less than 2.5MB', '⚠️');
+  if(file.size>2.5*1024*1024)return alert('Photo must be less than 2.5MB');
   const reader=new FileReader();
   reader.onload=async function(e){
     const base64=e.target.result;
@@ -567,14 +535,14 @@ function step3(){
 }
 function goStep3(){
   S.sd.firstName=$('fn').value;S.sd.lastName=$('ln').value;S.sd.email=$('em').value;S.sd.phone=$('ph').value;
-  if(!S.sd.firstName||!S.sd.email)return customAlert('Incomplete Form', 'Please enter Name and Email address.', '⚠️');
+  if(!S.sd.firstName||!S.sd.email)return alert('Fill Name and Email');
   S.step=3;render();
 }
 async function finishSignup(){
   const un=$('un').value.trim(),pw=$('pw').value,pw2=$('pw2').value;
-  if(!un||un.length<3)return customAlert('Invalid Username', 'Username must be at least 3 characters.', '⚠️');
-  if(!pw||pw.length<4)return customAlert('Weak Password', 'Password must be at least 4 characters.', '⚠️');
-  if(pw!==pw2)return customAlert('Mismatch', 'Passwords do not match.', '⚠️');
+  if(!un||un.length<3)return alert('Username 3+ chars');
+  if(!pw||pw.length<4)return alert('Password 4+ chars');
+  if(pw!==pw2)return alert('Passwords do not match');
   const uid='TG'+Date.now();
   const rc='TOXIC'+Math.floor(1000+Math.random()*9000);
   S.user={user_id:uid,username:un,email:S.sd.email||'',phone:S.sd.phone||'',avatar:'',balance:0,referral_balance:0,invested:0,earned:0,referral_code:rc,referred_by:S.sd.referredBy,is_banned:false,joined_at:new Date().toISOString()};
@@ -600,11 +568,11 @@ async function finishSignup(){
 }
 async function doLogin(){
   const u=$('lu').value.trim(),p=$('lp').value;
-  if(!u||!p)return customAlert('Required', 'Please enter your username and password.', '⚠️');
+  if(!u||!p)return alert('Enter credentials');
   const ex=JSON.parse(localStorage.getItem('t_user')||'null');
   if(ex&&ex.username===u){
     const st=localStorage.getItem('t_pwd_'+ex.user_id);
-    if(st&&st!==p)return customAlert('Access Denied', 'Wrong password entered.', '❌');
+    if(st&&st!==p)return alert('❌ Wrong password');
     S.user=ex;S.plans=JSON.parse(localStorage.getItem('t_plans')||'[]');S.tab='dashboard';save();
     haptic('success');
     await syncUser();await autoCredit();render();return;
@@ -615,13 +583,13 @@ async function doLogin(){
       if(r.data&&r.data[0]){S.user=r.data[0];S.tab='dashboard';save();haptic('success');await syncUser();await autoCredit();render();return;}
     }catch(e){}
   }
-  customAlert('User Not Found', 'Account not found. Please create one first.', '⚠️');
+  alert('⚠️ User not found. Sign up first.');
 }
 function logout(){
-  customConfirm('Logout', 'Are you sure you want to sign out?', ()=>{
-    localStorage.removeItem('t_user');localStorage.removeItem('t_plans');localStorage.removeItem('t_team');
-    S.user=null;S.plans=[];S.team=[];S.tab='signin';render();
-  }, '🚪');
+  haptic('warning');
+  if(!confirm('Logout?'))return;
+  localStorage.removeItem('t_user');localStorage.removeItem('t_plans');localStorage.removeItem('t_team');
+  S.user=null;S.plans=[];S.team=[];S.tab='signin';render();
 }
 
 /* MAIN SHELL */
@@ -914,7 +882,7 @@ function plansUI(){
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">${cards}</div>
   </div>`;
 }
-function openPlan(id){if(isActive(id))return customAlert('Plan Active', 'This plan is already currently running.', '🔒');S.selPlan=PLANS.find(p=>p.id===id);render();}
+function openPlan(id){if(isActive(id))return alert('🔒 Already active.');S.selPlan=PLANS.find(p=>p.id===id);render();}
 function closePlan(){S.selPlan=null;render();}
 function planModal(){
   if(!S.selPlan)return '';
@@ -946,13 +914,11 @@ function planModal(){
   </div>`;
 }
 function quickInvest(id){
-  if(isActive(id))return customAlert('Plan Active', 'This plan is already active.', '🔒');
+  if(isActive(id))return alert('🔒 Already active.');
   const p=PLANS.find(x=>x.id===id);
   if(!p)return;
   if(Number(S.user.balance)<p.d){
-    customConfirm('Add Funds?', `Required: $${p.d.toFixed(2)}\nCurrent: $${fmt(S.user.balance)}\n\nWould you like to open your wallet to deposit?`, ()=>{
-      setTab('wallet');
-    }, '💰');
+    if(confirm(`💰 Need: $${p.d.toFixed(2)}\nHave: $${fmt(S.user.balance)}\n\nAdd funds?`))setTab('wallet');
     return;
   }
   invest(id);
@@ -960,8 +926,8 @@ function quickInvest(id){
 async function invest(id){
   const p=PLANS.find(x=>x.id===id);
   if(!p)return;
-  if(isActive(id))return customAlert('Plan Active', 'This plan is already active.', '🔒');
-  if(Number(S.user.balance)<p.d)return customAlert('Low Balance', 'Insufficient balance in your account.', '💰');
+  if(isActive(id))return alert('🔒 Already active.');
+  if(Number(S.user.balance)<p.d)return alert('💰 Insufficient balance.');
   const now=new Date();
   let np={user_id:S.user.user_id,username:S.user.username,plan_id:p.id,plan_name:p.n,deposit:p.d,daily:p.dly,total:p.t,days_collected:0,status:'active',started_at:now.toISOString(),expires_at:new Date(now.getTime()+40*DAY).toISOString()};
   S.user.balance=Number(S.user.balance)-p.d;
@@ -973,6 +939,7 @@ async function invest(id){
       if(r.data&&r.data[0])np=r.data[0];
       await sb.from('users').update({balance:S.user.balance,invested:S.user.invested}).eq('user_id',S.user.user_id);
       
+      // Auto-credit 10% L1 commission to referrer if user was referred
       if(S.user.referred_by){
         const refUserRes=await sb.from('users').select('*').eq('referral_code', S.user.referred_by).limit(1);
         if(refUserRes.data&&refUserRes.data[0]){
@@ -989,13 +956,13 @@ async function invest(id){
   S.plans.unshift(np);
   haptic('success');
   save();render();
-  customAlert('Investment Successful!', `Plan: ${p.n}\nInvested: $${p.d.toFixed(2)}\n\nCollect your daily profit in 24 hours!`, '🎉');
+  alert(`🎉 INVESTMENT SUCCESSFUL!\n\nPlan: ${p.n}\nInvested: $${p.d.toFixed(2)}\n\n💰 Collect your first daily reward now!`);
 }
 async function collect(pid){
   const pl=S.plans.find(x=>String(x.id)===String(pid));
   if(!pl)return;
-  if(Date.now()<nextC(pl))return customAlert('Wait', 'Your daily reward is not ready yet.', '⏳');
-  if(Number(pl.days_collected)>=40)return customAlert('Done', 'This plan cycle is completed.', '✅');
+  if(Date.now()<nextC(pl))return alert('⏳ Not ready yet.');
+  if(Number(pl.days_collected)>=40)return alert('Completed!');
   const rw=Number(pl.dly||pl.daily);
   S.user.balance=Number(S.user.balance||0)+rw;
   S.user.earned=Number(S.user.earned||0)+rw;
@@ -1008,11 +975,10 @@ async function collect(pid){
   haptic('success');
   if(done){
     launchConfetti();
-    customAlert('Plan Completed!', `Congratulations! Total return collected: $${rw.toFixed(2)}`, '🎉');
-  } else {
-    customAlert('Reward Collected!', `Collected: $${rw.toFixed(2)}\nDay: ${pl.days_collected} / 40`, '💰');
   }
   save();render();
+  if(done)alert(`🎉 PLAN COMPLETED!\n\nCollected $${rw.toFixed(2)}`);
+  else alert(`💰 COLLECTED $${rw.toFixed(2)}!\n\nDay ${pl.days_collected} / 40`);
 }
 
 function activeUI(){
@@ -1168,9 +1134,9 @@ async function subDep(){
   const utr=$('depUtr')?$('depUtr').value.trim():'';
   const tx=$('depTx')?$('depTx').value.trim():'';
   const ref=isC?tx:utr;
-  if(!amt){return customAlert('Missing Info', 'Please enter deposit amount.', '⚠️');}
-  if(isC&&!ref){return customAlert('Missing Info', 'Please enter Transaction Hash (TxHash).', '⚠️');}
-  if(!isC&&utr.length!==12){return customAlert('Invalid UTR', 'Please enter a valid 12-digit UTR Number.', '⚠️');}
+  if(!amt){return alert('Please enter amount');}
+  if(isC&&!ref){return alert('Please enter Transaction Hash');}
+  if(!isC&&utr.length!==12){return alert('Please enter valid 12-digit UTR Number');}
   const method=['UPI','USDT BEP20','USDT TRC20','BTC BEP20'][sM];
   const usdAmt=isC?amt:(amt/CFG.inrRate);
   
@@ -1184,18 +1150,18 @@ async function subDep(){
   render();
   $('depAmt').value='';if($('depUtr'))$('depUtr').value='';if($('depTx'))$('depTx').value='';$('convBox').style.display='none';
   haptic('success');
-  customAlert('Deposit Submitted!', 'Your payment request has been sent for admin verification within 24 hours.', '✅');
+  alert('✅ Deposit submitted!\n\nAdmin will verify within 24 hours.');
 }
 
 async function subWd(){
   const amt=parseFloat($('wdAmt').value);
   const addr=$('wdAddr').value.trim();
   const method=S.wdMethod||'USDT';
-  if(!amt||amt<CFG.minWd)return customAlert('Minimum Limit', 'Minimum withdrawal is $' + CFG.minWd, '⚠️');
+  if(!amt||amt<CFG.minWd)return alert('Minimum withdrawal is $'+CFG.minWd);
   if(!addr){
-    return customAlert('Required', method==='UPI'?'Please enter your UPI ID':'Please enter USDT address', '⚠️');
+    return alert(method==='UPI'?'Please enter your UPI ID':'Please enter USDT address');
   }
-  if(Number(S.user.balance)<amt)return customAlert('Insufficient Funds', 'You do not have enough balance.', '⚠️');
+  if(Number(S.user.balance)<amt)return alert('Insufficient balance');
   
   const fee=amt*CFG.fee/100;
   const net=amt-fee;
@@ -1233,7 +1199,7 @@ async function subWd(){
   
   haptic('success');
   const note=method==='UPI'?`₹${(net*CFG.inrRate).toFixed(2)} INR`: `$${fmt(net)}`;
-  customAlert('Withdrawal Requested!', `Method: ${method}\nNet Receive: ${note}\n\nStatus is currently pending approval.`, '✅');
+  alert(`✅ Withdrawal requested!\n\nMethod: ${method}\nYou will receive: ${note}`);
 }
 
 /* HISTORY TAB */
@@ -1280,37 +1246,13 @@ function historyUI(){
   }).join('');
 }
 
-/* TRANSFER REFERRAL BALANCE TO MAIN BALANCE */
-async function claimRefToBal(){
-  const rb=Number(S.user.referral_balance||0);
-  if(rb<=0) return customAlert('Zero Balance', 'You have no referral balance to claim yet.', 'ℹ️');
-  
-  customConfirm('Claim to Balance', `Convert $${fmt(rb)} referral bonus into your main account balance?`, async()=>{
-    S.user.balance=Number(S.user.balance||0)+rb;
-    S.user.referral_balance=0;
-    save();
-    render();
-    if(sb){
-      try{
-        await sb.from('users').update({
-          balance: S.user.balance,
-          referral_balance: 0
-        }).eq('user_id', S.user.user_id);
-      }catch(e){}
-    }
-    haptic('success');
-    launchConfetti();
-    customAlert('Success!', `+$${fmt(rb)} added to your main balance. You can now invest or withdraw it!`, '💰');
-  }, '🔄');
-}
-
-/* TEAM TAB (WITH CLAIM BONUS BUTTON + DIRECT MEMBERS) */
+/* TEAM TAB (WITH DIRECT MEMBERS + REFERRAL BONUS LIST) */
 function teamUI(){
   const rl=refLink();
   const t=I18N[S.lang]||I18N.en;
   const myTeam=S.team||[];
-  const refBal=Number(S.user.referral_balance||0);
 
+  // Render personal downline
   let myTeamHTML='';
   if(myTeam.length===0){
     myTeamHTML=`<div style="text-align:center;padding:24px 10px;background:rgba(0,0,0,0.3);border-radius:14px;border:1px dashed rgba(0,255,102,0.15)">
@@ -1339,6 +1281,7 @@ function teamUI(){
     }).join('');
   }
 
+  // Render Top Leaderboard
   const lbRows=LEADERBOARD_DATA.map(item=>{
     const medal=item.r===1?'🥇':item.r===2?'🥈':item.r===3?'🥉':`#${item.r}`;
     return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:12px;background:rgba(0,0,0,0.35);margin-bottom:8px">
@@ -1364,16 +1307,12 @@ function teamUI(){
         </div>
         <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px;text-align:center">
           <p style="font-size:9px;color:#888;margin:0 0 4px">REFERRAL EARNED</p>
-          <p class="mono text-toxic" style="font-size:20px;font-weight:900;margin:0">$${fmt(refBal)}</p>
+          <p class="mono text-toxic" style="font-size:20px;font-weight:900;margin:0">$${fmt(S.user.referral_balance)}</p>
         </div>
       </div>
-      
-      ${refBal > 0 ? `
-      <button onclick="claimRefToBal()" class="btn-green glow" style="width:100%;margin-top:14px;padding:12px;border-radius:14px;font-size:12px;border:none;cursor:pointer">
-        ⚡ CLAIM $${fmt(refBal)} TO MAIN BALANCE
-      </button>` : ''}
     </div>
     
+    <!-- MY DIRECT TEAM LIST -->
     <div class="glass-card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
         <p style="font-size:10px;color:#00FF66;font-weight:800;margin:0;letter-spacing:1px">${t.myTeamTitle}</p>
@@ -1382,6 +1321,7 @@ function teamUI(){
       <div>${myTeamHTML}</div>
     </div>
 
+    <!-- GLOBAL LEADERBOARD -->
     <div class="glass-card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
         <p style="font-size:10px;color:#FFD700;font-weight:800;margin:0;letter-spacing:1px">${t.ldrTitle}</p>
@@ -1500,15 +1440,15 @@ function setLang(l){S.lang=l;save();render();}
 
 function changePw(){
   const o=$('oldPw').value,n=$('newPw').value,n2=$('newPw2').value;
-  if(!o||!n||!n2)return customAlert('Required', 'Please fill all fields', '⚠️');
-  if(n.length<4)return customAlert('Too Short', 'Password must be 4+ characters', '⚠️');
-  if(n!==n2)return customAlert('Mismatch', 'Passwords do not match', '⚠️');
+  if(!o||!n||!n2)return alert('Please fill all fields');
+  if(n.length<4)return alert('Password must be 4+ characters');
+  if(n!==n2)return alert('Passwords do not match');
   const st=localStorage.getItem('t_pwd_'+S.user.user_id);
-  if(st&&st!==o)return customAlert('Error', 'Current password is incorrect', '❌');
+  if(st&&st!==o)return alert('❌ Current password is incorrect');
   localStorage.setItem('t_pwd_'+S.user.user_id,n);
   $('oldPw').value='';$('newPw').value='';$('newPw2').value='';
   haptic('success');
-  customAlert('Success', 'Password updated successfully!', '✅');
+  alert('✅ Password updated successfully!');
 }
 
 function copy(text){
