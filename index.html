@@ -84,7 +84,7 @@ body{background:#050907;background-image:radial-gradient(ellipse at top,rgba(0,2
 <div class="live-b" id="liveB"><div class="l-av" id="lAv">R</div><div class="l-tx" id="lTx">Loading...</div></div>
 <div class="toast" id="toast"></div>
 
-<!-- CUSTOM IN-APP MODAL (NO BROWSER POPUPS) -->
+<!-- CUSTOM IN-APP DIALOG MODAL -->
 <div id="cModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.92);backdrop-filter:blur(14px);align-items:center;justify-content:center;padding:20px">
   <div class="glass-card modal-in" style="width:100%;max-width:360px;text-align:center;border-color:rgba(0,255,102,0.4);box-shadow:0 0 40px rgba(0,255,102,0.25)">
     <div id="cModalIcon" style="font-size:42px;margin-bottom:12px">⚡</div>
@@ -466,7 +466,6 @@ async function syncUser(){
     list.sort((a,b)=>new Date(b.date)-new Date(a.date));
     S.tx=list;
 
-    // Fetch team downline
     if(S.user.referral_code){
       const tm=await sb.from('users').select('username, joined_at, invested, balance').eq('referred_by', S.user.referral_code).order('joined_at',{ascending:false});
       if(tm.data){
@@ -569,6 +568,7 @@ function goStep3(){
   S.step=3;render();
 }
 
+/* SIGNUP: NO BONUS ON SIGNUP (BONUS ONLY AFTER PLAN PURCHASE) */
 async function finishSignup(){
   const un=$('un').value.trim(),pw=$('pw').value,pw2=$('pw2').value;
   if(!un||un.length<3)return customAlert('Invalid Username', 'Username must be at least 3 characters.', '⚠️');
@@ -580,7 +580,6 @@ async function finishSignup(){
   S.plans=[];
   localStorage.setItem('t_pwd_'+uid,pw);
   
-  // Create user in Supabase without granting any signup referral bonus
   if(sb){
     try{
       await sb.from('users').insert([{
@@ -961,6 +960,7 @@ function quickInvest(id){
   invest(id);
 }
 
+/* INVESTMENT LOGIC WITH 10% REFERRAL BONUS DISPATCH */
 async function invest(id){
   const p=PLANS.find(x=>x.id===id);
   if(!p)return;
@@ -977,12 +977,12 @@ async function invest(id){
       if(r.data&&r.data[0])np=r.data[0];
       await sb.from('users').update({balance:S.user.balance,invested:S.user.invested}).eq('user_id',S.user.user_id);
       
-      // Credit 10% referral commission to referrer on plan purchase
+      // Auto-credit 10% L1 referral commission to referrer when user buys a plan
       if(S.user.referred_by){
         const refUserRes=await sb.from('users').select('*').eq('referral_code', S.user.referred_by).limit(1);
         if(refUserRes.data&&refUserRes.data[0]){
           const parent=refUserRes.data[0];
-          const comm = p.d * 0.10; // Exactly 10% of purchased plan
+          const comm = p.d * 0.10; // 10% commission on plan purchase
           await sb.from('users').update({
             referral_balance: Number(parent.referral_balance||0) + comm
           }).eq('user_id', parent.user_id);
@@ -1309,7 +1309,7 @@ async function claimRefToBal(){
   }, '🔄');
 }
 
-/* TEAM TAB */
+/* TEAM TAB (WITH CLAIM BONUS BUTTON + DIRECT MEMBERS) */
 function teamUI(){
   const rl=refLink();
   const t=I18N[S.lang]||I18N.en;
@@ -1320,7 +1320,7 @@ function teamUI(){
   if(myTeam.length===0){
     myTeamHTML=`<div style="text-align:center;padding:24px 10px;background:rgba(0,0,0,0.3);border-radius:14px;border:1px dashed rgba(0,255,102,0.15)">
       <p style="font-size:12px;color:#888;margin:0">No members have joined with your link yet.</p>
-      <p style="font-size:10px;color:#00FF66;margin:4px 0 0">Share your link below to earn 10% commission on plans!</p>
+      <p style="font-size:10px;color:#00FF66;margin:4px 0 0">Share your link below to earn commissions!</p>
     </div>`;
   } else {
     myTeamHTML=myTeam.map(m=>{
