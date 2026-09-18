@@ -84,8 +84,8 @@ body{background:#050907;background-image:radial-gradient(ellipse at top,rgba(0,2
 <div class="live-b" id="liveB"><div class="l-av" id="lAv">R</div><div class="l-tx" id="lTx">Loading...</div></div>
 <div class="toast" id="toast"></div>
 
-<!-- CUSTOM DARK NEON MODAL (REPLACES BROWSER ALERT) -->
-<div id="cModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.92);backdrop-filter:blur(14px);align-items:center;justify-content:center;padding:20px">
+<!-- CUSTOM IN-APP MODAL (NO BROWSER POPUPS) -->
+<div id="cModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.92);backdrop-filter:blur(14px);align-items:center;justify-content:center;padding:20px">
   <div class="glass-card modal-in" style="width:100%;max-width:360px;text-align:center;border-color:rgba(0,255,102,0.4);box-shadow:0 0 40px rgba(0,255,102,0.25)">
     <div id="cModalIcon" style="font-size:42px;margin-bottom:12px">⚡</div>
     <h3 id="cModalTitle" style="font-size:18px;font-weight:900;margin-bottom:8px;color:#00FF66">Notification</h3>
@@ -97,11 +97,6 @@ body{background:#050907;background-image:radial-gradient(ellipse at top,rgba(0,2
 <div id="app"></div>
 
 <script>
-/* GLOBAL OVERRIDE FOR BROWSER ALERT & CONFIRM */
-window.alert = function(msg) {
-  customAlert('Notification', msg, '⚡');
-};
-
 const CFG={
   banner:'https://i.postimg.cc/Wz818VcZ/1789133259079.png',
   support:'https://t.me/Toxiconect',
@@ -245,7 +240,6 @@ document.addEventListener('pointerdown',(e)=>{
 function customAlert(title, message, icon='⚡'){
   haptic('medium');
   const m=$('cModal');
-  if(!m) return;
   $('cModalIcon').textContent=icon;
   $('cModalTitle').textContent=title;
   $('cModalMsg').textContent=message;
@@ -255,7 +249,6 @@ function customAlert(title, message, icon='⚡'){
 function customConfirm(title, message, onConfirm, icon='❓'){
   haptic('medium');
   const m=$('cModal');
-  if(!m) return;
   $('cModalIcon').textContent=icon;
   $('cModalTitle').textContent=title;
   $('cModalMsg').textContent=message;
@@ -270,8 +263,7 @@ function customConfirm(title, message, onConfirm, icon='❓'){
   m.style.display='flex';
 }
 function closeCModal(){
-  const m=$('cModal');
-  if(m) m.style.display='none';
+  $('cModal').style.display='none';
 }
 
 function animateCount(elem,start,end,duration=700,prefix='$'){
@@ -474,6 +466,7 @@ async function syncUser(){
     list.sort((a,b)=>new Date(b.date)-new Date(a.date));
     S.tx=list;
 
+    // Fetch team downline
     if(S.user.referral_code){
       const tm=await sb.from('users').select('username, joined_at, invested, balance').eq('referred_by', S.user.referral_code).order('joined_at',{ascending:false});
       if(tm.data){
@@ -587,6 +580,7 @@ async function finishSignup(){
   S.plans=[];
   localStorage.setItem('t_pwd_'+uid,pw);
   
+  // Create user in Supabase without granting any signup referral bonus
   if(sb){
     try{
       await sb.from('users').insert([{
@@ -983,7 +977,7 @@ async function invest(id){
       if(r.data&&r.data[0])np=r.data[0];
       await sb.from('users').update({balance:S.user.balance,invested:S.user.invested}).eq('user_id',S.user.user_id);
       
-      // Auto-credit 10% referral commission to referrer when user buys a plan
+      // Credit 10% referral commission to referrer on plan purchase
       if(S.user.referred_by){
         const refUserRes=await sb.from('users').select('*').eq('referral_code', S.user.referred_by).limit(1);
         if(refUserRes.data&&refUserRes.data[0]){
@@ -1291,7 +1285,7 @@ function historyUI(){
   }).join('');
 }
 
-/* CLAIM REFERRAL TO MAIN BALANCE */
+/* TRANSFER REFERRAL BALANCE TO MAIN BALANCE */
 async function claimRefToBal(){
   const rb=Number(S.user.referral_balance||0);
   if(rb<=0) return customAlert('Zero Balance', 'You have no referral balance to claim yet.', 'ℹ️');
