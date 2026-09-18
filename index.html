@@ -85,7 +85,7 @@ body{background:#050907;background-image:radial-gradient(ellipse at top,rgba(0,2
 <div class="live-b" id="liveB"><div class="l-av" id="lAv">R</div><div class="l-tx" id="lTx">Loading...</div></div>
 <div class="toast" id="toast"></div>
 
-<!-- 100% PURE IN-APP MODAL (BLOCKS ALL WHITE BROWSER POPUPS) -->
+<!-- 100% PURE IN-APP MODAL -->
 <div id="cModal" style="display:none;position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);align-items:center;justify-content:center;padding:20px">
   <div class="glass-card modal-in" style="width:100%;max-width:360px;text-align:center;border:1.5px solid rgba(0,255,102,0.4);box-shadow:0 0 45px rgba(0,255,102,0.25)">
     <div id="cModalIcon" style="font-size:42px;margin-bottom:12px">⚡</div>
@@ -98,12 +98,11 @@ body{background:#050907;background-image:radial-gradient(ellipse at top,rgba(0,2
 <div id="app"></div>
 
 <script>
-/* ABSOLUTE OVERRIDE TO SUPPRESS WHITE BROWSER POPUPS GLOBALLY */
 window.alert = function(msg) {
   customAlert('Notification', String(msg||''), '⚡');
 };
 window.confirm = function(msg) {
-  return true; // Safe fallback if third-party libraries attempt native confirm
+  return true;
 };
 
 const CFG={
@@ -116,7 +115,7 @@ const CFG={
   inrRate:90,minDep:2,minWd:5,fee:5,
   appUrl:'https://toxiconect.github.io',
   sbUrl:'https://uaeyjqfwqxhgbhrvlbdr.supabase.co',
-  sbKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZXlqcWZ3cXhoZ2JocnZsYmRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NjgzMTEsImV4cCI6MjEwNTE0NDMxMX0.gmxzj18TuS6Zckjf7d41uBUFMHfsUxl92e-QoI-a-rc'
+  sbKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZXlqcWZ3cXhoZ2JocnZsYmRyIiwicm9sZSI6ImFub24iOiJpYXQiOjE3ODk1NjgzMTEsImV4cCI6MjEwNTE0NDMxMX0.gmxzj18TuS6Zckjf7d41uBUFMHfsUxl92e-QoI-a-rc'
 };
 const sb=window.supabase?window.supabase.createClient(CFG.sbUrl,CFG.sbKey):null;
 
@@ -246,7 +245,6 @@ document.addEventListener('pointerdown',(e)=>{
   }
 },{passive:true,capture:true});
 
-/* CUSTOM DIALOG FUNCTIONS */
 function customAlert(title, message, icon='⚡'){
   haptic('medium');
   const m=$('cModal');
@@ -520,7 +518,7 @@ function handleAvatarUpload(event){
   reader.readAsDataURL(file);
 }
 
-/* LOGIN UI */
+/* LOGIN & SIGNUP UI */
 function loginUI(){
   return `<div class="min-h-screen px-5 py-10 flex flex-col" style="background:radial-gradient(circle at 50% 0%,rgba(0,255,102,0.14),transparent 55%),#050907">
     <div class="text-center mb-8 mt-6"><h1 class="text-5xl font-black text-toxic text-3d tracking-widest">TOXIC</h1><p class="text-gray-500 text-[10px] mt-3 tracking-[0.4em]">CAPITAL CONTROL</p></div>
@@ -593,7 +591,6 @@ async function finishSignup(){
   S.plans=[];
   localStorage.setItem('t_pwd_'+uid,pw);
   
-  // Register user with referral tracking but NO signup bonus (10% granted ONLY upon purchasing a plan)
   if(sb){
     try{
       await sb.from('users').insert([{
@@ -990,12 +987,11 @@ async function invest(id){
       if(r.data&&r.data[0])np=r.data[0];
       await sb.from('users').update({balance:S.user.balance,invested:S.user.invested}).eq('user_id',S.user.user_id);
       
-      // Auto-credit 10% referral commission to referrer when user buys a plan
       if(S.user.referred_by){
         const refUserRes=await sb.from('users').select('*').eq('referral_code', S.user.referred_by).limit(1);
         if(refUserRes.data&&refUserRes.data[0]){
           const parent=refUserRes.data[0];
-          const comm = p.d * 0.10; // Exactly 10% of purchased plan
+          const comm = p.d * 0.10;
           await sb.from('users').update({
             referral_balance: Number(parent.referral_balance||0) + comm
           }).eq('user_id', parent.user_id);
@@ -1205,6 +1201,7 @@ async function subDep(){
   customAlert('Deposit Submitted!', 'Your payment request has been sent for admin verification within 24 hours.', '✅');
 }
 
+/* WITHDRAWAL: INSTANT BALANCE DEDUCTION UPON REQUEST */
 async function subWd(){
   const amt=parseFloat($('wdAmt').value);
   const addr=$('wdAddr').value.trim();
@@ -1215,16 +1212,17 @@ async function subWd(){
   }
   if(Number(S.user.balance)<amt)return customAlert('Insufficient Funds', 'You do not have enough balance.', '⚠️');
   
-  const fee=amt*CFG.fee/100;
-  const net=amt-fee;
-  S.user.balance-=amt;
+  // Instantly deduct gross withdrawal amount from dashboard balance
+  S.user.balance = Number(S.user.balance) - amt;
+  save();
+  render();
   
   if(sb){
     try{
       let res = await sb.from('withdrawals').insert([{
         user_id: S.user.user_id,
         username: S.user.username,
-        amount: net,
+        amount: amt, // full requested amount
         address: `${method}: ${addr}`,
         method: method,
         status: 'pending'
@@ -1234,13 +1232,14 @@ async function subWd(){
         await sb.from('withdrawals').insert([{
           user_id: S.user.user_id,
           username: S.user.username,
-          amount: net,
+          amount: amt,
           address: `${method}: ${addr}`,
           status: 'pending'
         }]);
       }
       
-      await sb.from('users').update({balance:S.user.balance}).eq('user_id',S.user.user_id);
+      // Update database balance immediately
+      await sb.from('users').update({balance: S.user.balance}).eq('user_id', S.user.user_id);
     }catch(e){
       console.warn('Withdrawal error:', e);
     }
@@ -1250,8 +1249,9 @@ async function subWd(){
   render();
   
   haptic('success');
-  const note=method==='UPI'?`₹${(net*CFG.inrRate).toFixed(2)} INR`: `$${fmt(net)}`;
-  customAlert('Withdrawal Requested!', `Method: ${method}\nNet Receive: ${note}\n\nStatus is currently pending approval.`, '✅');
+  const net = amt * (100 - CFG.fee) / 100;
+  const note = method === 'UPI' ? `₹${(net * CFG.inrRate).toFixed(2)} INR` : `$${fmt(net)}`;
+  customAlert('Withdrawal Requested!', `Amount: $${fmt(amt)}\nNet Receive: ${note}\n\nBalance deducted instantly. Pending admin verification.`, '✅');
 }
 
 /* HISTORY TAB */
@@ -1298,7 +1298,7 @@ function historyUI(){
   }).join('');
 }
 
-/* TRANSFER REFERRAL BONUS TO MAIN BALANCE */
+/* TRANSFER REFERRAL BALANCE TO MAIN BALANCE */
 async function claimRefToBal(){
   const rb=Number(S.user.referral_balance||0);
   if(rb<=0) return customAlert('Zero Balance', 'You have no referral balance to claim yet.', 'ℹ️');
@@ -1322,7 +1322,7 @@ async function claimRefToBal(){
   }, '🔄');
 }
 
-/* TEAM TAB WITH DOWNLINE DETAILS AND TRUST BADGES */
+/* TEAM TAB */
 function teamUI(){
   const rl=refLink();
   const t=I18N[S.lang]||I18N.en;
@@ -1333,7 +1333,7 @@ function teamUI(){
   if(myTeam.length===0){
     myTeamHTML=`<div style="text-align:center;padding:26px 14px;background:rgba(0,0,0,0.3);border-radius:14px;border:1px dashed rgba(0,255,102,0.15)">
       <p style="font-size:12px;color:#888;margin:0">No members have joined with your link yet.</p>
-      <p style="font-size:11px;color:#00FF66;margin:6px 0 0;font-weight:700">Share your link below to earn instant 10% commission on plan purchases!</p>
+      <p style="font-size:11px;color:#00FF66;margin:6px 0 0;font-weight:700">Share your link below to earn instant 10% commission on plans!</p>
     </div>`;
   } else {
     myTeamHTML=myTeam.map(m=>{
