@@ -62,8 +62,8 @@ body{background:#050907;background-image:radial-gradient(ellipse at top,rgba(0,2
 .l-logo{font-size:60px;font-weight:900;color:#00FF66;letter-spacing:0.3em;animation:ll 1.5s infinite;text-shadow:0 0 40px #00FF66}
 @keyframes ll{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.06);opacity:0.85}}
 .l-bar{width:200px;height:3px;background:rgba(0,255,102,0.15);border-radius:3px;margin-top:28px;overflow:hidden}
-.l-fill{height:100%;background:linear-gradient(90deg,#00FF66,#10B981);width:0;transition:width 0.3s ease}
-.l-msg{font-size:11px;color:#666;margin-top:16px;letter-spacing:1.5px;text-transform:uppercase}
+.l-fill{height:100%;background:linear-gradient(90deg,#00FF66,#10B981);animation:lf 1.6s forwards}
+@keyframes lf{to{width:100%}}
 .live-b{position:fixed;bottom:100px;left:12px;right:12px;max-width:420px;margin:0 auto;background:linear-gradient(135deg,rgba(9,18,14,0.98),rgba(5,12,8,0.99));backdrop-filter:blur(20px);border:1px solid rgba(0,255,102,0.45);border-radius:16px;padding:12px 16px;z-index:45;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s;transform:translateY(180%);opacity:0;display:flex;align-items:center;gap:12px;box-shadow:0 15px 40px rgba(0,255,102,0.25)}
 .live-b.show{transform:translateY(0);opacity:1}
 .l-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00FF66,#10B981);display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;font-size:15px;flex-shrink:0}
@@ -72,8 +72,6 @@ body{background:#050907;background-image:radial-gradient(ellipse at top,rgba(0,2
 .toast{position:fixed;bottom:165px;left:50%;transform:translateX(-50%) translateY(40px);background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-weight:800;padding:12px 24px;border-radius:14px;font-size:13px;z-index:70;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 15px 45px rgba(0,255,102,0.6);opacity:0;pointer-events:none;max-width:88%;text-align:center}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 .nbadge{position:absolute;top:-5px;right:-5px;background:#EF4444;color:#fff;font-size:9px;font-weight:900;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid #050907;box-shadow:0 0 10px rgba(239,68,68,0.6)}
-.nav-badge{position:absolute;top:2px;right:20%;background:#EF4444;color:#fff;font-size:8px;font-weight:900;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px;box-shadow:0 0 8px rgba(239,68,68,0.7);animation:npulse 1.5s infinite}
-@keyframes npulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
 .nitem{padding:16px;background:rgba(0,0,0,0.4);border-radius:14px;margin-bottom:10px;border-left:3px solid #10B981;transition:all 0.2s}
 .nitem.warning{border-left-color:#FBBF24;background:rgba(251,191,36,0.07)}
 .nitem.bonus{border-left-color:#00FF66;background:rgba(0,255,102,0.07)}
@@ -117,20 +115,12 @@ body{background:#050907;background-image:radial-gradient(ellipse at top,rgba(0,2
 .switch.on{background:linear-gradient(135deg,#00FF66,#10B981);border-color:#00FF66}
 .switch::after{content:'';position:absolute;width:22px;height:22px;background:#fff;border-radius:50%;top:2px;left:2px;transition:all 0.2s;box-shadow:0 2px 6px rgba(0,0,0,0.3)}
 .switch.on::after{left:24px}
-.net-btn{padding:10px;border-radius:12px;font-size:12px;font-weight:800;border:1.5px solid rgba(255,255,255,0.08);cursor:pointer;background:rgba(255,255,255,0.04);color:#888;transition:all 0.2s}
-.net-btn.active{background:linear-gradient(135deg,#00FF66,#10B981);color:#000;border-color:#00FF66;box-shadow:0 0 18px rgba(0,255,102,0.45)}
-.f-tab{padding:8px 16px;border-radius:20px;font-size:11px;font-weight:800;border:none;cursor:pointer;background:rgba(255,255,255,0.05);color:#888;transition:all 0.2s;white-space:nowrap}
-.f-tab.active{background:linear-gradient(135deg,#00FF66,#10B981);color:#000;box-shadow:0 0 15px rgba(0,255,102,0.5)}
-.tree-node{padding:10px 12px;border-radius:12px;background:rgba(0,0,0,0.45);border:1px solid rgba(0,255,102,0.15);margin-bottom:6px;display:flex;align-items:center;gap:10px;font-size:12px}
-.tree-node.level-1{border-left:3px solid #00FF66}
-.tree-node.level-2{margin-left:20px;border-left:3px solid #10B981;background:rgba(0,0,0,0.35)}
-.tree-node.level-3{margin-left:40px;border-left:3px solid #22D3EE;background:rgba(0,0,0,0.25)}
-.inr-toggle{padding:4px 10px;border-radius:20px;font-size:10px;font-weight:900;background:rgba(0,255,102,0.12);border:1px solid rgba(0,255,102,0.4);color:#00FF66;cursor:pointer;letter-spacing:0.5px}
-.sk-page{display:flex;flex-direction:column;gap:12px}
+.netbtn{padding:10px;font-weight:800;text-align:center;cursor:pointer;border-radius:12px;font-size:11px;transition:all 0.2s;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#888}
+.netbtn.active{background:rgba(0,255,102,0.15);border-color:rgba(0,255,102,0.5);color:#00FF66}
 </style>
 </head>
 <body>
-<div class="loading" id="loading"><div class="l-logo">TOXIC</div><div class="l-bar"><div class="l-fill" id="lFill"></div></div><div class="l-msg" id="lMsg">INITIALIZING…</div></div>
+<div class="loading" id="loading"><div class="l-logo">TOXIC</div><div class="l-bar"><div class="l-fill"></div></div></div>
 <div class="live-b" id="liveB"><div class="l-av" id="lAv">R</div><div class="l-tx" id="lTx">Loading...</div></div>
 <div class="toast" id="toast"></div>
 <div id="pullIndicator">↓</div>
@@ -168,8 +158,7 @@ let CFG={
   sbUrl:'https://uaeyjqfwqxhgbhrvlbdr.supabase.co',
   sbKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZXlqcWZ3cXhoZ2JocnZsYmRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NjgzMTEsImV4cCI6MjEwNTE0NDMxMX0.gmxzj18TuS6Zckjf7d41uBUFMHfsUxl92e-QoI-a-rc'
 };
-let sb=null;
-try{ if(window.supabase) sb=window.supabase.createClient(CFG.sbUrl,CFG.sbKey); }catch(e){ console.warn('Supabase init failed',e); }
+const sb=window.supabase?window.supabase.createClient(CFG.sbUrl,CFG.sbKey):null;
 
 let PROMO_CODES=[];
 let PROMO_LOADED=false;
@@ -257,33 +246,32 @@ let S={
   plans:JSON.parse(localStorage.getItem('t_plans')||'[]'),
   tx:JSON.parse(localStorage.getItem('t_tx')||'[]'),
   team:JSON.parse(localStorage.getItem('t_team')||'[]'),
-  teamL2:[],
-  teamL3:[],
-  commissionHistory:[],
   notifs:[],
   tab:'dashboard',
   step:1,
-  sd:{country:'',firstName:'',lastName:'',email:'',phone:'',username:'',password:'',referredBy:null,manualRef:''},
+  sd:{country:'',firstName:'',lastName:'',email:'',phone:'',username:'',password:'',referredBy:null},
   selPlan:null,showProfile:false,showNotifs:false,
   calcAmt:50,
   lang:localStorage.getItem('t_lang')||'en',
   wdMethod:'USDT',
-  wdNetwork:'BEP20',
   spin:{lastSpin:0,totalSpins:0},
   milestones:{claimed:[]},
   tgBonus:false,
   page:null,
   syncing:false,
   historyLimit:CFG.historyPageSize,
-  txFilter:'all',
-  teamView:'l1',
   soundOn:localStorage.getItem('t_sound')!=='0',
   cryptoData:[],
   redeemedCodes:JSON.parse(localStorage.getItem('t_redeemed')||'[]'),
-  inrMode:localStorage.getItem('t_inr')==='1',
-  savedAddresses:JSON.parse(localStorage.getItem('t_saved_addr')||'{}'),
-  lastSeenTeamCount:parseInt(localStorage.getItem('t_last_team')||'0'),
-  lastSeenTxCount:parseInt(localStorage.getItem('t_last_tx')||'0')
+  showInr:localStorage.getItem('t_inr')==='1',
+  txFilter:'all',
+  savedAddresses:JSON.parse(localStorage.getItem('t_saved_addr')||'[]'),
+  lastTeamCount:parseInt(localStorage.getItem('t_last_team')||'0'),
+  lastRefSeen:0,
+  usdtNetwork:'BEP20',
+  showTree:false,
+  showCommissions:false,
+  refLocked:localStorage.getItem('t_ref_lock')||null
 };
 
 try{
@@ -293,25 +281,22 @@ try{
   S.tgBonus=ex.tgBonus||false;
 }catch(e){}
 
+// Ref link lock + URL param
 try{
   const up=new URLSearchParams(location.search);
   const rf=up.get('ref');
   const locked=localStorage.getItem('t_ref_lock');
-  if(rf && !locked){
-    localStorage.setItem('t_ref_lock', rf);
-    S.sd.referredBy=rf;
-  } else if(locked){
-    S.sd.referredBy=locked;
-  }
+  if(rf){
+    if(locked && locked!==rf){ S.sd.referredBy=locked; S.refLocked=locked; }
+    else { S.sd.referredBy=rf; localStorage.setItem('t_ref_lock',rf); S.refLocked=rf; }
+  } else if(locked){ S.sd.referredBy=locked; S.refLocked=locked; }
 }catch(e){}
 
 const $=id=>document.getElementById(id);
 const fmt=n=>Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-const fmtMoney=n=>S.inrMode?('₹'+(Number(n||0)*CFG.inrRate).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})):('$'+fmt(n));
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const nextC=p=>new Date(p.started_at).getTime()+(Number(p.days_collected)||0)*DAY;
 const isActive=pid=>S.plans.some(p=>p.plan_id===pid&&Number(p.days_collected)<40&&p.status!=='completed');
-const isEverHad=pid=>S.plans.some(p=>p.plan_id===pid);
 const refLink=()=>S.user?CFG.appUrl+'/?ref='+S.user.referral_code:CFG.appUrl;
 
 function getVIPBadge(invested){
@@ -320,16 +305,19 @@ function getVIPBadge(invested){
   return best;
 }
 
+function getTeamBadge(count){
+  if(count>=100)return{name:'Diamond Leader',icon:'💎',c:'#22D3EE'};
+  if(count>=50)return{name:'Gold Leader',icon:'🥇',c:'#FFD700'};
+  if(count>=25)return{name:'Silver Leader',icon:'🥈',c:'#C0C0C0'};
+  if(count>=10)return{name:'Bronze Leader',icon:'🥉',c:'#CD7F32'};
+  if(count>=5)return{name:'Rising Star',icon:'⭐',c:'#10B981'};
+  return{name:'Newbie',icon:'🌱',c:'#666'};
+}
+
 function saveExtra(){
   localStorage.setItem('t_extra',JSON.stringify({
     spin:S.spin,milestones:S.milestones,tgBonus:S.tgBonus
   }));
-}
-function toggleINR(){
-  S.inrMode=!S.inrMode;
-  localStorage.setItem('t_inr',S.inrMode?'1':'0');
-  haptic('medium');sound('tap');
-  render();
 }
 
 let audioCtx=null;
@@ -357,7 +345,6 @@ function sound(type){
     else if(type==='notif'){tone(660,0,0.08,0.1);tone(880,0.08,0.15,0.12);}
     else if(type==='spin'){for(let i=0;i<8;i++)tone(400+i*80,i*0.06,0.05,0.08);}
     else if(type==='tap'){tone(500,0,0.04,0.06);}
-    else if(type==='nav'){tone(700,0,0.03,0.05);}
     else if(type==='ref'){tone(700,0,0.08,0.12);tone(900,0.08,0.08,0.12);tone(1100,0.16,0.15,0.15);}
   }catch(e){}
 }
@@ -375,18 +362,9 @@ function haptic(type='light'){
 }
 
 document.addEventListener('pointerdown',(e)=>{
-  const hit=e.target.closest('button, .nav-item, .plan-card, [onclick], input[type="range"], select, .lang-btn, .switch, .net-btn, .f-tab');
+  const hit=e.target.closest('button, .nav-item, .plan-card, [onclick], input[type="range"], select, .lang-btn, .switch, .netbtn');
   if(hit){haptic('light');sound('tap');}
 },{passive:true,capture:true});
-
-function pushModalState(){try{history.pushState({modal:true},'');}catch(e){}}
-window.addEventListener('popstate',(e)=>{
-  if(S.showProfile){S.showProfile=false;render();pushModalState();return;}
-  if(S.showNotifs){S.showNotifs=false;render();pushModalState();return;}
-  if(S.page){S.page=null;render();pushModalState();return;}
-  if(S.selPlan){S.selPlan=null;render();pushModalState();return;}
-  if(S.tab!=='dashboard'&&S.user){S.tab='dashboard';render();pushModalState();return;}
-});
 
 function customAlert(title,message,icon='⚡'){
   haptic('medium');
@@ -411,8 +389,16 @@ function customConfirm(title,message,onConfirm,icon='❓'){
 }
 function closeCModal(){$('cModal').style.display='none';}
 
+function showDetailedError(title,details,action,icon){
+  action=action||'Please try again.';
+  icon=icon||'⚠️';
+  const msg=details?(details+'\n\n'+action):action;
+  customAlert(title,msg,icon);
+}
+
 function animateCount(elem,start,end,duration=700,prefix='$'){
   if(!elem)return;
+  if(S.showInr){prefix='₹';start=start*CFG.inrRate;end=end*CFG.inrRate;}
   const range=end-start;let startTime=null;
   function step(ts){
     if(!startTime)startTime=ts;
@@ -428,16 +414,13 @@ function launchConfetti(){
 }
 
 function save(){
-  try{
-    localStorage.setItem('t_user',JSON.stringify(S.user));
-    localStorage.setItem('t_plans',JSON.stringify(S.plans));
-    localStorage.setItem('t_tx',JSON.stringify(S.tx));
-    localStorage.setItem('t_team',JSON.stringify(S.team));
-    localStorage.setItem('t_lang',S.lang);
-    localStorage.setItem('t_redeemed',JSON.stringify(S.redeemedCodes));
-    localStorage.setItem('t_saved_addr',JSON.stringify(S.savedAddresses));
-    saveExtra();
-  }catch(e){}
+  localStorage.setItem('t_user',JSON.stringify(S.user));
+  localStorage.setItem('t_plans',JSON.stringify(S.plans));
+  localStorage.setItem('t_tx',JSON.stringify(S.tx));
+  localStorage.setItem('t_team',JSON.stringify(S.team));
+  localStorage.setItem('t_lang',S.lang);
+  localStorage.setItem('t_redeemed',JSON.stringify(S.redeemedCodes));
+  saveExtra();
 }
 function toast(m){
   const el=$('toast');if(!el)return;
@@ -453,6 +436,7 @@ function skeletonCard(){
   </div>`;
 }
 
+/* ============ LOAD SITE CONFIG ============ */
 async function loadSiteConfig(){
   if(!sb)return;
   try{
@@ -482,6 +466,7 @@ async function loadSiteConfig(){
   }catch(e){console.warn('Config load failed:',e);}
 }
 
+/* ============ LOAD PLANS FROM DB ============ */
 async function loadPlansFromDB(){
   if(!sb)return;
   try{
@@ -500,10 +485,14 @@ async function loadPlansFromDB(){
   }catch(e){console.warn('Plans load failed:',e);}
 }
 
+/* ============ PROMO CODES ============ */
 async function loadPromoCodes(){
   if(!sb)return;
   try{
-    const r=await sb.from('promo_codes').select('*').eq('is_active',true).order('id',{ascending:false});
+    const r=await sb.from('promo_codes')
+      .select('*')
+      .eq('is_active',true)
+      .order('id',{ascending:false});
     if(r.data){
       PROMO_CODES=r.data.filter(x=>Number(x.used_count||0)<Number(x.max_uses||0));
       PROMO_LOADED=true;
@@ -511,6 +500,7 @@ async function loadPromoCodes(){
   }catch(e){console.warn('Promo load error:',e);}
 }
 
+/* ============ CRYPTO PRICES ============ */
 async function loadCryptoPrices(){
   try{
     const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether,binancecoin,solana&vs_currencies=usd&include_24hr_change=true');
@@ -547,19 +537,12 @@ async function loadNotifs(){
   if(!sb||!S.user)return;
   try{const r=await sb.from('notifications').select('*').eq('user_id',S.user.user_id).order('id',{ascending:false}).limit(50);if(r.data)S.notifs=r.data;}catch(e){}
 }
-async function loadCommissionHistory(){
-  if(!sb||!S.user)return;
-  try{
-    const r=await sb.from('notifications').select('*').eq('user_id',S.user.user_id).like('title','%Commission%').order('id',{ascending:false}).limit(50);
-    S.commissionHistory=r.data||[];
-  }catch(e){S.commissionHistory=[];}
-}
 const unread=()=>S.notifs.filter(n=>!n.is_read).length;
 async function markRead(){
   if(!sb||!S.user)return;
   haptic('medium');
-  for(const n of S.notifs.filter(x=>!x.is_read)){try{await sb.from('notifications').update({is_read:true}).eq('id',n.id);}catch(e){}}
-  try{await sb.from('users').update({unread_count:0}).eq('user_id',S.user.user_id);}catch(e){}
+  for(const n of S.notifs.filter(x=>!x.is_read)){await sb.from('notifications').update({is_read:true}).eq('id',n.id);}
+  await sb.from('users').update({unread_count:0}).eq('user_id',S.user.user_id);
   S.user.unread_count=0;S.notifs.forEach(n=>n.is_read=true);save();render();
 }
 
@@ -730,7 +713,7 @@ function checkVIPBadgeChange(){
   }
 }
 
-function openPage(p){S.page=p;pushModalState();window.scrollTo(0,0);render();}
+function openPage(p){S.page=p;window.scrollTo(0,0);render();}
 function closePage(){S.page=null;render();}
 
 function renderPage(){
@@ -916,7 +899,7 @@ function pageFAQ(){
     {q:'What happens after 40 days?',a:'After 40 days, your plan completes automatically. Total returns equal 4x your investment.'},
     {q:'How does the Spin & Win work?',a:'You get 1 free spin every 24 hours. Win between $0.01 and $0.50 instantly credited to your balance.'},
     {q:'Are there any team bonuses?',a:'Yes! Reach team milestones (5, 10, 25, 50, 100 members) to unlock bonus rewards up to $100.'},
-    {q:'What payment methods are supported?',a:'Deposits: UPI, USDT (BEP20/TRC20), BTC. Withdrawals: USDT (BEP20/TRC20) or UPI (INR at ₹'+CFG.inrRate+'/USD rate).'},
+    {q:'What payment methods are supported?',a:'Deposits: UPI, USDT (BEP20/TRC20), BTC. Withdrawals: USDT or UPI (INR at ₹'+CFG.inrRate+'/USD rate).'},
     {q:'How can I join the community?',a:'Tap the Telegram icon in the app header or "Join Community" card to enter our official channel.'}
   ];
   return `<h1>❓ Frequently Asked Questions</h1>
@@ -950,16 +933,16 @@ function showLive(){
 }
 
 function render(){
-  try{
-    const a=$('app');
-    if(!a)return;
-    if(S.page){a.innerHTML=renderPage();return;}
-    if(!S.user){
-      a.innerHTML=S.tab==='signin'?loginUI():signupUI();return;
-    }
-    a.innerHTML=mainUI()+planModal()+profileModal()+notifsModal();
-    updateDyn();
-  }catch(e){ console.error('Render error:',e); }
+  const a=$('app');
+  if(S.page){a.innerHTML=renderPage();return;}
+  if(!S.user){a.innerHTML=S.tab==='signin'?loginUI():signupUI();return;}
+  if(S.syncing && !a.innerHTML.trim()){
+    a.innerHTML=`<div style="padding:20px">${skeletonCard().repeat(3)}</div>`;
+    return;
+  }
+  a.innerHTML=mainUI()+planModal()+profileModal()+notifsModal();
+  if(S.tab==='wallet')setTimeout(loadSavedAddresses,0);
+  updateDyn();
 }
 
 function updateDyn(){
@@ -1021,7 +1004,6 @@ async function syncUser(){
       S.user.invested=Number(f.invested||0);
       S.user.earned=Number(f.earned||0);
       if(f.avatar)S.user.avatar=f.avatar;
-      if(f.saved_wd_address)S.savedAddresses=typeof f.saved_wd_address==='string'?JSON.parse(f.saved_wd_address):f.saved_wd_address;
 
       if(S.user.referral_balance > 0){
         const rb=S.user.referral_balance;
@@ -1077,52 +1059,35 @@ async function syncUser(){
         haptic('success');sound('notif');
         setTimeout(()=>{launchConfetti();customAlert('✅ Withdrawal Approved!',`$${fmt(updated.amount)} withdrawal has been approved and processed!`,'💰');},800);
       } else if(oldSt==='pending' && (newSt==='rejected'||newSt==='failed')){
-        const refundKey='t_refunded_'+old.id;
-        if(!localStorage.getItem(refundKey)){
-          localStorage.setItem(refundKey,'1');
-          const refundAmt=Number(old.fullAmount||old.amount||0);
-          S.user.balance=Number(S.user.balance||0)+refundAmt;
-          try{await sb.from('users').update({balance:S.user.balance}).eq('user_id',S.user.user_id);}catch(e){}
-          save();
-        }
         haptic('warning');sound('error');
-        setTimeout(()=>{customAlert('❌ Withdrawal Rejected',`Your withdrawal of $${fmt(updated.amount)} was rejected.\n\nFull amount (with fee) refunded to your balance.`,'⚠️');},800);
+        const refundAmt=Number(updated.amount)/(1-CFG.fee/100);
+        S.user.balance=Number(S.user.balance||0)+refundAmt;
+        try{await sb.from('users').update({balance:S.user.balance}).eq('user_id',S.user.user_id);}catch(e){}
+        save();
+        setTimeout(()=>{customAlert('❌ Withdrawal Rejected',`Your withdrawal of $${fmt(updated.amount)} was rejected.\n\n✅ $${fmt(refundAmt)} refunded to your balance.\n\nContact support if needed.`,'⚠️');},800);
       }
     });
 
     S.tx=finalList;
 
     if(S.user.referral_code){
-      const tm=await sb.from('users').select('username, joined_at, invested, balance, referral_code, referred_by').eq('referred_by',S.user.referral_code).order('joined_at',{ascending:false});
+      const tm=await sb.from('users').select('username, joined_at, invested, balance').eq('referred_by',S.user.referral_code).order('joined_at',{ascending:false});
       if(tm.data){
         S.team=tm.data;
-        if(tm.data.length>0){
-          const l1codes=tm.data.map(x=>x.referral_code).filter(Boolean);
-          if(l1codes.length>0){
-            const l2=await sb.from('users').select('username, joined_at, invested, referral_code, referred_by').in('referred_by',l1codes).order('joined_at',{ascending:false});
-            S.teamL2=l2.data||[];
-            if(S.teamL2.length>0){
-              const l2codes=S.teamL2.map(x=>x.referral_code).filter(Boolean);
-              if(l2codes.length>0){
-                const l3=await sb.from('users').select('username, joined_at, invested, referral_code, referred_by').in('referred_by',l2codes).order('joined_at',{ascending:false});
-                S.teamL3=l3.data||[];
-              } else S.teamL3=[];
-            } else S.teamL3=[];
-          }
+        const currentCount=S.team.length;
+        if(S.lastTeamCount>0 && currentCount>S.lastTeamCount){
+          const newRefs=currentCount-S.lastTeamCount;
+          haptic('success');sound('ref');launchConfetti();
+          setTimeout(()=>{
+            customAlert('🎉 New Referral!',`${newRefs} new member${newRefs>1?'s':''} joined your team!\n\nTotal team: ${currentCount}`,'👥');
+          },600);
         }
+        S.lastTeamCount=currentCount;
+        localStorage.setItem('t_last_team',String(currentCount));
       }
     }
     await loadNotifs();
-    await loadCommissionHistory();
     save();
-
-    if(S.team.length > S.lastSeenTeamCount && S.lastSeenTeamCount > 0){
-      const diff=S.team.length - S.lastSeenTeamCount;
-      haptic('success');sound('ref');
-      launchConfetti();
-      setTimeout(()=>customAlert('🎉 New Referral!',`${diff} new member${diff>1?'s':''} joined your team!\n\nKeep sharing to earn more commission.`,'👥'),600);
-    }
-    localStorage.setItem('t_last_team', S.team.length);
   }catch(e){console.warn('Sync note:',e);}
   S.syncing=false;
 }
@@ -1155,7 +1120,7 @@ function loginUI(){
       <input id="lu" class="inp mb-3" placeholder="Username">
       <input id="lp" type="password" class="inp mb-6" placeholder="Password">
       <button onclick="doLogin()" class="w-full btn-green py-4 rounded-2xl text-sm glow">SIGN IN</button>
-      <p class="text-center text-sm text-gray-500 pt-5">No account? <span onclick="S.tab='signup';S.step=1;render()" class="text-toxic font-bold cursor-pointer">Create one →</span></p>
+      <p class="text-center text-sm text-gray-500 pt-5">No account? <span onclick="S.tab='signup';render()" class="text-toxic font-bold cursor-pointer">Create one →</span></p>
     </div>
     <div style="text-align:center;margin-top:20px;font-size:11px;color:#666">
       <p>By continuing, you accept our <span onclick="S.page='tnc';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Terms</span> & <span onclick="S.page='privacy';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Privacy Policy</span></p>
@@ -1171,7 +1136,7 @@ function signupUI(){
     return `<div style="width:46px;height:46px;border-radius:14px;background:${bg};color:${tc};display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;box-shadow:${step===n?'0 0 25px #00FF66':'none'};transition:all 0.3s">${step>n?'✓':n}</div>`;
   }).join('');
   return `<div class="min-h-screen flex flex-col" style="background:radial-gradient(circle at 50% 0%,rgba(0,255,102,0.14),transparent 55%),#050907">
-    <div class="relative w-full h-48 overflow-hidden"><img src="${CFG.banner}" style="width:100%;height:100%;object-fit:cover;opacity:0.75"><div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,9,7,0.3),rgba(5,9,7,0.98))"></div><div style="position:absolute;bottom:18px;left:22px"><h1 class="text-3xl font-black text-toxic tracking-widest text-3d">TOXIC</h1></div></div>
+    <div class="relative w-full h-36 overflow-hidden"><img src="${CFG.banner}" style="width:100%;height:100%;object-fit:cover;opacity:0.75"><div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,9,7,0.3),rgba(5,9,7,0.98))"></div><div style="position:absolute;bottom:18px;left:22px"><h1 class="text-3xl font-black text-toxic tracking-widest text-3d">TOXIC</h1></div></div>
     <div class="px-5 pb-10"><div class="flex items-center justify-center gap-4 mb-7">${steps}</div>
       <div class="glass-card p-6">${step===1?step1():step===2?step2():step3()}</div>
     </div>
@@ -1185,14 +1150,16 @@ function step1(){
   const cs=['India (+91)','Pakistan (+92)','Bangladesh (+880)','United States (+1)','UAE (+971)','Saudi Arabia (+966)','Nigeria (+234)','Indonesia (+62)','Philippines (+63)','Nepal (+977)'];
   const ops=cs.map(c=>`<option ${S.sd.country===c?'selected':''}>${c}</option>`).join('');
   const rn=S.sd.referredBy?`<div style="border-radius:14px;padding:14px;margin-bottom:16px;background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.3)"><p style="font-size:10px;color:#888;margin:0">Referred by</p><p class="text-toxic mono" style="font-weight:900;font-size:13px;margin:4px 0 0">${esc(S.sd.referredBy)}</p></div>`:'';
+  const lockAttr=S.refLocked?'readonly style="text-transform:uppercase;opacity:0.7"':'style="text-transform:uppercase"';
   return `${rn}<p style="font-size:10px;color:#666;font-weight:700;margin:0 0 8px;letter-spacing:2px">STEP 1 / 3</p>
     <h2 class="text-2xl font-black mb-1">Choose your country</h2><p class="text-sm text-gray-500 mb-6">Select your country.</p>
     <div style="background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.25);border-radius:12px;padding:10px 14px;margin-bottom:16px">
       <p style="font-size:11px;color:#00FF66;font-weight:700;margin:0">🎁 Get $${CFG.signupBonus.toFixed(2)} FREE signup bonus!</p>
     </div>
-    <select id="cs" class="inp mb-4" onchange="S.sd.country=this.value"><option value="">Choose a country...</option>${ops}</select>
-    <input id="mref" class="inp mb-6" placeholder="Referral Code (optional)" value="${esc(S.sd.manualRef||'')}" style="text-transform:uppercase">
-    <button onclick="S.step=2;if($('cs').value)S.sd.country=$('cs').value;S.sd.manualRef=$('mref').value.trim().toUpperCase();render()" class="w-full btn-green py-4 rounded-2xl text-sm glow">NEXT →</button>
+    <select id="cs" class="inp mb-3" onchange="S.sd.country=this.value"><option value="">Choose a country...</option>${ops}</select>
+    <input id="manualRef" class="inp mb-6" placeholder="Referral Code (optional)" value="${S.sd.referredBy||''}" ${lockAttr}>
+    ${S.refLocked?`<p style="font-size:10px;color:#FBBF24;margin:-14px 0 14px">🔒 Referral locked: ${esc(S.refLocked)}</p>`:''}
+    <button onclick="S.step=2;if($('cs').value)S.sd.country=$('cs').value;const mr=$('manualRef').value.trim().toUpperCase();if(mr){S.sd.referredBy=mr;localStorage.setItem('t_ref_lock',mr);}render()" class="w-full btn-green py-4 rounded-2xl text-sm glow">NEXT →</button>
     <p class="text-center text-xs text-gray-500 mt-4">Already have an account? <span onclick="S.tab='signin';render()" class="text-yellow-400 font-bold">Sign in</span></p>`;
 }
 function step2(){
@@ -1228,22 +1195,25 @@ async function finishSignup(){
   if(!un||un.length<3)return customAlert('Invalid Username','Username must be at least 3 characters.','⚠️');
   if(!pw||pw.length<4)return customAlert('Weak Password','Password must be at least 4 characters.','⚠️');
   if(pw!==pw2)return customAlert('Mismatch','Passwords do not match.','⚠️');
+
+  // Referral validity + loop check
+  if(S.sd.referredBy && sb){
+    try{
+      const rf=await sb.from('users').select('user_id').eq('referral_code',S.sd.referredBy).limit(1);
+      if(!rf.data || rf.data.length===0){
+        toast('⚠️ Invalid referral code removed');
+        S.sd.referredBy=null;
+        localStorage.removeItem('t_ref_lock');
+      }
+    }catch(e){}
+  }
+
   const uid='TG'+Date.now();
   const rc='TOXIC'+Math.floor(1000+Math.random()*9000);
-  let refBy=S.sd.referredBy;
-  if(S.sd.manualRef){
-    if(sb){
-      try{
-        const r=await sb.from('users').select('referral_code').eq('referral_code',S.sd.manualRef).limit(1);
-        if(r.data&&r.data.length>0){ refBy=S.sd.manualRef; }
-        else { toast('⚠️ Invalid referral code — skipped'); }
-      }catch(e){}
-    }
-  }
-  S.user={user_id:uid,username:un,email:S.sd.email||'',phone:S.sd.phone||'',avatar:'',balance:0,referral_balance:0,invested:0,earned:0,referral_code:rc,referred_by:refBy,is_banned:false,joined_at:new Date().toISOString()};
+  S.user={user_id:uid,username:un,email:S.sd.email||'',phone:S.sd.phone||'',avatar:'',balance:0,referral_balance:0,invested:0,earned:0,referral_code:rc,referred_by:S.sd.referredBy,is_banned:false,joined_at:new Date().toISOString()};
   S.plans=[];
   localStorage.setItem('t_pwd_'+uid,pw);
-  if(sb){try{await sb.from('users').insert([{user_id:uid,username:un,email:S.sd.email||'',phone:S.sd.phone||'',password:pw,balance:0,referral_balance:0,invested:0,referral_code:rc,referred_by:refBy,is_banned:false}]);}catch(e){}}
+  if(sb){try{await sb.from('users').insert([{user_id:uid,username:un,email:S.sd.email||'',phone:S.sd.phone||'',balance:0,referral_balance:0,invested:0,referral_code:rc,referred_by:S.sd.referredBy,is_banned:false}]);}catch(e){}}
   haptic('success');sound('success');
   S.tab='dashboard';save();render();
   setTimeout(()=>applySignupBonus(),800);
@@ -1258,51 +1228,37 @@ async function doLogin(){
     if(st&&st!==p){sound('error');return customAlert('Access Denied','Wrong password entered.\n\nPlease check your credentials or create a new account.','❌');}
     S.user=ex;S.plans=JSON.parse(localStorage.getItem('t_plans')||'[]');S.tab='dashboard';save();
     haptic('success');sound('success');
-    syncUser().then(render);render();return;
+    await syncUser();render();return;
   }
   if(sb){
     try{
       const r=await sb.from('users').select('*').eq('username',u).limit(1);
-      if(r.data&&r.data[0]){
-        const acc=r.data[0];
-        if(acc.password && acc.password!==p){
-          sound('error');
-          return customAlert('Access Denied','Wrong password entered.','❌');
-        }
-        S.user=acc;S.tab='dashboard';save();
-        if(acc.password)localStorage.setItem('t_pwd_'+acc.user_id,acc.password);
-        haptic('success');sound('success');
-        syncUser().then(render);render();return;
-      }
+      if(r.data&&r.data[0]){S.user=r.data[0];S.tab='dashboard';save();haptic('success');sound('success');await syncUser();render();return;}
     }catch(e){}
   }
   sound('error');
   customAlert('User Not Found','No account found with this username.\n\nPlease create a new account first.','⚠️');
 }
-
 function logout(){
   customConfirm('Logout','Are you sure you want to sign out?',()=>{
     localStorage.removeItem('t_user');localStorage.removeItem('t_plans');localStorage.removeItem('t_team');
-    localStorage.removeItem('t_last_team');localStorage.removeItem('t_last_tx');
-    S.user=null;S.plans=[];S.team=[];S.teamL2=[];S.teamL3=[];S.tab='signin';render();
+    S.user=null;S.plans=[];S.team=[];S.tab='signin';render();
   },'🚪');
 }
 
 function mainUI(){
   const u=S.user;
   const badge=getVIPBadge(Number(u.invested||0));
-  const newTeamCount=S.team.length > S.lastSeenTeamCount && S.lastSeenTeamCount > 0 ? (S.team.length - S.lastSeenTeamCount) : 0;
   return `<div class="min-h-screen pb-28 relative max-w-md mx-auto">
     <header style="padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:40;background:rgba(5,9,7,0.95);backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,255,102,0.08)">
       <h1 class="text-toxic text-3d" style="font-size:20px;font-weight:900;letter-spacing:0.25em;margin:0">TOXIC</h1>
       <div style="display:flex;align-items:center;gap:10px">
-        <div onclick="toggleINR()" class="inr-toggle">${S.inrMode?'₹ INR':'$ USD'}</div>
         <a href="${CFG.telegram}" target="_blank" style="text-decoration:none;padding:4px;display:flex;align-items:center;justify-content:center;color:#00a6ed">${TG_ICON_SVG}</a>
-        <div onclick="S.showNotifs=true;pushModalState();render()" style="position:relative;cursor:pointer;padding:4px">
+        <div onclick="S.showNotifs=true;render()" style="position:relative;cursor:pointer;padding:4px">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
           <div id="nb" class="nbadge" style="display:none">0</div>
         </div>
-        <div onclick="S.showProfile=true;pushModalState();render()" class="avatar" style="cursor:pointer;width:40px;height:40px;position:relative">
+        <div onclick="S.showProfile=true;render()" class="avatar" style="cursor:pointer;width:40px;height:40px;position:relative">
           ${userAvatar(u,36,13)}
           <div style="position:absolute;bottom:-4px;right:-6px;background:${badge.c};color:#000;font-size:9px;padding:1px 5px;border-radius:10px;font-weight:900;border:2px solid #050907">${badge.icon}</div>
         </div>
@@ -1312,34 +1268,20 @@ function mainUI(){
     <a href="${CFG.telegram}" target="_blank" style="position:fixed;bottom:180px;right:16px;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0088cc,#00a6ed);color:#fff;z-index:40;text-decoration:none;box-shadow:0 0 25px rgba(0,136,204,0.7);animation:tgPulse 2s infinite">${TG_ICON_SVG}</a>
     <a href="${CFG.support}" target="_blank" style="position:fixed;bottom:115px;right:16px;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#000;font-size:22px;z-index:40;text-decoration:none" class="bg-toxic glow-strong">💬</a>
     <nav class="nav"><div style="display:flex;justify-content:space-around;align-items:center">
-      ${nav('dashboard',t().dash,'M3 5h7v7H3zM14 5h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z',0)}
-      ${nav('plans',t().invest,'M3 17l6-6 4 4 8-8M21 7v6h-6',0)}
-      ${nav('active',t().active,'M3 7h18v14H3zM3 7l3-3h12l3 3M12 11v6M9 14h6',0)}
-      ${nav('wallet',t().wallet,'M21 12V7H5a2 2 0 010-4h14v4M3 5v14a2 2 0 002 2h16v-5M18 12a2 2 0 000 4h4v-4h-4z',0)}
-      ${nav('history',t().history,'M12 8v4l3 3M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8M3 3v5h5',0)}
-      ${nav('team',t().team,'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 7a4 4 0 100 8 4 4 0 000-8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75',newTeamCount)}
+      ${nav('dashboard',t().dash,'M3 5h7v7H3zM14 5h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z')}
+      ${nav('plans',t().invest,'M3 17l6-6 4 4 8-8M21 7v6h-6')}
+      ${nav('active',t().active,'M3 7h18v14H3zM3 7l3-3h12l3 3M12 11v6M9 14h6')}
+      ${nav('wallet',t().wallet,'M21 12V7H5a2 2 0 010-4h14v4M3 5v14a2 2 0 002 2h16v-5M18 12a2 2 0 000 4h4v-4h-4z')}
+      ${nav('history',t().history,'M12 8v4l3 3M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8M3 3v5h5')}
+      ${nav('team',t().team,'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 7a4 4 0 100 8 4 4 0 000-8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75')}
     </div></nav>
   </div>`;
 }
-function nav(id,l,path,badgeCount){
+function nav(id,l,path){
   const a=S.tab===id;
-  const badge=badgeCount>0?`<div class="nav-badge">${badgeCount>9?'9+':badgeCount}</div>`:'';
-  return `<div class="nav-item ${a?'active':''}" onclick="setTab('${id}')">${badge}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:22px;height:22px;stroke-width:2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${path}"/></svg><span style="font-size:9px;font-weight:700;letter-spacing:0.3px">${l}</span></div>`;
+  return `<div class="nav-item ${a?'active':''}" onclick="setTab('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:22px;height:22px;stroke-width:2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${path}"/></svg><span style="font-size:9px;font-weight:700;letter-spacing:0.3px">${l}</span></div>`;
 }
-function setTab(t2){
-  if(t2===S.tab&&t2!=='team')return;
-  S.tab=t2;S.selPlan=null;S.page=null;
-  if(t2==='history')S.historyLimit=CFG.historyPageSize;
-  if(t2==='team'){
-    S.lastSeenTeamCount=S.team.length;
-    localStorage.setItem('t_last_team',S.team.length);
-  }
-  sound('nav');
-  window.scrollTo(0,0);
-  render();
-  if(S.user)syncUser().then(render);
-}
-
+function setTab(t2){S.tab=t2;S.selPlan=null;if(t2==='history')S.historyLimit=CFG.historyPageSize;window.scrollTo(0,0);render();if(S.user)syncUser().then(render);}
 function renderTab(){
   if(S.tab==='dashboard')return dashUI();
   if(S.tab==='plans')return plansUI();
@@ -1369,6 +1311,13 @@ function tgCommunityCard(){
       <div style="font-size:22px;color:#00a6ed;font-weight:900">→</div>
     </div>
   </a>`;
+}
+
+function toggleINR(){
+  S.showInr=!S.showInr;
+  localStorage.setItem('t_inr',S.showInr?'1':'0');
+  haptic('light');sound('tap');
+  render();
 }
 
 function dashUI(){
@@ -1410,13 +1359,11 @@ function dashUI(){
     ${cryptoUI()}
     ${newsBannerUI()}
     ${tgCommunityCard()}
-    <div style="position:relative;width:100%;height:180px;border-radius:24px;overflow:hidden;border:1px solid rgba(0,255,102,0.2)">
+    <div style="position:relative;width:100%;height:120px;border-radius:20px;overflow:hidden;border:1px solid rgba(0,255,102,0.2)">
       <img src="${CFG.banner}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
       <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.2),rgba(5,9,7,0.96))"></div>
-      <div style="position:absolute;bottom:16px;left:20px;max-width:70%">
-        <p style="font-size:9px;font-weight:800;letter-spacing:4px;color:#00FF66;margin:0 0 2px;text-transform:uppercase;text-shadow:0 0 14px rgba(0,255,102,0.7)">${t().welcome}</p>
-        <h2 class="text-3d" style="font-size:22px;font-weight:900;margin:2px 0 0;line-height:1.1">${esc(u.username)}</h2>
-        <div style="display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:3px 10px;border-radius:12px;background:${badge.c}25;border:1px solid ${badge.c}66">
+      <div style="position:absolute;bottom:12px;left:16px"><p style="font-size:11px;font-weight:900;letter-spacing:5px;color:#00FF66;margin:0 0 3px;text-transform:uppercase;text-shadow:0 0 22px rgba(0,255,102,0.8),0 0 8px rgba(0,255,102,0.5)">${t().welcome}</p><h2 class="text-3d" style="font-size:20px;font-weight:900;margin:2px 0 0">${esc(u.username)}</h2>
+        <div style="display:inline-flex;align-items:center;gap:4px;margin-top:5px;padding:3px 10px;border-radius:12px;background:${badge.c}25;border:1px solid ${badge.c}66">
           <span style="font-size:11px">${badge.icon}</span><span style="font-size:10px;font-weight:800;color:${badge.c}">${badge.name}</span>
         </div>
       </div>
@@ -1426,10 +1373,13 @@ function dashUI(){
         <p style="font-size:10px;color:#10B981;font-weight:800;margin:0;letter-spacing:1.5px">💎 ${t().totalBal}</p>
         <div style="display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;display:inline-block" class="bg-toxic pdot"></span><span style="font-size:9px;font-weight:800" class="text-toxic">LIVE</span></div>
       </div>
-      <p id="bal" class="mono" style="font-size:38px;font-weight:900;margin:0 0 12px;letter-spacing:-1px">${S.inrMode?('₹'+(Number(u.balance)*CFG.inrRate).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})):('$'+fmt(u.balance))}</p>
+      <div style="display:flex;align-items:center;gap:10px;margin:0 0 12px;flex-wrap:wrap">
+        <p id="bal" class="mono" style="font-size:36px;font-weight:900;margin:0;letter-spacing:-1px">${S.showInr?'₹'+fmt(Number(u.balance||0)*CFG.inrRate):'$'+fmt(u.balance)}</p>
+        <button onclick="toggleINR()" style="padding:4px 10px;border-radius:10px;background:rgba(0,255,102,0.12);border:1px solid rgba(0,255,102,0.35);color:#00FF66;font-size:10px;font-weight:800;cursor:pointer">${S.showInr?'₹ INR':'$ USD'}</button>
+      </div>
       <div style="display:flex;align-items:flex-end;gap:6px;height:56px;margin:12px 4px">${bars}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
-        <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px"><p style="font-size:9px;color:#888;margin:0 0 4px;letter-spacing:0.5px">${t().refBal}</p><p id="refb" class="mono text-toxic" style="font-size:15px;font-weight:900;margin:0">${fmtMoney(u.referral_balance)}</p></div>
+        <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px"><p style="font-size:9px;color:#888;margin:0 0 4px;letter-spacing:0.5px">${t().refBal}</p><p id="refb" class="mono text-toxic" style="font-size:15px;font-weight:900;margin:0">$${fmt(u.referral_balance)}</p></div>
         <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px"><p style="font-size:9px;color:#888;margin:0 0 4px;letter-spacing:0.5px">${t().activePlans}</p><p id="pc" class="mono" style="font-size:15px;font-weight:900;margin:0">${ap.length}</p></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
@@ -1545,9 +1495,8 @@ function plansUI(){
   const cards=PLANS.map(p=>{
     const roi=((p.dly/p.d)*100).toFixed(1);
     const active=isActive(p.id);
-    const had=isEverHad(p.id);
-    const btn=active?'<button class="btn-invest locked" disabled>🔒 ALREADY ACTIVE</button>':(had?'<button class="btn-invest locked" disabled>✓ USED</button>':`<button onclick="event.stopPropagation();quickInvest('${p.id}')" class="btn-invest">⚡ INVEST NOW</button>`);
-    return `<div class="plan-card ${(active||had)?'locked':''}" onclick="${(active||had)?'':`openPlan('${p.id}')`}">
+    const btn=active?'<button class="btn-invest locked" disabled>🔒 ALREADY ACTIVE</button>':`<button onclick="event.stopPropagation();quickInvest('${p.id}')" class="btn-invest">⚡ INVEST NOW</button>`;
+    return `<div class="plan-card ${active?'locked':''}" onclick="${active?'':`openPlan('${p.id}')`}">
       <div style="display:flex;justify-content:space-between;margin-bottom:10px;position:relative;z-index:1">
         <p style="font-size:9px;color:#888;font-weight:800;margin:0;letter-spacing:1px">PLAN</p>
         <div style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:${p.c}18;border:1px solid ${p.c}55"><span style="color:${p.c};font-size:11px">→</span></div>
@@ -1571,18 +1520,14 @@ function plansUI(){
       <p style="font-size:12px;color:#666;margin:0">40-day cycle · Daily returns</p>
       <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;align-items:center">
         <p style="font-size:10px;color:#888;margin:0;letter-spacing:0.5px">AVAILABLE BALANCE</p>
-        <p class="mono text-toxic" style="font-size:16px;font-weight:900;margin:0">${fmtMoney(S.user.balance)}</p>
+        <p class="mono text-toxic" style="font-size:16px;font-weight:900;margin:0">$${fmt(S.user.balance)}</p>
       </div>
     </div>
     ${calcUI()}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">${cards}</div>
   </div>`;
 }
-function openPlan(id){
-  if(isActive(id))return customAlert('Plan Active','This plan is already currently running.','🔒');
-  if(isEverHad(id))return customAlert('Already Used','You have already used this plan once.\n\nEach plan can only be purchased once per account.','🔒');
-  S.selPlan=PLANS.find(p=>p.id===id);pushModalState();render();
-}
+function openPlan(id){if(isActive(id))return customAlert('Plan Active','This plan is already currently running.','🔒');S.selPlan=PLANS.find(p=>p.id===id);render();}
 function closePlan(){S.selPlan=null;render();}
 function planModal(){
   if(!S.selPlan)return '';
@@ -1606,7 +1551,7 @@ function planModal(){
         <div style="display:flex;justify-content:space-between;padding:13px;background:rgba(0,0,0,0.45);border-radius:12px;font-size:12px"><span style="color:#888">💰 Deposit</span><span class="mono" style="font-weight:800">$${p.d.toFixed(2)}</span></div>
         <div style="display:flex;justify-content:space-between;padding:13px;background:rgba(0,0,0,0.45);border-radius:12px;font-size:12px"><span style="color:#888">📈 Daily</span><span class="mono text-toxic" style="font-weight:800">$${p.dly.toFixed(2)}</span></div>
         <div style="display:flex;justify-content:space-between;padding:13px;background:rgba(0,0,0,0.45);border-radius:12px;font-size:12px"><span style="color:#888">⚡ Duration</span><span class="mono" style="font-weight:800">40 Days</span></div>
-        <div style="display:flex;justify-content:space-between;padding:13px;background:rgba(0,0,0,0.45);border-radius:12px;font-size:12px"><span style="color:#888">🏦 Balance</span><span class="mono" style="font-weight:800;color:${can?'#00FF66':'#FBBF24'}">${fmtMoney(S.user.balance)}</span></div>
+        <div style="display:flex;justify-content:space-between;padding:13px;background:rgba(0,0,0,0.45);border-radius:12px;font-size:12px"><span style="color:#888">🏦 Balance</span><span class="mono" style="font-weight:800;color:${can?'#00FF66':'#FBBF24'}">$${fmt(S.user.balance)}</span></div>
       </div>
       ${btn}
       <button onclick="closePlan()" style="width:100%;padding:13px;border-radius:16px;background:rgba(255,255,255,0.05);color:#9CA3AF;font-size:12px;font-weight:800">Cancel</button>
@@ -1615,10 +1560,9 @@ function planModal(){
 }
 function quickInvest(id){
   if(isActive(id))return customAlert('Plan Active','This plan is already active.','🔒');
-  if(isEverHad(id))return customAlert('Already Used','You have already used this plan once.','🔒');
   const p=PLANS.find(x=>x.id===id);if(!p)return;
   if(Number(S.user.balance)<p.d){
-    customConfirm('Add Funds?',`Required: $${p.d.toFixed(2)}\nCurrent: ${fmtMoney(S.user.balance)}\n\nWould you like to open your wallet to deposit?`,()=>setTab('wallet'),'💰');
+    customConfirm('Add Funds?',`Required: $${p.d.toFixed(2)}\nCurrent: $${fmt(S.user.balance)}\n\nWould you like to open your wallet to deposit?`,()=>setTab('wallet'),'💰');
     return;
   }
   invest(id);
@@ -1627,29 +1571,16 @@ function quickInvest(id){
 async function invest(id){
   const p=PLANS.find(x=>x.id===id);if(!p)return;
   if(isActive(id))return customAlert('Plan Active','This plan is already active.','🔒');
-  if(isEverHad(id))return customAlert('Already Used','You have already used this plan once.','🔒');
-
+  if(Number(S.user.balance)<p.d)return customAlert('Low Balance','Insufficient balance.\n\nRequired: $'+p.d.toFixed(2)+'\nCurrent: $'+fmt(S.user.balance),'💰');
   if(sb){
     try{
-      const dup=await sb.from('user_plans').select('id').eq('user_id',S.user.user_id).eq('plan_id',id).limit(1);
+      const dup=await sb.from('user_plans').select('id').eq('user_id',S.user.user_id).eq('plan_id',id).lt('days_collected',40).limit(1);
       if(dup.data && dup.data.length>0){
         sound('error');
-        return customAlert('Already Owned','This plan is already in your account.','🔒');
+        return customAlert('Already Active','You already have this plan running.\n\nWait for it to complete first.','🔒');
       }
-      const fresh=await sb.from('users').select('balance').eq('user_id',S.user.user_id).limit(1);
-      if(fresh.data&&fresh.data[0]){
-        const srvBal=Number(fresh.data[0].balance||0);
-        if(srvBal < p.d){
-          sound('error');
-          return customAlert('Low Balance','Server balance insufficient.\n\nAvailable: $'+fmt(srvBal)+'\nRequired: $'+p.d.toFixed(2),'💰');
-        }
-        S.user.balance=srvBal;
-      }
-    }catch(e){console.warn('Pre-invest check failed:',e);}
+    }catch(e){}
   }
-
-  if(Number(S.user.balance)<p.d)return customAlert('Low Balance','Insufficient balance.\n\nRequired: $'+p.d.toFixed(2)+'\nCurrent: $'+fmt(S.user.balance),'💰');
-
   const now=new Date();
   let np={user_id:S.user.user_id,username:S.user.username,plan_id:p.id,plan_name:p.n,deposit:p.d,daily:p.dly,total:p.t,days_collected:0,status:'active',started_at:now.toISOString(),expires_at:new Date(now.getTime()+40*DAY).toISOString()};
   S.user.balance=Number(S.user.balance)-p.d;
@@ -1673,15 +1604,14 @@ async function distributeReferralCommissions(planAmount,planName){
   if(!sb||!S.user||!S.user.referred_by)return;
   const COMMISSIONS=[0.10,0.05,0.02,0.01,0.01,0.01,0.01,0.01,0.01,0.01];
   let currentRefCode=S.user.referred_by;
-  let level=1;
-  const visited=new Set([S.user.referral_code]);
+  let level=1;const visited=[];
   while(currentRefCode && level<=10){
-    if(visited.has(currentRefCode))break;
-    visited.add(currentRefCode);
     try{
       const res=await sb.from('users').select('user_id,username,referral_code,referral_balance,referred_by').eq('referral_code',currentRefCode).limit(1);
       if(!res.data||!res.data[0])break;
       const upline=res.data[0];
+      if(visited.includes(upline.user_id))break;
+      visited.push(upline.user_id);
       const pct=COMMISSIONS[level-1]||0;
       const comm=planAmount*pct;
       if(comm>0){
@@ -1741,13 +1671,61 @@ function activeUI(){
   }).join('')}</div>`;
 }
 
+function loadSavedAddresses(){
+  const box=$('savedAddrList');if(!box)return;
+  const list=S.savedAddresses.filter(a=>a.method===S.wdMethod);
+  if(list.length===0){box.innerHTML='';return;}
+  box.innerHTML=`<p style="font-size:9px;color:#888;margin:0 0 6px;letter-spacing:1px">💾 SAVED ADDRESSES</p>`+
+    list.map((a,i)=>`<div style="display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,0.45);border:1px solid rgba(0,255,102,0.15);border-radius:10px;padding:8px 12px;margin-bottom:6px">
+      <span class="mono" style="font-size:10px;color:#ccc;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-right:8px">${esc(a.addr)} <span style="color:#00FF66">[${esc(a.net||'-')}]</span></span>
+      <div style="display:flex;gap:6px;flex-shrink:0">
+        <button onclick="useSavedAddr(${i})" style="background:#00FF66;color:#000;border:none;padding:4px 10px;border-radius:8px;font-size:10px;font-weight:800;cursor:pointer">USE</button>
+        <button onclick="delSavedAddr(${i})" style="background:rgba(239,68,68,0.15);color:#EF4444;border:none;padding:4px 8px;border-radius:8px;font-size:10px;font-weight:800;cursor:pointer">×</button>
+      </div>
+    </div>`).join('');
+}
+function useSavedAddr(i){
+  const list=S.savedAddresses.filter(a=>a.method===S.wdMethod);
+  const a=list[i];if(!a)return;
+  if($('wdAddr'))$('wdAddr').value=a.addr;
+  if(a.net&&a.net!=='UPI')pickNetwork(a.net);
+  haptic('success');toast('✅ Address loaded');
+}
+function delSavedAddr(i){
+  const list=S.savedAddresses.filter(a=>a.method===S.wdMethod);
+  const a=list[i];if(!a)return;
+  const idx=S.savedAddresses.indexOf(a);
+  S.savedAddresses.splice(idx,1);
+  localStorage.setItem('t_saved_addr',JSON.stringify(S.savedAddresses));
+  haptic('medium');loadSavedAddresses();
+}
+function saveAddrIfChecked(addr,net,method){
+  if(!$('saveAddrChk')||!$('saveAddrChk').checked)return;
+  const exists=S.savedAddresses.find(a=>a.addr===addr&&a.method===method);
+  if(exists)return;
+  S.savedAddresses.unshift({addr,net,method});
+  if(S.savedAddresses.length>10)S.savedAddresses=S.savedAddresses.slice(0,10);
+  localStorage.setItem('t_saved_addr',JSON.stringify(S.savedAddresses));
+}
+function pickNetwork(n){
+  S.usdtNetwork=n;haptic('light');
+  const b20=$('net-BEP20'),trc=$('net-TRC20'),inp=$('wdAddr');
+  if(!b20||!trc)return;
+  if(n==='BEP20'){
+    b20.classList.add('active');trc.classList.remove('active');
+    if(inp)inp.placeholder='Enter USDT BEP20 Address (0x...)';
+  } else {
+    trc.classList.add('active');b20.classList.remove('active');
+    if(inp)inp.placeholder='Enter USDT TRC20 Address (T...)';
+  }
+}
+
 function walletUI(){
   const upiQR=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent('upi://pay?pa='+CFG.upi+'&pn='+CFG.upiName+'&cu=INR')}`;
   const m=['UPI','USDT BEP20','USDT TRC20','BTC BEP20'];
   const btns=m.map((x,i)=>`<button onclick="selM(${i})" id="m-${i}" style="padding:8px 16px;border-radius:999px;font-size:12px;font-weight:800;border:none;cursor:pointer;white-space:nowrap;transition:all 0.2s;${i===0?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.05);color:#888'}">${x}</button>`).join('');
   const todayWd=getTodayWdCount();
-  const savedUsdt=S.savedAddresses[S.wdNetwork]||'';
-  const savedUpi=S.savedAddresses['UPI']||'';
+  const netActive=S.usdtNetwork==='BEP20';
   return `<div style="display:flex;flex-direction:column;gap:16px">
     ${PROMO_CODES.length>0?`
     <div class="promo-card">
@@ -1790,15 +1768,9 @@ function walletUI(){
         <p style="font-size:11px;color:#FBBF24;font-weight:700;margin:0">📊 Today's withdrawals: ${todayWd} / ${CFG.maxDailyWd}</p>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
-        <button id="wdTabUsdt" onclick="selWdMethod('USDT')" style="padding:10px;border-radius:12px;font-size:12px;font-weight:800;border:none;cursor:pointer;background:${S.wdMethod==='USDT'?'#00FF66':'rgba(255,255,255,0.05)'};color:${S.wdMethod==='USDT'?'#000':'#888'}">USDT (Crypto)</button>
-        <button id="wdTabUpi" onclick="selWdMethod('UPI')" style="padding:10px;border-radius:12px;font-size:12px;font-weight:800;border:none;cursor:pointer;background:${S.wdMethod==='UPI'?'#00FF66':'rgba(255,255,255,0.05)'};color:${S.wdMethod==='UPI'?'#000':'#888'}">UPI (INR)</button>
+        <button id="wdTabUsdt" onclick="selWdMethod('USDT')" style="padding:10px;border-radius:12px;font-size:12px;font-weight:800;border:none;cursor:pointer;background:#00FF66;color:#000">USDT (Crypto)</button>
+        <button id="wdTabUpi" onclick="selWdMethod('UPI')" style="padding:10px;border-radius:12px;font-size:12px;font-weight:800;border:none;cursor:pointer;background:rgba(255,255,255,0.05);color:#888">UPI (INR)</button>
       </div>
-      ${S.wdMethod==='USDT'?`
-      <p style="font-size:10px;color:#888;font-weight:800;margin:0 0 8px;letter-spacing:1px">NETWORK</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
-        <button onclick="selNetwork('BEP20')" class="net-btn ${S.wdNetwork==='BEP20'?'active':''}">🟡 BEP20 (BSC)</button>
-        <button onclick="selNetwork('TRC20')" class="net-btn ${S.wdNetwork==='TRC20'?'active':''}">🔴 TRC20 (Tron)</button>
-      </div>`:''}
       <input type="number" id="wdAmt" class="inp" placeholder="Enter Amount in USD (Min $${CFG.minWd})" style="margin-bottom:12px" oninput="calcWd()">
       <div id="feeBox" style="display:none;background:rgba(0,0,0,0.45);border-radius:14px;padding:12px;margin-bottom:12px;font-size:11px;color:#ccc">
         <div style="display:flex;justify-content:space-between"><span>Fee (${CFG.fee}%)</span><span id="feeVal" class="mono">$0.00</span></div>
@@ -1807,22 +1779,19 @@ function walletUI(){
           <span style="color:#FFD700">Receive in UPI</span><span id="netInrVal" class="mono" style="color:#FFD700">₹0.00</span>
         </div>
       </div>
-      <div id="wdInputWrapper">
-        <input type="text" id="wdAddr" class="inp" placeholder="${S.wdMethod==='UPI'?'Enter your UPI ID (e.g. mobile@upi)':'Enter '+(S.wdNetwork||'BEP20')+' Address'}" style="margin-bottom:8px" value="${S.wdMethod==='UPI'?esc(savedUpi):esc(savedUsdt)}">
-        ${S.wdMethod==='UPI'?(savedUpi?`<button onclick="useSaved('UPI')" style="font-size:10px;color:#00FF66;background:none;border:none;font-weight:700;cursor:pointer;margin-bottom:12px">✓ Use saved UPI</button>`:''):(savedUsdt?`<button onclick="useSaved('${S.wdNetwork}')" style="font-size:10px;color:#00FF66;background:none;border:none;font-weight:700;cursor:pointer;margin-bottom:12px">✓ Use saved ${S.wdNetwork} address</button>`:'')}
+      <div id="networkPicker" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <button type="button" onclick="pickNetwork('BEP20')" id="net-BEP20" class="netbtn ${netActive?'active':''}">🟡 BEP20 (BSC)</button>
+        <button type="button" onclick="pickNetwork('TRC20')" id="net-TRC20" class="netbtn ${!netActive?'active':''}">🔴 TRC20 (Tron)</button>
       </div>
+      <input type="text" id="wdAddr" class="inp" placeholder="${netActive?'Enter USDT BEP20 Address (0x...)':'Enter USDT TRC20 Address (T...)'}" style="margin-bottom:10px">
+      <div id="savedAddrList" style="margin-bottom:12px"></div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:#ccc;padding:10px;background:rgba(0,0,0,0.4);border-radius:10px;cursor:pointer;margin-bottom:12px">
+        <input type="checkbox" id="saveAddrChk" style="accent-color:#00FF66"> 💾 Save this address for future
+      </label>
       <p style="font-size:10px;color:#666;margin:0 0 12px">Min $${CFG.minWd} · ${CFG.fee}% fee · 1 USD = ₹${CFG.inrRate} · Max ${CFG.maxDailyWd}/day</p>
       <button onclick="subWd()" style="width:100%;padding:16px;border-radius:16px;font-size:14px;font-weight:800;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;cursor:pointer">Request Withdrawal</button>
     </div>
   </div>`;
-}
-
-function selNetwork(net){S.wdNetwork=net;haptic('light');sound('tap');render();}
-function useSaved(net){const addr=S.savedAddresses[net]||'';const inp=$('wdAddr');if(inp)inp.value=addr;haptic('light');sound('tap');}
-function validateCryptoAddress(addr,network){
-  if(network==='BEP20')return /^0x[a-fA-F0-9]{40}$/.test(addr);
-  if(network==='TRC20')return /^T[a-zA-Z0-9]{33}$/.test(addr);
-  return addr.length>15;
 }
 
 async function redeemCode(){
@@ -1831,6 +1800,7 @@ async function redeemCode(){
   const code=inp.value.trim().toUpperCase();
   if(!code)return customAlert('Enter Code','Please enter a promo code.','⚠️');
   if(!sb)return customAlert('Offline','Cannot connect to server. Try again.','⚠️');
+
   try{
     const dup=await sb.from('promo_redemptions').select('id').eq('code',code).eq('user_id',S.user.user_id).limit(1);
     if(dup.data && dup.data.length>0){
@@ -1838,24 +1808,33 @@ async function redeemCode(){
       return customAlert('Already Used','You have already redeemed this code.\n\nEach code can be used only once per user.','ℹ️');
     }
   }catch(e){}
+
   let promo=null;
   try{
     const r=await sb.from('promo_codes').select('*').eq('code',code).eq('is_active',true).limit(1);
     if(r.data && r.data[0])promo=r.data[0];
   }catch(e){}
-  if(!promo){sound('error');return customAlert('Invalid Code','This promo code is not valid or has expired.\n\nPlease check and try again.','❌');}
+
+  if(!promo){
+    sound('error');
+    return customAlert('Invalid Code','This promo code is not valid or has expired.\n\nPlease check and try again.','❌');
+  }
+
   if(Number(promo.used_count||0) >= Number(promo.max_uses||100)){
     sound('error');
     return customAlert('Code Expired','This promo code has reached its maximum uses.','⏳');
   }
+
   const amt=Number(promo.amount||0);
   S.user.balance=Number(S.user.balance||0)+amt;
   S.tx.unshift({type:'bonus',amount:amt,status:'success',method:'Promo · '+code,date:new Date().toISOString()});
+
   try{
     await sb.from('promo_redemptions').insert([{code:code,user_id:S.user.user_id,amount:amt}]);
     await sb.from('promo_codes').update({used_count:Number(promo.used_count||0)+1}).eq('id',promo.id);
     await sb.from('users').update({balance:S.user.balance}).eq('user_id',S.user.user_id);
   }catch(e){console.warn('Redeem save error:',e);}
+
   save();
   inp.value='';
   haptic('success');sound('coin');launchConfetti();
@@ -1864,7 +1843,25 @@ async function redeemCode(){
   render();
 }
 
-function selWdMethod(m){S.wdMethod=m;haptic('light');sound('tap');render();}
+function selWdMethod(m){
+  S.wdMethod=m;
+  const bUsdt=$('wdTabUsdt');const bUpi=$('wdTabUpi');const inp=$('wdAddr');
+  const np=$('networkPicker');
+  if(m==='USDT'){
+    if(bUsdt){bUsdt.style.background='#00FF66';bUsdt.style.color='#000';}
+    if(bUpi){bUpi.style.background='rgba(255,255,255,0.05)';bUpi.style.color='#888';}
+    if(inp)inp.placeholder=S.usdtNetwork==='BEP20'?"Enter USDT BEP20 Address (0x...)":"Enter USDT TRC20 Address (T...)";
+    if(np)np.style.display='grid';
+    if($('upiCalcRow'))$('upiCalcRow').style.display='none';
+  } else {
+    if(bUpi){bUpi.style.background='#00FF66';bUpi.style.color='#000';}
+    if(bUsdt){bUsdt.style.background='rgba(255,255,255,0.05)';bUsdt.style.color='#888';}
+    if(inp)inp.placeholder="Enter your UPI ID (e.g. mobile@upi)";
+    if(np)np.style.display='none';
+    calcWd();
+  }
+  setTimeout(loadSavedAddresses,50);
+}
 
 let sM=0;
 function selM(i){
@@ -1911,9 +1908,11 @@ async function subDep(){
   if(usdAmt < CFG.minDep)return customAlert('Minimum Limit',`Minimum deposit is $${CFG.minDep} USD (₹${CFG.minDep*CFG.inrRate} INR).\n\nYour amount: $${usdAmt.toFixed(2)}`,'⚠️');
   if(isC&&!ref)return customAlert('Missing Info','Please enter Transaction Hash.','⚠️');
   if(!isC&&utr.length!==12)return customAlert('Invalid UTR','Please enter a valid 12-digit UTR Number.\n\nExample: 123456789012','⚠️');
+
   const localId='dep_'+Date.now();
   S.tx.unshift({id:localId,type:'deposit',amount:usdAmt,method:method,ref:ref,status:'pending',date:new Date().toISOString()});
   save();render();
+
   if(sb){
     try{
       let ins=await sb.from('deposits').insert([{user_id:S.user.user_id,username:S.user.username,amount:usdAmt,method:method,ref:ref,status:'pending'}]);
@@ -1926,7 +1925,7 @@ async function subDep(){
       S.tx=S.tx.filter(x=>x.id!==localId);
       save();render();
       haptic('error');sound('error');
-      customAlert('Deposit Failed','Server error: '+(e.message||e)+'\n\nPlease check your internet and try again.','❌');
+      showDetailedError('Deposit Failed','Server error: '+(e.message||e),'Please check your internet and try again.','❌');
       return;
     }
   }
@@ -1945,37 +1944,33 @@ async function subWd(){
   const amt=parseFloat($('wdAmt').value);
   const addr=$('wdAddr').value.trim();
   const method=S.wdMethod||'USDT';
-  const network=method==='USDT'?S.wdNetwork:'UPI';
   if(!amt||amt<CFG.minWd)return customAlert('Minimum Limit',`Minimum withdrawal is $${CFG.minWd}.\n\nYour amount: $${(amt||0).toFixed(2)}`,'⚠️');
-  if(!addr)return customAlert('Required',method==='UPI'?'Please enter your UPI ID.\n\nExample: name@upi':'Please enter your USDT address.','⚠️');
-  if(method==='USDT'){
-    if(!validateCryptoAddress(addr,network)){
-      sound('error');
-      return customAlert('Invalid Address',`This address does not look like a valid ${network} address.\n\n${network==='BEP20'?'BEP20: starts with 0x and 42 characters.':'TRC20: starts with T and 34 characters.'}\n\nPlease check and try again.`,'❌');
-    }
-  }
-  if(Number(S.user.balance)<amt)return customAlert('Insufficient Funds',`Your balance: ${fmtMoney(S.user.balance)}\nRequired: $${amt.toFixed(2)}\n\nPlease deposit or earn more.`,'⚠️');
+  if(!addr)return customAlert('Required',method==='UPI'?'Please enter your UPI ID.\n\nExample: name@upi':'Please enter USDT address.\n\nExample: 0x...','⚠️');
+  if(Number(S.user.balance)<amt)return customAlert('Insufficient Funds',`Your balance: $${fmt(S.user.balance)}\nRequired: $${amt.toFixed(2)}\n\nPlease deposit or earn more.`,'⚠️');
+
   const todayCount=getTodayWdCount();
   if(todayCount >= CFG.maxDailyWd){
     return customAlert('Daily Limit Reached',`You can only make ${CFG.maxDailyWd} withdrawal requests per day.\n\nToday: ${todayCount}/${CFG.maxDailyWd}\n\nPlease try again tomorrow.`,'⏳');
   }
+
   const fee=amt*CFG.fee/100;const net=amt-fee;
   S.user.balance-=amt;
-  S.savedAddresses[method==='USDT'?network:'UPI']=addr;
-  localStorage.setItem('t_saved_addr',JSON.stringify(S.savedAddresses));
+
+  saveAddrIfChecked(addr,S.wdMethod==='USDT'?S.usdtNetwork:'UPI',S.wdMethod);
 
   const localId='wd_'+Date.now();
-  S.tx.unshift({id:localId,type:'withdrawal',amount:net,fullAmount:amt,method:method+(method==='USDT'?' '+network:''),address:addr,status:'pending',date:new Date().toISOString()});
+  const addrFull=method==='USDT'?`${method} ${S.usdtNetwork}: ${addr}`:addr;
+  S.tx.unshift({id:localId,type:'withdrawal',amount:net,method:method,address:addrFull,status:'pending',date:new Date().toISOString()});
   save();render();
+
   if(sb){
     try{
-      const methodStr=method==='USDT'?`USDT ${network}`:'UPI';
-      let ins=await sb.from('withdrawals').insert([{user_id:S.user.user_id,username:S.user.username,amount:net,address:`${methodStr}: ${addr}`,method:methodStr,status:'pending'}]);
+      let ins=await sb.from('withdrawals').insert([{user_id:S.user.user_id,username:S.user.username,amount:net,address:addrFull,method:method,status:'pending'}]);
       if(ins.error && String(ins.error.message||'').toLowerCase().includes('method')){
-        ins=await sb.from('withdrawals').insert([{user_id:S.user.user_id,username:S.user.username,amount:net,address:`${methodStr}: ${addr}`,status:'pending'}]);
+        ins=await sb.from('withdrawals').insert([{user_id:S.user.user_id,username:S.user.username,amount:net,address:addrFull,status:'pending'}]);
       }
       if(ins.error) throw ins.error;
-      const upd=await sb.from('users').update({balance:S.user.balance,saved_wd_address:JSON.stringify(S.savedAddresses)}).eq('user_id',S.user.user_id);
+      const upd=await sb.from('users').update({balance:S.user.balance}).eq('user_id',S.user.user_id);
       if(upd.error) console.warn('Balance sync warning:', upd.error);
     }catch(e){
       console.error('Withdrawal error:',e);
@@ -1983,7 +1978,7 @@ async function subWd(){
       S.tx=S.tx.filter(x=>x.id!==localId);
       save();render();
       haptic('error');sound('error');
-      customAlert('Withdrawal Failed','Server error: '+(e.message||e)+'\n\nYour balance has been refunded. Please try again.','❌');
+      showDetailedError('Withdrawal Failed','Server error: '+(e.message||e),'Your balance has been refunded. Please try again.','❌');
       return;
     }
   }
@@ -1991,7 +1986,7 @@ async function subWd(){
   haptic('success');sound('success');
   const note=method==='UPI'?`₹${(net*CFG.inrRate).toFixed(2)} INR`:`$${fmt(net)}`;
   const remaining=CFG.maxDailyWd-(todayCount+1);
-  customAlert('Withdrawal Requested!',`Method: ${method}${method==='USDT'?' ('+network+')':''}\nAddress: ${addr.slice(0,12)}...\nAmount: $${amt.toFixed(2)}\nFee: $${fee.toFixed(2)}\nNet Receive: ${note}\n\nToday remaining: ${remaining}/${CFG.maxDailyWd}\nProcessing: 1-24 hours`,'✅');
+  customAlert('Withdrawal Requested!',`Method: ${method}\nAmount: $${amt.toFixed(2)}\nFee: $${fee.toFixed(2)}\nNet Receive: ${note}\n\nToday remaining: ${remaining}/${CFG.maxDailyWd}\nProcessing: 1-24 hours`,'✅');
 }
 
 async function manualRefresh(){
@@ -2010,25 +2005,23 @@ function historyUI(){
   let allTx=S.tx.filter(x=>x.type==='deposit'||x.type==='withdrawal');
   if(S.txFilter==='deposit')allTx=allTx.filter(x=>x.type==='deposit');
   else if(S.txFilter==='withdrawal')allTx=allTx.filter(x=>x.type==='withdrawal');
+  else if(S.txFilter==='pending')allTx=allTx.filter(x=>(x.status||'').toLowerCase()==='pending');
   const tx=allTx.slice(0,S.historyLimit);
   const hasMore=allTx.length > S.historyLimit;
 
-  const filters=`
-    <div style="display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px" class="hide-scroll">
-      <button onclick="setTxFilter('all')" class="f-tab ${S.txFilter==='all'?'active':''}">ALL</button>
-      <button onclick="setTxFilter('deposit')" class="f-tab ${S.txFilter==='deposit'?'active':''}">💳 DEPOSITS</button>
-      <button onclick="setTxFilter('withdrawal')" class="f-tab ${S.txFilter==='withdrawal'?'active':''}">💸 WITHDRAWALS</button>
-    </div>`;
+  const filterBar=`<div style="display:flex;gap:6px;margin-bottom:10px;overflow-x:auto" class="hide-scroll">
+    ${['all','deposit','withdrawal','pending'].map(f=>`<button onclick="S.txFilter='${f}';render()" style="padding:8px 14px;border-radius:20px;font-size:11px;font-weight:800;white-space:nowrap;border:none;cursor:pointer;${S.txFilter===f?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.06);color:#888'}">${f==='all'?'📋 All':f==='deposit'?'💳 Deposits':f==='withdrawal'?'💸 Withdrawals':'⏳ Pending'}</button>`).join('')}
+  </div>`;
 
   const h=`<div class="glass-card" style="text-align:center;margin-bottom:12px;position:relative">
     <button onclick="manualRefresh()" style="position:absolute;top:10px;right:10px;background:rgba(0,255,102,0.12);border:1px solid rgba(0,255,102,0.35);color:#00FF66;border-radius:10px;padding:6px 12px;font-size:10px;font-weight:800;cursor:pointer">🔄 REFRESH</button>
     <p style="font-size:10px;color:#888;margin:0 0 8px;letter-spacing:1.5px">TOTAL TRANSACTIONS</p>
     <p class="mono" style="font-size:34px;font-weight:900;margin:0">${allTx.length}</p>
     <p style="font-size:9px;color:#00FF66;margin:8px 0 0;font-weight:700">● LIVE · Auto-updates every 5s</p>
-  </div>${filters}`;
+  </div>`;
 
   if(allTx.length===0){
-    return h+`<div class="glass-card" style="text-align:center;padding:52px 20px"><div style="font-size:42px;opacity:0.4;margin-bottom:14px">📋</div><p style="font-weight:900;font-size:17px;margin:0 0 6px">No transactions yet</p><p style="font-size:12px;color:#888;margin:0">Your ${S.txFilter==='all'?'deposit & withdrawal':S.txFilter} history will appear here</p></div>`;
+    return h+filterBar+`<div class="glass-card" style="text-align:center;padding:52px 20px"><div style="font-size:42px;opacity:0.4;margin-bottom:14px">📋</div><p style="font-weight:900;font-size:17px;margin:0 0 6px">No transactions yet</p><p style="font-size:12px;color:#888;margin:0">Your deposit & withdrawal history will appear here</p></div>`;
   }
 
   const list=tx.map(x=>{
@@ -2077,10 +2070,13 @@ function historyUI(){
   } else if(allTx.length > CFG.historyPageSize){
     loadMoreHTML=`<p style="text-align:center;font-size:11px;color:#666;margin:14px 0 0">— End of history —</p>`;
   }
-  return h+list+loadMoreHTML;
+  return h+filterBar+list+loadMoreHTML;
 }
-function setTxFilter(f){S.txFilter=f;S.historyLimit=CFG.historyPageSize;haptic('light');sound('tap');render();}
-function loadMoreHistory(){haptic('light');S.historyLimit += CFG.historyPageSize;render();}
+function loadMoreHistory(){
+  haptic('light');
+  S.historyLimit += CFG.historyPageSize;
+  render();
+}
 
 function referralRaceUI(){
   const myCount=(S.team||[]).length;
@@ -2138,88 +2134,107 @@ function teamMilestonesUI(){
   </div>`;
 }
 
-function teamTreeUI(){
-  const l1=S.team||[],l2=S.teamL2||[],l3=S.teamL3||[];
-  const tabs=`
-    <div style="display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px" class="hide-scroll">
-      <button onclick="setTeamView('l1')" class="f-tab ${S.teamView==='l1'?'active':''}">L1 · ${l1.length}</button>
-      <button onclick="setTeamView('l2')" class="f-tab ${S.teamView==='l2'?'active':''}">L2 · ${l2.length}</button>
-      <button onclick="setTeamView('l3')" class="f-tab ${S.teamView==='l3'?'active':''}">L3 · ${l3.length}</button>
-      <button onclick="setTeamView('tree')" class="f-tab ${S.teamView==='tree'?'active':''}">🌳 TREE</button>
+function commissionHistoryUI(){
+  const comms=(S.notifs||[]).filter(n=>(n.title||'').toLowerCase().includes('commission')||(n.title||'').toLowerCase().includes('level'));
+  if(comms.length===0){
+    return `<div class="glass-card" style="text-align:center;padding:28px 16px">
+      <p style="font-size:28px;opacity:0.4;margin:0 0 8px">💎</p>
+      <p style="font-size:13px;font-weight:800;margin:0 0 4px">No Commissions Yet</p>
+      <p style="font-size:11px;color:#888;margin:0">Invite friends to start earning</p>
     </div>`;
-  let content='';
-  if(S.teamView==='tree'){
-    if(l1.length===0)content=`<p style="text-align:center;color:#888;padding:20px;font-size:12px">No team members yet.</p>`;
-    else{
-      content=l1.map(m=>{
-        const kids=l2.filter(x=>x.referred_by===m.referral_code);
-        return `<div style="margin-bottom:10px">
-          <div class="tree-node level-1">
-            <div style="width:26px;height:26px;border-radius:50%;background:rgba(0,255,102,0.15);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:11px;color:#00FF66">${(m.username||'U')[0].toUpperCase()}</div>
-            <div style="flex:1"><p style="font-weight:900;font-size:12px;margin:0">${esc(m.username)}</p><p style="font-size:9px;color:#888;margin:2px 0 0">Invested: $${fmt(m.invested||0)}</p></div>
-          </div>
-          ${kids.map(k=>{
-            const gk=l3.filter(x=>x.referred_by===k.referral_code);
-            return `<div class="tree-node level-2">
-              <div style="width:22px;height:22px;border-radius:50%;background:rgba(16,185,129,0.15);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:10px;color:#10B981">${(k.username||'U')[0].toUpperCase()}</div>
-              <div style="flex:1"><p style="font-weight:800;font-size:11px;margin:0">${esc(k.username)}</p></div>
-              ${gk.length>0?`<span style="font-size:9px;color:#22D3EE">+${gk.length} more</span>`:''}
-            </div>`;
-          }).join('')}
-        </div>`;
-      }).join('');
-    }
-  } else {
-    const arr=S.teamView==='l1'?l1:S.teamView==='l2'?l2:l3;
-    if(arr.length===0){
-      content=`<div style="text-align:center;padding:24px 10px;background:rgba(0,0,0,0.3);border-radius:14px;border:1px dashed rgba(0,255,102,0.15)"><p style="font-size:12px;color:#888;margin:0">No members at this level yet.</p></div>`;
-    } else {
-      content=arr.map(m=>{
-        const joinD=m.joined_at?String(m.joined_at).slice(0,10):'Recent';
-        const inv=Number(m.invested||0);
-        const isPlanActive=inv>0;
-        return `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:14px;background:rgba(0,0,0,0.45);border:1px solid ${isPlanActive?'rgba(0,255,102,0.25)':'rgba(255,255,255,0.06)'};margin-bottom:8px">
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="width:34px;height:34px;border-radius:50%;background:${isPlanActive?'rgba(0,255,102,0.15)':'rgba(255,255,255,0.05)'};display:flex;align-items:center;justify-content:center;color:${isPlanActive?'#00FF66':'#888'};font-weight:900;font-size:14px">${(m.username||'U')[0].toUpperCase()}</div>
-            <div><p style="font-weight:900;font-size:13px;margin:0">${esc(m.username)}</p><p style="font-size:9px;color:#888;margin:2px 0 0">Joined: ${joinD}</p></div>
-          </div>
-          <div style="text-align:right">
-            <p class="mono ${isPlanActive?'text-toxic':'text-gray-400'} font-black" style="margin:0;font-size:13px">$${fmt(inv)}</p>
-            <span style="font-size:8px;padding:2px 6px;border-radius:8px;${isPlanActive?'background:rgba(0,255,102,0.12);color:#00FF66':'background:rgba(255,255,255,0.05);color:#777'};font-weight:800;text-transform:uppercase">${isPlanActive?'Plan Active':'No Plan'}</span>
-          </div>
-        </div>`;
-      }).join('');
-    }
   }
   return `<div class="glass-card">
-    <p style="font-size:10px;color:#00FF66;font-weight:800;margin:0 0 10px;letter-spacing:1px">🌳 REFERRAL TREE</p>
-    ${tabs}${content}
-  </div>`;
-}
-function setTeamView(v){S.teamView=v;haptic('light');sound('tap');render();}
-
-function commissionHistoryUI(){
-  const list=S.commissionHistory||[];
-  if(list.length===0)return '';
-  return `<div class="glass-card">
-    <p style="font-size:10px;color:#FFD700;font-weight:800;margin:0 0 12px;letter-spacing:1.5px">💰 COMMISSION HISTORY</p>
-    ${list.slice(0,20).map(c=>{
-      const dt=c.created_at?new Date(c.created_at):null;
-      const dateStr=dt?dt.toLocaleDateString('en-GB'):'Recent';
-      return `<div style="padding:10px 12px;border-radius:12px;background:rgba(0,0,0,0.35);border-left:3px solid #FFD700;margin-bottom:6px">
-        <div style="display:flex;justify-content:space-between;gap:8px">
-          <p style="font-size:11px;color:#ccc;margin:0;flex:1;line-height:1.4">${esc(c.message||'Referral commission')}</p>
-          <p style="font-size:9px;color:#888;margin:0;white-space:nowrap">${dateStr}</p>
-        </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <p style="font-size:10px;color:#FFD700;font-weight:800;margin:0;letter-spacing:1.5px">💎 COMMISSION HISTORY</p>
+      <p style="font-size:10px;color:#888;margin:0">${comms.length} entries</p>
+    </div>
+    ${comms.slice(0,20).map(n=>{
+      let dt='—';
+      try{const d=new Date(n.created_at);dt=String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}catch(e){}
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:rgba(0,0,0,0.4);border-radius:12px;margin-bottom:6px;border-left:3px solid #FFD700">
+        <div style="flex:1;min-width:0"><p style="font-size:12px;font-weight:800;margin:0">${esc(n.title||'Commission')}</p><p style="font-size:10px;color:#aaa;margin:3px 0 0;word-break:break-word">${esc(n.message||'')}</p><p style="font-size:9px;color:#666;margin:3px 0 0">${dt}</p></div>
       </div>`;
     }).join('')}
   </div>`;
 }
 
+async function loadRefTree(){
+  if(!sb||!S.user)return [];
+  try{
+    const r=await sb.from('users').select('username,invested,referred_by,referral_code,joined_at').eq('referred_by',S.user.referral_code);
+    if(!r.data)return [];
+    const tree=[];
+    for(const m of r.data){
+      const sub=await sb.from('users').select('username,invested').eq('referred_by',m.referral_code).limit(20);
+      tree.push({...m,children:sub.data||[]});
+    }
+    return tree;
+  }catch(e){return [];}
+}
+function renderTreeNodes(nodes,depth=0){
+  if(!nodes||nodes.length===0)return '';
+  return nodes.map(n=>{
+    const inv=Number(n.invested||0);
+    const col=inv>0?'#00FF66':'#666';
+    const pad=depth*16;
+    return `<div style="margin-left:${pad}px;padding:8px 10px;background:rgba(0,0,0,0.4);border-radius:10px;margin-bottom:6px;border-left:2px solid ${col}">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:12px;font-weight:800">${depth>0?'└ ':'▸ '}${esc(n.username)}</span>
+        <span class="mono" style="font-size:11px;color:${col};font-weight:800">$${fmt(inv)}</span>
+      </div>
+      ${n.children?renderTreeNodes(n.children,depth+1):''}
+    </div>`;
+  }).join('');
+}
+async function toggleTree(){
+  S.showTree=!S.showTree;
+  if(S.showTree && !S._treeData){
+    toast('🌳 Loading tree...');
+    S._treeData=await loadRefTree();
+  }
+  render();
+}
+function treeUI(){
+  if(!S.showTree)return '';
+  const data=S._treeData||[];
+  return `<div class="glass-card" style="border:1.5px solid rgba(0,255,102,0.35)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <p style="font-size:10px;color:#00FF66;font-weight:800;margin:0;letter-spacing:1.5px">🌳 REFERRAL TREE</p>
+      <span style="font-size:10px;color:#888">${data.length} direct</span>
+    </div>
+    ${data.length===0?`<p style="font-size:12px;color:#888;text-align:center;padding:16px 0;margin:0">No downline yet</p>`:renderNodes(data)}
+  </div>`;
+}
+function renderNodes(d){return renderTreeNodes(d);}
+
 function teamUI(){
   const rl=refLink();
   const myTeam=S.team||[];
   const refBal=Number(S.user.referral_balance||0);
+  const tb=getTeamBadge(myTeam.length);
+  let myTeamHTML='';
+  if(myTeam.length===0){
+    myTeamHTML=`<div style="text-align:center;padding:24px 10px;background:rgba(0,0,0,0.3);border-radius:14px;border:1px dashed rgba(0,255,102,0.15)">
+      <p style="font-size:12px;color:#888;margin:0">No members have joined with your link yet.</p>
+      <p style="font-size:10px;color:#00FF66;margin:4px 0 0">Share your link below to earn 10% commission!</p>
+    </div>`;
+  } else {
+    myTeamHTML=myTeam.map(m=>{
+      const joinD=m.joined_at?String(m.joined_at).slice(0,10):'Recent';
+      const inv=Number(m.invested||0);
+      const isPlanActive=inv>0;
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:14px;background:rgba(0,0,0,0.45);border:1px solid ${isPlanActive?'rgba(0,255,102,0.25)':'rgba(255,255,255,0.06)'};margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:34px;height:34px;border-radius:50%;background:${isPlanActive?'rgba(0,255,102,0.15)':'rgba(255,255,255,0.05)'};display:flex;align-items:center;justify-content:center;color:${isPlanActive?'#00FF66':'#888'};font-weight:900;font-size:14px">${(m.username||'U')[0].toUpperCase()}</div>
+          <div><p style="font-weight:900;font-size:13px;margin:0">${esc(m.username)}</p><p style="font-size:9px;color:#888;margin:2px 0 0">Joined: ${joinD}</p></div>
+        </div>
+        <div style="text-align:right">
+          <p class="mono ${isPlanActive?'text-toxic':'text-gray-400'} font-black" style="margin:0;font-size:13px">$${fmt(inv)}</p>
+          <span style="font-size:8px;padding:2px 6px;border-radius:8px;${isPlanActive?'background:rgba(0,255,102,0.12);color:#00FF66':'background:rgba(255,255,255,0.05);color:#777'};font-weight:800;text-transform:uppercase">${isPlanActive?'Plan Active':'No Plan'}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
   const lbRows=LEADERBOARD_DATA.map(item=>{
     const medal=item.r===1?'🥇':item.r===2?'🥈':item.r===3?'🥉':`#${item.r}`;
     return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:12px;background:rgba(0,0,0,0.35);margin-bottom:8px">
@@ -2231,19 +2246,27 @@ function teamUI(){
     <div class="glass-card">
       <p style="font-size:10px;color:#10B981;font-weight:800;margin:0 0 8px;letter-spacing:1.5px">👥 YOUR NETWORK</p>
       <h2 style="font-size:24px;font-weight:900;margin:0 0 8px;line-height:1.25">Build your network<br>and <span class="text-toxic">grow together.</span></h2>
+      <div style="display:inline-flex;align-items:center;gap:6px;margin-bottom:10px;padding:5px 14px;border-radius:20px;background:${tb.c}25;border:1px solid ${tb.c}66">
+        <span style="font-size:14px">${tb.icon}</span><span style="font-size:11px;font-weight:900;color:${tb.c}">${tb.name}</span>
+      </div>
       <p style="font-size:12px;color:#888;margin:0">Earn 10% instant commission on referral investments</p>
       <div style="background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.25);border-radius:12px;padding:10px 14px;margin-top:14px">
         <p style="font-size:11px;color:#00FF66;font-weight:700;margin:0">⚡ Referral bonuses auto-credit to main balance</p>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.08)">
         <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px;text-align:center"><p style="font-size:9px;color:#888;margin:0 0 4px">TOTAL MEMBERS</p><p class="mono text-toxic" style="font-size:20px;font-weight:900;margin:0">${myTeam.length}</p></div>
-        <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px;text-align:center"><p style="font-size:9px;color:#888;margin:0 0 4px">PENDING REF</p><p class="mono text-toxic" style="font-size:20px;font-weight:900;margin:0">${fmtMoney(refBal)}</p></div>
+        <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px;text-align:center"><p style="font-size:9px;color:#888;margin:0 0 4px">PENDING REF</p><p class="mono text-toxic" style="font-size:20px;font-weight:900;margin:0">$${fmt(refBal)}</p></div>
       </div>
     </div>
     ${referralRaceUI()}
     ${teamMilestonesUI()}
-    ${teamTreeUI()}
     ${commissionHistoryUI()}
+    <div class="glass-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><p style="font-size:10px;color:#00FF66;font-weight:800;margin:0;letter-spacing:1px">${t().myTeamTitle}</p><span style="font-size:10px;font-weight:800" class="text-toxic">${myTeam.length} Members</span></div>
+      <div>${myTeamHTML}</div>
+    </div>
+    <button onclick="toggleTree()" class="btn-green" style="width:100%;padding:13px;border-radius:14px;font-size:12px">${S.showTree?'▲ HIDE TREE':'🌳 VIEW REFERRAL TREE'}</button>
+    ${treeUI()}
     <div class="glass-card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><p style="font-size:10px;color:#FFD700;font-weight:800;margin:0;letter-spacing:1px">${t().ldrTitle}</p><span style="font-size:10px;color:#888">${t().top10}</span></div>
       <div>${lbRows}</div>
@@ -2335,8 +2358,8 @@ function profileModal(){
         ${pRow('📧 Email',u.email||'—')}
         ${pRow('📱 Phone',u.phone||'—')}
         ${pRow('🎫 Referral',u.referral_code||'—',1)}
-        ${pRow('💰 Balance',fmtMoney(u.balance),1)}
-        ${pRow('👥 Pending Ref',fmtMoney(u.referral_balance),1)}
+        ${pRow('💰 Balance','$'+fmt(u.balance),1)}
+        ${pRow('👥 Pending Ref','$'+fmt(u.referral_balance),1)}
         ${pRow('📊 Total Invested','$'+fmt(u.invested),1)}
         ${pRow('🎡 Spins',(S.spin.totalSpins||0))}
         ${pRow('📅 Joined',u.joined_at?String(u.joined_at).slice(0,10):'—')}
@@ -2347,13 +2370,6 @@ function profileModal(){
       <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(0,0,0,0.45);border-radius:12px;margin-bottom:18px">
         <span style="font-size:12px;color:#ccc">App Sounds</span>
         <div onclick="toggleSound()" class="switch ${S.soundOn?'on':''}"></div>
-      </div>
-
-      <div style="height:1px;background:rgba(255,255,255,0.08);margin:18px 0"></div>
-      <p style="font-size:10px;color:#888;font-weight:800;margin:0 0 12px;letter-spacing:1.5px">💱 CURRENCY DISPLAY</p>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(0,0,0,0.45);border-radius:12px;margin-bottom:18px">
-        <span style="font-size:12px;color:#ccc">Show in INR (₹)</span>
-        <div onclick="toggleINR()" class="switch ${S.inrMode?'on':''}"></div>
       </div>
 
       <div style="height:1px;background:rgba(255,255,255,0.08);margin:18px 0"></div>
@@ -2387,7 +2403,7 @@ function pRow(l,v,green){
 }
 function setLang(l){S.lang=l;save();sound('tap');render();}
 
-async function changePw(){
+function changePw(){
   const o=$('oldPw').value,n=$('newPw').value,n2=$('newPw2').value;
   if(!o||!n||!n2)return customAlert('Required','Please fill all fields','⚠️');
   if(n.length<4)return customAlert('Too Short','Password must be 4+ characters','⚠️');
@@ -2395,20 +2411,17 @@ async function changePw(){
   const st=localStorage.getItem('t_pwd_'+S.user.user_id);
   if(st&&st!==o)return customAlert('Error','Current password is incorrect','❌');
   localStorage.setItem('t_pwd_'+S.user.user_id,n);
-  if(sb){try{await sb.from('users').update({password:n}).eq('user_id',S.user.user_id);}catch(e){}}
   $('oldPw').value='';$('newPw').value='';$('newPw2').value='';
   haptic('success');sound('success');
   customAlert('Success','Password updated successfully!','✅');
 }
 
 function copy(text){
-  try{
-    navigator.clipboard.writeText(text).then(()=>{haptic('success');sound('tap');toast('✅ Copied to Clipboard!');}).catch(()=>{
-      const el=document.createElement('textarea');el.value=text;
-      document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);
-      haptic('success');sound('tap');toast('✅ Copied to Clipboard!');
-    });
-  }catch(e){}
+  navigator.clipboard.writeText(text).then(()=>{haptic('success');sound('tap');toast('✅ Copied to Clipboard!');}).catch(()=>{
+    const el=document.createElement('textarea');el.value=text;
+    document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);
+    haptic('success');sound('tap');toast('✅ Copied to Clipboard!');
+  });
 }
 
 let deferredPrompt=null;
@@ -2474,98 +2487,54 @@ document.addEventListener('touchend',async()=>{
   pullDist=0;
 });
 
+// Back button handler
+function pushBackState(){
+  try{history.pushState({t:Date.now()},'','#');}catch(e){}
+}
+window.addEventListener('popstate',()=>{
+  let closed=false;
+  if($('cModal') && $('cModal').style.display==='flex'){closeCModal();closed=true;}
+  else if(S.showProfile){S.showProfile=false;closed=true;}
+  else if(S.showNotifs){S.showNotifs=false;closed=true;}
+  else if(S.selPlan){S.selPlan=null;closed=true;}
+  else if(S.page){S.page=null;closed=true;}
+  else if(S.showTree){S.showTree=false;closed=true;}
+  if(closed){render();pushBackState();}
+  else{pushBackState();}
+});
+pushBackState();
+
 try{if(window.Telegram&&window.Telegram.WebApp){window.Telegram.WebApp.ready();window.Telegram.WebApp.expand();}}catch(e){}
 if(!S.user)S.tab='signup';
 
-// ============ BOOT (BULLETPROOF) ============
-(function boot(){
-  // 1. App turant render karo
-  try{ render(); }catch(e){ console.error('Initial render error:',e); }
-
-  // 2. Failsafe: 8 second mein loading hat jayegi chahe kuch bhi ho
-  var failsafe=setTimeout(function(){
-    var l=document.getElementById('loading');
-    if(l) l.classList.add('hide');
-  },8000);
-
-  // 3. Progress bar animation
-  var p=0;
-  var pi=setInterval(function(){
-    if(p<88){ p+=4; var f=document.getElementById('lFill'); if(f) f.style.width=p+'%'; }
-  },100);
-
-  var fm=document.getElementById('lMsg');
-  if(fm) fm.textContent='CONNECTING…';
-
-  function timeout(ms){
-    return new Promise(function(_,rej){ setTimeout(function(){ rej(new Error('timeout')); }, ms); });
-  }
-
-  function setMsg(m){ if(fm) fm.textContent=m; }
-
-  // 4. Data load karo (har step apna timeout)
-  var loadP=Promise.resolve();
-
-  if(sb){
-    loadP=loadP
-      .then(function(){ return Promise.race([loadSiteConfig(),timeout(3000)]); })
-      .then(function(){ setMsg('LOADING PLANS…'); return Promise.race([loadPlansFromDB(),timeout(3000)]); })
-      .then(function(){
-        if(S.user){
-          setMsg('SYNCING ACCOUNT…');
-          return Promise.race([syncUser(),timeout(5000)]);
-        }
-      })
-      .then(function(){ setMsg('LOADING BONUSES…'); return Promise.race([loadPromoCodes(),timeout(3000)]); })
-      .then(function(){ setMsg('READY'); return Promise.race([loadCryptoPrices(),timeout(3000)]); })
-      .catch(function(e){ console.warn('Boot step failed:',e&&e.message); });
-  }
-
-  // 5. Sab load hone pe ya 7 second baad — loading band karo
-  Promise.race([loadP,timeout(7000)]).then(function(){
-    clearInterval(pi);
-    clearTimeout(failsafe);
-
-    var f=document.getElementById('lFill'); if(f) f.style.width='100%';
-    setMsg('READY');
-
-    setTimeout(function(){
-      try{ render(); }catch(e){ console.error(e); }
-      var l=document.getElementById('loading');
-      if(l) l.classList.add('hide');
-    },300);
-
-    // Background timers
-    setTimeout(showLive,3500);
-    setTimeout(function(){
-      if(S.user){
-        try{ checkTeamMilestones(); }catch(e){}
-        try{ checkVIPBadgeChange(); }catch(e){}
-      }
-    },2000);
-
-    setInterval(loadCryptoPrices,90000);
-    setInterval(loadPromoCodes,60000);
-    setInterval(function(){ loadSiteConfig(); loadPlansFromDB(); },120000);
-  });
+(async function(){
+  await loadSiteConfig();
+  await loadPlansFromDB();
+  if(S.user){await syncUser();}
+  await loadPromoCodes();
+  await loadCryptoPrices();
+  render();
+  setTimeout(()=>{const l=$('loading');if(l)l.classList.add('hide');},1200);
+  setTimeout(showLive,3500);
+  setTimeout(()=>{if(S.user){checkTeamMilestones();checkVIPBadgeChange();}},2000);
+  setInterval(loadCryptoPrices,90000);
+  setInterval(loadPromoCodes,60000);
+  setInterval(async()=>{await loadSiteConfig();await loadPlansFromDB();},120000);
 })();
 
-// Background sync every 5 seconds
 setInterval(async()=>{
   if(S.user){
-    try{
-      const before=S.tx.map(x=>x.id+'|'+x.status).join(',');
-      await syncUser();
-      if(!PROMO_LOADED)await loadPromoCodes();
-      checkTeamMilestones();
-      const after=S.tx.map(x=>x.id+'|'+x.status).join(',');
-      updateDyn();
-      const ae=document.activeElement;
-      const typing=ae&&['INPUT','SELECT','TEXTAREA'].includes(ae.tagName);
-      if(before!==after && !typing && !S.showProfile && !S.showNotifs && !S.page && !S.selPlan && S.tab!=='wallet'){
-        render();
-      }
-    }catch(e){}
+    const before=S.tx.map(x=>x.id+'|'+x.status).join(',');
+    await syncUser();
+    if(!PROMO_LOADED)await loadPromoCodes();
+    checkTeamMilestones();
+    const after=S.tx.map(x=>x.id+'|'+x.status).join(',');
+    updateDyn();
+    const ae=document.activeElement;
+    const typing=ae&&['INPUT','SELECT','TEXTAREA'].includes(ae.tagName);
+    if(before!==after && !typing && !S.showProfile && !S.showNotifs && !S.page && !S.selPlan && S.tab!=='wallet'){
+      render();
+    }
   }
 },5000);
 </script>
