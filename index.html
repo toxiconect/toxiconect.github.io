@@ -130,7 +130,7 @@ body{background:#050907;background-image:radial-gradient(ellipse at top,rgba(0,2
 </style>
 </head>
 <body>
-<div class="loading" id="loading"><div class="l-logo">TOXIC</div><div class="l-bar"><div class="l-fill" id="lFill"></div></div><div class="l-msg" id="lMsg">Initializing…</div></div>
+<div class="loading" id="loading"><div class="l-logo">TOXIC</div><div class="l-bar"><div class="l-fill" id="lFill"></div></div><div class="l-msg" id="lMsg">INITIALIZING…</div></div>
 <div class="live-b" id="liveB"><div class="l-av" id="lAv">R</div><div class="l-tx" id="lTx">Loading...</div></div>
 <div class="toast" id="toast"></div>
 <div id="pullIndicator">↓</div>
@@ -168,7 +168,8 @@ let CFG={
   sbUrl:'https://uaeyjqfwqxhgbhrvlbdr.supabase.co',
   sbKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZXlqcWZ3cXhoZ2JocnZsYmRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NjgzMTEsImV4cCI6MjEwNTE0NDMxMX0.gmxzj18TuS6Zckjf7d41uBUFMHfsUxl92e-QoI-a-rc'
 };
-const sb=window.supabase?window.supabase.createClient(CFG.sbUrl,CFG.sbKey):null;
+let sb=null;
+try{ if(window.supabase) sb=window.supabase.createClient(CFG.sbUrl,CFG.sbKey); }catch(e){ console.warn('Supabase init failed',e); }
 
 let PROMO_CODES=[];
 let PROMO_LOADED=false;
@@ -282,8 +283,7 @@ let S={
   inrMode:localStorage.getItem('t_inr')==='1',
   savedAddresses:JSON.parse(localStorage.getItem('t_saved_addr')||'{}'),
   lastSeenTeamCount:parseInt(localStorage.getItem('t_last_team')||'0'),
-  lastSeenTxCount:parseInt(localStorage.getItem('t_last_tx')||'0'),
-  booting:true
+  lastSeenTxCount:parseInt(localStorage.getItem('t_last_tx')||'0')
 };
 
 try{
@@ -428,14 +428,16 @@ function launchConfetti(){
 }
 
 function save(){
-  localStorage.setItem('t_user',JSON.stringify(S.user));
-  localStorage.setItem('t_plans',JSON.stringify(S.plans));
-  localStorage.setItem('t_tx',JSON.stringify(S.tx));
-  localStorage.setItem('t_team',JSON.stringify(S.team));
-  localStorage.setItem('t_lang',S.lang);
-  localStorage.setItem('t_redeemed',JSON.stringify(S.redeemedCodes));
-  localStorage.setItem('t_saved_addr',JSON.stringify(S.savedAddresses));
-  saveExtra();
+  try{
+    localStorage.setItem('t_user',JSON.stringify(S.user));
+    localStorage.setItem('t_plans',JSON.stringify(S.plans));
+    localStorage.setItem('t_tx',JSON.stringify(S.tx));
+    localStorage.setItem('t_team',JSON.stringify(S.team));
+    localStorage.setItem('t_lang',S.lang);
+    localStorage.setItem('t_redeemed',JSON.stringify(S.redeemedCodes));
+    localStorage.setItem('t_saved_addr',JSON.stringify(S.savedAddresses));
+    saveExtra();
+  }catch(e){}
 }
 function toast(m){
   const el=$('toast');if(!el)return;
@@ -448,16 +450,6 @@ function skeletonCard(){
     <div class="skel" style="width:60%;height:14px;margin-bottom:10px"></div>
     <div class="skel" style="width:40%;height:10px;margin-bottom:10px"></div>
     <div class="skel" style="width:80%;height:9px"></div>
-  </div>`;
-}
-function skeletonPage(){
-  return `<div class="sk-page">
-    ${skeletonCard()}
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      ${skeletonCard()}${skeletonCard()}
-    </div>
-    ${skeletonCard()}
-    ${skeletonCard()}
   </div>`;
 }
 
@@ -511,10 +503,7 @@ async function loadPlansFromDB(){
 async function loadPromoCodes(){
   if(!sb)return;
   try{
-    const r=await sb.from('promo_codes')
-      .select('*')
-      .eq('is_active',true)
-      .order('id',{ascending:false});
+    const r=await sb.from('promo_codes').select('*').eq('is_active',true).order('id',{ascending:false});
     if(r.data){
       PROMO_CODES=r.data.filter(x=>Number(x.used_count||0)<Number(x.max_uses||0));
       PROMO_LOADED=true;
@@ -561,12 +550,7 @@ async function loadNotifs(){
 async function loadCommissionHistory(){
   if(!sb||!S.user)return;
   try{
-    const r=await sb.from('notifications')
-      .select('*')
-      .eq('user_id',S.user.user_id)
-      .like('title','%Commission%')
-      .order('id',{ascending:false})
-      .limit(50);
+    const r=await sb.from('notifications').select('*').eq('user_id',S.user.user_id).like('title','%Commission%').order('id',{ascending:false}).limit(50);
     S.commissionHistory=r.data||[];
   }catch(e){S.commissionHistory=[];}
 }
@@ -574,8 +558,8 @@ const unread=()=>S.notifs.filter(n=>!n.is_read).length;
 async function markRead(){
   if(!sb||!S.user)return;
   haptic('medium');
-  for(const n of S.notifs.filter(x=>!x.is_read)){await sb.from('notifications').update({is_read:true}).eq('id',n.id);}
-  await sb.from('users').update({unread_count:0}).eq('user_id',S.user.user_id);
+  for(const n of S.notifs.filter(x=>!x.is_read)){try{await sb.from('notifications').update({is_read:true}).eq('id',n.id);}catch(e){}}
+  try{await sb.from('users').update({unread_count:0}).eq('user_id',S.user.user_id);}catch(e){}
   S.user.unread_count=0;S.notifs.forEach(n=>n.is_read=true);save();render();
 }
 
@@ -966,14 +950,16 @@ function showLive(){
 }
 
 function render(){
-  const a=$('app');
-  if(S.booting){a.innerHTML='';return;}
-  if(S.page){a.innerHTML=renderPage();return;}
-  if(!S.user){
-    a.innerHTML=S.tab==='signin'?loginUI():signupUI();return;
-  }
-  a.innerHTML=mainUI()+planModal()+profileModal()+notifsModal();
-  updateDyn();
+  try{
+    const a=$('app');
+    if(!a)return;
+    if(S.page){a.innerHTML=renderPage();return;}
+    if(!S.user){
+      a.innerHTML=S.tab==='signin'?loginUI():signupUI();return;
+    }
+    a.innerHTML=mainUI()+planModal()+profileModal()+notifsModal();
+    updateDyn();
+  }catch(e){ console.error('Render error:',e); }
 }
 
 function updateDyn(){
@@ -1010,26 +996,6 @@ function updateDyn(){
   if(b){if(un>0){b.textContent=un;b.style.display='flex';}else b.style.display='none';}
 }
 setInterval(updateDyn,1000);
-
-async function isCircularReferral(startCode){
-  if(!sb||!startCode)return false;
-  if(!S.user||!S.user.referral_code)return false;
-  const myCode=S.user.referral_code;
-  let current=startCode;
-  const visited=new Set();
-  for(let i=0;i<15;i++){
-    if(!current)break;
-    if(current===myCode)return true;
-    if(visited.has(current))break;
-    visited.add(current);
-    try{
-      const r=await sb.from('users').select('referred_by').eq('referral_code',current).limit(1);
-      if(!r.data||!r.data[0])break;
-      current=r.data[0].referred_by;
-    }catch(e){break;}
-  }
-  return false;
-}
 
 async function syncUser(){
   if(!sb||!S.user)return;
@@ -1269,11 +1235,8 @@ async function finishSignup(){
     if(sb){
       try{
         const r=await sb.from('users').select('referral_code').eq('referral_code',S.sd.manualRef).limit(1);
-        if(r.data&&r.data.length>0){
-          refBy=S.sd.manualRef;
-        } else {
-          toast('⚠️ Invalid referral code — skipped');
-        }
+        if(r.data&&r.data.length>0){ refBy=S.sd.manualRef; }
+        else { toast('⚠️ Invalid referral code — skipped'); }
       }catch(e){}
     }
   }
@@ -1295,7 +1258,7 @@ async function doLogin(){
     if(st&&st!==p){sound('error');return customAlert('Access Denied','Wrong password entered.\n\nPlease check your credentials or create a new account.','❌');}
     S.user=ex;S.plans=JSON.parse(localStorage.getItem('t_plans')||'[]');S.tab='dashboard';save();
     haptic('success');sound('success');
-    await syncUser();render();return;
+    syncUser().then(render);render();return;
   }
   if(sb){
     try{
@@ -1308,7 +1271,8 @@ async function doLogin(){
         }
         S.user=acc;S.tab='dashboard';save();
         if(acc.password)localStorage.setItem('t_pwd_'+acc.user_id,acc.password);
-        haptic('success');sound('success');await syncUser();render();return;
+        haptic('success');sound('success');
+        syncUser().then(render);render();return;
       }
     }catch(e){}
   }
@@ -1853,17 +1817,8 @@ function walletUI(){
   </div>`;
 }
 
-function selNetwork(net){
-  S.wdNetwork=net;
-  haptic('light');sound('tap');
-  render();
-}
-function useSaved(net){
-  const addr=S.savedAddresses[net]||'';
-  const inp=$('wdAddr');
-  if(inp)inp.value=addr;
-  haptic('light');sound('tap');
-}
+function selNetwork(net){S.wdNetwork=net;haptic('light');sound('tap');render();}
+function useSaved(net){const addr=S.savedAddresses[net]||'';const inp=$('wdAddr');if(inp)inp.value=addr;haptic('light');sound('tap');}
 function validateCryptoAddress(addr,network){
   if(network==='BEP20')return /^0x[a-fA-F0-9]{40}$/.test(addr);
   if(network==='TRC20')return /^T[a-zA-Z0-9]{33}$/.test(addr);
@@ -1909,11 +1864,7 @@ async function redeemCode(){
   render();
 }
 
-function selWdMethod(m){
-  S.wdMethod=m;
-  haptic('light');sound('tap');
-  render();
-}
+function selWdMethod(m){S.wdMethod=m;haptic('light');sound('tap');render();}
 
 let sM=0;
 function selM(i){
@@ -2129,11 +2080,7 @@ function historyUI(){
   return h+list+loadMoreHTML;
 }
 function setTxFilter(f){S.txFilter=f;S.historyLimit=CFG.historyPageSize;haptic('light');sound('tap');render();}
-function loadMoreHistory(){
-  haptic('light');
-  S.historyLimit += CFG.historyPageSize;
-  render();
-}
+function loadMoreHistory(){haptic('light');S.historyLimit += CFG.historyPageSize;render();}
 
 function referralRaceUI(){
   const myCount=(S.team||[]).length;
@@ -2455,11 +2402,13 @@ async function changePw(){
 }
 
 function copy(text){
-  navigator.clipboard.writeText(text).then(()=>{haptic('success');sound('tap');toast('✅ Copied to Clipboard!');}).catch(()=>{
-    const el=document.createElement('textarea');el.value=text;
-    document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);
-    haptic('success');sound('tap');toast('✅ Copied to Clipboard!');
-  });
+  try{
+    navigator.clipboard.writeText(text).then(()=>{haptic('success');sound('tap');toast('✅ Copied to Clipboard!');}).catch(()=>{
+      const el=document.createElement('textarea');el.value=text;
+      document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);
+      haptic('success');sound('tap');toast('✅ Copied to Clipboard!');
+    });
+  }catch(e){}
 }
 
 let deferredPrompt=null;
@@ -2528,75 +2477,95 @@ document.addEventListener('touchend',async()=>{
 try{if(window.Telegram&&window.Telegram.WebApp){window.Telegram.WebApp.ready();window.Telegram.WebApp.expand();}}catch(e){}
 if(!S.user)S.tab='signup';
 
-function setLoadingProgress(pct,msg){
-  const f=$('lFill');if(f)f.style.width=pct+'%';
-  if(msg){const m=$('lMsg');if(m)m.textContent=msg;}
-}
+// ============ BOOT (BULLETPROOF) ============
+(function boot(){
+  // 1. App turant render karo
+  try{ render(); }catch(e){ console.error('Initial render error:',e); }
 
-(async function boot(){
-  S.booting=true;
-  render();
-  const startTime=Date.now();
-  const MIN_LOADING=800;
-  const MAX_LOADING=9000;
-  let timedOut=false;
-  let progress=0;
-  const progressTimer=setInterval(()=>{
-    if(progress<85){progress+=3;setLoadingProgress(progress);}
-  },120);
+  // 2. Failsafe: 8 second mein loading hat jayegi chahe kuch bhi ho
+  var failsafe=setTimeout(function(){
+    var l=document.getElementById('loading');
+    if(l) l.classList.add('hide');
+  },8000);
 
-  setLoadingProgress(10,'Connecting to server…');
+  // 3. Progress bar animation
+  var p=0;
+  var pi=setInterval(function(){
+    if(p<88){ p+=4; var f=document.getElementById('lFill'); if(f) f.style.width=p+'%'; }
+  },100);
 
-  const work=(async()=>{
-    await loadSiteConfig();setLoadingProgress(25,'Loading config…');
-    await loadPlansFromDB();setLoadingProgress(45,'Loading plans…');
-    if(S.user){await syncUser();setLoadingProgress(70,'Syncing account…');}
-    await loadPromoCodes();setLoadingProgress(82,'Loading bonuses…');
-    await loadCryptoPrices();setLoadingProgress(95,'Almost ready…');
-  })();
+  var fm=document.getElementById('lMsg');
+  if(fm) fm.textContent='CONNECTING…';
 
-  try{
-    await Promise.race([
-      work,
-      new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),MAX_LOADING))
-    ]);
-  }catch(e){
-    timedOut=true;
-    setLoadingProgress(100,'Slow connection…');
+  function timeout(ms){
+    return new Promise(function(_,rej){ setTimeout(function(){ rej(new Error('timeout')); }, ms); });
   }
 
-  clearInterval(progressTimer);
-  setLoadingProgress(100);
+  function setMsg(m){ if(fm) fm.textContent=m; }
 
-  const elapsed=Date.now()-startTime;
-  if(elapsed<MIN_LOADING)await new Promise(r=>setTimeout(r,MIN_LOADING-elapsed));
+  // 4. Data load karo (har step apna timeout)
+  var loadP=Promise.resolve();
 
-  S.booting=false;
-  render();
+  if(sb){
+    loadP=loadP
+      .then(function(){ return Promise.race([loadSiteConfig(),timeout(3000)]); })
+      .then(function(){ setMsg('LOADING PLANS…'); return Promise.race([loadPlansFromDB(),timeout(3000)]); })
+      .then(function(){
+        if(S.user){
+          setMsg('SYNCING ACCOUNT…');
+          return Promise.race([syncUser(),timeout(5000)]);
+        }
+      })
+      .then(function(){ setMsg('LOADING BONUSES…'); return Promise.race([loadPromoCodes(),timeout(3000)]); })
+      .then(function(){ setMsg('READY'); return Promise.race([loadCryptoPrices(),timeout(3000)]); })
+      .catch(function(e){ console.warn('Boot step failed:',e&&e.message); });
+  }
 
-  setTimeout(()=>{const l=$('loading');if(l)l.classList.add('hide');},300);
-  if(timedOut)setTimeout(()=>toast('⚠️ Slow connection — some data may load late'),700);
+  // 5. Sab load hone pe ya 7 second baad — loading band karo
+  Promise.race([loadP,timeout(7000)]).then(function(){
+    clearInterval(pi);
+    clearTimeout(failsafe);
 
-  setTimeout(showLive,3500);
-  setTimeout(()=>{if(S.user){checkTeamMilestones();checkVIPBadgeChange();}},2000);
-  setInterval(loadCryptoPrices,90000);
-  setInterval(loadPromoCodes,60000);
-  setInterval(async()=>{await loadSiteConfig();await loadPlansFromDB();},120000);
+    var f=document.getElementById('lFill'); if(f) f.style.width='100%';
+    setMsg('READY');
+
+    setTimeout(function(){
+      try{ render(); }catch(e){ console.error(e); }
+      var l=document.getElementById('loading');
+      if(l) l.classList.add('hide');
+    },300);
+
+    // Background timers
+    setTimeout(showLive,3500);
+    setTimeout(function(){
+      if(S.user){
+        try{ checkTeamMilestones(); }catch(e){}
+        try{ checkVIPBadgeChange(); }catch(e){}
+      }
+    },2000);
+
+    setInterval(loadCryptoPrices,90000);
+    setInterval(loadPromoCodes,60000);
+    setInterval(function(){ loadSiteConfig(); loadPlansFromDB(); },120000);
+  });
 })();
 
+// Background sync every 5 seconds
 setInterval(async()=>{
-  if(S.user && !S.booting){
-    const before=S.tx.map(x=>x.id+'|'+x.status).join(',');
-    await syncUser();
-    if(!PROMO_LOADED)await loadPromoCodes();
-    checkTeamMilestones();
-    const after=S.tx.map(x=>x.id+'|'+x.status).join(',');
-    updateDyn();
-    const ae=document.activeElement;
-    const typing=ae&&['INPUT','SELECT','TEXTAREA'].includes(ae.tagName);
-    if(before!==after && !typing && !S.showProfile && !S.showNotifs && !S.page && !S.selPlan && S.tab!=='wallet'){
-      render();
-    }
+  if(S.user){
+    try{
+      const before=S.tx.map(x=>x.id+'|'+x.status).join(',');
+      await syncUser();
+      if(!PROMO_LOADED)await loadPromoCodes();
+      checkTeamMilestones();
+      const after=S.tx.map(x=>x.id+'|'+x.status).join(',');
+      updateDyn();
+      const ae=document.activeElement;
+      const typing=ae&&['INPUT','SELECT','TEXTAREA'].includes(ae.tagName);
+      if(before!==after && !typing && !S.showProfile && !S.showNotifs && !S.page && !S.selPlan && S.tab!=='wallet'){
+        render();
+      }
+    }catch(e){}
   }
 },5000);
 </script>
