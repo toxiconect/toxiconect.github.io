@@ -1738,7 +1738,7 @@ function loginUI() {
 
 function signupUI() {
   const step = S.step;
-  const steps = [1,2,3].map(n => {
+  const steps = [1,2].map(n => {
     const bg = step > n ? '#10B981' : step === n ? '#00FF66' : 'rgba(255,255,255,0.06)';
     const tc = step >= n ? '#000' : '#4B5563';
     return `<div style="width:46px;height:46px;border-radius:14px;background:${bg};color:${tc};display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;box-shadow:${step===n?'0 0 25px #00FF66':'none'};transition:all 0.3s">${step>n?'✓':n}</div>`;
@@ -1751,7 +1751,7 @@ function signupUI() {
     </div>
     <div class="px-5 pb-10">
       <div class="flex items-center justify-center gap-4 mb-7">${steps}</div>
-      <div class="glass-card p-6">${step===1?step1():step===2?step2():step3()}</div>
+      <div class="glass-card p-6">${step===1?step1():step2()}</div>
     </div>
     <div style="text-align:center;font-size:11px;color:#666;padding-bottom:20px">
       <p>By signing up, you agree to our <span onclick="S.page='tnc';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Terms</span> & <span onclick="S.page='privacy';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Privacy Policy</span></p>
@@ -1763,57 +1763,48 @@ function step1() {
   const cs = ['India (+91)','Pakistan (+92)','Bangladesh (+880)','United States (+1)','UAE (+971)','Saudi Arabia (+966)','Nigeria (+234)','Indonesia (+62)','Philippines (+63)','Nepal (+977)'];
   const ops = cs.map(c => `<option ${S.sd.country===c?'selected':''}>${c}</option>`).join('');
   const rn = S.sd.referredBy ? `<div style="border-radius:14px;padding:14px;margin-bottom:16px;background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.3)"><p style="font-size:10px;color:#888;margin:0">Referred by</p><p class="text-toxic mono" style="font-weight:900;font-size:13px;margin:4px 0 0">${esc(S.sd.referredBy)}</p></div>` : '';
-  return `${rn}<p style="font-size:10px;color:#666;font-weight:700;margin:0 0 8px;letter-spacing:2px">STEP 1 / 3</p>
-    <h2 class="text-2xl font-black mb-1">Choose your country</h2>
-    <p class="text-sm text-gray-500 mb-6">Select your country.</p>
+  return `${rn}<p style="font-size:10px;color:#666;font-weight:700;margin:0 0 8px;letter-spacing:2px">STEP 1 / 2</p>
+    <h2 class="text-2xl font-black mb-1">Create your account</h2>
+    <p class="text-sm text-gray-500 mb-6">Select country & enter mobile number.</p>
     <div style="background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.25);border-radius:12px;padding:10px 14px;margin-bottom:16px">
       <p style="font-size:11px;color:#00FF66;font-weight:700;margin:0">🎁 Get $${CFG.signupBonus.toFixed(2)} FREE signup bonus!</p>
     </div>
-    <select id="cs" class="inp mb-3" onchange="S.sd.country=this.value"><option value="">Choose a country...</option>${ops}</select>
+    <label style="font-size:10px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:6px">COUNTRY CODE</label>
+    <select id="cs" class="inp mb-3">${ops}</select>
+    <label style="font-size:10px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:6px">MOBILE NUMBER</label>
+    <input id="ph" type="tel" class="inp mb-3" placeholder="Enter your mobile number" value="${S.sd.phone||''}">
     <input id="manualRef" class="inp mb-6" placeholder="Referral Code (optional)" value="${S.sd.referredBy||''}" style="text-transform:uppercase">
-    <button onclick="S.step=2;if($('cs').value)S.sd.country=$('cs').value;const mr=$('manualRef').value.trim().toUpperCase();if(mr){S.sd.referredBy=mr;localStorage.setItem('t_locked_ref',mr);localStorage.setItem('t_locked_ref_time',Date.now().toString());}render()" class="w-full btn-green py-4 rounded-2xl text-sm glow">NEXT →</button>
-    <p class="text-center text-xs text-gray-500 mt-4">Already have an account? <span onclick="S.tab='signin';render()" class="text-yellow-400 font-bold">Sign in</span></p>`;
+    <button onclick="goStep2()" class="w-full btn-green py-4 rounded-2xl text-sm glow">NEXT →</button>
+    <p class="text-center text-xs text-gray-500 mt-4">Already have an account? <span onclick="S.tab='signin';render()" class="text-yellow-400 font-bold cursor-pointer">Sign in</span></p>`;
 }
 
 function step2() {
-  return `<p style="font-size:10px;color:#666;font-weight:700;margin:0 0 8px;letter-spacing:2px">STEP 2 / 3</p>
-    <h2 class="text-2xl font-black mb-1">Personal Info</h2>
-    <p class="text-sm text-gray-500 mb-5">Tell us about you.</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-      <input class="inp" id="fn" placeholder="First Name" value="${S.sd.firstName||''}">
-      <input class="inp" id="ln" placeholder="Last Name" value="${S.sd.lastName||''}">
-    </div>
-    <input class="inp mb-3" id="em" type="email" placeholder="you@example.com" value="${S.sd.email||''}">
-    <input class="inp mb-6" id="ph" type="tel" placeholder="WhatsApp Number" value="${S.sd.phone||''}">
-    <div style="display:flex;gap:12px">
-      <button onclick="S.step=1;render()" style="flex:1;padding:16px;border-radius:16px;background:rgba(255,255,255,0.05);font-weight:700;font-size:13px;border:none;color:#fff;cursor:pointer">← BACK</button>
-      <button onclick="goStep3()" style="flex:1;padding:16px;border-radius:16px;font-weight:800;font-size:13px;border:none;cursor:pointer" class="btn-green">NEXT →</button>
-    </div>`;
-}
-
-function step3() {
-  return `<p style="font-size:10px;color:#666;font-weight:700;margin:0 0 8px;letter-spacing:2px">STEP 3 / 3</p>
+  return `<p style="font-size:10px;color:#666;font-weight:700;margin:0 0 8px;letter-spacing:2px">STEP 2 / 2</p>
     <h2 class="text-2xl font-black mb-1">Create Access</h2>
     <p class="text-sm text-gray-500 mb-5">Set username & password.</p>
     <input class="inp mb-3" id="un" placeholder="Username" value="${S.sd.username||''}">
     <input class="inp mb-3" id="pw" type="password" placeholder="Password">
     <input class="inp mb-6" id="pw2" type="password" placeholder="Confirm Password">
     <div style="display:flex;gap:12px">
-      <button onclick="S.step=2;render()" style="padding:16px 22px;border-radius:16px;background:rgba(255,255,255,0.05);font-weight:700;font-size:13px;border:none;color:#fff;cursor:pointer">← BACK</button>
+      <button onclick="S.step=1;render()" style="padding:16px 22px;border-radius:16px;background:rgba(255,255,255,0.05);font-weight:700;font-size:13px;border:none;color:#fff;cursor:pointer">← BACK</button>
       <button onclick="finishSignup()" style="flex:1;padding:16px;border-radius:16px;font-weight:800;font-size:13px;border:none;cursor:pointer" class="btn-green">FINISH →</button>
     </div>`;
 }
 
-function goStep3() {
-  S.sd.firstName = $('fn').value.trim();
-  S.sd.lastName = $('ln').value.trim();
-  S.sd.email = $('em').value.trim();
-  S.sd.phone = $('ph').value.trim();
-  if (!S.sd.firstName) return customAlert('Incomplete Form', 'Please enter your First Name.', '⚠️');
-  if (!S.sd.email) return customAlert('Incomplete Form', 'Please enter your Email address.', '⚠️');
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  if (!emailRegex.test(S.sd.email)) return customAlert('Invalid Email', 'Please enter a valid email address (e.g. name@gmail.com).', '⚠️');
-  S.step = 3;
+function goStep2() {
+  const cs = $('cs').value;
+  const ph = $('ph').value.trim();
+  S.sd.country = cs;
+  S.sd.phone = ph;
+  if (!cs) return customAlert('Missing Info', 'Please select your country code.', '⚠️');
+  if (!ph || ph.length < 6) return customAlert('Invalid Number', 'Please enter a valid mobile number (at least 6 digits).', '⚠️');
+  const mr = $('manualRef').value.trim().toUpperCase();
+  if (mr) {
+    S.sd.referredBy = mr;
+    localStorage.setItem('t_locked_ref', mr);
+    localStorage.setItem('t_locked_ref_time', Date.now().toString());
+  }
+  S.step = 2;
   render();
 }
 
@@ -1824,12 +1815,13 @@ async function finishSignup() {
   if (pw !== pw2) return customAlert('Mismatch', 'Passwords do not match.', '⚠️');
   const uid = 'TG' + Date.now();
   const rc = 'TOXIC' + Math.floor(1000 + Math.random() * 9000);
-  S.user = {user_id:uid, username:un, email:S.sd.email||'', phone:S.sd.phone||'', avatar:'', balance:0, referral_balance:0, invested:0, earned:0, referral_code:rc, referred_by:S.sd.referredBy, is_banned:false, joined_at:new Date().toISOString()};
+  const fullPhone = ((S.sd.country || '') + ' ' + (S.sd.phone || '')).trim();
+  S.user = {user_id:uid, username:un, email:'', phone:fullPhone, avatar:'', balance:0, referral_balance:0, invested:0, earned:0, referral_code:rc, referred_by:S.sd.referredBy, is_banned:false, joined_at:new Date().toISOString()};
   S.plans = [];
   localStorage.setItem('t_pwd_' + uid, pw);
   if (sb) {
     try {
-      await sb.from('users').insert([{user_id:uid, username:un, email:S.sd.email||'', phone:S.sd.phone||'', balance:0, referral_balance:0, invested:0, referral_code:rc, referred_by:S.sd.referredBy, is_banned:false}]);
+      await sb.from('users').insert([{user_id:uid, username:un, email:'', phone:fullPhone, balance:0, referral_balance:0, invested:0, referral_code:rc, referred_by:S.sd.referredBy, is_banned:false}]);
     } catch(e) {}
   }
   localStorage.removeItem('t_locked_ref');
@@ -2038,8 +2030,8 @@ function dashUI() {
     <div style="position:relative;width:100%;height:180px;border-radius:24px;overflow:hidden;border:1px solid rgba(0,255,102,0.2)">
       <img src="${CFG.banner}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
       <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.2),rgba(5,9,7,0.96))"></div>
-      <div style="position:absolute;bottom:16px;left:20px">
-        <p style="font-size:13px;font-weight:900;letter-spacing:5px;color:#00FF66;margin:0 0 4px;text-transform:uppercase;text-shadow:0 0 22px rgba(0,255,102,0.8),0 0 8px rgba(0,255,102,0.5)">${t().welcome}</p>
+      <div style="position:absolute;bottom:16px;left:12px">
+        <p style="font-size:10px;font-weight:800;letter-spacing:3px;color:#00FF66;margin:0 0 2px;text-transform:uppercase;text-shadow:0 0 18px rgba(0,255,102,0.8),0 0 6px rgba(0,255,102,0.5)">${t().welcome}</p>
         <h2 class="text-3d" style="font-size:24px;font-weight:900;margin:2px 0 0">${esc(u.username)}</h2>
         <div style="display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:3px 10px;border-radius:12px;background:${badge.c}25;border:1px solid ${badge.c}66">
           <span style="font-size:11px">${badge.icon}</span>
