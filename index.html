@@ -1,4 +1,4 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1730,7 +1730,6 @@ document.addEventListener('touchend',async()=>{
   }
   pullDist=0;
 });
-/* BACK BUTTON HANDLER */
 function pushBackState(){try{history.pushState({t:Date.now()},'','#');}catch(e){}}
 window.addEventListener('popstate',()=>{
   let closed=false;
