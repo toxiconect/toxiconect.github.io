@@ -49,6 +49,7 @@ body{background:#050907;background-image:radial-gradient(ellipse at top,rgba(0,2
 .btn-invest{background:linear-gradient(180deg,#00FF66,#10B981);color:#000;font-weight:900;border-radius:12px;border:none;padding:11px;width:100%;cursor:pointer;font-size:11px;letter-spacing:0.4px;box-shadow:0 4px 0 #0a5c3a,0 6px 20px rgba(0,255,102,0.4);transition:all 0.1s;position:relative;z-index:20}
 .btn-invest:active{transform:translateY(3px);box-shadow:0 1px 0 #0a5c3a,0 2px 8px rgba(0,255,102,0.3)}
 .btn-invest.locked{background:linear-gradient(180deg,#2a2a2a,#1a1a1a);color:#666;cursor:not-allowed;box-shadow:0 4px 0 #0a0a0a}
+.btn-invest:disabled{opacity:0.6;cursor:not-allowed;pointer-events:none}
 .collect-btn{background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-weight:900;box-shadow:0 0 35px rgba(0,255,102,0.55);animation:cpa 2s infinite;transition:all 0.2s}
 @keyframes cpa{0%,100%{box-shadow:0 0 20px rgba(0,255,102,0.4)}50%{box-shadow:0 0 50px rgba(0,255,102,0.9)}}
 .collect-btn:disabled{background:rgba(255,255,255,0.05);color:#6B7280;box-shadow:none;animation:none;cursor:not-allowed}
@@ -162,6 +163,9 @@ const sb=window.supabase?window.supabase.createClient(CFG.sbUrl,CFG.sbKey):null;
 let PROMO_CODES=[];
 let PROMO_LOADED=false;
 
+// 🔒 INVEST LOCK — prevents double-invest / multi-tab / rapid-click
+let INVEST_LOCK=false;
+
 // PLANS — loaded dynamically from Supabase (fallback to default below)
 let PLANS=[
   {id:'l1',n:'BRONZE',d:1,dly:0.10,t:4.00,c:'#CD7F32',i:'🥉'},
@@ -272,7 +276,41 @@ try{
   S.tgBonus=ex.tgBonus||false;
 }catch(e){}
 
-try{const up=new URLSearchParams(location.search);const rf=up.get('ref');if(rf)S.sd.referredBy=rf}catch(e){}
+/* ============ FIX #15: REFERRAL LINK LOCK ============ */
+/* Pehla ref lock karo — baad me koi aur link aaye to overwrite na ho */
+try{
+  const up=new URLSearchParams(location.search);
+  const rf=up.get('ref');
+  const REF_LOCK_DAYS=30;
+  const REF_LOCK_MS=REF_LOCK_DAYS*24*60*60*1000;
+  const lockedRef=localStorage.getItem('t_locked_ref');
+  const lockedTime=parseInt(localStorage.getItem('t_locked_ref_time')||'0');
+
+  // Expire check
+  if(lockedRef && Date.now()-lockedTime > REF_LOCK_MS){
+    localStorage.removeItem('t_locked_ref');
+    localStorage.removeItem('t_locked_ref_time');
+  }
+
+  if(rf){
+    // URL me ref hai
+    const freshLockedRef=localStorage.getItem('t_locked_ref');
+    if(!freshLockedRef){
+      // Pehli baar — lock karo
+      S.sd.referredBy=rf;
+      localStorage.setItem('t_locked_ref',rf);
+      localStorage.setItem('t_locked_ref_time',Date.now().toString());
+      console.log('🔒 Ref locked:',rf);
+    } else {
+      // Already locked — purana hi use karo (attacker overwrite nahi kar sakta)
+      S.sd.referredBy=freshLockedRef;
+      console.log('🔒 Ref already locked, ignoring new:',rf,'→ using:',freshLockedRef);
+    }
+  } else {
+    // URL me ref nahi — lock se uthao
+    if(lockedRef) S.sd.referredBy=lockedRef;
+  }
+}catch(e){}
 
 const $=id=>document.getElementById(id);
 const fmt=n=>Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -1149,6 +1187,9 @@ async function finishSignup(){
   S.plans=[];
   localStorage.setItem('t_pwd_'+uid,pw);
   if(sb){try{await sb.from('users').insert([{user_id:uid,username:un,email:S.sd.email||'',phone:S.sd.phone||'',balance:0,referral_balance:0,invested:0,referral_code:rc,referred_by:S.sd.referredBy,is_banned:false}]);}catch(e){}}
+  /* FIX #15: Signup complete hone pe ref lock clear karo */
+  localStorage.removeItem('t_locked_ref');
+  localStorage.removeItem('t_locked_ref_time');
   haptic('success');sound('success');
   S.tab='dashboard';save();render();
   setTimeout(()=>applySignupBonus(),800);
@@ -1420,7 +1461,8 @@ function plansUI(){
   const cards=PLANS.map(p=>{
     const roi=((p.dly/p.d)*100).toFixed(1);
     const active=isActive(p.id);
-    const btn=active?'<button class="btn-invest locked" disabled>🔒 ALREADY ACTIVE</button>':`<button onclick="event.stopPropagation();quickInvest('${p.id}')" class="btn-invest">⚡ INVEST NOW</button>`;
+    const lockAttr=INVEST_LOCK?'disabled':'';
+    const btn=active?'<button class="btn-invest locked" disabled>🔒 ALREADY ACTIVE</button>':`<button onclick="event.stopPropagation();quickInvest('${p.id}')" class="btn-invest" ${lockAttr}>⚡ INVEST NOW</button>`;
     return `<div class="plan-card ${active?'locked':''}" onclick="${active?'':`openPlan('${p.id}')`}">
       <div style="display:flex;justify-content:space-between;margin-bottom:10px;position:relative;z-index:1">
         <p style="font-size:9px;color:#888;font-weight:800;margin:0;letter-spacing:1px">PLAN</p>
@@ -1459,7 +1501,8 @@ function planModal(){
   const p=S.selPlan;
   const roi=((p.dly/p.d)*100).toFixed(2);
   const can=Number(S.user.balance)>=p.d;
-  const btn=can?`<button onclick="closePlan();invest('${p.id}')" class="btn-green" style="width:100%;padding:16px;border-radius:16px;font-size:14px;margin-bottom:12px">⚡ INVEST NOW — $${p.d.toFixed(2)}</button>`:`<button onclick="closePlan();setTab('wallet')" style="width:100%;padding:16px;border-radius:16px;font-size:14px;margin-bottom:12px;background:linear-gradient(135deg,#FBBF24,#F59E0B);color:#000;font-weight:800">💰 ADD FUNDS TO INVEST</button>`;
+  const lockAttr=INVEST_LOCK?'disabled':'';
+  const btn=can?`<button onclick="closePlan();invest('${p.id}')" class="btn-green" style="width:100%;padding:16px;border-radius:16px;font-size:14px;margin-bottom:12px" ${lockAttr}>⚡ INVEST NOW — $${p.d.toFixed(2)}</button>`:`<button onclick="closePlan();setTab('wallet')" style="width:100%;padding:16px;border-radius:16px;font-size:14px;margin-bottom:12px;background:linear-gradient(135deg,#FBBF24,#F59E0B);color:#000;font-weight:800">💰 ADD FUNDS TO INVEST</button>`;
   return `<div style="position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px)" onclick="closePlan()">
     <div class="glass-card modal-in" onclick="event.stopPropagation()" style="width:100%;max-width:440px;border-color:${p.c}66;max-height:90vh;overflow-y:auto">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><span style="font-size:10px;color:#888;font-weight:800;letter-spacing:1px">PLAN DETAILS</span><button onclick="closePlan()" style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.05);border:none;color:#aaa;font-size:22px;cursor:pointer">×</button></div>
@@ -1484,6 +1527,7 @@ function planModal(){
   </div>`;
 }
 function quickInvest(id){
+  if(INVEST_LOCK)return;
   if(isActive(id))return customAlert('Plan Active','This plan is already active.','🔒');
   const p=PLANS.find(x=>x.id===id);if(!p)return;
   if(Number(S.user.balance)<p.d){
@@ -1493,51 +1537,129 @@ function quickInvest(id){
   invest(id);
 }
 
+/* ============ FIX #11 + #3: INVEST LOCK + REFERRAL LOOP SAFE ============ */
 async function invest(id){
+  if(INVEST_LOCK){
+    haptic('warning');
+    toast('⏳ Please wait...');
+    return;
+  }
   const p=PLANS.find(x=>x.id===id);if(!p)return;
   if(isActive(id))return customAlert('Plan Active','This plan is already active.','🔒');
   if(Number(S.user.balance)<p.d)return customAlert('Low Balance','Insufficient balance.\n\nRequired: $'+p.d.toFixed(2)+'\nCurrent: $'+fmt(S.user.balance),'💰');
+
+  // 🔒 Lock ON — koi aur invest click block
+  INVEST_LOCK=true;
+  render(); // buttons disable dikhe
+
   const now=new Date();
   let np={user_id:S.user.user_id,username:S.user.username,plan_id:p.id,plan_name:p.n,deposit:p.d,daily:p.dly,total:p.t,days_collected:0,status:'active',started_at:now.toISOString(),expires_at:new Date(now.getTime()+40*DAY).toISOString()};
   S.user.balance=Number(S.user.balance)-p.d;
   S.user.invested=Number(S.user.invested||0)+p.d;
-  if(sb){
-    try{
+
+  try{
+    if(sb){
       const r=await sb.from('user_plans').insert([np]).select();
-      if(r.data&&r.data[0])np=r.data[0];
+      if(r.error){
+        // Unique constraint violation = plan already active server-side
+        if(r.error.code==='23505' || String(r.error.message||'').toLowerCase().includes('unique')){
+          // Rollback
+          S.user.balance += p.d;
+          S.user.invested -= p.d;
+          INVEST_LOCK=false;
+          render();
+          return customAlert('Already Active','You already have this plan running on our server.','🔒');
+        }
+        throw r.error;
+      }
+      if(r.data && r.data[0]) np=r.data[0];
       await sb.from('users').update({balance:S.user.balance,invested:S.user.invested}).eq('user_id',S.user.user_id);
       await distributeReferralCommissions(p.d,p.n);
-    }catch(e){console.warn('Invest error:',e);}
+    }
+    S.tx.unshift({type:'deposit',amount:p.d,status:'success',method:'INVEST · '+p.n,date:new Date().toISOString()});
+    S.plans.unshift(np);
+    haptic('success');sound('success');save();render();
+    customAlert('Investment Successful!',`Plan: ${p.n}\nInvested: $${p.d.toFixed(2)}\n\nCollect your daily profit in 24 hours!`,'🎉');
+    setTimeout(()=>checkVIPBadgeChange(),1500);
+  }catch(e){
+    console.error('Invest failed:',e);
+    // Rollback balance
+    S.user.balance += p.d;
+    S.user.invested -= p.d;
+    save();
+    haptic('error');sound('error');
+    showDetailedError('Investment Failed',(e.message||String(e)),'Your balance has been restored. Please try again.','❌');
+    render();
+  }finally{
+    INVEST_LOCK=false;
   }
-  S.tx.unshift({type:'deposit',amount:p.d,status:'success',method:'INVEST · '+p.n,date:new Date().toISOString()});
-  S.plans.unshift(np);
-  haptic('success');sound('success');save();render();
-  customAlert('Investment Successful!',`Plan: ${p.n}\nInvested: $${p.d.toFixed(2)}\n\nCollect your daily profit in 24 hours!`,'🎉');
-  setTimeout(()=>checkVIPBadgeChange(),1500);
 }
 
+/* ============ FIX #3: REFERRAL LOOP SAFE ============ */
 async function distributeReferralCommissions(planAmount,planName){
   if(!sb||!S.user||!S.user.referred_by)return;
   const COMMISSIONS=[0.10,0.05,0.02,0.01,0.01,0.01,0.01,0.01,0.01,0.01];
+  const visited=new Set();
   let currentRefCode=S.user.referred_by;
-  let level=1;const visited=[];
-  while(currentRefCode && level<=10){
+  let level=1;
+  const MAX_LEVELS=10;
+  const QUERY_TIMEOUT=2000;
+
+  while(currentRefCode && level<=MAX_LEVELS){
+    // Self-referral check
+    if(currentRefCode === S.user.referral_code) {
+      console.warn('⚠️ Self-referral detected, breaking loop');
+      break;
+    }
     try{
-      const res=await sb.from('users').select('user_id,username,referral_code,referral_balance,referred_by').eq('referral_code',currentRefCode).limit(1);
-      if(!res.data||!res.data[0])break;
+      // Timeout-safe query
+      const queryPromise = sb.from('users')
+        .select('user_id,username,referral_code,referral_balance,referred_by')
+        .eq('referral_code',currentRefCode)
+        .limit(1);
+      const timeoutPromise = new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),QUERY_TIMEOUT));
+      const res = await Promise.race([queryPromise, timeoutPromise]);
+
+      if(!res.data || !res.data[0]) {
+        console.log('✅ Referral chain ended at level',level);
+        break;
+      }
       const upline=res.data[0];
-      if(visited.includes(upline.user_id))break;
-      visited.push(upline.user_id);
+
+      // Cycle detection — both id and code
+      if(visited.has(upline.user_id) || visited.has(upline.referral_code)){
+        console.warn('⚠️ Cycle detected at level',level,'— breaking loop');
+        break;
+      }
+      visited.add(upline.user_id);
+      visited.add(upline.referral_code);
+
       const pct=COMMISSIONS[level-1]||0;
       const comm=planAmount*pct;
       if(comm>0){
-        await sb.from('users').update({referral_balance:Number(upline.referral_balance||0)+comm}).eq('user_id',upline.user_id);
-        try{await sb.from('notifications').insert([{user_id:upline.user_id,title:`💎 Level ${level} Commission!`,message:`You earned $${comm.toFixed(2)} (${(pct*100).toFixed(0)}%) from ${S.user.username}'s ${planName} plan investment of $${planAmount.toFixed(2)}`,type:'bonus',is_read:false}]);}catch(e){}
+        try{
+          await sb.from('users').update({referral_balance:Number(upline.referral_balance||0)+comm}).eq('user_id',upline.user_id);
+          try{
+            await sb.from('notifications').insert([{
+              user_id:upline.user_id,
+              title:`💎 Level ${level} Commission!`,
+              message:`You earned $${comm.toFixed(2)} (${(pct*100).toFixed(0)}%) from ${S.user.username}'s ${planName} plan investment of $${planAmount.toFixed(2)}`,
+              type:'bonus',
+              is_read:false
+            }]);
+          }catch(e){}
+        }catch(e){
+          console.warn('Commission update failed at level',level,e);
+        }
       }
       currentRefCode=upline.referred_by;
       level++;
-    }catch(e){break;}
+    }catch(e){
+      console.warn('⚠️ Referral loop broke at level',level,':',e.message);
+      break;
+    }
   }
+  console.log('✅ Referral distribution complete. Levels processed:',level-1);
 }
 
 async function collect(pid){
@@ -2254,14 +2376,39 @@ document.addEventListener('touchend',async()=>{
 try{if(window.Telegram&&window.Telegram.WebApp){window.Telegram.WebApp.ready();window.Telegram.WebApp.expand();}}catch(e){}
 if(!S.user)S.tab='signup';
 
+/* ============ FIX #12: LOADING SCREEN — Promise.all + failsafe ============ */
+let loadingHidden=false;
+function hideLoading(){
+  if(loadingHidden)return;
+  loadingHidden=true;
+  const l=$('loading');
+  if(l)l.classList.add('hide');
+}
+
 (async function(){
-  await loadSiteConfig();
-  await loadPlansFromDB();
-  if(S.user){await syncUser();}
-  await loadPromoCodes();
-  await loadCryptoPrices();
+  // Failsafe — 8 second baad hamesha hide (slow network protection)
+  const failsafe=setTimeout(()=>{
+    hideLoading();
+    setTimeout(()=>toast('⚠️ Slow connection. Some data may be missing.'),500);
+  },8000);
+
+  try{
+    // Sab kuch parallel load
+    await Promise.all([
+      loadSiteConfig(),
+      loadPlansFromDB(),
+      loadPromoCodes(),
+      loadCryptoPrices(),
+      S.user ? syncUser() : Promise.resolve()
+    ]);
+  }catch(e){
+    console.warn('Init error:',e);
+  }
+
+  clearTimeout(failsafe);
   render();
-  setTimeout(()=>{const l=$('loading');if(l)l.classList.add('hide');},1200);
+  hideLoading();
+
   setTimeout(showLive,3500);
   setTimeout(()=>{if(S.user){checkTeamMilestones();checkVIPBadgeChange();}},2000);
   setInterval(loadCryptoPrices,90000);
