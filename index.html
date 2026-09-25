@@ -61,7 +61,18 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 @keyframes min { from { opacity: 0; transform: scale(0.9) translateY(30px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 .loading { position: fixed; inset: 0; background: #050907; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s, visibility 0.6s; }
 .loading.hide { opacity: 0; visibility: hidden; }
+.l-logo { font-size: 60px; font-weight: 900; color: #00FF66; letter-spacing: 0.3em; text-shadow: 0 0 40px #00FF66; }
 @keyframes ll { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.06); opacity: 0.85; } }
+.l-bar { width: 200px; height: 3px; background: rgba(0,255,102,0.15); border-radius: 3px; margin-top: 28px; overflow: hidden; }
+.l-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #00FF66, #10B981); animation: lf 1.6s forwards; }
+@keyframes lf { to { width: 100%; } }
+/* ===== GLITCH EFFECT ===== */
+.glitch { position: relative; animation: ll 1.5s infinite; }
+.glitch::before, .glitch::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #050907; overflow: hidden; }
+.glitch::before { left: 2px; text-shadow: -2px 0 #FF00FF; animation: glitch-anim-1 3s infinite linear alternate-reverse; }
+.glitch::after { left: -2px; text-shadow: -2px 0 #00FFFF; animation: glitch-anim-2 2s infinite linear alternate-reverse; }
+@keyframes glitch-anim-1 { 0% { clip-path: inset(20% 0 80% 0); } 20% { clip-path: inset(60% 0 10% 0); } 40% { clip-path: inset(40% 0 50% 0); } 60% { clip-path: inset(80% 0 5% 0); } 80% { clip-path: inset(10% 0 70% 0); } 100% { clip-path: inset(30% 0 50% 0); } }
+@keyframes glitch-anim-2 { 0% { clip-path: inset(10% 0 60% 0); } 20% { clip-path: inset(30% 0 20% 0); } 40% { clip-path: inset(70% 0 10% 0); } 60% { clip-path: inset(20% 0 50% 0); } 80% { clip-path: inset(50% 0 30% 0); } 100% { clip-path: inset(5% 0 80% 0); } }
 .live-b { position: fixed; bottom: 100px; left: 12px; right: 12px; max-width: 420px; margin: 0 auto; background: linear-gradient(135deg, rgba(9,18,14,0.98), rgba(5,12,8,0.99)); backdrop-filter: blur(20px); border: 1px solid rgba(0,255,102,0.45); border-radius: 16px; padding: 12px 16px; z-index: 45; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s; transform: translateY(180%); opacity: 0; display: flex; align-items: center; gap: 12px; box-shadow: 0 15px 40px rgba(0,255,102,0.25); }
 .live-b.show { transform: translateY(0); opacity: 1; }
 .l-av { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #00FF66, #10B981); display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; font-size: 15px; flex-shrink: 0; }
@@ -120,7 +131,8 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 <body>
 
 <div class="loading" id="loading">
-  <img src="icon-512.png" style="width:160px;height:160px;filter:drop-shadow(0 0 40px #00FF66);animation:ll 1.5s infinite;">
+  <div class="l-logo glitch" data-text="TOXIC">TOXIC</div>
+  <div class="l-bar"><div class="l-fill"></div></div>
 </div>
 
 <div class="live-b" id="liveB">
@@ -1840,10 +1852,10 @@ function teamUI() {
       <h2 style="font-size:24px;font-weight:900;margin:0 0 8px;line-height:1.25">Build your network<br>and <span class="text-toxic">grow together.</span></h2>
       <div style="display:inline-flex;align-items:center;gap:6px;margin-bottom:10px;padding:5px 14px;border-radius:20px;background:${tb.c}25;border:1px solid ${tb.c}66"><span style="font-size:14px">${tb.icon}</span><span style="font-size:11px;font-weight:900;color:${tb.c}">${tb.name}</span></div>
       <p style="font-size:12px;color:#888;margin:0">Earn 10% instant commission on referral investments</p>
-      <div style="background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.25);border-radius:12px;padding:10px 14px;margin-top:14px"><p style="font-size:11px;color:#00FF66;font-weight:700;margin:0">⚡ Referral bonuses auto-credit to main balance</p></div>
+      <div style="background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.25);border-radius:12px;padding:10px 14px;margin-top:14px"><p style="font-size:11px;color:#00FF66;font-weight:700;margin:0">⚡ Click 'ADD TO BALANCE' to claim your referral earnings</p></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.08)">
         <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px;text-align:center"><p style="font-size:9px;color:#888;margin:0 0 4px">TOTAL MEMBERS</p><p class="mono text-toxic" style="font-size:20px;font-weight:900;margin:0">${myTeam.length}</p></div>
-        <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px;text-align:center"><p style="font-size:9px;color:#888;margin:0 0 4px">PENDING REF</p><p class="mono text-toxic" style="font-size:20px;font-weight:900;margin:0">$${fmt(refBal)}</p>${refBal > 0 ? `<button onclick="claimReferralBalance()" class="btn-green" style="margin-top:10px;padding:8px 12px;border-radius:10px;font-size:11px;width:100%;font-weight:900">➕ ADD TO BALANCE</button>` : ''}</div>
+        <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px;text-align:center"><p style="font-size:9px;color:#888;margin:0 0 4px;letter-spacing:0.5px">TOTAL REF EARNINGS</p><p class="mono text-toxic" style="font-size:20px;font-weight:900;margin:0">$${fmt(refBal)}</p>${refBal > 0 ? `<button onclick="claimReferralBalance()" class="btn-green" style="margin-top:10px;padding:8px 12px;border-radius:10px;font-size:11px;width:100%;font-weight:900">➕ ADD TO BALANCE</button>` : ''}</div>
       </div>
     </div>
     ${referralRaceUI()}
