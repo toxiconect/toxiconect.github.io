@@ -61,18 +61,11 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 @keyframes min { from { opacity: 0; transform: scale(0.9) translateY(30px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 .loading { position: fixed; inset: 0; background: #050907; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s, visibility 0.6s; }
 .loading.hide { opacity: 0; visibility: hidden; }
-.l-logo { font-size: 60px; font-weight: 900; color: #00FF66; letter-spacing: 0.3em; text-shadow: 0 0 40px #00FF66; }
+.l-logo { font-size: 60px; font-weight: 900; color: #00FF66; letter-spacing: 0.3em; text-shadow: 0 0 40px #00FF66; animation: ll 1.5s infinite; }
 @keyframes ll { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.06); opacity: 0.85; } }
 .l-bar { width: 200px; height: 3px; background: rgba(0,255,102,0.15); border-radius: 3px; margin-top: 28px; overflow: hidden; }
 .l-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #00FF66, #10B981); animation: lf 1.6s forwards; }
 @keyframes lf { to { width: 100%; } }
-/* ===== GLITCH EFFECT ===== */
-.glitch { position: relative; animation: ll 1.5s infinite; }
-.glitch::before, .glitch::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #050907; overflow: hidden; }
-.glitch::before { left: 2px; text-shadow: -2px 0 #FF00FF; animation: glitch-anim-1 3s infinite linear alternate-reverse; }
-.glitch::after { left: -2px; text-shadow: -2px 0 #00FFFF; animation: glitch-anim-2 2s infinite linear alternate-reverse; }
-@keyframes glitch-anim-1 { 0% { clip-path: inset(20% 0 80% 0); } 20% { clip-path: inset(60% 0 10% 0); } 40% { clip-path: inset(40% 0 50% 0); } 60% { clip-path: inset(80% 0 5% 0); } 80% { clip-path: inset(10% 0 70% 0); } 100% { clip-path: inset(30% 0 50% 0); } }
-@keyframes glitch-anim-2 { 0% { clip-path: inset(10% 0 60% 0); } 20% { clip-path: inset(30% 0 20% 0); } 40% { clip-path: inset(70% 0 10% 0); } 60% { clip-path: inset(20% 0 50% 0); } 80% { clip-path: inset(50% 0 30% 0); } 100% { clip-path: inset(5% 0 80% 0); } }
 .live-b { position: fixed; bottom: 100px; left: 12px; right: 12px; max-width: 420px; margin: 0 auto; background: linear-gradient(135deg, rgba(9,18,14,0.98), rgba(5,12,8,0.99)); backdrop-filter: blur(20px); border: 1px solid rgba(0,255,102,0.45); border-radius: 16px; padding: 12px 16px; z-index: 45; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s; transform: translateY(180%); opacity: 0; display: flex; align-items: center; gap: 12px; box-shadow: 0 15px 40px rgba(0,255,102,0.25); }
 .live-b.show { transform: translateY(0); opacity: 1; }
 .l-av { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #00FF66, #10B981); display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; font-size: 15px; flex-shrink: 0; }
@@ -131,7 +124,7 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 <body>
 
 <div class="loading" id="loading">
-  <div class="l-logo glitch" data-text="TOXIC">TOXIC</div>
+  <div class="l-logo">TOXIC</div>
   <div class="l-bar"><div class="l-fill"></div></div>
 </div>
 
@@ -1015,7 +1008,7 @@ function goStep2() {
   S.sd.phone = ph;
   if (!cs) return customAlert('Missing Info', 'Please select your country code.', '⚠️');
   if (!ph) return customAlert('Missing Info', 'Please enter your mobile number.', '⚠️');
-  if (cs.includes('India') && ph.length !== 10) return customAlert('Invalid Number', 'India ka mobile number 10 digit ka hona chahiye.\n\nExample: 9876543210', '⚠️');
+  if (cs.includes('India') && ph.length !== 10) return customAlert('Invalid Number', 'India mobile number must be 10 digits.\n\nExample: 9876543210', '⚠️');
   if (ph.length < 6) return customAlert('Invalid Number', 'Please enter a valid mobile number (at least 6 digits).', '⚠️');
   const mr = $('manualRef').value.trim().toUpperCase();
   if (mr) { S.sd.referredBy = mr; localStorage.setItem('t_locked_ref', mr); localStorage.setItem('t_locked_ref_time', Date.now().toString()); }
@@ -1720,42 +1713,100 @@ async function manualRefresh() {
 }
 
 function historyUI() {
-  let allTx = S.tx.filter(x => x.type === 'deposit' || x.type === 'withdrawal');
+  let allTx = S.tx.filter(x => x.type === 'deposit' || x.type === 'withdrawal' || x.type === 'spin' || x.type === 'bonus' || x.type === 'daily_collect' || x.type === 'milestone');
+  
   if (S.txFilter === 'deposit') allTx = allTx.filter(x => x.type === 'deposit');
   else if (S.txFilter === 'withdrawal') allTx = allTx.filter(x => x.type === 'withdrawal');
   else if (S.txFilter === 'pending') allTx = allTx.filter(x => (x.status||'').toLowerCase() === 'pending');
+  else if (S.txFilter === 'earning') allTx = allTx.filter(x => x.type === 'spin' || x.type === 'bonus' || x.type === 'daily_collect' || x.type === 'milestone');
+  
   const tx = allTx.slice(0, S.historyLimit);
   const hasMore = allTx.length > S.historyLimit;
-  const filterBar = `<div style="display:flex;gap:6px;margin-bottom:10px;overflow-x:auto" class="hide-scroll">${['all','deposit','withdrawal','pending'].map(f => `<button onclick="S.txFilter='${f}';render()" style="padding:8px 14px;border-radius:20px;font-size:11px;font-weight:800;white-space:nowrap;border:none;cursor:pointer;${S.txFilter===f?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.06);color:#888'}">${f==='all'?'📋 All':f==='deposit'?'💳 Deposits':f==='withdrawal'?'💸 Withdrawals':'⏳ Pending'}</button>`).join('')}</div>`;
-  const h = `<div class="glass-card" style="text-align:center;margin-bottom:12px;position:relative"><button onclick="manualRefresh()" style="position:absolute;top:10px;right:10px;background:rgba(0,255,102,0.12);border:1px solid rgba(0,255,102,0.35);color:#00FF66;border-radius:10px;padding:6px 12px;font-size:10px;font-weight:800;cursor:pointer">🔄 REFRESH</button><p style="font-size:10px;color:#888;margin:0 0 8px;letter-spacing:1.5px">TOTAL TRANSACTIONS</p><p class="mono" style="font-size:34px;font-weight:900;margin:0">${allTx.length}</p><p style="font-size:9px;color:#00FF66;margin:8px 0 0;font-weight:700">● LIVE · Auto-updates every 5s</p></div>`;
+  
+  const filterBar = `<div style="display:flex;gap:6px;margin-bottom:10px;overflow-x:auto" class="hide-scroll">
+    ${['all','earning','deposit','withdrawal','pending'].map(f => `<button onclick="S.txFilter='${f}';render()" style="padding:8px 14px;border-radius:20px;font-size:11px;font-weight:800;white-space:nowrap;border:none;cursor:pointer;${S.txFilter===f?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.06);color:#888'}">${f==='all'?'📋 All':f==='earning'?'🎁 Earnings':f==='deposit'?'💳 Deposits':f==='withdrawal'?'💸 Withdrawals':'⏳ Pending'}</button>`).join('')}
+  </div>`;
+  
+  const h = `<div class="glass-card" style="text-align:center;margin-bottom:12px;position:relative">
+    <button onclick="manualRefresh()" style="position:absolute;top:10px;right:10px;background:rgba(0,255,102,0.12);border:1px solid rgba(0,255,102,0.35);color:#00FF66;border-radius:10px;padding:6px 12px;font-size:10px;font-weight:800;cursor:pointer">🔄 REFRESH</button>
+    <p style="font-size:10px;color:#888;margin:0 0 8px;letter-spacing:1.5px">TOTAL TRANSACTIONS</p>
+    <p class="mono" style="font-size:34px;font-weight:900;margin:0">${allTx.length}</p>
+    <p style="font-size:9px;color:#00FF66;margin:8px 0 0;font-weight:700">● LIVE · Auto-updates every 5s</p>
+  </div>`;
+  
   if (allTx.length === 0) {
-    return h + filterBar + `<div class="glass-card" style="text-align:center;padding:52px 20px"><div style="font-size:42px;opacity:0.4;margin-bottom:14px">📋</div><p style="font-weight:900;font-size:17px;margin:0 0 6px">No transactions yet</p><p style="font-size:12px;color:#888;margin:0">Your deposit & withdrawal history will appear here</p></div>`;
+    return h + filterBar + `<div class="glass-card" style="text-align:center;padding:52px 20px">
+      <div style="font-size:42px;opacity:0.4;margin-bottom:14px">📋</div>
+      <p style="font-weight:900;font-size:17px;margin:0 0 6px">No transactions yet</p>
+      <p style="font-size:12px;color:#888;margin:0">Your earning & transaction history will appear here</p>
+    </div>`;
   }
+  
   const list = tx.map(x => {
     const isWd = x.type === 'withdrawal';
-    const isC = !isWd;
-    const col = isC ? 'text-toxic' : 'text-red-400';
-    const sign = isC ? '+' : '-';
-    const st = (x.status || 'pending').toLowerCase();
-    let stBadge = 'background:rgba(251,191,36,0.15);color:#FBBF24'; let stText = 'PENDING';
-    if (st === 'approved' || st === 'paid' || st === 'completed' || st === 'success') { stBadge = 'background:rgba(0,255,102,0.15);color:#00FF66'; stText = 'SUCCESS'; }
+    const isSpin = x.type === 'spin';
+    const isBonus = x.type === 'bonus';
+    const isCollect = x.type === 'daily_collect';
+    const isMilestone = x.type === 'milestone';
+    
+    let icon = '💳';
+    let label = 'Deposit';
+    if (isWd) { icon = '💸'; label = 'Withdrawal'; }
+    else if (isSpin) { icon = '🎡'; label = 'Spin & Win'; }
+    else if (isBonus) { icon = '🎁'; label = 'Bonus'; }
+    else if (isCollect) { icon = '💰'; label = 'Daily Collect'; }
+    else if (isMilestone) { icon = '🏆'; label = 'Team Milestone'; }
+    
+    const col = isWd ? 'text-red-400' : 'text-toxic';
+    const sign = isWd ? '-' : '+';
+    
+    const st = (x.status || 'success').toLowerCase();
+    let stBadge = 'background:rgba(0,255,102,0.15);color:#00FF66';
+    let stText = 'SUCCESS';
+    if (st === 'pending') { stBadge = 'background:rgba(251,191,36,0.15);color:#FBBF24'; stText = 'PENDING'; }
     else if (st === 'rejected' || st === 'failed') { stBadge = 'background:rgba(239,68,68,0.15);color:#EF4444'; stText = 'REJECTED'; }
-    const label = isWd ? 'Withdrawal' : 'Deposit';
-    const icon = isWd ? '💸' : '💳';
+    
     let subInfo = esc(x.method || '');
     if (isWd && x.address && !subInfo.includes(x.address)) subInfo += ' • ' + esc(x.address);
+    if (isCollect && x.plan_id) subInfo = 'Plan: ' + esc(x.method || '');
+    
     let dateTime = '—';
     if (x.date || x.created_at) {
       try {
         const dt = new Date(x.date || x.created_at);
-        if (!isNaN(dt.getTime())) { const dd = String(dt.getDate()).padStart(2, '0'); const mm = String(dt.getMonth() + 1).padStart(2, '0'); const yy = dt.getFullYear(); let hh = dt.getHours(); const ampm = hh >= 12 ? 'PM' : 'AM'; hh = hh % 12 || 12; const mi = String(dt.getMinutes()).padStart(2, '0'); dateTime = `${dd}/${mm}/${yy} • ${String(hh).padStart(2,'0')}:${mi} ${ampm}`; }
+        if (!isNaN(dt.getTime())) {
+          const dd = String(dt.getDate()).padStart(2, '0');
+          const mm = String(dt.getMonth() + 1).padStart(2, '0');
+          const yy = dt.getFullYear();
+          let hh = dt.getHours();
+          const ampm = hh >= 12 ? 'PM' : 'AM';
+          hh = hh % 12 || 12;
+          const mi = String(dt.getMinutes()).padStart(2, '0');
+          dateTime = `${dd}/${mm}/${yy} • ${String(hh).padStart(2,'0')}:${mi} ${ampm}`;
+        }
       } catch(e) {}
     }
-    return `<div class="glass-card" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:16px"><div style="flex:1;min-width:0"><p style="font-weight:800;font-size:13px;margin:0">${icon} ${label}</p><p style="font-size:10px;color:#888;margin:4px 0 0;word-break:break-all">${subInfo}</p><p class="mono" style="font-size:9px;color:#666;margin:5px 0 0">🕐 ${dateTime}</p></div><div style="text-align:right;flex-shrink:0;margin-left:10px"><p class="mono font-black ${col}" style="margin:0;font-size:14px">${sign}$${fmt(x.amount)}</p><span style="font-size:9px;padding:3px 10px;border-radius:20px;${stBadge};font-weight:800;margin-top:6px;display:inline-block;text-transform:uppercase;letter-spacing:0.5px">${stText}</span></div></div>`;
+    
+    return `<div class="glass-card" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:16px">
+      <div style="flex:1;min-width:0">
+        <p style="font-weight:800;font-size:13px;margin:0">${icon} ${label}</p>
+        ${subInfo ? `<p style="font-size:10px;color:#888;margin:4px 0 0;word-break:break-all">${subInfo}</p>` : ''}
+        <p class="mono" style="font-size:9px;color:#666;margin:5px 0 0">🕐 ${dateTime}</p>
+      </div>
+      <div style="text-align:right;flex-shrink:0;margin-left:10px">
+        <p class="mono font-black ${col}" style="margin:0;font-size:14px">${sign}$${fmt(x.amount)}</p>
+        <span style="font-size:9px;padding:3px 10px;border-radius:20px;${stBadge};font-weight:800;margin-top:6px;display:inline-block;text-transform:uppercase;letter-spacing:0.5px">${stText}</span>
+      </div>
+    </div>`;
   }).join('');
+  
   let loadMoreHTML = '';
-  if (hasMore) { loadMoreHTML = `<button onclick="loadMoreHistory()" class="btn-green glow" style="width:100%;padding:14px;border-radius:14px;font-size:13px;margin-top:6px">⬇️ LOAD MORE (${allTx.length - S.historyLimit} remaining)</button>`; }
-  else if (allTx.length > CFG.historyPageSize) { loadMoreHTML = `<p style="text-align:center;font-size:11px;color:#666;margin:14px 0 0">— End of history —</p>`; }
+  if (hasMore) {
+    loadMoreHTML = `<button onclick="loadMoreHistory()" class="btn-green glow" style="width:100%;padding:14px;border-radius:14px;font-size:13px;margin-top:6px">⬇️ LOAD MORE (${allTx.length - S.historyLimit} remaining)</button>`;
+  } else if (allTx.length > CFG.historyPageSize) {
+    loadMoreHTML = `<p style="text-align:center;font-size:11px;color:#666;margin:14px 0 0">— End of history —</p>`;
+  }
+  
   return h + filterBar + list + loadMoreHTML;
 }
 
