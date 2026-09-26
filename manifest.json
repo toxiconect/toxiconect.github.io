@@ -3,7 +3,7 @@
   "short_name": "TOXIC",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#050907",
+  "background_color": "#000000",
   "theme_color": "#00FF66",
   "description": "TOXIC Investment Platform - Earn daily rewards",
   "orientation": "portrait",
