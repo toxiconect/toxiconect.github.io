@@ -205,7 +205,9 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
   </div>
 </div>
 
-<div id="app"></div><script>
+<div id="app"></div>
+
+<script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('service-worker.js').then(reg => console.log('SW registered')).catch(err => console.log('SW error:', err));
@@ -248,9 +250,7 @@ let PLANS = [
   {id:'l10',n:'IMMORTAL', d:1000, dly:200.00, t:8000.00, c:'#FEF08A', i:'⚡'},
   {id:'l11',n:'TITAN', d:2000, dly:410.00, t:16400.00, c:'#3B82F6', i:'⭐'},
   {id:'l12',n:'GODFATHER', d:5000, dly:1050.00,t:42000.00, c:'#00FF66', i:'👑'}
-];
-
-const I18N = {
+];const I18N = {
   en: {dash:"Dashboard", earn:"Earn", invest:"INVEST", wallet:"Wallet", history:"History", team:"Team", totalBal:"TOTAL BALANCE", withEarn:"WITHDRAW EARNINGS ↗", refBal:"REFERRAL", activePlans:"ACTIVE PLANS", calcTitle:"INVESTMENT CALCULATOR", calcSub:"Estimate your returns in real-time ($1 - $5000)", days:"Days", estReturn:"Total Return", newsHeading:"ANNOUNCEMENT", wdTimeNotice:"⚡ Processing Time: Withdrawals are processed within 1 to 24 hours.", ldrTitle:"🏆 TOP AFFILIATES LEADERBOARD", top10:"Global Top Referrers", myTeamTitle:"👥 MY DIRECT REFERRALS", invFriends:"INVITE FRIENDS", shareTg:"SHARE ON TELEGRAM", welcome:"Welcome", langName:"Language"},
   hi: {dash:"डैशबोर्ड", earn:"कमाएँ", invest:"निवेश", wallet:"वॉलेट", history:"इतिहास", team:"टीम", totalBal:"कुल बैलेंस", withEarn:"कमाई निकालें ↗", refBal:"रेफरल", activePlans:"सक्रिय प्लान", calcTitle:"निवेश कैलकुलेटर", calcSub:"अपना रिटर्न रियल-टाइम में देखें ($1 - $5000)", days:"दिन", estReturn:"कुल रिटर्न", newsHeading:"घोषणा", wdTimeNotice:"⚡ प्रोसेसिंग समय: विथड्रॉल 1 से 24 घंटे में प्रोसेस होते हैं।", ldrTitle:"🏆 टॉप एफिलिएट्स", top10:"ग्लोबल टॉप रेफरर्स", myTeamTitle:"👥 मेरे डायरेक्ट रेफरल", invFriends:"दोस्तों को बुलाएं", shareTg:"टेलीग्राम पर शेयर करें", welcome:"स्वागत", langName:"भाषा"},
   ur: {dash:"ڈیش بورڈ", earn:"کمائیں", invest:"سرمایہ کاری", wallet:"والٹ", history:"تاریخ", team:"ٹیم", totalBal:"کل بیلنس", withEarn:"کمائی نکالیں ↗", refBal:"ریفرل", activePlans:"فعال پلانز", calcTitle:"سرمایہ کیلکولیٹر", calcSub:"اپنی واپسی رئیل ٹائم میں دیکھیں ($1 - $5000)", days:"دن", estReturn:"کل واپسی", newsHeading:"اعلان", wdTimeNotice:"⚡ پروسیسنگ ٹائم: وِدھ ڈرال 1 سے 24 گھنٹے میں۔", ldrTitle:"🏆 ٹاپ ایفیلیئٹس", top10:"گلوبل ٹاپ ریفررز", myTeamTitle:"👥 میرے ڈائریکٹ ریفرلز", invFriends:"دوستوں کو مدعو کریں", shareTg:"ٹیلیگرام پر شیئر کریں", welcome:"خوش آمدید", langName:"زبان"},
@@ -915,8 +915,7 @@ function renderTab() {
   if (S.tab === 'history') return historyUI();
   if (S.tab === 'team') return teamUI();
   return '';
-}
-function newsBannerUI() {
+}function newsBannerUI() {
   const items = NEWS_LIST.join('  •  ');
   return `<div class="news-ticker"><span style="font-size:10px;font-weight:900;color:#00FF66;display:flex;align-items:center;gap:4px">📢 ${t().newsHeading}:</span><div style="flex:1;overflow:hidden"><div class="news-scroll mono" style="font-size:11px;color:#ddd">${items}</div></div></div>`;
 }
@@ -1344,7 +1343,8 @@ async function claimReferralBalance() {
   if (sb) { try { await sb.from('users').update({balance: S.user.balance, referral_balance: 0}).eq('user_id', S.user.user_id); } catch(e) {} }
   haptic('success'); sound('coin'); launchConfetti();
   customAlert('🎉 Added to Balance!', `+$${fmt(refBal)} successfully added to your main balance!`, '💰'); render();
-}function userAvatar(u, size = 36, fontSize = 13) {
+}
+function userAvatar(u, size = 36, fontSize = 13) {
   if (u && u.avatar) return `<div class="avatar-in" style="width:${size}px;height:${size}px"><img src="${u.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"></div>`;
   const init = (u && u.username) ? u.username[0].toUpperCase() : 'T';
   return `<div class="avatar-in" style="width:${size}px;height:${size}px;font-size:${fontSize}px">${init}</div>`;
