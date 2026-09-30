@@ -1,4 +1,4 @@
-const CACHE_NAME = 'toxic-cache-v13';
+const CACHE_NAME = 'toxic-cache-v14';
 const ASSETS = [
   './',
   './index.html',
