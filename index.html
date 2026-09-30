@@ -33,7 +33,7 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .btn-green:active { transform: scale(0.97); }
 .btn-green:disabled { opacity: 0.5; cursor: not-allowed; }
 .card-gradient { background: linear-gradient(160deg, rgba(0,255,102,0.14), rgba(9,14,11,0.99) 65%); }
-.inp { background: rgba(0,0,0,0.55); border: 1.5px solid rgba(0,255,102,0.12); border-radius: 12px; padding: 12px 14px; color: #fff; outline: none; width: 100%; font-size: 14px; font-family: inherit; transition: all 0.2s; }
+.inp { background: rgba(0,0,0,0.55); border: 1.5px solid rgba(0,255,102,0.12); border-radius: 10px; padding: 10px 12px; color: #fff; outline: none; width: 100%; font-size: 13px; font-family: inherit; transition: all 0.2s; }
 .inp:focus { border-color: rgba(0,255,102,0.6); box-shadow: 0 0 0 4px rgba(0,255,102,0.08); }
 .inp::placeholder { color: #4B5563; }
 .nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 448px; margin: 0 auto; z-index: 50; background: rgba(5,9,7,0.98); backdrop-filter: blur(30px); border-top: 1px solid rgba(0,255,102,0.1); padding: 8px 4px calc(8px + env(safe-area-inset-bottom)); }
@@ -140,7 +140,7 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .fake-ad-progress { height: 100%; width: 0%; background: linear-gradient(90deg, #00FF66, #10B981); transition: width 1s linear; box-shadow: 0 0 12px #00FF66; }
 .fake-ad-counter { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: #FFD700; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 900; letter-spacing: 1px; text-shadow: 0 0 12px rgba(255,215,0,0.7); z-index: 3; }
 .fake-ad-footnote { color: #666; font-size: 11px; margin-top: 20px; text-align: center; letter-spacing: 0.5px; }
-.otp-input { letter-spacing: 8px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 900; }
+.otp-input { letter-spacing: 6px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 900; }
 .warning-red { background: linear-gradient(135deg, rgba(239,68,68,0.15), rgba(220,38,38,0.08)); border: 1.5px solid rgba(239,68,68,0.5); border-radius: 14px; padding: 12px 14px; margin-bottom: 14px; }
 .warning-red p { color: #FCA5A5 !important; font-size: 11px !important; font-weight: 800 !important; margin: 0 !important; line-height: 1.5 !important; text-align: center; }
 .live-counter { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.35); }
@@ -150,6 +150,14 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .earned-item { font-size: 11px; color: #ccc; padding: 4px 0; display: flex; align-items: center; gap: 8px; }
 .earned-item b { color: #00FF66; font-weight: 800; }
 .trending-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; background: linear-gradient(135deg, rgba(239,68,68,0.2), rgba(249,115,22,0.15)); border: 1px solid rgba(239,68,68,0.45); }
+/* Landscape / Horizontal Screen Adjustments */
+@media (orientation: landscape) and (max-height: 600px) {
+  .signup-banner { height: 120px !important; }
+  .signup-content { margin-top: 10px !important; }
+  .signup-scroll { max-height: 65vh; overflow-y: auto; padding-right: 4px; }
+  .signup-scroll::-webkit-scrollbar { width: 4px; }
+  .signup-scroll::-webkit-scrollbar-thumb { background: #00FF66; border-radius: 4px; }
+}
 </style>
 </head>
 <body>
@@ -246,7 +254,8 @@ let PLANS = [
   {id:'l10',n:'IMMORTAL', d:1000, dly:200.00, t:8000.00, c:'#FEF08A', i:'⚡'},
   {id:'l11',n:'TITAN', d:2000, dly:410.00, t:16400.00, c:'#3B82F6', i:'⭐'},
   {id:'l12',n:'GODFATHER', d:5000, dly:1050.00,t:42000.00, c:'#00FF66', i:'👑'}
-];const I18N = {
+];
+const I18N = {
   en: {dash:"Dashboard", earn:"Earn", invest:"INVEST", wallet:"Wallet", history:"History", team:"Team", totalBal:"TOTAL BALANCE", withEarn:"WITHDRAW EARNINGS ↗", refBal:"REFERRAL", activePlans:"ACTIVE PLANS", calcTitle:"INVESTMENT CALCULATOR", calcSub:"Estimate your returns in real-time ($1 - $5000)", days:"Days", estReturn:"Total Return", newsHeading:"ANNOUNCEMENT", wdTimeNotice:"⚡ Processing Time: Withdrawals are processed within 1 to 24 hours.", ldrTitle:"🏆 TOP AFFILIATES LEADERBOARD", top10:"Global Top Referrers", myTeamTitle:"👥 MY DIRECT REFERRALS", invFriends:"INVITE FRIENDS", shareTg:"SHARE ON TELEGRAM", welcome:"Welcome", langName:"Language"},
   hi: {dash:"डैशबोर्ड", earn:"कमाएँ", invest:"निवेश", wallet:"वॉलेट", history:"इतिहास", team:"टीम", totalBal:"कुल बैलेंस", withEarn:"कमाई निकालें ↗", refBal:"रेफरल", activePlans:"सक्रिय प्लान", calcTitle:"निवेश कैलकुलेटर", calcSub:"अपना रिटर्न रियल-टाइम में देखें ($1 - $5000)", days:"दिन", estReturn:"कुल रिटर्न", newsHeading:"घोषणा", wdTimeNotice:"⚡ प्रोसेसिंग समय: विथड्रॉल 1 से 24 घंटे में प्रोसेस होते हैं।", ldrTitle:"🏆 टॉप एफिलिएट्स", top10:"ग्लोबल टॉप रेफरर्स", myTeamTitle:"👥 मेरे डायरेक्ट रेफरल", invFriends:"दोस्तों को बुलाएं", shareTg:"टेलीग्राम पर शेयर करें", welcome:"स्वागत", langName:"भाषा"},
   ur: {dash:"ڈیش بورڈ", earn:"کمائیں", invest:"سرمایہ کاری", wallet:"والٹ", history:"تاریخ", team:"ٹیم", totalBal:"کل بیلنس", withEarn:"کمائی نکالیں ↗", refBal:"ریفرل", activePlans:"فعال پلانز", calcTitle:"سرمایہ کیلکولیٹر", calcSub:"اپنی واپسی رئیل ٹائم میں دیکھیں ($1 - $5000)", days:"دن", estReturn:"کل واپسی", newsHeading:"اعلان", wdTimeNotice:"⚡ پروسیسنگ ٹائم: وِدھ ڈرال 1 سے 24 گھنٹے میں۔", ldrTitle:"🏆 ٹاپ ایفیلیئٹس", top10:"گلوبل ٹاپ ریفررز", myTeamTitle:"👥 میرے ڈائریکٹ ریفرلز", invFriends:"دوستوں کو مدعو کریں", shareTg:"ٹیلیگرام پر شیئر کریں", welcome:"خوش آمدید", langName:"زبان"},
@@ -326,7 +335,7 @@ let S = {
   adData: {todayCount:0, totalEarned:0, lastResetDate:''},
   liveStats: {watching:2847, todayAds:18432, todayPaid:18.43, trending:847},
   liveEarners: [],
-  showPasswordModal: false // <--- Added for Password Change
+  showPasswordModal: false
 };
 
 try {
@@ -365,7 +374,7 @@ try {
 
 const $ = id => document.getElementById(id);
 const fmt = n => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-const fmt3 = n => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:3, maximumFractionDigits:3}); // <--- Added for precise ad rewards
+const fmt3 = n => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:3, maximumFractionDigits:3});
 const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const nextC = p => new Date(p.started_at).getTime() + (Number(p.days_collected)||0) * DAY;
 const isActive = pid => S.plans.some(p => p.plan_id === pid && Number(p.days_collected) < 40 && p.status !== 'completed');
@@ -679,7 +688,6 @@ async function creditAdReward() {
 }
 
 function earnUI() {
-  // Removed "Free Rewards Hub" Header completely
   return `<div style="display:flex;flex-direction:column;gap:16px">
     ${watchEarnUI()}
     ${spinUI()}
@@ -720,7 +728,6 @@ async function sendOTP() {
   S.otp = { code, email, expiry: Date.now() + 15 * 60 * 1000 };
   localStorage.setItem('t_otp', JSON.stringify(S.otp));
   try {
-    // Fix applied here: passcode -> otp_code
     await emailjs.send(CFG.emailjs.serviceId, CFG.emailjs.templateId, { otp_code: code, time: timeStr, email: email });
     haptic('success'); sound('success');
     customAlert('📧 OTP Sent!', `A 6-digit OTP has been sent to:\n\n${email}\n\nPlease check your inbox (and spam folder).\n\nOTP valid for 15 minutes.`, '✅');
@@ -851,7 +858,7 @@ function render() {
   const a = $('app');
   if (S.page) { a.innerHTML = renderPage(); return; }
   if (!S.user) { a.innerHTML = S.tab === 'signin' ? loginUI() : signupUI(); return; }
-  a.innerHTML = mainUI() + planModal() + profileModal() + notifsModal() + passwordModal(); // Added passwordModal
+  a.innerHTML = mainUI() + planModal() + profileModal() + notifsModal() + passwordModal();
   if (S.tab === 'wallet') setTimeout(loadSavedAddresses, 0);
   updateDyn();
 }
@@ -914,7 +921,8 @@ function renderTab() {
   if (S.tab === 'history') return historyUI();
   if (S.tab === 'team') return teamUI();
   return '';
-}function newsBannerUI() {
+}
+function newsBannerUI() {
   const items = NEWS_LIST.join('  •  ');
   return `<div class="news-ticker"><span style="font-size:10px;font-weight:900;color:#00FF66;display:flex;align-items:center;gap:4px">📢 ${t().newsHeading}:</span><div style="flex:1;overflow:hidden"><div class="news-scroll mono" style="font-size:11px;color:#ddd">${items}</div></div></div>`;
 }
@@ -926,9 +934,6 @@ function dashUI() {
   const u = S.user; const ap = S.plans.filter(p => Number(p.days_collected) < 40 && p.status !== 'completed');
   const badge = getVIPBadge(Number(u.invested||0));
   const bars = [20,35,28,50,42,65,55,80,70,95].map((h, i) => `<div style="flex:1;border-radius:4px 4px 0 0;height:${h}%;background:linear-gradient(180deg,#00FF66,rgba(0,255,102,0.15));opacity:${0.4+i*0.06}"></div>`).join('');
-  
-  // Active Plans Logic Removed from Dashboard
-  let plansHTML = ''; 
   
   return `<div style="display:flex;flex-direction:column;gap:14px">
     ${cryptoUI()}
@@ -979,7 +984,6 @@ function renderCalcVals() {
   if ($('cNet')) $('cNet').innerText = '+$' + (amt * dlyRate * 40 - amt).toFixed(2);
 }
 function plansUI() {
-  // Active Plans logic moved here
   const ap = S.plans.filter(p => Number(p.days_collected) < 40 && p.status !== 'completed');
   let plansHTML = '';
   if (ap.length === 0) {
@@ -1003,7 +1007,6 @@ function plansUI() {
   return `<div style="display:flex;flex-direction:column;gap:16px">
     <div class="glass-card"><p style="font-size:10px;color:#10B981;font-weight:800;margin:0 0 8px;letter-spacing:1.5px">📈 INVESTMENT</p><h2 style="font-size:30px;font-weight:900;margin:0 0 4px;letter-spacing:-0.5px">Choose your plan</h2><p style="font-size:12px;color:#666;margin:0">40-day cycle · Daily returns</p><div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;align-items:center"><p style="font-size:10px;color:#888;margin:0;letter-spacing:0.5px">AVAILABLE BALANCE</p><p class="mono text-toxic" style="font-size:16px;font-weight:900;margin:0">$${fmt(S.user.balance)}</p></div></div>
     
-    <!-- Active Plans Merged Here -->
     <div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><p style="font-size:10px;color:#888;font-weight:800;margin:0;letter-spacing:1.5px">📈 ${t().activePlans}</p><span style="font-size:10px;font-weight:800" class="text-toxic">${ap.length} active</span></div>${plansHTML}</div>
 
     ${calcUI()}
@@ -1127,7 +1130,6 @@ function walletUI() {
     ${PROMO_CODES.length > 0 ? `<div class="promo-card"><p style="font-size:10px;color:#FFD700;font-weight:800;margin:0 0 8px;letter-spacing:1.5px">🎁 REDEEM PROMO CODE</p><p style="font-size:11px;color:#ccc;margin:0 0 12px">Enter a gift code to get instant bonus</p><div style="display:flex;gap:8px"><input id="promoInput" class="inp" placeholder="Enter code" style="flex:1;text-transform:uppercase;font-weight:700;letter-spacing:1px;background:rgba(0,0,0,0.5)"><button onclick="redeemCode()" style="padding:0 20px;border-radius:14px;background:linear-gradient(135deg,#FFD700,#F59E0B);color:#000;font-weight:900;font-size:12px;border:none;cursor:pointer">REDEEM</button></div></div>` : ''}
     <div class="glass-card">
       <p style="font-size:10px;color:#10B981;font-weight:800;margin:0 0 12px;letter-spacing:1.5px">💳 DEPOSIT FUNDS</p>
-      <!-- Translated Warning Box -->
       <div class="warning-red"><p>⚠️ SUBMITTING A FAKE UTR WILL RESULT IN ACCOUNT BLOCK</p></div>
       <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px" class="hide-scroll">${btns}</div>
       <div style="background:rgba(0,255,102,0.06);border:1px solid rgba(0,255,102,0.2);border-radius:12px;padding:10px 14px;margin-bottom:14px"><p style="font-size:10px;color:#00FF66;font-weight:700;margin:0">💡 Minimum deposit: $${CFG.minDep} (₹${(CFG.minDep * CFG.inrRate).toFixed(0)})</p></div>
@@ -1443,43 +1445,105 @@ function pageFAQ() {
   return `<h1>❓ FAQ</h1><p style="color:#888;font-size:11px;margin-bottom:20px">Everything about TOXIC</p>${faqs.map((f, i) => `<div style="background:rgba(0,0,0,0.4);border:1px solid rgba(0,255,102,0.12);border-radius:14px;padding:14px;margin-bottom:10px;cursor:pointer" onclick="this.querySelector('.faq-a').style.display=this.querySelector('.faq-a').style.display==='block'?'none':'block'"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><p style="font-weight:800;font-size:13px;margin:0;color:#fff"><span style="color:#00FF66">Q${i+1}.</span> ${f.q}</p><span style="color:#00FF66;font-size:12px">▼</span></div><p class="faq-a" style="display:none;font-size:12px;color:#ccc;line-height:1.6;margin:10px 0 0;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06)">${f.a}</p></div>`).join('')}`;
 }
 function loginUI() {
-  return `<div class="min-h-screen px-5 py-10 flex flex-col" style="background:radial-gradient(circle at 50% 0%,rgba(0,255,102,0.14),transparent 55%),#050907"><div class="text-center mb-8 mt-6"><h1 class="text-5xl font-black text-toxic text-3d tracking-widest">TOXIC</h1><p class="text-gray-500 text-[10px] mt-3 tracking-[0.4em]">CAPITAL CONTROL</p></div><div class="glass-card p-6"><p class="text-[10px] text-gray-500 font-bold mb-3 tracking-widest">WELCOME BACK</p><h2 class="text-2xl font-black mb-6">Sign in to your account</h2><input id="lu" class="inp mb-3" placeholder="Username"><input id="lp" type="password" class="inp mb-6" placeholder="Password"><button onclick="doLogin()" class="w-full btn-green py-4 rounded-2xl text-sm glow">SIGN IN</button><p class="text-center text-sm text-gray-500 pt-5">No account? <span onclick="S.tab='signup';render()" class="text-toxic font-bold cursor-pointer">Create one →</span></p></div><div style="text-align:center;margin-top:20px;font-size:11px;color:#666"><p>By continuing, you accept our <span onclick="S.page='tnc';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Terms</span> & <span onclick="S.page='privacy';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Privacy</span></p></div></div>`;
+  return `<div class="min-h-screen px-5 py-10 flex flex-col" style="background:radial-gradient(circle at 50% 0%,rgba(0,255,102,0.14),transparent 55%),#050907"><div class="text-center mb-10 mt-12"><h1 class="text-6xl font-black text-toxic text-3d tracking-[0.2em]" style="text-shadow:3px 3px 0 #0a5c3a, 6px 6px 15px rgba(0,0,0,0.8), 0 0 40px rgba(0,255,102,0.8)">TOXIC</h1><p class="text-gray-500 text-xs mt-4 tracking-[0.5em] font-bold">CAPITAL CONTROL</p></div><div class="glass-card p-6"><p class="text-[10px] text-gray-500 font-bold mb-3 tracking-widest">WELCOME BACK</p><h2 class="text-2xl font-black mb-6">Sign in to your account</h2><input id="lu" class="inp mb-3" placeholder="Username"><input id="lp" type="password" class="inp mb-6" placeholder="Password"><button onclick="doLogin()" class="w-full btn-green py-4 rounded-2xl text-sm glow">SIGN IN</button><p class="text-center text-sm text-gray-500 pt-5">No account? <span onclick="S.tab='signup';render()" class="text-toxic font-bold cursor-pointer">Create one →</span></p></div><div style="text-align:center;margin-top:20px;font-size:11px;color:#666"><p>By continuing, you accept our <span onclick="S.page='tnc';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Terms</span> & <span onclick="S.page='privacy';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Privacy</span></p></div></div>`;
 }
 function signupUI() {
   const step = S.step;
-  return `<div class="min-h-screen flex flex-col" style="background:radial-gradient(circle at 50% 0%,rgba(0,255,102,0.14),transparent 55%),#050907"><div class="relative w-full h-28 overflow-hidden"><img src="${CFG.banner}" style="width:100%;height:100%;object-fit:cover;opacity:0.75"><div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,9,7,0.3),rgba(5,9,7,0.98))"></div><div style="position:absolute;bottom:12px;left:16px"><h1 class="text-2xl font-black text-toxic tracking-widest text-3d">TOXIC</h1></div></div><div class="px-4 pb-6"><div class="glass-card p-4">${step===1?step1():step2()}</div></div><div style="text-align:center;font-size:11px;color:#666;padding-bottom:20px"><p>By signing up, you agree to our <span onclick="S.page='tnc';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Terms</span> & <span onclick="S.page='privacy';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Privacy</span></p></div></div>`;
+  return `<div class="min-h-screen flex flex-col" style="background:radial-gradient(circle at 50% 0%,rgba(0,255,102,0.14),transparent 55%),#050907">
+    <div class="relative w-full h-48 signup-banner overflow-hidden flex-shrink-0">
+      <img src="${CFG.banner}" style="width:100%;height:100%;object-fit:cover;opacity:0.9">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,9,7,0.1) 0%,rgba(5,9,7,0.8) 80%,#050907 100%)"></div>
+      <div style="position:absolute;bottom:16px;left:20px">
+        <h1 class="text-3xl font-black text-toxic tracking-[0.25em]" style="text-shadow: 0 0 20px rgba(0,255,102,0.8), 0 4px 6px rgba(0,0,0,0.8)">TOXIC</h1>
+        <p style="font-size:10px;color:#00FF66;font-weight:900;letter-spacing:2px;margin-top:4px;text-shadow:0 0 10px rgba(0,255,102,0.8)">CAPITAL CONTROL</p>
+      </div>
+    </div>
+    <div class="px-4 pb-6 mt-2 relative z-10 flex-1 signup-content">
+      <div class="glass-card p-4 shadow-2xl signup-scroll">${step===1?step1():step2()}</div>
+    </div>
+    <div style="text-align:center;font-size:11px;color:#666;padding-bottom:20px;flex-shrink:0">
+      <p>By signing up, you agree to our 
+        <span onclick="S.page='tnc';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Terms</span> & 
+        <span onclick="S.page='privacy';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Privacy</span>
+      </p>
+    </div>
+  </div>`;
 }
 function step1() {
-  const cs = ['India','Pakistan','Bangladesh','United Arab Emirates','Saudi Arabia','United States','United Kingdom','Indonesia','Malaysia','Singapore','Nepal','Sri Lanka','Afghanistan','Other'];
+  const cs = ['Afghanistan','Albania','Algeria','Andorra','Angola','Antigua and Barbuda','Argentina','Armenia','Australia','Austria','Azerbaijan','Bahamas','Bahrain','Bangladesh','Barbados','Belarus','Belgium','Belize','Benin','Bhutan','Bolivia','Bosnia and Herzegovina','Botswana','Brazil','Brunei','Bulgaria','Burkina Faso','Burundi','Cabo Verde','Cambodia','Cameroon','Canada','Central African Republic','Chad','Chile','China','Colombia','Comoros','Congo','Costa Rica','Croatia','Cuba','Cyprus','Czech Republic','Denmark','Djibouti','Dominica','Dominican Republic','Ecuador','Egypt','El Salvador','Equatorial Guinea','Eritrea','Estonia','Eswatini','Ethiopia','Fiji','Finland','France','Gabon','Gambia','Georgia','Germany','Ghana','Greece','Grenada','Guatemala','Guinea','Guinea-Bissau','Guyana','Haiti','Honduras','Hungary','Iceland','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy','Jamaica','Japan','Jordan','Kazakhstan','Kenya','Kiribati','Korea North','Korea South','Kosovo','Kuwait','Kyrgyzstan','Laos','Latvia','Lebanon','Lesotho','Liberia','Libya','Liechtenstein','Lithuania','Luxembourg','Madagascar','Malawi','Malaysia','Maldives','Mali','Malta','Marshall Islands','Mauritania','Mauritius','Mexico','Micronesia','Moldova','Monaco','Mongolia','Montenegro','Morocco','Mozambique','Myanmar','Namibia','Nauru','Nepal','Netherlands','New Zealand','Nicaragua','Niger','Nigeria','North Macedonia','Norway','Oman','Pakistan','Palau','Palestine','Panama','Papua New Guinea','Paraguay','Peru','Philippines','Poland','Portugal','Qatar','Romania','Russia','Rwanda','Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines','Samoa','San Marino','Sao Tome and Principe','Saudi Arabia','Senegal','Serbia','Seychelles','Sierra Leone','Singapore','Slovakia','Slovenia','Solomon Islands','Somalia','South Africa','South Sudan','Spain','Sri Lanka','Sudan','Suriname','Sweden','Switzerland','Syria','Taiwan','Tajikistan','Tanzania','Thailand','Timor-Leste','Togo','Tonga','Trinidad and Tobago','Tunisia','Turkey','Turkmenistan','Tuvalu','Uganda','Ukraine','United Arab Emirates','United Kingdom','United States','Uruguay','Uzbekistan','Vanuatu','Vatican City','Venezuela','Vietnam','Yemen','Zambia','Zimbabwe'];
   const ops = cs.map(c => `<option ${S.sd.country===c?'selected':''}>${c}</option>`).join('');
-  const rn = S.sd.referredBy ? `<div style="border-radius:12px;padding:12px;margin-bottom:12px;background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.3)"><p style="font-size:10px;color:#888;margin:0">Referred by</p><p class="text-toxic mono" style="font-weight:900;font-size:12px;margin:2px 0 0">${esc(S.sd.referredBy)}</p></div>` : '';
-  return `${rn}<p style="font-size:10px;color:#666;font-weight:700;margin:0 0 6px;letter-spacing:2px">STEP 1 / 2 · EMAIL VERIFICATION</p>
-    <h2 class="text-xl font-black mb-1">Create your account</h2>
-    <p class="text-xs text-gray-500 mb-4">Verify your Gmail with OTP.</p>
-    <div style="background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.25);border-radius:12px;padding:10px 12px;margin-bottom:12px"><p style="font-size:11px;color:#00FF66;font-weight:700;margin:0">🎁 Get $${CFG.signupBonus.toFixed(2)} FREE signup bonus!</p></div>
-    <label style="font-size:10px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:4px">COUNTRY</label>
-    <select id="cs" class="inp mb-3"><option value="" disabled selected>Select your country</option>${ops}</select>
-    <label style="font-size:10px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:4px">GMAIL ADDRESS</label>
-    <input id="sd_email" type="email" class="inp mb-3" placeholder="yourname@gmail.com" value="${S.sd.email||''}">
-    <button id="sendOtpBtn" onclick="sendOTP()" class="w-full btn-green py-3 rounded-xl text-sm mb-3">SEND OTP</button>
-    <div id="otpSection" style="display:${S.otpVerified?'none':'block'};margin-bottom:12px">
-      <label style="font-size:10px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:4px">ENTER 6-DIGIT OTP</label>
-      <input id="otpCode" type="text" maxlength="6" class="inp otp-input mb-3" placeholder="••••••">
-      <button onclick="verifyOTP()" class="w-full btn-green py-3 rounded-xl text-sm">VERIFY OTP</button>
+  const rn = S.sd.referredBy ? `<div style="border-radius:10px;padding:10px;margin-bottom:10px;background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.3)"><p style="font-size:9px;color:#888;margin:0">Referred by</p><p class="text-toxic mono" style="font-weight:900;font-size:11px;margin:2px 0 0">${esc(S.sd.referredBy)}</p></div>` : '';
+  return `${rn}<p style="font-size:9px;color:#666;font-weight:700;margin:0 0 4px;letter-spacing:1.5px">STEP 1 / 2 · EMAIL VERIFICATION</p>
+    <h2 class="text-lg font-black mb-1">Create your account</h2>
+    <p class="text-xs text-gray-500 mb-3">Verify your Gmail with OTP.</p>
+    <div style="background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.25);border-radius:10px;padding:8px 10px;margin-bottom:10px"><p style="font-size:10px;color:#00FF66;font-weight:700;margin:0">🎁 Get $${CFG.signupBonus.toFixed(2)} FREE signup bonus!</p></div>
+    <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:2px">COUNTRY</label>
+    <select id="cs" class="inp mb-2"><option value="" disabled selected>Select your country</option>${ops}</select>
+    <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:2px">GMAIL ADDRESS</label>
+    <input id="sd_email" type="email" class="inp mb-2" placeholder="yourname@gmail.com" value="${S.sd.email||''}">
+    <button id="sendOtpBtn" onclick="sendOTP()" class="w-full btn-green py-2.5 rounded-xl text-xs mb-2">SEND OTP</button>
+    <div id="otpSection" style="display:${S.otpVerified?'none':'block'};margin-bottom:10px">
+      <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:2px">ENTER 6-DIGIT OTP</label>
+      <input id="otpCode" type="text" maxlength="6" class="inp otp-input mb-2" placeholder="••••••">
+      <button onclick="verifyOTP()" class="w-full btn-green py-2.5 rounded-xl text-xs">VERIFY OTP</button>
     </div>
-    ${S.otpVerified ? `<div style="background:rgba(0,255,102,0.1);border:1px solid rgba(0,255,102,0.4);border-radius:12px;padding:10px 12px;margin-bottom:12px"><p style="font-size:11px;color:#00FF66;font-weight:700;margin:0">✅ Email verified! Continue below.</p></div>` : ''}
-    <input id="manualRef" class="inp mb-4" placeholder="Referral Code (optional)" value="${S.sd.referredBy||''}" style="text-transform:uppercase">
-    <button onclick="goStep2()" class="w-full btn-green py-3 rounded-xl text-sm glow" ${S.otpVerified?'':'disabled style="opacity:0.5"'}>NEXT →</button>
-    <p class="text-center text-xs text-gray-500 mt-4">Already have an account? <span onclick="S.tab='signin';render()" class="text-yellow-400 font-bold cursor:pointer">Sign in</span></p>`;
+    ${S.otpVerified ? `<div style="background:rgba(0,255,102,0.1);border:1px solid rgba(0,255,102,0.4);border-radius:10px;padding:8px 10px;margin-bottom:10px"><p style="font-size:10px;color:#00FF66;font-weight:700;margin:0">✅ Email verified! Continue below.</p></div>` : ''}
+    <input id="manualRef" class="inp mb-3" placeholder="Referral Code (optional)" value="${S.sd.referredBy||''}" style="text-transform:uppercase">
+    <button onclick="goStep2()" class="w-full btn-green py-2.5 rounded-xl text-xs glow" ${S.otpVerified?'':'disabled style="opacity:0.5"'}>NEXT →</button>
+    <p class="text-center text-xs text-gray-500 mt-3">Already have an account? <span onclick="S.tab='signin';render()" class="text-yellow-400 font-bold cursor:pointer">Sign in</span></p>`;
 }
 function step2() {
-  return `<p style="font-size:10px;color:#666;font-weight:700;margin:0 0 6px;letter-spacing:2px">STEP 2 / 2 · SET CREDENTIALS</p>
-    <h2 class="text-xl font-black mb-1">Create Access</h2>
-    <p class="text-xs text-gray-500 mb-4">Set username & password.</p>
-    <input class="inp mb-3" id="un" placeholder="Username" value="${S.sd.username||''}">
-    <input class="inp mb-3" id="pw" type="password" placeholder="Password">
-    <input class="inp mb-4" id="pw2" type="password" placeholder="Confirm Password">
+  return `<p style="font-size:9px;color:#666;font-weight:700;margin:0 0 4px;letter-spacing:1.5px">STEP 2 / 2 · SET CREDENTIALS</p>
+    <h2 class="text-lg font-black mb-1">Create Access</h2>
+    <p class="text-xs text-gray-500 mb-3">Set username & password.</p>
+    <input class="inp mb-2" id="un" placeholder="Username" value="${S.sd.username||''}">
+    <input class="inp mb-2" id="pw" type="password" placeholder="Password">
+    <input class="inp mb-3" id="pw2" type="password" placeholder="Confirm Password">
     <div style="display:flex;gap:12px"><button onclick="S.step=1;render()" style="padding:12px 20px;border-radius:14px;background:rgba(255,255,255,0.05);font-weight:700;font-size:13px;border:none;color:#fff;cursor:pointer">← BACK</button><button onclick="finishSignup()" style="flex:1;padding:12px;border-radius:14px;font-weight:800;font-size:13px;border:none;cursor:pointer" class="btn-green">FINISH →</button></div>`;
+}
+function passwordModal() {
+  if (!S.showPasswordModal || !S.user) return '';
+  return `<div style="position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:20px">
+    <div class="glass-card modal-in" style="width:100%;max-width:360px;border-color:rgba(0,255,102,0.4);box-shadow:0 0 40px rgba(0,255,102,0.25)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+        <h3 style="font-size:18px;font-weight:900;margin:0;color:#00FF66">🔑 Change Password</h3>
+        <button onclick="S.showPasswordModal=false;render()" style="background:none;border:none;color:#888;font-size:24px;cursor:pointer">×</button>
+      </div>
+      <input id="oldPwd" type="password" class="inp mb-3" placeholder="Current Password">
+      <input id="newPwd" type="password" class="inp mb-3" placeholder="New Password (min 4 chars)">
+      <input id="confPwd" type="password" class="inp mb-4" placeholder="Confirm New Password">
+      <div style="display:flex;gap:10px">
+        <button onclick="S.showPasswordModal=false;render()" style="flex:1;padding:12px;border-radius:14px;background:rgba(255,255,255,0.08);color:#ccc;border:none;cursor:pointer;font-size:13px;font-weight:700">Cancel</button>
+        <button onclick="submitPasswordChange()" class="btn-green" style="flex:1;padding:12px;border-radius:14px;font-size:13px">Update</button>
+      </div>
+    </div>
+  </div>`;
+}
+async function submitPasswordChange() {
+  const oldPwd = $('oldPwd').value.trim();
+  const newPwd = $('newPwd').value.trim();
+  const confPwd = $('confPwd').value.trim();
+  if (!oldPwd || !newPwd || !confPwd) return customAlert('Missing Info', 'Please fill all fields.', '⚠️');
+  if (newPwd.length < 4) return customAlert('Weak Password', 'New password must be at least 4 characters.', '⚠️');
+  if (newPwd !== confPwd) return customAlert('Mismatch', 'New passwords do not match.', '⚠️');
+  let currentValid = false;
+  const storedPwd = localStorage.getItem('t_pwd_' + S.user.user_id);
+  if (storedPwd && storedPwd === oldPwd) currentValid = true;
+  if (!currentValid && sb) {
+    try {
+      const r = await sb.from('users').select('password_hash').eq('user_id', S.user.user_id).limit(1);
+      if (r.data && r.data[0] && r.data[0].password_hash) {
+        if (atob(r.data[0].password_hash) === oldPwd) currentValid = true;
+      }
+    } catch(e) {}
+  }
+  if (!currentValid) return customAlert('Incorrect Password', 'Your current password is incorrect.', '❌');
+  localStorage.setItem('t_pwd_' + S.user.user_id, newPwd);
+  if (sb) { try { await sb.from('users').update({ password_hash: btoa(newPwd) }).eq('user_id', S.user.user_id); } catch(e) {} }
+  S.showPasswordModal = false;
+  haptic('success'); sound('success');
+  customAlert('✅ Password Changed', 'Your password has been updated successfully!', '🔑');
+  render();
 }
 async function syncUser() {
   if (!sb || !S.user) return;
@@ -1489,9 +1553,8 @@ async function syncUser() {
     if (u.data && u.data[0]) {
       const f = u.data[0];
       if (f.is_banned === true) {
-        sound('error');
-        customAlert('Account Suspended', 'Your account has been suspended by the administrator.\n\nContact support: @Toxiconect', '🚫');
-        setTimeout(() => { localStorage.removeItem('t_user'); localStorage.removeItem('t_plans'); localStorage.removeItem('t_team'); localStorage.removeItem('t_tx'); S.user = null; S.plans = []; S.team = []; S.tx = []; S.tab = 'signin'; render(); }, 3000);
+        sound('error'); customAlert('Account Suspended', 'Your account has been suspended.\n\nContact support: @Toxiconect', '🚫');
+        setTimeout(() => { localStorage.clear(); S.user = null; S.plans = []; S.team = []; S.tx = []; S.tab = 'signin'; render(); }, 3000);
         return;
       }
       const oldB = Number(S.user.balance||0);
@@ -1598,9 +1661,23 @@ if (!S.user) S.tab = 'signup';
 let loadingHidden = false;
 function hideLoading() { if (loadingHidden) return; loadingHidden = true; const l = $('loading'); if (l) l.classList.add('hide'); }
 (async function() {
-  const failsafe = setTimeout(() => { hideLoading(); setTimeout(() => toast('⚠️ Slow connection.'), 500); }, 8000);
-  try { await Promise.all([loadSiteConfig(), loadPlansFromDB(), loadPromoCodes(), loadCryptoPrices(), loadLeaderboard(), S.user ? syncUser() : Promise.resolve()]); } catch(e) {}
-  clearTimeout(failsafe); render(); hideLoading();
+  // Fast Rendering: UI turant load karein
+  render(); 
+  hideLoading();
+  
+  // Background Data Sync
+  try { 
+    await Promise.all([
+      loadSiteConfig(), 
+      loadPlansFromDB(), 
+      loadPromoCodes(), 
+      loadCryptoPrices(), 
+      loadLeaderboard(), 
+      S.user ? syncUser() : Promise.resolve()
+    ]); 
+    render(); 
+  } catch(e) { console.log("Background sync error:", e); }
+
   setTimeout(showLive, 3500);
   setTimeout(() => { if (S.user) { checkTeamMilestones(); checkVIPBadgeChange(); } }, 2000);
   setInterval(loadCryptoPrices, 90000);
