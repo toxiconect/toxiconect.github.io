@@ -737,7 +737,7 @@ async function sendOTP() {
     console.error('EmailJS error:', err);
     haptic('error'); sound('error');
     customAlert('Failed to Send', 'Could not send OTP. Please check your internet and try again.\n\nError: ' + (err.text || err.message || 'Unknown'), '❌');
-    if (btn) { btn.disabled = false; btn.textContent = 'SEND OTP'; }
+    if (btn) { btn.disabled = false; btn.textContent = 'SEND'; }
   }
 }
 
@@ -751,7 +751,7 @@ function startOtpResendTimer() {
     if (btn) { btn.disabled = true; btn.textContent = `RESEND IN ${sec}s`; }
     if (sec <= 0) {
       clearInterval(otpResendInterval); otpResendInterval = null;
-      if (btn) { btn.disabled = false; btn.textContent = 'RESEND OTP'; }
+      if (btn) { btn.disabled = false; btn.textContent = 'SEND'; }
     }
   }, 1000);
 }
@@ -827,18 +827,23 @@ async function applySignupBonus() {
 
 async function doLogin() {
   const u = $('lu').value.trim(); const p = $('lp').value;
-  if (!u || !p) return customAlert('Required', 'Please enter your username and password.', '⚠️');
+  if (!u || !p) return customAlert('Required', 'Please enter your username/email and password.', '⚠️');
+  
+  // 1. Check in LocalStorage (Both Username OR Email)
   const ex = JSON.parse(localStorage.getItem('t_user') || 'null');
-  if (ex && ex.username === u) {
+  if (ex && (ex.username === u || (ex.email && ex.email.toLowerCase() === u.toLowerCase()))) {
     const st = localStorage.getItem('t_pwd_' + ex.user_id);
     if (st && st !== p) { sound('error'); return customAlert('Access Denied', 'Wrong password entered.\n\nPlease check your credentials.', '❌'); }
     S.user = ex; S.plans = JSON.parse(localStorage.getItem('t_plans') || '[]');
     S.tab = 'dashboard'; save(); haptic('success'); sound('success');
     await syncUser(); render(); return;
   }
+  
+  // 2. Check in Supabase (Both Username OR Email)
   if (sb) {
     try {
-      const r = await sb.from('users').select('*').eq('username', u).limit(1);
+      // Supabase ka .or() operator use karke dono column me check karein
+      const r = await sb.from('users').select('*').or(`username.eq.${u},email.eq.${u}`).limit(1);
       if (r.data && r.data[0]) {
         const dbUser = r.data[0];
         let dbPwd = dbUser.password_hash ? atob(dbUser.password_hash) : null;
@@ -849,7 +854,8 @@ async function doLogin() {
       }
     } catch(e) {}
   }
-  sound('error'); customAlert('User Not Found', 'No account found with this username.\n\nPlease create a new account first.', '⚠️');
+  
+  sound('error'); customAlert('User Not Found', 'No account found with this username or email.\n\nPlease create a new account first.', '⚠️');
 }
 
 function logout() { customConfirm('Logout', 'Are you sure you want to sign out?', () => { localStorage.removeItem('t_user'); localStorage.removeItem('t_plans'); localStorage.removeItem('t_team'); S.user = null; S.plans = []; S.team = []; S.tab = 'signin'; render(); }, '🚪'); }
@@ -1445,7 +1451,32 @@ function pageFAQ() {
   return `<h1>❓ FAQ</h1><p style="color:#888;font-size:11px;margin-bottom:20px">Everything about TOXIC</p>${faqs.map((f, i) => `<div style="background:rgba(0,0,0,0.4);border:1px solid rgba(0,255,102,0.12);border-radius:14px;padding:14px;margin-bottom:10px;cursor:pointer" onclick="this.querySelector('.faq-a').style.display=this.querySelector('.faq-a').style.display==='block'?'none':'block'"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><p style="font-weight:800;font-size:13px;margin:0;color:#fff"><span style="color:#00FF66">Q${i+1}.</span> ${f.q}</p><span style="color:#00FF66;font-size:12px">▼</span></div><p class="faq-a" style="display:none;font-size:12px;color:#ccc;line-height:1.6;margin:10px 0 0;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06)">${f.a}</p></div>`).join('')}`;
 }
 function loginUI() {
-  return `<div class="min-h-screen px-5 py-10 flex flex-col" style="background:radial-gradient(circle at 50% 0%,rgba(0,255,102,0.14),transparent 55%),#050907"><div class="text-center mb-10 mt-12"><h1 class="text-6xl font-black text-toxic text-3d tracking-[0.2em]" style="text-shadow:3px 3px 0 #0a5c3a, 6px 6px 15px rgba(0,0,0,0.8), 0 0 40px rgba(0,255,102,0.8)">TOXIC</h1><p class="text-gray-500 text-xs mt-4 tracking-[0.5em] font-bold">CAPITAL CONTROL</p></div><div class="glass-card p-6"><p class="text-[10px] text-gray-500 font-bold mb-3 tracking-widest">WELCOME BACK</p><h2 class="text-2xl font-black mb-6">Sign in to your account</h2><input id="lu" class="inp mb-3" placeholder="Username"><input id="lp" type="password" class="inp mb-6" placeholder="Password"><button onclick="doLogin()" class="w-full btn-green py-4 rounded-2xl text-sm glow">SIGN IN</button><p class="text-center text-sm text-gray-500 pt-5">No account? <span onclick="S.tab='signup';render()" class="text-toxic font-bold cursor-pointer">Create one →</span></p></div><div style="text-align:center;margin-top:20px;font-size:11px;color:#666"><p>By continuing, you accept our <span onclick="S.page='tnc';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Terms</span> & <span onclick="S.page='privacy';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Privacy</span></p></div></div>`;
+  return `<div class="min-h-screen flex flex-col" style="background:radial-gradient(circle at 50% 0%,rgba(0,255,102,0.14),transparent 55%),#050907">
+    <div class="relative w-full h-48 signup-banner overflow-hidden flex-shrink-0">
+      <img src="${CFG.banner}" style="width:100%;height:100%;object-fit:cover;opacity:0.9">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,9,7,0.1) 0%,rgba(5,9,7,0.8) 80%,#050907 100%)"></div>
+      <div style="position:absolute;bottom:16px;left:20px">
+        <h1 class="text-3xl font-black text-toxic tracking-[0.25em]" style="text-shadow: 0 0 20px rgba(0,255,102,0.8), 0 4px 6px rgba(0,0,0,0.8)">TOXIC</h1>
+        <p style="font-size:10px;color:#00FF66;font-weight:900;letter-spacing:2px;margin-top:4px;text-shadow:0 0 10px rgba(0,255,102,0.8)">CAPITAL CONTROL</p>
+      </div>
+    </div>
+    <div class="px-4 pb-6 mt-[-30px] relative z-10 flex-1 signup-content">
+      <div class="glass-card p-6 shadow-2xl signup-scroll">
+        <p class="text-[10px] text-gray-500 font-bold mb-3 tracking-widest">WELCOME BACK</p>
+        <h2 class="text-2xl font-black mb-6">Sign in to your account</h2>
+        <input id="lu" class="inp mb-3" placeholder="Username or Gmail">
+        <input id="lp" type="password" class="inp mb-6" placeholder="Password">
+        <button onclick="doLogin()" class="w-full btn-green py-4 rounded-2xl text-sm glow">SIGN IN</button>
+        <p class="text-center text-sm text-gray-500 pt-5">No account? <span onclick="S.tab='signup';render()" class="text-toxic font-bold cursor-pointer">Create one →</span></p>
+      </div>
+    </div>
+    <div style="text-align:center;font-size:11px;color:#666;padding-bottom:20px;flex-shrink:0">
+      <p>By continuing, you accept our 
+        <span onclick="S.page='tnc';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Terms</span> & 
+        <span onclick="S.page='privacy';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Privacy</span>
+      </p>
+    </div>
+  </div>`;
 }
 function signupUI() {
   const step = S.step;
@@ -1458,7 +1489,7 @@ function signupUI() {
         <p style="font-size:10px;color:#00FF66;font-weight:900;letter-spacing:2px;margin-top:4px;text-shadow:0 0 10px rgba(0,255,102,0.8)">CAPITAL CONTROL</p>
       </div>
     </div>
-    <div class="px-4 pb-6 mt-2 relative z-10 flex-1 signup-content">
+    <div class="px-4 pb-6 mt-[-30px] relative z-10 flex-1 signup-content">
       <div class="glass-card p-4 shadow-2xl signup-scroll">${step===1?step1():step2()}</div>
     </div>
     <div style="text-align:center;font-size:11px;color:#666;padding-bottom:20px;flex-shrink:0">
@@ -1473,22 +1504,47 @@ function step1() {
   const cs = ['Afghanistan','Albania','Algeria','Andorra','Angola','Antigua and Barbuda','Argentina','Armenia','Australia','Austria','Azerbaijan','Bahamas','Bahrain','Bangladesh','Barbados','Belarus','Belgium','Belize','Benin','Bhutan','Bolivia','Bosnia and Herzegovina','Botswana','Brazil','Brunei','Bulgaria','Burkina Faso','Burundi','Cabo Verde','Cambodia','Cameroon','Canada','Central African Republic','Chad','Chile','China','Colombia','Comoros','Congo','Costa Rica','Croatia','Cuba','Cyprus','Czech Republic','Denmark','Djibouti','Dominica','Dominican Republic','Ecuador','Egypt','El Salvador','Equatorial Guinea','Eritrea','Estonia','Eswatini','Ethiopia','Fiji','Finland','France','Gabon','Gambia','Georgia','Germany','Ghana','Greece','Grenada','Guatemala','Guinea','Guinea-Bissau','Guyana','Haiti','Honduras','Hungary','Iceland','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy','Jamaica','Japan','Jordan','Kazakhstan','Kenya','Kiribati','Korea North','Korea South','Kosovo','Kuwait','Kyrgyzstan','Laos','Latvia','Lebanon','Lesotho','Liberia','Libya','Liechtenstein','Lithuania','Luxembourg','Madagascar','Malawi','Malaysia','Maldives','Mali','Malta','Marshall Islands','Mauritania','Mauritius','Mexico','Micronesia','Moldova','Monaco','Mongolia','Montenegro','Morocco','Mozambique','Myanmar','Namibia','Nauru','Nepal','Netherlands','New Zealand','Nicaragua','Niger','Nigeria','North Macedonia','Norway','Oman','Pakistan','Palau','Palestine','Panama','Papua New Guinea','Paraguay','Peru','Philippines','Poland','Portugal','Qatar','Romania','Russia','Rwanda','Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines','Samoa','San Marino','Sao Tome and Principe','Saudi Arabia','Senegal','Serbia','Seychelles','Sierra Leone','Singapore','Slovakia','Slovenia','Solomon Islands','Somalia','South Africa','South Sudan','Spain','Sri Lanka','Sudan','Suriname','Sweden','Switzerland','Syria','Taiwan','Tajikistan','Tanzania','Thailand','Timor-Leste','Togo','Tonga','Trinidad and Tobago','Tunisia','Turkey','Turkmenistan','Tuvalu','Uganda','Ukraine','United Arab Emirates','United Kingdom','United States','Uruguay','Uzbekistan','Vanuatu','Vatican City','Venezuela','Vietnam','Yemen','Zambia','Zimbabwe'];
   const ops = cs.map(c => `<option ${S.sd.country===c?'selected':''}>${c}</option>`).join('');
   const rn = S.sd.referredBy ? `<div style="border-radius:10px;padding:10px;margin-bottom:10px;background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.3)"><p style="font-size:9px;color:#888;margin:0">Referred by</p><p class="text-toxic mono" style="font-weight:900;font-size:11px;margin:2px 0 0">${esc(S.sd.referredBy)}</p></div>` : '';
-  return `${rn}<p style="font-size:9px;color:#666;font-weight:700;margin:0 0 4px;letter-spacing:1.5px">STEP 1 / 2 · EMAIL VERIFICATION</p>
+  return `${rn}
+    <p style="font-size:9px;color:#666;font-weight:700;margin:0 0 4px;letter-spacing:1.5px">STEP 1 / 2 · EMAIL VERIFICATION</p>
     <h2 class="text-lg font-black mb-1">Create your account</h2>
     <p class="text-xs text-gray-500 mb-3">Verify your Gmail with OTP.</p>
-    <div style="background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.25);border-radius:10px;padding:8px 10px;margin-bottom:10px"><p style="font-size:10px;color:#00FF66;font-weight:700;margin:0">🎁 Get $${CFG.signupBonus.toFixed(2)} FREE signup bonus!</p></div>
-    <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:2px">COUNTRY</label>
-    <select id="cs" class="inp mb-2"><option value="" disabled selected>Select your country</option>${ops}</select>
-    <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:2px">GMAIL ADDRESS</label>
-    <input id="sd_email" type="email" class="inp mb-2" placeholder="yourname@gmail.com" value="${S.sd.email||''}">
-    <button id="sendOtpBtn" onclick="sendOTP()" class="w-full btn-green py-2.5 rounded-xl text-xs mb-2">SEND OTP</button>
+    
+    <div style="background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.25);border-radius:10px;padding:8px 10px;margin-bottom:10px">
+      <p style="font-size:10px;color:#00FF66;font-weight:700;margin:0">🎁 Get $${CFG.signupBonus.toFixed(2)} FREE signup bonus!</p>
+    </div>
+
+    <!-- Country & Gmail Grid -->
+    <div class="grid grid-cols-1 gap-2 mb-2">
+      <div>
+        <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:2px">COUNTRY</label>
+        <select id="cs" class="inp"><option value="" disabled selected>Select your country</option>${ops}</select>
+      </div>
+      <div>
+        <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:2px">GMAIL ADDRESS</label>
+        <div style="display:flex; gap: 5px;">
+          <input id="sd_email" type="email" class="inp" placeholder="yourname@gmail.com" value="${S.sd.email||''}" style="flex: 1;">
+          <button id="sendOtpBtn" onclick="sendOTP()" class="btn-green" style="width: 80px; padding: 0 10px; font-size: 10px;">SEND</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compact OTP Section -->
     <div id="otpSection" style="display:${S.otpVerified?'none':'block'};margin-bottom:10px">
       <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:2px">ENTER 6-DIGIT OTP</label>
-      <input id="otpCode" type="text" maxlength="6" class="inp otp-input mb-2" placeholder="••••••">
-      <button onclick="verifyOTP()" class="w-full btn-green py-2.5 rounded-xl text-xs">VERIFY OTP</button>
+      <div style="display:flex; gap: 5px;">
+        <input id="otpCode" type="text" maxlength="6" class="inp otp-input" placeholder="••••••" style="flex: 1; letter-spacing: 4px; font-size: 16px;">
+        <button onclick="verifyOTP()" class="btn-green" style="width: 80px; padding: 0 10px; font-size: 10px;">VERIFY</button>
+      </div>
     </div>
-    ${S.otpVerified ? `<div style="background:rgba(0,255,102,0.1);border:1px solid rgba(0,255,102,0.4);border-radius:10px;padding:8px 10px;margin-bottom:10px"><p style="font-size:10px;color:#00FF66;font-weight:700;margin:0">✅ Email verified! Continue below.</p></div>` : ''}
-    <input id="manualRef" class="inp mb-3" placeholder="Referral Code (optional)" value="${S.sd.referredBy||''}" style="text-transform:uppercase">
+
+    ${S.otpVerified ? `<div style="background:rgba(0,255,102,0.1);border:1px solid rgba(0,255,102,0.4);border-radius:10px;padding:6px 10px;margin-bottom:8px"><p style="font-size:10px;color:#00FF66;font-weight:700;margin:0">✅ Email verified! Continue below.</p></div>` : ''}
+
+    <!-- Compact Referral Code -->
+    <div style="margin-bottom: 12px;">
+      <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:2px">REFERRAL CODE (OPTIONAL)</label>
+      <input id="manualRef" class="inp" placeholder="Enter code" value="${S.sd.referredBy||''}" style="text-transform:uppercase; width: 160px;">
+    </div>
+
     <button onclick="goStep2()" class="w-full btn-green py-2.5 rounded-xl text-xs glow" ${S.otpVerified?'':'disabled style="opacity:0.5"'}>NEXT →</button>
     <p class="text-center text-xs text-gray-500 mt-3">Already have an account? <span onclick="S.tab='signin';render()" class="text-yellow-400 font-bold cursor:pointer">Sign in</span></p>`;
 }
