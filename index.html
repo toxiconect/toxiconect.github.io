@@ -26,7 +26,6 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .text-toxic { color: #00FF66; }
 .bg-toxic { background: #00FF66; }
 .glow { box-shadow: 0 0 30px rgba(0,255,102,0.35); }
-.glow-strong { box-shadow: 0 0 60px rgba(0,255,102,0.55); }
 .btn-green { background: linear-gradient(135deg, #00FF66, #10B981); color: #000; font-weight: 800; letter-spacing: 0.3px; transition: all 0.15s; border: none; cursor: pointer; }
 .btn-green:active { transform: scale(0.97); }
 .btn-green:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -40,7 +39,11 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 2px; border-radius: 14px; cursor: pointer; color: #6B7280; transition: all 0.2s; position: relative; }
 .nav-item.active { color: #00FF66; }
 .nav-item.active::before { content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%); width: 28px; height: 3px; background: #00FF66; border-radius: 0 0 3px 3px; box-shadow: 0 0 12px #00FF66; }
-.plan-active { position: relative; overflow: hidden; border-radius: 16px; padding: 12px; background: linear-gradient(145deg, rgba(0,255,102,0.12), rgba(7,14,10,0.99) 75%); border: 1.5px solid rgba(0,255,102,0.4); box-shadow: 0 0 20px rgba(0,255,102,0.1); }
+.plan-card { background: linear-gradient(160deg, rgba(0,0,0,0.75), rgba(9,18,14,0.98)); border: 1.5px solid rgba(0,255,102,0.12); border-radius: 20px; padding: 16px; position: relative; overflow: hidden; cursor: pointer; transition: all 0.25s; }
+.plan-card:active { transform: scale(0.97); }
+.plan-card.locked { opacity: 0.65; cursor: default; }
+.plan-card.locked::after { content: '✓ ACTIVE'; position: absolute; top: 12px; right: 12px; background: linear-gradient(135deg, #00FF66, #10B981); color: #000; font-size: 9px; font-weight: 900; padding: 5px 10px; border-radius: 20px; box-shadow: 0 0 20px rgba(0,255,102,0.7); z-index: 10; letter-spacing: 0.5px; }
+.plan-active { position: relative; overflow: hidden; border-radius: 18px; padding: 16px; background: linear-gradient(145deg, rgba(0,255,102,0.12), rgba(7,14,10,0.99) 75%); border: 1.5px solid rgba(0,255,102,0.4); box-shadow: 0 0 24px rgba(0,255,102,0.12); margin-bottom: 12px; }
 .plan-active::before { content: ''; position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(0,255,102,0.22), transparent 70%); pointer-events: none; }
 .plan-active::after { content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent); animation: shine 3.5s infinite; pointer-events: none; }
 @keyframes shine { 0% { left: -100%; } 60%, 100% { left: 200%; } }
@@ -58,13 +61,22 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .timer-glow { text-shadow: 0 0 30px rgba(0,255,102,0.8); }
 .modal-in { animation: min 0.35s cubic-bezier(0.34,1.56,0.64,1); }
 @keyframes min { from { opacity: 0; transform: scale(0.9) translateY(30px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-.loading { position: fixed; inset: 0; background: #050907; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s, visibility 0.6s; }
+/* LOADING */
+.loading { position: fixed; inset: 0; background: radial-gradient(circle at center, rgba(0,255,102,0.06), #050907 70%); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s, visibility 0.6s; overflow: hidden; }
 .loading.hide { opacity: 0; visibility: hidden; }
-.l-logo { animation: ll 1.5s infinite; }
-@keyframes ll { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.06); opacity: 0.85; } }
-.l-bar { width: 200px; height: 3px; background: rgba(0,255,102,0.15); border-radius: 3px; margin-top: 28px; overflow: hidden; }
-.l-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #00FF66, #10B981); animation: lf 1.6s forwards; }
+.loading-particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.loading-particles .p { position: absolute; width: 4px; height: 4px; background: #00FF66; border-radius: 50%; box-shadow: 0 0 10px #00FF66; animation: floatP 4s infinite ease-in-out; }
+@keyframes floatP { 0%,100% { transform: translateY(0) scale(1); opacity: 0.3; } 50% { transform: translateY(-30px) scale(1.5); opacity: 1; } }
+.l-logo-wrap { position: relative; display: inline-block; }
+.l-logo-wrap::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); animation: sweep 2.5s infinite; pointer-events: none; }
+@keyframes sweep { 0% { left: -100%; } 60%, 100% { left: 200%; } }
+.l-logo { animation: ll 2s infinite; }
+@keyframes ll { 0%,100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(0,255,102,0.5)); } 50% { transform: scale(1.04); filter: drop-shadow(0 0 40px rgba(0,255,102,0.8)); } }
+.l-bar { width: 220px; height: 4px; background: rgba(0,255,102,0.15); border-radius: 4px; margin-top: 26px; overflow: hidden; position: relative; }
+.l-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #00FF66, #10B981); animation: lf 2.2s forwards; position: relative; }
+.l-fill::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); animation: sweep 1.2s infinite; }
 @keyframes lf { to { width: 100%; } }
+.l-pct { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #00FF66; margin-top: 12px; font-weight: 800; letter-spacing: 2px; text-shadow: 0 0 12px rgba(0,255,102,0.8); }
 .live-b { position: fixed; bottom: 100px; left: 12px; right: 12px; max-width: 420px; margin: 0 auto; background: linear-gradient(135deg, rgba(9,18,14,0.98), rgba(5,12,8,0.99)); backdrop-filter: blur(20px); border: 1px solid rgba(0,255,102,0.45); border-radius: 16px; padding: 12px 16px; z-index: 45; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s; transform: translateY(180%); opacity: 0; display: flex; align-items: center; gap: 12px; box-shadow: 0 15px 40px rgba(0,255,102,0.25); }
 .live-b.show { transform: translateY(0); opacity: 1; }
 .l-av { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #00FF66, #10B981); display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; font-size: 15px; flex-shrink: 0; }
@@ -97,7 +109,6 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 #pullIndicator.active { opacity: 1; }
 #pullIndicator.spin { animation: spinR 0.9s linear infinite; }
 @keyframes spinR { to { transform: translateX(-50%) rotate(360deg); } }
-/* PREMIUM CYBER CRYPTO TICKER */
 .cyber-ticker { position: relative; background: linear-gradient(135deg, rgba(0,20,10,0.95), rgba(0,10,5,0.98)); border: 1px solid rgba(0,255,102,0.35); border-radius: 14px; padding: 9px 0; overflow: hidden; box-shadow: 0 0 20px rgba(0,255,102,0.12), inset 0 0 20px rgba(0,255,102,0.04); }
 .cyber-ticker::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0, transparent 3px, rgba(0,255,102,0.04) 3px, rgba(0,255,102,0.04) 4px); pointer-events: none; z-index: 1; }
 .cyber-ticker::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,255,102,0.8), transparent); animation: scan 3s linear infinite; }
@@ -110,16 +121,16 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .winner-scroll { white-space: nowrap; display: inline-flex; animation: winnerAnim 45s linear infinite; }
 @keyframes winnerAnim { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 .emoji-3d { display: inline-block; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.7)) drop-shadow(0 0 6px rgba(0,255,102,0.25)); transform: translateY(-1px); }
-.ach-btn { padding: 6px 4px; border-radius: 10px; font-size: 9px; font-weight: 900; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 1px; border-width: 1px; border-style: solid; }
-.ach-btn .ach-emoji { font-size: 12px; }
-.ach-btn .ach-sub { font-size: 7px; color: #888; font-weight: 700; }
+.ach-btn { padding: 7px 4px; border-radius: 10px; font-size: 9px; font-weight: 900; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 1px; border-width: 1px; border-style: solid; }
+.ach-btn .ach-emoji { font-size: 13px; }
+.ach-btn .ach-sub { font-size: 8px; color: #888; font-weight: 700; }
 .auth-hero { position: relative; width: 100%; min-height: 100vh; overflow: hidden; }
 .auth-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; }
 .auth-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,9,7,0.05) 0%, rgba(5,9,7,0.30) 25%, rgba(5,9,7,0.72) 55%, rgba(5,9,7,0.95) 78%, #050907 100%); }
 .auth-logo-wrap { position: absolute; top: 3%; left: 50%; transform: translateX(-50%); z-index: 3; text-align: center; }
 .auth-card-wrap { position: relative; z-index: 5; min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 130px 16px calc(16px + env(safe-area-inset-bottom)); }
-.toxic-svg-logo { height: 70px; width: auto; display: inline-block; filter: drop-shadow(0 0 22px rgba(0,255,102,0.5)); }
-.toxic-svg-logo-sm { height: 40px; width: auto; display: inline-block; filter: drop-shadow(0 0 14px rgba(0,255,102,0.45)); }
+.toxic-svg-logo { height: 70px; width: auto; display: inline-block; }
+.toxic-svg-logo-sm { height: 40px; width: auto; display: inline-block; }
 .ach-card { display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(0,0,0,0.45); border-radius: 14px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); }
 .ach-card.unlocked { background: linear-gradient(135deg, rgba(0,255,102,0.12), rgba(0,0,0,0.5)); border-color: rgba(0,255,102,0.35); box-shadow: 0 0 20px rgba(0,255,102,0.1); }
 .ach-card.locked { opacity: 0.55; }
@@ -139,13 +150,10 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .an-val { font-size: 24px; font-weight: 900; color: #00FF66; font-family: 'JetBrains Mono', monospace; }
 #pwaBanner { position: fixed; bottom: 90px; left: 12px; right: 12px; max-width: 424px; margin: 0 auto; background: linear-gradient(135deg, #00FF66, #10B981); color: #000; border-radius: 16px; padding: 14px 16px; display: none; align-items: center; gap: 12px; z-index: 60; box-shadow: 0 15px 45px rgba(0,255,102,0.6); animation: min 0.4s; }
 #pwaBanner.show { display: flex; }
-/* #15 OFFLINE BANNER */
 #offlineBanner { position: fixed; top: 0; left: 0; right: 0; background: linear-gradient(135deg, #EF4444, #DC2626); color: #fff; text-align: center; padding: 8px 16px; font-size: 12px; font-weight: 800; z-index: 9998; transform: translateY(-100%); transition: transform 0.3s; box-shadow: 0 4px 20px rgba(239,68,68,0.6); }
 #offlineBanner.show { transform: translateY(0); }
-/* #19 COIN ANIMATION */
 @keyframes coinFloat { 0% { opacity: 0; transform: translate(-50%, 0) scale(0.5); } 20% { opacity: 1; transform: translate(-50%, -30px) scale(1.2); } 80% { opacity: 1; transform: translate(-50%, -100px) scale(1); } 100% { opacity: 0; transform: translate(-50%, -140px) scale(0.9); } }
 .coin-anim { position: fixed; top: 45%; left: 50%; transform: translateX(-50%); font-size: 36px; font-weight: 900; color: #00FF66; text-shadow: 0 0 30px #00FF66, 0 4px 8px rgba(0,0,0,0.8); z-index: 9999; pointer-events: none; animation: coinFloat 1.6s forwards; font-family: 'JetBrains Mono', monospace; }
-/* #20 TOUR */
 #tourOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(8px); z-index: 9000; display: none; align-items: center; justify-content: center; padding: 20px; }
 #tourOverlay.show { display: flex; }
 .tour-card { background: linear-gradient(145deg, rgba(13,24,18,0.99), rgba(7,13,10,1)); border: 1.5px solid rgba(0,255,102,0.5); border-radius: 22px; padding: 24px 20px; max-width: 360px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,255,102,0.2); }
@@ -160,8 +168,17 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 <div id="offlineBanner">📡 You are offline — Data will refresh when connected</div>
 
 <div class="loading" id="loading">
-  <div class="l-logo" id="loadingLogo"></div>
-  <div class="l-bar"><div class="l-fill"></div></div>
+  <div class="loading-particles">
+    <div class="p" style="top:25%;left:15%;animation-delay:0s"></div>
+    <div class="p" style="top:70%;left:20%;animation-delay:0.5s"></div>
+    <div class="p" style="top:30%;left:80%;animation-delay:1s"></div>
+    <div class="p" style="top:75%;left:85%;animation-delay:1.5s"></div>
+    <div class="p" style="top:15%;left:50%;animation-delay:0.8s"></div>
+    <div class="p" style="top:85%;left:50%;animation-delay:1.3s"></div>
+  </div>
+  <div class="l-logo-wrap"><div class="l-logo" id="loadingLogo"></div></div>
+  <div class="l-bar"><div class="l-fill" id="loadingFill"></div></div>
+  <div class="l-pct" id="loadingPct">0%</div>
 </div>
 
 <div class="live-b" id="liveB">
@@ -192,24 +209,23 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 </div>
 
 <div id="tourOverlay"></div>
-
 <div id="app"></div>
 
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('service-worker.js').then(() => console.log('SW registered')).catch(err => console.log('SW error:', err));
+    navigator.serviceWorker.register('service-worker.js').then(() => console.log('SW ok')).catch(err => console.log('SW err:', err));
   });
 }
 if (window.emailjs) { emailjs.init('jqUMl6CNuI5ijOpCJ'); }
 
 const TG_ICON_SVG = `<svg viewBox="0 0 24 24" fill="currentColor" width="26" height="26"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>`;
 
-// SVG LOGO — no puddle, no shadow, bigger, drips + bubbles + highlights
+// ============ SVG LOGO (No drips, no shadow, clean) ============
 function toxicLogo(size = 'lg') {
   const cls = size === 'lg' ? 'toxic-svg-logo' : 'toxic-svg-logo-sm';
   const uid = size + Math.random().toString(36).slice(2, 7);
-  return `<svg class="${cls}" viewBox="0 0 400 130" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  return `<svg class="${cls}" viewBox="0 0 400 110" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
     <defs>
       <linearGradient id="tg-${uid}" x1="0%" y1="0%" x2="0%" y2="100%">
         <stop offset="0%" stop-color="#E8FFB8"/>
@@ -224,31 +240,24 @@ function toxicLogo(size = 'lg') {
         <stop offset="100%" stop-color="#3FCC00" stop-opacity="0"/>
       </radialGradient>
       <filter id="glow-${uid}" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur stdDeviation="3" result="b"/>
+        <feGaussianBlur stdDeviation="3.5" result="b"/>
         <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
     </defs>
     <text x="200" y="88" text-anchor="middle" font-family="Inter, Arial Black, sans-serif" font-size="92" font-weight="900" letter-spacing="2" fill="url(#tg-${uid})" stroke="#0a3d10" stroke-width="0.8" filter="url(#glow-${uid})">TOXIC</text>
-    <g fill="url(#tg-${uid})">
-      <path d="M 78,100 C 74,116 74,132 78,146 C 82,150 84,146 82,132 C 80,118 80,106 78,100 Z"/>
-      <path d="M 148,102 C 143,120 143,138 148,152 C 153,156 155,150 152,136 C 149,120 149,110 148,102 Z"/>
-      <path d="M 220,102 C 216,114 216,128 220,140 C 224,144 226,140 224,128 C 222,116 222,108 220,102 Z"/>
-      <path d="M 292,102 C 288,120 288,136 292,150 C 296,154 298,148 296,136 C 293,120 293,110 292,102 Z"/>
-      <path d="M 352,102 C 349,114 349,128 352,140 C 355,144 357,140 355,128 C 353,116 353,108 352,102 Z"/>
+    <g opacity="0.75">
+      <circle cx="88" cy="42" r="3.5" fill="url(#bg-${uid})"/>
+      <circle cx="128" cy="28" r="2.6" fill="url(#bg-${uid})"/>
+      <circle cx="165" cy="36" r="4" fill="url(#bg-${uid})"/>
+      <circle cx="200" cy="30" r="3.2" fill="url(#bg-${uid})"/>
+      <circle cx="240" cy="38" r="3.5" fill="url(#bg-${uid})"/>
+      <circle cx="278" cy="32" r="2.6" fill="url(#bg-${uid})"/>
+      <circle cx="315" cy="40" r="3.2" fill="url(#bg-${uid})"/>
     </g>
-    <g opacity="0.72">
-      <circle cx="88" cy="52" r="3.5" fill="url(#bg-${uid})"/>
-      <circle cx="128" cy="38" r="2.6" fill="url(#bg-${uid})"/>
-      <circle cx="165" cy="46" r="4" fill="url(#bg-${uid})"/>
-      <circle cx="200" cy="40" r="3.2" fill="url(#bg-${uid})"/>
-      <circle cx="240" cy="48" r="3.5" fill="url(#bg-${uid})"/>
-      <circle cx="278" cy="42" r="2.6" fill="url(#bg-${uid})"/>
-      <circle cx="315" cy="50" r="3.2" fill="url(#bg-${uid})"/>
-    </g>
-    <g fill="#E8FFC7" opacity="0.4">
-      <ellipse cx="110" cy="28" rx="14" ry="1.8"/>
-      <ellipse cx="190" cy="26" rx="18" ry="1.8"/>
-      <ellipse cx="270" cy="28" rx="14" ry="1.8"/>
+    <g fill="#E8FFC7" opacity="0.42">
+      <ellipse cx="110" cy="18" rx="14" ry="1.8"/>
+      <ellipse cx="190" cy="16" rx="18" ry="1.8"/>
+      <ellipse cx="270" cy="18" rx="14" ry="1.8"/>
     </g>
   </svg>`;
 }
@@ -331,16 +340,16 @@ const SPIN_PRIZES = [
 ];
 
 const ACHIEVEMENTS = [
-  {id:'first_invest', name:'First Invest', icon:'🥇', desc:'Buy your first investment plan', check:(u,team,plans)=>Number(u.invested||0)>0},
+  {id:'first_invest', name:'First Invest', icon:'🥇', desc:'Buy your first investment plan', check:(u,tm,p)=>Number(u.invested||0)>0},
   {id:'club_100', name:'$100 Club', icon:'💰', desc:'Invest $100 or more in total', check:(u)=>Number(u.invested||0)>=100},
   {id:'club_1000', name:'$1000 Club', icon:'💎', desc:'Invest $1000 or more in total', check:(u)=>Number(u.invested||0)>=1000},
-  {id:'refs_10', name:'10 Referrals', icon:'👥', desc:'Invite 10 invested team members', check:(u,team)=>team.filter(t=>Number(t.invested||0)>0).length>=10},
-  {id:'refs_50', name:'50 Referrals', icon:'🎯', desc:'Invite 50 invested team members', check:(u,team)=>team.filter(t=>Number(t.invested||0)>0).length>=50},
-  {id:'diamond_hands', name:'Diamond Hands', icon:'💎', desc:'Complete a full 40-day plan cycle', check:(u,team,plans)=>plans.some(p=>Number(p.days_collected)>=40)},
+  {id:'refs_10', name:'10 Referrals', icon:'👥', desc:'Invite 10 invested team members', check:(u,tm)=>tm.filter(x=>Number(x.invested||0)>0).length>=10},
+  {id:'refs_50', name:'50 Referrals', icon:'🎯', desc:'Invite 50 invested team members', check:(u,tm)=>tm.filter(x=>Number(x.invested||0)>0).length>=50},
+  {id:'diamond_hands', name:'Diamond Hands', icon:'💎', desc:'Complete a full 40-day plan cycle', check:(u,tm,p)=>p.some(x=>Number(x.days_collected)>=40)},
   {id:'lucky_spinner', name:'Lucky Spinner', icon:'🎡', desc:'Spin the wheel 5 times', check:()=>(S.spin.totalSpins||0)>=5},
-  {id:'team_leader', name:'Team Leader', icon:'🏆', desc:'Build a team of 25 invested members', check:(u,team)=>team.filter(t=>Number(t.invested||0)>0).length>=25},
+  {id:'team_leader', name:'Team Leader', icon:'🏆', desc:'Build a team of 25 invested members', check:(u,tm)=>tm.filter(x=>Number(x.invested||0)>0).length>=25},
   {id:'whale', name:'Whale', icon:'⚡', desc:'Invest $5000+ total', check:(u)=>Number(u.invested||0)>=5000},
-  {id:'active_trader', name:'Active Trader', icon:'🔥', desc:'Run 3 plans at the same time', check:(u,team,plans)=>plans.filter(p=>Number(p.days_collected)<40 && p.status!=='completed').length>=3}
+  {id:'active_trader', name:'Active Trader', icon:'🔥', desc:'Run 3 plans at the same time', check:(u,tm,p)=>p.filter(x=>Number(x.days_collected)<40 && x.status!=='completed').length>=3}
 ];
 
 const WORLD_NAMES = ['Rahul','Priya','Ahmed','Sara','Vikram','Anjali','Kiran','Ravi','Neha','Amit','Rohan','Sneha','Raj','Pooja','Arjun','Divya','Karan','Meera','Siddharth','Ananya','James','Emma','Oliver','Sophie','Harry','Charlotte','Jack','Emily','Liam','Isabella','George','Alice','Henry','Grace','Thomas','Lucy','William','Rose','Charlie','Ella','Michael','Jessica','David','Ashley','Chris','Amanda','Daniel','Sarah','Matthew','Nicole','Joshua','Hannah','Andrew','Rachel','Brandon','Melissa','Tyler','Lauren','Kevin','Rebecca','Khalid','Fatima','Omar','Aisha','Saeed','Layla','Rashid','Noor','Hamdan','Mariam','Sultan','Amna','Majid','Hessa','Faisal','Shamma','Latifa','Rakan','Maha','Abdullah','Nora','Reem','Turki','Bandar','Lama','Saud','Razan','Nawaf','Layan','Jood','Yazeed','Dana','Majed','Rawan','Fahad','Bushra','Ethan','Olivia','Nathan','Chloe','Lucas','Zoe','Ryan','Mia','Noah','Lily','Logan','Ava','Mason','Jacob','Aria','Elijah','Scarlett','Benjamin','Chinedu','Ngozi','Emeka','Adaeze','Tunde','Blessing','Kunle','Ifeoma','Segun','Chioma','Obinna','Amarachi','Uche','Chiamaka','Femi','Yetunde','Bola','Funke','Kola','Ronke','Ivan','Anastasia','Dmitri','Ekaterina','Sergei','Olga','Alexei','Natasha','Vladimir','Yulia','Nikolai','Svetlana','Mikhail','Irina','Andrei','Tatiana','Pavel','Elena','Viktor','Marina','Pedro','Ana','Gabriel','Julia','Rafael','Beatriz','Thiago','Camila','Bruno','Larissa','Diego','Isabela','Felipe','Mariana','Rodrigo','Carolina','Mateus','Fernanda','Leonardo','Gabriela','Budi','Siti','Andi','Dewi','Rizki','Putri','Agus','Indah','Bayu','Maya','Adi','Rina','Eko','Wulan','Hendra','Sari','Fajar','Nurul','Yoga','Ayu','Mehmet','Ayse','Ali','Zeynep','Emre','Elif','Burak','Selin','Can','Deniz','Kerem','Yasmin','Baris','Melis','Onur','Eda','Cem','Buse','Kaan','Derya','Jose','Maria','Juan','Carlos','Rosa','Miguel','Lucia','Antonio','Sofia','Marco','Paolo','Giulia','Andrea','Francesca','Lukas','Anna','Felix','Max','Lena','Jonas','Leon','Marie','Paul','Laura','Erik','Niklas','Finn','Amelie','Tim','Klara','Pierre','Jean','Luc','Camille','Antoine','Hugo','Louis','Lea','Manon','Julien','Alexandre','Julie','Rahim','Fatema','Karim','Sumaiya','Rakib','Nusrat','Shakib','Tasnim','Arif','Jannat','Tanvir','Sadia','Imran','Mim','Rifat','Runa','Sabbir','Mou','Hasan','Tisha','Haruto','Yui','Sota','Aoi','Ren','Sakura','Yuto','Hina','Kaito','Rin','Riku','Yuna','Sora','Himari','Hayato','Mei','Kenta','Ichika','Daiki','Akari','Minho','Jiyeon','Junho','Soyeon','Hyunwoo','Seungmin','Haeun','Jihoon','Chaeyoung','Taehyung','Nayeon','Jungkook','Momo','Jimin','Sana','Yoongi','Mina','Hoseok','Dahyun','Sipho','Thandi','Bongani','Lerato','Sibusiso','Zanele','Mandla','Nomsa','Kagiso','Palesa','Tebogo','Ayanda','Katlego','Lindiwe','Themba','Zinhle','Mpho','Refilwe','Sizwe','Naledi'];
@@ -390,6 +399,9 @@ function generateWinnerTicker() {
   }
   return fakes;
 }
+
+// ⚠️ CRITICAL: These constants MUST be declared before use
+const FAKE_REFERRERS = generateFakeReferrers(50);
 
 let S = {
   user: JSON.parse(localStorage.getItem('t_user') || 'null'),
@@ -570,8 +582,6 @@ function animateCount(elem, start, end, duration = 700, prefix = '$') {
   requestAnimationFrame(step);
 }
 function launchConfetti() { try { if (typeof confetti === 'function') confetti({particleCount:120, spread:85, origin:{y:0.6}, colors:['#00FF66','#10B981','#FFD700','#ffffff']}); } catch(e) {} }
-
-// #19 COIN FLOAT ANIMATION
 function showCoinAnim(amount) {
   const d = document.createElement('div');
   d.className = 'coin-anim';
@@ -603,7 +613,7 @@ function sendPush(title, body) {
 }
 
 async function sendScreenshotToTelegram(base64Image, username, userId) {
-  if (!CFG.telegramBotToken || CFG.telegramBotToken === 'YOUR_BOT_TOKEN_HERE') return { ok: false, error: 'Bot not configured' };
+  if (!CFG.telegramBotToken) return { ok: false, error: 'Bot not configured' };
   try {
     const blob = await (await fetch(base64Image)).blob();
     const fd = new FormData();
@@ -616,20 +626,13 @@ async function sendScreenshotToTelegram(base64Image, username, userId) {
   } catch(e) { return { ok: false, error: e.message }; }
 }
 
-// #15 OFFLINE MODE
 function initOfflineMode() {
-  const update = () => {
-    const b = $('offlineBanner');
-    if (!b) return;
-    if (navigator.onLine) b.classList.remove('show');
-    else b.classList.add('show');
-  };
+  const update = () => { const b = $('offlineBanner'); if (!b) return; if (navigator.onLine) b.classList.remove('show'); else b.classList.add('show'); };
   window.addEventListener('online', () => { update(); toast('✅ Back online'); });
   window.addEventListener('offline', () => { update(); toast('📡 You are offline'); });
   update();
 }
 
-// #20 FIRST-TIME TOUR
 function showTour() {
   if (!S.user) return;
   const tourKey = 't_tour_' + S.user.user_id;
@@ -640,11 +643,9 @@ function showTour() {
     {icon:'⚡', title:'Invest & Collect Daily', desc:'Choose a plan from INVEST. Come back every 24 hours to collect your daily reward. Missed days are forfeited!'},
     {icon:'👥', title:'Refer & Earn', desc:'Share your referral link to earn up to 10% commission across 10 levels. Invite 5+ invested members to unlock milestone bonuses!'}
   ];
-  S.tourStep = 0;
-  renderTour(steps);
-  const overlay = $('tourOverlay');
-  overlay.classList.add('show');
-  overlay.onclick = (e) => { if (e.target === overlay) { skipTour(); } };
+  S.tourStep = 0; renderTour(steps);
+  const overlay = $('tourOverlay'); overlay.classList.add('show');
+  overlay.onclick = (e) => { if (e.target === overlay) skipTour(); };
 }
 function renderTour(steps) {
   const overlay = $('tourOverlay');
@@ -664,15 +665,8 @@ function renderTour(steps) {
   window._tourSteps = steps;
 }
 function nextTour() { S.tourStep++; renderTour(window._tourSteps); }
-function finishTour() {
-  localStorage.setItem('t_tour_' + S.user.user_id, '1');
-  $('tourOverlay').classList.remove('show');
-  haptic('success'); sound('success');
-}
-function skipTour() {
-  localStorage.setItem('t_tour_' + S.user.user_id, '1');
-  $('tourOverlay').classList.remove('show');
-}
+function finishTour() { localStorage.setItem('t_tour_' + S.user.user_id, '1'); $('tourOverlay').classList.remove('show'); haptic('success'); sound('success'); }
+function skipTour() { localStorage.setItem('t_tour_' + S.user.user_id, '1'); $('tourOverlay').classList.remove('show'); }
 
 function generateOTP() { return String(Math.floor(100000 + Math.random() * 900000)); }
 
@@ -909,7 +903,6 @@ async function checkTeamMilestones() {
   for (let i = 0; i < TEAM_MILESTONES.length; i++) {
     const m = TEAM_MILESTONES[i];
     if (count >= m.size && !S.milestones.claimed.includes(i)) {
-      // Double-claim guard: check Supabase first
       if (sb) {
         try {
           const chk = await sb.from('users').select('milestones_claimed').eq('user_id', S.user.user_id).limit(1);
@@ -924,10 +917,7 @@ async function checkTeamMilestones() {
       S.tx.unshift({type:'milestone', amount:m.reward, status:'success', method:`Team Milestone · ${m.label}`, date:new Date().toISOString()});
       save();
       if (sb) {
-        try {
-          const upd = await sb.from('users').update({balance:S.user.balance, milestones_claimed: JSON.stringify(S.milestones.claimed)}).eq('user_id', S.user.user_id);
-          if (upd.error) toast('⚠️ Milestone sync issue - contact support');
-        } catch(e) {}
+        try { await sb.from('users').update({balance:S.user.balance, milestones_claimed: JSON.stringify(S.milestones.claimed)}).eq('user_id', S.user.user_id); } catch(e) {}
       }
       setTimeout(() => { launchConfetti(); sound('success'); customAlert('🏆 Milestone Achieved!', `Team Size: ${m.label}\nBonus: +$${m.reward.toFixed(2)}`, '🎉'); }, 800);
       break;
@@ -1051,7 +1041,7 @@ async function checkAchievements() {
   }
   if (unlocked.length > 0) {
     save();
-    if (sb) { try { const upd = await sb.from('users').update({achievements: JSON.stringify(S.achievements)}).eq('user_id', S.user.user_id); if (upd.error) console.warn('Ach save err'); } catch(e) {} }
+    if (sb) { try { await sb.from('users').update({achievements: JSON.stringify(S.achievements)}).eq('user_id', S.user.user_id); } catch(e) {} }
     unlocked.forEach((a, idx) => {
       setTimeout(() => { launchConfetti(); sound('success'); customAlert(`${a.icon} Achievement Unlocked!`, `${a.name}\n\n${a.desc}`, '🏆'); }, 800 + idx * 1500);
     });
@@ -1079,8 +1069,6 @@ function pageAnalytics() {
   let totalInvested = 0, totalEarned = 0, activeCount = 0, completedCount = 0;
   S.plans.forEach(p => { totalInvested += Number(p.deposit||0); totalEarned += Number(p.days_collected||0) * Number(p.dly || p.daily || 0); if (Number(p.days_collected) >= 40) completedCount++; else activeCount++; });
   const roi = totalInvested > 0 ? (totalEarned / totalInvested * 100) : 0;
-  let bestPlan = null, bestEarned = 0;
-  S.plans.forEach(p => { const e = Number(p.days_collected||0) * Number(p.dly || p.daily || 0); if (e > bestEarned) { bestEarned = e; bestPlan = p; } });
   const base = totalInvested || 10;
   const projections = [{label:'After 40 days', mult:4},{label:'After 80 days', mult:16},{label:'After 120 days', mult:64},{label:'After 1 year', mult:Math.pow(4,9)}];
   return `<h1>📊 Analytics Dashboard</h1>
@@ -1179,8 +1167,7 @@ async function claimReferralBalance() {
   S.user.referral_balance = 0;
   save();
   if (sb) { try { await sb.from('users').update({balance: S.user.balance, referral_balance: 0}).eq('user_id', S.user.user_id); } catch(e) {} }
-  haptic('success'); sound('coin'); launchConfetti();
-  showCoinAnim(refBal);
+  haptic('success'); sound('coin'); launchConfetti(); showCoinAnim(refBal);
   customAlert('🎉 Added to Balance!', `+$${fmt(refBal)} successfully added to your main balance!`, '💰');
   render();
 }
@@ -1196,8 +1183,8 @@ async function syncUser() {
       const f = u.data[0];
       if (f.is_banned === true) {
         sound('error');
-        customAlert('Account Suspended', 'Your account has been suspended by the administrator.\n\nContact support: @Toxiconect', '🚫');
-        setTimeout(() => { localStorage.removeItem('t_user'); localStorage.removeItem('t_plans'); localStorage.removeItem('t_team'); localStorage.removeItem('t_tx'); S.user = null; S.plans = []; S.team = []; S.tx = []; S.tab = 'signin'; render(); }, 3000);
+        customAlert('Account Suspended', 'Your account has been suspended.\n\nContact support: @Toxiconect', '🚫');
+        setTimeout(() => { Object.keys(localStorage).forEach(k => { if (k.startsWith('t_')) localStorage.removeItem(k); }); S.user = null; S.plans = []; S.team = []; S.tx = []; S.tab = 'signin'; render(); }, 3000);
         SYNC_LOCK = false; return;
       }
       const oldB = Number(S.user.balance||0);
@@ -1304,7 +1291,7 @@ async function autoRenewCombined(completedPlans) {
   const totalCost = completedPlans.reduce((s, p) => s + Number(p.deposit), 0);
   const bal = Number(S.user.balance || 0);
   if (bal < totalCost) {
-    if (sb) { try { await sb.from('notifications').insert([{user_id:S.user.user_id, title:'⚠️ Auto-Renew Skipped', message:`${completedPlans.length} completed plan(s) could not auto-renew due to insufficient balance (need $${fmt(totalCost)}).`, type:'warning', is_read:false}]); } catch(e) {} }
+    if (sb) { try { await sb.from('notifications').insert([{user_id:S.user.user_id, title:'⚠️ Auto-Renew Skipped', message:`${completedPlans.length} completed plan(s) could not auto-renew due to insufficient balance.`, type:'warning', is_read:false}]); } catch(e) {} }
     completedPlans.forEach(p => { p._renewed = true; });
     return;
   }
@@ -1546,7 +1533,6 @@ async function doLogin() {
   customAlert('User Not Found', 'No account found.\n\nPlease create a new account first.', '⚠️');
 }
 
-// #5 LOGOUT FULL CLEAR
 function logout() {
   customConfirm('Logout', 'Are you sure you want to sign out?', () => {
     Object.keys(localStorage).forEach(k => { if (k.startsWith('t_')) localStorage.removeItem(k); });
@@ -1613,40 +1599,6 @@ function dashUI() {
   const badge = getVIPBadge(Number(u.invested||0));
   const bars = [20,35,28,50,42,65,55,80,70,95].map((h, i) => `<div style="flex:1;border-radius:4px 4px 0 0;height:${h}%;background:linear-gradient(180deg,#00FF66,rgba(0,255,102,0.15));opacity:${0.4+i*0.06}"></div>`).join('');
   const unlockedCount = ACHIEVEMENTS.filter(a => S.achievements.includes(a.id)).length;
-  let plansHTML = '';
-  if (ap.length === 0) {
-    plansHTML = `<div class="glass-card" style="text-align:center;padding:32px 20px;margin-bottom:12px"><div style="font-size:38px;opacity:0.5;margin-bottom:10px" class="emoji-3d">📊</div><p style="font-weight:900;font-size:14px;margin:0 0 6px">No Active Plans</p><p style="font-size:12px;color:#888;margin:0 0 16px">Choose a plan to start earning</p><button onclick="setTab('plans')" class="btn-green" style="padding:11px 26px;border-radius:12px;font-size:12px">BROWSE PLANS →</button></div>`;
-  } else {
-    plansHTML = ap.slice(0, 2).map(pl => {
-      const p = PLANS.find(x => x.id === pl.plan_id) || {c:'#00FF66', i:'💰', dly:pl.daily, t:pl.total, n:pl.plan_name};
-      const days = Number(pl.days_collected) || 0;
-      const pct = (days / 40) * 100;
-      const earned = days * Number(pl.dly || pl.daily);
-      return `<div class="plan-active" style="margin-bottom:10px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px;position:relative;z-index:1">
-          <div style="display:flex;gap:9px;align-items:center">
-            <div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;background:${p.c}25;border:1px solid ${p.c}66" class="emoji-3d">${p.i}</div>
-            <div><p style="font-weight:900;font-size:13px;color:${p.c};margin:0;letter-spacing:0.3px">${p.n}</p><p style="font-size:9px;color:#888;margin:2px 0 0">$${fmt(pl.deposit)} · Day ${days}/40</p></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:4px"><span style="width:5px;height:5px;border-radius:50%;display:inline-block" class="bg-toxic pdot"></span><span style="font-size:9px;font-weight:900" class="text-toxic">LIVE</span></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:8px;position:relative;z-index:1">
-          <div style="background:rgba(0,0,0,0.5);border-radius:8px;padding:6px 4px;text-align:center"><p style="font-size:8px;color:#888;margin:0 0 2px">EARNED</p><p class="mono text-toxic" style="font-size:10px;font-weight:900;margin:0">$${earned.toFixed(2)}</p></div>
-          <div style="background:rgba(0,0,0,0.5);border-radius:8px;padding:6px 4px;text-align:center"><p style="font-size:8px;color:#888;margin:0 0 2px">DAILY</p><p class="mono text-toxic" style="font-size:10px;font-weight:900;margin:0">$${Number(pl.dly||pl.daily).toFixed(2)}</p></div>
-          <div style="background:rgba(0,0,0,0.5);border-radius:8px;padding:6px 4px;text-align:center"><p style="font-size:8px;color:#888;margin:0 0 2px">TARGET</p><p class="mono" style="font-size:10px;font-weight:900;margin:0;color:${p.c}">$${Number(pl.t||pl.total).toFixed(0)}</p></div>
-        </div>
-        <div style="background:linear-gradient(135deg,${p.c}22,transparent);border:1px solid ${p.c}55;border-radius:12px;padding:9px 10px;margin-bottom:7px;position:relative;z-index:1">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-            <p style="font-size:9px;color:#888;font-weight:800;margin:0;letter-spacing:1px">⏳ NEXT COLLECT IN</p>
-            <p class="mono timer-glow" style="font-size:13px;font-weight:900;margin:0;color:${p.c}" data-timer="${pl.id}">--:--:--</p>
-          </div>
-          <button data-collect="${pl.id}" onclick="collect(${pl.id})" class="collect-btn" style="width:100%;padding:9px;border-radius:10px;font-size:10px">⚡ REWARD CHARGING...</button>
-        </div>
-        <div style="width:100%;height:4px;border-radius:2px;background:rgba(255,255,255,0.05);overflow:hidden;position:relative;z-index:1"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,${p.c},#10B981);box-shadow:0 0 10px ${p.c}88"></div></div>
-      </div>`;
-    }).join('');
-    if (ap.length > 2) plansHTML += `<button onclick="setTab('active')" class="btn-green" style="width:100%;padding:10px;border-radius:11px;font-size:11px">VIEW ALL ${ap.length} ACTIVE PLANS →</button>`;
-  }
   return `<div style="display:flex;flex-direction:column;gap:14px">
     ${cryptoUI()}
     ${combinedTickerUI()}
@@ -1668,7 +1620,6 @@ function dashUI() {
     </div>
     ${spinUI()}
     ${chartUI()}
-    <div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><p style="font-size:10px;color:#888;font-weight:800;margin:0;letter-spacing:1.5px">📈 ${t().activePlans}</p><span style="font-size:10px;font-weight:800" class="text-toxic">${ap.length} active</span></div>${plansHTML}</div>
     <div class="glass-card"><p style="font-size:10px;color:#888;font-weight:800;margin:0 0 12px;letter-spacing:1.5px">🔗 YOUR REFERRAL LINK</p><div style="display:flex;gap:8px;align-items:center"><input readonly value="${rl}" class="mono" style="flex:1;font-size:10px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:13px;color:#10B981"><button onclick="S.showQR=true;render()" class="btn-green" style="padding:13px 12px;border-radius:12px;font-size:12px">QR</button><button onclick="copy('${rl}')" class="btn-green" style="padding:13px 14px;border-radius:12px;font-size:12px">📋</button></div></div>
     <div class="glass-card"><p style="font-size:10px;color:#888;font-weight:800;margin:0 0 12px;letter-spacing:1.5px">ℹ️ INFORMATION</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
       <button onclick="openPage('about')" style="padding:12px;border-radius:12px;background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.2);color:#fff;font-size:11px;font-weight:700;cursor:pointer">ℹ️ About Us</button>
@@ -1746,7 +1697,7 @@ function plansUI() {
     const active = isActive(p.id);
     const lockAttr = INVEST_LOCK ? 'disabled' : '';
     const btn = active ? '<button class="btn-invest locked" disabled>🔒 ALREADY ACTIVE</button>' : `<button onclick="event.stopPropagation();quickInvest('${p.id}')" class="btn-invest" ${lockAttr}>⚡ INVEST NOW</button>`;
-    return `<div class="plan-card" onclick="${active?'':`openPlan('${p.id}')`}">
+    return `<div class="plan-card ${active?'locked':''}" onclick="${active?'':`openPlan('${p.id}')`}">
       <div style="display:flex;justify-content:space-between;margin-bottom:10px"><p style="font-size:9px;color:#888;font-weight:800;margin:0;letter-spacing:1px">PLAN</p><div style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:${p.c}18;border:1px solid ${p.c}55"><span style="color:${p.c};font-size:11px">→</span></div></div>
       <p style="font-size:11px;font-weight:900;color:${p.c};margin:0 0 8px"><span class="emoji-3d">${p.i}</span> ${p.n}</p>
       <p class="mono" style="font-size:26px;font-weight:900;margin:0 0 2px">$${p.d}.00</p>
@@ -1867,7 +1818,6 @@ async function distributeReferralCommissions(planAmount, planName, investTxId) {
   }
 }
 
-// #19 Daily collect animation
 async function collect(pid) {
   const pl = S.plans.find(x => String(x.id) === String(pid));
   if (!pl) return;
@@ -1884,13 +1834,12 @@ async function collect(pid) {
   S.tx.unshift({type:'daily_collect', amount:rw, status:'success', method:pl.plan_name, date:nowIso, plan_id:pl.plan_id});
   if (sb) {
     try {
-      const upd = await sb.from('user_plans').update({days_collected:pl.days_collected, status:pl.status, last_collect_at: nowIso}).eq('id', pl.id);
-      if (upd.error) console.warn('Plan update error:', upd.error);
+      await sb.from('user_plans').update({days_collected:pl.days_collected, status:pl.status, last_collect_at: nowIso}).eq('id', pl.id);
       await sb.from('users').update({balance:S.user.balance, earned:S.user.earned}).eq('user_id', S.user.user_id);
     } catch(e) {}
   }
   haptic('success'); sound('coin');
-  showCoinAnim(rw); // #19
+  showCoinAnim(rw);
   if (done) { launchConfetti(); customAlert('Plan Completed!', `Total return collected: $${rw.toFixed(2)}`, '🎉'); }
   else customAlert('Reward Collected!', `Collected: $${rw.toFixed(2)}\nDay: ${pl.days_collected} / 40`, '💰');
   save(); render();
@@ -1902,31 +1851,30 @@ function activeUI() {
   if (ap.length === 0) {
     return `<div class="glass-card" style="text-align:center;padding:52px 20px"><div style="font-size:52px;opacity:0.4;margin-bottom:14px" class="emoji-3d">📦</div><p style="font-weight:900;font-size:17px;margin:0 0 8px">No Active Plans</p><p style="font-size:12px;color:#888;margin:0 0 22px">Buy a plan to start earning</p><button onclick="setTab('plans')" class="btn-green" style="padding:14px 34px;border-radius:14px;font-size:13px">+ BROWSE PLANS</button></div>`;
   }
-  return `<div style="display:flex;flex-direction:column;gap:12px">${ap.map(pl => {
+  return `<div style="display:flex;flex-direction:column;gap:0">${ap.map(pl => {
     const p = PLANS.find(x => x.id === pl.plan_id) || {c:'#00FF66', i:'💰', dly:pl.daily, t:pl.total, n:pl.plan_name};
     const days = Number(pl.days_collected) || 0, pct = (days / 40) * 100, earned = days * Number(pl.dly || pl.daily);
     return `<div class="plan-active">
-      <div style="display:flex;justify-content:space-between;margin-bottom:10px;position:relative;z-index:1">
-        <div style="display:flex;gap:10px;align-items:center">
-          <div style="width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;background:${p.c}25;border:1px solid ${p.c}66" class="emoji-3d-lg">${p.i}</div>
-          <div><p style="font-weight:900;color:${p.c};font-size:15px;margin:0">${p.n}</p><p style="font-size:9px;color:#888;margin:2px 0 0">Day ${days}/40 · ${40-days} left</p></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:14px;position:relative;z-index:1">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;background:${p.c}25;border:1px solid ${p.c}66" class="emoji-3d-lg">${p.i}</div>
+          <div><p style="font-weight:900;color:${p.c};font-size:17px;margin:0;letter-spacing:0.3px">${p.n}</p><p style="font-size:10px;color:#888;margin:3px 0 0">$${fmt(pl.deposit)} invested · Day ${days}/40</p></div>
         </div>
-        <div style="display:flex;align-items:center;gap:4px"><span style="width:5px;height:5px;border-radius:50%;display:inline-block" class="bg-toxic pdot"></span><span style="font-size:9px;font-weight:900" class="text-toxic">LIVE</span></div>
+        <div style="display:flex;align-items:center;gap:5px"><span style="width:6px;height:6px;border-radius:50%;display:inline-block" class="bg-toxic pdot"></span><span style="font-size:10px;font-weight:900" class="text-toxic">LIVE</span></div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:5px;margin-bottom:10px;position:relative;z-index:1">
-        <div style="background:rgba(0,0,0,0.5);border-radius:9px;padding:6px 3px;text-align:center"><p style="font-size:8px;color:#888;margin:0 0 2px">INV</p><p class="mono" style="font-size:10px;font-weight:900;margin:0">$${fmt(pl.deposit).replace('.00','')}</p></div>
-        <div style="background:rgba(0,0,0,0.5);border-radius:9px;padding:6px 3px;text-align:center"><p style="font-size:8px;color:#888;margin:0 0 2px">EARN</p><p class="mono text-toxic" style="font-size:10px;font-weight:900;margin:0">$${earned.toFixed(1)}</p></div>
-        <div style="background:rgba(0,0,0,0.5);border-radius:9px;padding:6px 3px;text-align:center"><p style="font-size:8px;color:#888;margin:0 0 2px">DAILY</p><p class="mono text-toxic" style="font-size:10px;font-weight:900;margin:0">$${Number(pl.dly||pl.daily).toFixed(2)}</p></div>
-        <div style="background:rgba(0,0,0,0.5);border-radius:9px;padding:6px 3px;text-align:center"><p style="font-size:8px;color:#888;margin:0 0 2px">TGT</p><p class="mono" style="font-size:10px;font-weight:900;margin:0;color:${p.c}">$${Number(pl.t||pl.total).toFixed(0)}</p></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;position:relative;z-index:1">
+        <div style="background:rgba(0,0,0,0.5);border-radius:12px;padding:10px 6px;text-align:center"><p style="font-size:9px;color:#888;margin:0 0 4px">EARNED</p><p class="mono text-toxic" style="font-size:13px;font-weight:900;margin:0">$${earned.toFixed(2)}</p></div>
+        <div style="background:rgba(0,0,0,0.5);border-radius:12px;padding:10px 6px;text-align:center"><p style="font-size:9px;color:#888;margin:0 0 4px">DAILY</p><p class="mono text-toxic" style="font-size:13px;font-weight:900;margin:0">$${Number(pl.dly||pl.daily).toFixed(2)}</p></div>
+        <div style="background:rgba(0,0,0,0.5);border-radius:12px;padding:10px 6px;text-align:center"><p style="font-size:9px;color:#888;margin:0 0 4px">TARGET</p><p class="mono" style="font-size:13px;font-weight:900;margin:0;color:${p.c}">$${Number(pl.t||pl.total).toFixed(0)}</p></div>
       </div>
-      <div style="background:linear-gradient(135deg,${p.c}22,transparent);border:1px solid ${p.c}55;border-radius:12px;padding:10px;margin-bottom:8px;position:relative;z-index:1">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <p style="font-size:9px;color:#888;font-weight:800;margin:0;letter-spacing:1px">⏳ NEXT COLLECT IN</p>
-          <p class="mono timer-glow" style="font-size:16px;font-weight:900;margin:0;color:${p.c}" data-timer="${pl.id}">--:--:--</p>
+      <div style="background:linear-gradient(135deg,${p.c}22,transparent);border:1px solid ${p.c}55;border-radius:14px;padding:14px;margin-bottom:12px;position:relative;z-index:1">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <p style="font-size:10px;color:#888;font-weight:800;margin:0;letter-spacing:1px">⏳ NEXT COLLECT IN</p>
+          <p class="mono timer-glow" style="font-size:20px;font-weight:900;margin:0;color:${p.c}" data-timer="${pl.id}">--:--:--</p>
         </div>
-        <button data-collect="${pl.id}" onclick="collect(${pl.id})" class="collect-btn" style="width:100%;padding:11px;border-radius:11px;font-size:11px">⚡ REWARD CHARGING...</button>
+        <button data-collect="${pl.id}" onclick="collect(${pl.id})" class="collect-btn" style="width:100%;padding:13px;border-radius:12px;font-size:12px">⚡ REWARD CHARGING...</button>
       </div>
-      <div style="width:100%;height:5px;border-radius:3px;background:rgba(255,255,255,0.05);overflow:hidden;position:relative;z-index:1"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,${p.c},#10B981);box-shadow:0 0 10px ${p.c}88"></div></div>
+      <div style="width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,0.05);overflow:hidden;position:relative;z-index:1"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,${p.c},#10B981);box-shadow:0 0 12px ${p.c}88"></div></div>
     </div>`;
   }).join('')}</div>`;
 }
@@ -2125,7 +2073,6 @@ function getTodayWdCount() {
   return S.tx.filter(x => x.type === 'withdrawal' && new Date(x.date || x.created_at || 0).getTime() >= today.getTime()).length;
 }
 
-// #17 Withdrawal with password confirmation
 async function subWd() {
   const amt = parseFloat($('wdAmt').value);
   const addr = $('wdAddr').value.trim();
@@ -2138,9 +2085,7 @@ async function subWd() {
   const fee = amt * CFG.fee / 100;
   const net = amt - fee;
   const note = method === 'UPI' ? `₹${(net * CFG.inrRate).toFixed(2)} INR` : `$${fmt(net)}`;
-  // Confirmation
   customConfirm('💸 Confirm Withdrawal', `Method: ${method}\nAmount: $${amt.toFixed(2)}\nFee: $${fee.toFixed(2)}\nNet: ${note}\n\nProceed to password?`, () => {
-    // Password prompt
     customPassword('🔐 Enter Password', `Confirm your password to submit withdrawal of $${amt.toFixed(2)}`, async (pwd) => {
       if (!pwd) return toast('❌ Password required');
       const stored = localStorage.getItem('t_pwd_' + S.user.user_id);
@@ -2153,7 +2098,6 @@ async function subWd() {
         } catch(e) {}
       }
       if (!valid) { sound('error'); return customAlert('Wrong Password', 'The password you entered is incorrect.\n\nWithdrawal cancelled.', '❌'); }
-      // Proceed
       S.user.balance -= amt;
       saveAddrIfChecked(addr, S.wdMethod === 'USDT' ? S.usdtNetwork : 'UPI', S.wdMethod);
       const localId = 'wd_' + Date.now();
@@ -2235,7 +2179,7 @@ function referralRaceUI() {
   all.push({u:S.user.username, c:'🏠', count:myCount, isMe:true});
   all.sort((a, b) => b.count - a.count);
   all.forEach((x, i) => { x.rank = i + 1; x.pos = Math.min(95, (x.count / 55) * 100); });
-  const me = all.find(x => x.isMe);
+  const me = all.find(x => x.isMe) || {rank: '—'};
   const medals = ['🥇','🥈','🥉'];
   const top = all.slice(0, 15);
   return `<div class="glass-card" style="border:1.5px solid rgba(255,215,0,0.4);background:linear-gradient(135deg,rgba(255,215,0,0.08),rgba(7,13,10,0.99) 75%)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><p style="font-size:10px;color:#FFD700;font-weight:800;margin:0;letter-spacing:1.5px">🏁 REFERRAL RACE</p><span style="font-size:10px;font-weight:900;color:#00FF66">Your Rank: #${me.rank}</span></div>${top.map(x => `<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px;width:22px;font-weight:900;color:${x.rank===1?'#FFD700':x.rank===2?'#C0C0C0':x.rank===3?'#CD7F32':'#666'}">${x.rank<=3?medals[x.rank-1]:'#'+x.rank}</span><span style="font-size:12px;font-weight:${x.isMe?'900':'700'};color:${x.isMe?'#00FF66':'#fff'}">${esc(x.u)}${x.isMe?' (You)':''}</span><span style="font-size:11px">${x.c}</span></div><span class="mono" style="font-size:11px;font-weight:900;color:${x.isMe?'#00FF66':'#888'}">${x.count} refs</span></div><div style="height:8px;background:rgba(0,0,0,0.4);border-radius:10px;position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;bottom:0;width:${x.pos}%;background:linear-gradient(90deg,${x.isMe?'#00FF66':'#10B981'},rgba(0,255,102,0.3));border-radius:10px;box-shadow:${x.isMe?'0 0 15px #00FF66':'none'}"></div></div></div>`).join('')}</div>`;
@@ -2267,12 +2211,11 @@ async function buildLeaderboard() {
   return all.slice(0, 100);
 }
 
-// SAFE leaderboard loader — catches all errors
 async function loadLeaderboardSafe() {
   try {
     const box = $('leaderboardList'); if (!box) return;
     if (S.leaderboardLoaded) return;
-    box.innerHTML = '<p style="text-align:center;padding:16px;color:#666;font-size:11px">Loading leaderboard...</p>';
+    box.innerHTML = '<p style="text-align:center;padding:16px;color:#666;font-size:11px">Loading...</p>';
     const lb = await buildLeaderboard();
     S.leaderboardLoaded = true;
     if (!lb || lb.length === 0) {
@@ -2562,9 +2505,24 @@ if (!S.user) S.tab = 'signup';
 let loadingHidden = false;
 function hideLoading() { if (loadingHidden) return; loadingHidden = true; const l = $('loading'); if (l) l.classList.add('hide'); }
 
+// Loading percentage animation
+function animateLoadingPct() {
+  const pctEl = $('loadingPct');
+  if (!pctEl) return;
+  let pct = 0;
+  const int = setInterval(() => {
+    pct += Math.floor(Math.random() * 8) + 3;
+    if (pct >= 100) { pct = 100; clearInterval(int); }
+    pctEl.textContent = pct + '%';
+    const fill = $('loadingFill');
+    if (fill) fill.style.width = pct + '%';
+  }, 100);
+}
+
 (async function() {
   const loadingLogo = $('loadingLogo');
   if (loadingLogo) loadingLogo.innerHTML = toxicLogo('lg');
+  animateLoadingPct();
   initOfflineMode();
   const failsafe = setTimeout(() => { hideLoading(); setTimeout(() => toast('⚠️ Slow connection.'), 500); }, 8000);
   try { await Promise.all([loadSiteConfig(), loadPlansFromDB(), loadPromoCodes(), loadCryptoPrices(), S.user ? syncUser() : Promise.resolve()]); } catch(e) {}
