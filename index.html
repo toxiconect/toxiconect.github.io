@@ -44,10 +44,10 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .plan-card:active { transform: scale(0.97); }
 .plan-card.locked { opacity: 0.65; cursor: default; }
 .plan-card.locked::after { content: '✓ ACTIVE'; position: absolute; top: 12px; right: 12px; background: linear-gradient(135deg, #00FF66, #10B981); color: #000; font-size: 9px; font-weight: 900; padding: 5px 10px; border-radius: 20px; box-shadow: 0 0 20px rgba(0,255,102,0.7); z-index: 10; letter-spacing: 0.5px; }
-/* PREMIUM ACTIVE PLAN */
-.plan-active { position: relative; overflow: hidden; border-radius: 22px; padding: 20px; background: linear-gradient(145deg, rgba(0,255,102,0.16), rgba(7,14,10,0.99) 75%); border: 1.5px solid rgba(0,255,102,0.45); box-shadow: 0 0 30px rgba(0,255,102,0.15), inset 0 1px 0 rgba(255,255,255,0.05); }
-.plan-active::before { content: ''; position: absolute; top: -60px; right: -60px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(0,255,102,0.25), transparent 70%); pointer-events: none; }
-.plan-active::after { content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); animation: shine 3.5s infinite; pointer-events: none; }
+/* PREMIUM ACTIVE PLAN - COMPACT */
+.plan-active { position: relative; overflow: hidden; border-radius: 18px; padding: 14px; background: linear-gradient(145deg, rgba(0,255,102,0.12), rgba(7,14,10,0.99) 75%); border: 1.5px solid rgba(0,255,102,0.4); box-shadow: 0 0 24px rgba(0,255,102,0.12), inset 0 1px 0 rgba(255,255,255,0.04); }
+.plan-active::before { content: ''; position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(0,255,102,0.22), transparent 70%); pointer-events: none; }
+.plan-active::after { content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent); animation: shine 3.5s infinite; pointer-events: none; }
 @keyframes shine { 0% { left: -100%; } 60%, 100% { left: 200%; } }
 .avatar { background: linear-gradient(135deg, #00FF66, #10B981); padding: 2px; border-radius: 50%; position: relative; }
 .avatar-in { background: #050907; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; color: #00FF66; overflow: hidden; }
@@ -55,10 +55,9 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .btn-invest { background: linear-gradient(180deg, #00FF66, #10B981); color: #000; font-weight: 900; border-radius: 12px; border: none; padding: 11px; width: 100%; cursor: pointer; font-size: 11px; letter-spacing: 0.4px; box-shadow: 0 4px 0 #0a5c3a, 0 6px 20px rgba(0,255,102,0.4); transition: all 0.1s; position: relative; z-index: 20; }
 .btn-invest:active { transform: translateY(3px); box-shadow: 0 1px 0 #0a5c3a, 0 2px 8px rgba(0,255,102,0.3); }
 .btn-invest.locked { background: linear-gradient(180deg, #2a2a2a, #1a1a1a); color: #666; cursor: not-allowed; box-shadow: 0 4px 0 #0a0a0a; }
-.btn-invest:disabled { opacity: 0.6; cursor: not-allowed; pointer-events: none; }
 .collect-btn { background: linear-gradient(135deg, #00FF66, #10B981); color: #000; font-weight: 900; box-shadow: 0 0 35px rgba(0,255,102,0.55); animation: cpa 2s infinite; transition: all 0.2s; }
 @keyframes cpa { 0%,100% { box-shadow: 0 0 20px rgba(0,255,102,0.4); } 50% { box-shadow: 0 0 50px rgba(0,255,102,0.9); } }
-.collect-btn:disabled { background: rgba(255,255,255,0.05); color: #6B7280; box-shadow: none; animation: none; cursor: not-allowed; }
+.collect-btn:disabled { background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); color: #6B7280; box-shadow: none; animation: none; cursor: not-allowed; border: 1px solid rgba(255,255,255,0.06); }
 .pdot { animation: pd 1.5s infinite; }
 @keyframes pd { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
 .timer-glow { text-shadow: 0 0 30px rgba(0,255,102,0.8); }
@@ -106,46 +105,65 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 #pullIndicator.active { opacity: 1; }
 #pullIndicator.spin { animation: spinR 0.9s linear infinite; }
 @keyframes spinR { to { transform: translateX(-50%) rotate(360deg); } }
-.crypto-ticker { background: rgba(0,0,0,0.6); border: 1px solid rgba(0,255,102,0.18); border-radius: 12px; padding: 8px 0; overflow: hidden; position: relative; }
-.crypto-ticker > div { display: flex; white-space: nowrap; animation: scrollL 30s linear infinite; }
+/* PREMIUM CYBER CRYPTO TICKER */
+.cyber-ticker { position: relative; background: linear-gradient(135deg, rgba(0,20,10,0.95), rgba(0,10,5,0.98)); border: 1px solid rgba(0,255,102,0.35); border-radius: 14px; padding: 9px 0; overflow: hidden; box-shadow: 0 0 20px rgba(0,255,102,0.12), inset 0 0 20px rgba(0,255,102,0.04); }
+.cyber-ticker::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0, transparent 3px, rgba(0,255,102,0.04) 3px, rgba(0,255,102,0.04) 4px); pointer-events: none; z-index: 1; }
+.cyber-ticker::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,255,102,0.8), transparent); animation: scan 3s linear infinite; }
+@keyframes scan { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+.cyber-ticker > div { display: flex; white-space: nowrap; animation: scrollL 32s linear infinite; position: relative; z-index: 2; }
+.cyber-ticker > div > div { display: flex; align-items: center; gap: 8px; padding: 0 16px; border-right: 1px solid rgba(0,255,102,0.12); }
+.cyber-ticker .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #00FF66; box-shadow: 0 0 8px #00FF66; animation: pd 1.5s infinite; }
 @keyframes scrollL { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-#pwaBanner { position: fixed; bottom: 90px; left: 12px; right: 12px; max-width: 424px; margin: 0 auto; background: linear-gradient(135deg, #00FF66, #10B981); color: #000; border-radius: 16px; padding: 14px 16px; display: none; align-items: center; gap: 12px; z-index: 60; box-shadow: 0 15px 45px rgba(0,255,102,0.6); animation: min 0.4s cubic-bezier(0.34,1.56,0.64,1); }
-#pwaBanner.show { display: flex; }
-.an-card { background: linear-gradient(160deg, rgba(0,255,102,0.08), rgba(9,14,11,0.98)); border: 1px solid rgba(0,255,102,0.25); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
-.an-val { font-size: 24px; font-weight: 900; color: #00FF66; font-family: 'JetBrains Mono', monospace; }
-.lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.lang-btn { padding: 12px 8px; border-radius: 12px; font-size: 12px; font-weight: 800; border: 1px solid rgba(255,255,255,0.08); cursor: pointer; background: rgba(255,255,255,0.05); color: #aaa; transition: all 0.2s; text-align: center; }
-.lang-btn.active { background: linear-gradient(135deg, #00FF66, #10B981); color: #000; border-color: #00FF66; box-shadow: 0 0 20px rgba(0,255,102,0.4); }
-.promo-card { background: linear-gradient(135deg, rgba(255,215,0,0.12), rgba(0,0,0,0.5)); border: 1.5px solid rgba(255,215,0,0.4); border-radius: 18px; padding: 16px; position: relative; overflow: hidden; }
-.promo-card::before { content: '🎁'; position: absolute; top: -10px; right: -10px; font-size: 60px; opacity: 0.08; }
-.switch { position: relative; width: 50px; height: 28px; background: rgba(255,255,255,0.1); border-radius: 14px; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,255,255,0.1); }
-.switch.on { background: linear-gradient(135deg, #00FF66, #10B981); border-color: #00FF66; }
-.switch::after { content: ''; position: absolute; width: 22px; height: 22px; background: #fff; border-radius: 50%; top: 2px; left: 2px; transition: all 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
-.switch.on::after { left: 24px; }
-.netbtn { padding: 10px; font-weight: 800; text-align: center; cursor: pointer; border-radius: 12px; font-size: 11px; transition: all 0.2s; border: 1.5px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #888; }
-.netbtn.active { background: rgba(0,255,102,0.15); border-color: rgba(0,255,102,0.5); color: #00FF66; }
-/* 3D EMOJI EFFECT */
+/* COMBINED WINNERS + NEWS TICKER */
+.combined-ticker { position: relative; background: linear-gradient(135deg, rgba(30,20,0,0.75), rgba(5,10,5,0.98) 50%, rgba(0,20,10,0.75)); border: 1px solid rgba(255,215,0,0.35); border-radius: 14px; padding: 10px 14px; overflow: hidden; box-shadow: 0 0 22px rgba(255,215,0,0.12), inset 0 0 20px rgba(0,255,102,0.04); }
+.combined-ticker::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(255,215,0,0.05), transparent 40%, transparent 60%, rgba(0,255,102,0.05)); pointer-events: none; }
+.combined-row { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; transition: opacity 0.4s ease; }
+.combined-row.fade { opacity: 0; }
+.winner-scroll { white-space: nowrap; display: inline-flex; animation: winnerAnim 45s linear infinite; }
+@keyframes winnerAnim { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+/* 3D EMOJI */
 .emoji-3d { display: inline-block; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.7)) drop-shadow(0 0 6px rgba(0,255,102,0.25)); transform: translateY(-1px); transition: transform 0.2s; }
 .emoji-3d:hover { transform: translateY(-2px) scale(1.05); }
 .emoji-3d-lg { display: inline-block; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.8)) drop-shadow(0 0 12px rgba(0,255,102,0.4)); transform: translateY(-2px); }
-/* WINNER TICKER */
-.winner-ticker { background: linear-gradient(90deg, rgba(255,215,0,0.15), rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.6) 70%, rgba(255,215,0,0.15)); border: 1px solid rgba(255,215,0,0.35); border-radius: 14px; padding: 8px 12px; overflow: hidden; display: flex; align-items: center; gap: 10px; }
-.winner-scroll { white-space: nowrap; display: inline-flex; animation: winnerAnim 45s linear infinite; }
-@keyframes winnerAnim { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-/* FULL SCREEN AUTH */
+/* COMPACT ACHIEVEMENT BUTTONS */
+.ach-btn { padding: 9px 6px; border-radius: 12px; font-size: 10px; font-weight: 900; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; border-width: 1px; border-style: solid; }
+.ach-btn .ach-emoji { font-size: 14px; }
+.ach-btn .ach-sub { font-size: 8px; color: #888; font-weight: 700; }
+/* AUTH */
 .auth-hero { position: relative; width: 100%; min-height: 100vh; overflow: hidden; }
 .auth-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
-.auth-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,9,7,0.15) 0%, rgba(5,9,7,0.55) 40%, rgba(5,9,7,0.92) 70%, #050907 100%); }
-.auth-logo-wrap { position: absolute; top: 8%; left: 50%; transform: translateX(-50%); z-index: 3; text-align: center; }
-.auth-card-wrap { position: relative; z-index: 5; min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px 16px calc(30px + env(safe-area-inset-bottom)); }
+.auth-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,9,7,0.05) 0%, rgba(5,9,7,0.30) 25%, rgba(5,9,7,0.72) 55%, rgba(5,9,7,0.95) 78%, #050907 100%); }
+.auth-logo-wrap { position: absolute; top: 4%; left: 50%; transform: translateX(-50%); z-index: 3; text-align: center; }
+.auth-card-wrap { position: relative; z-index: 5; min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 100px 16px calc(20px + env(safe-area-inset-bottom)); }
 /* SVG LOGO */
-.toxic-svg-logo { height: 42px; width: auto; display: inline-block; filter: drop-shadow(0 0 18px rgba(0,255,102,0.55)); }
-.toxic-svg-logo-sm { height: 30px; width: auto; display: inline-block; filter: drop-shadow(0 0 12px rgba(0,255,102,0.5)); }
-/* ACHIEVEMENT */
+.toxic-svg-logo { height: 55px; width: auto; display: inline-block; filter: drop-shadow(0 0 20px rgba(0,255,102,0.55)); }
+.toxic-svg-logo-sm { height: 32px; width: auto; display: inline-block; filter: drop-shadow(0 0 12px rgba(0,255,102,0.5)); }
+/* ACHIEVEMENT CARD */
 .ach-card { display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(0,0,0,0.45); border-radius: 14px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); }
 .ach-card.unlocked { background: linear-gradient(135deg, rgba(0,255,102,0.12), rgba(0,0,0,0.5)); border-color: rgba(0,255,102,0.35); box-shadow: 0 0 20px rgba(0,255,102,0.1); }
 .ach-card.locked { opacity: 0.55; }
 .ach-icon { font-size: 30px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.7)); }
+/* SWITCH */
+.switch { position: relative; width: 50px; height: 28px; background: rgba(255,255,255,0.1); border-radius: 14px; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
+.switch.on { background: linear-gradient(135deg, #00FF66, #10B981); border-color: #00FF66; }
+.switch::after { content: ''; position: absolute; width: 22px; height: 22px; background: #fff; border-radius: 50%; top: 2px; left: 2px; transition: all 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+.switch.on::after { left: 24px; }
+/* NETWORK PICKER */
+.netbtn { padding: 10px; font-weight: 800; text-align: center; cursor: pointer; border-radius: 12px; font-size: 11px; transition: all 0.2s; border: 1.5px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #888; }
+.netbtn.active { background: rgba(0,255,102,0.15); border-color: rgba(0,255,102,0.5); color: #00FF66; }
+/* LANG */
+.lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.lang-btn { padding: 12px 8px; border-radius: 12px; font-size: 12px; font-weight: 800; border: 1px solid rgba(255,255,255,0.08); cursor: pointer; background: rgba(255,255,255,0.05); color: #aaa; transition: all 0.2s; text-align: center; }
+.lang-btn.active { background: linear-gradient(135deg, #00FF66, #10B981); color: #000; border-color: #00FF66; box-shadow: 0 0 20px rgba(0,255,102,0.4); }
+/* PROMO */
+.promo-card { background: linear-gradient(135deg, rgba(255,215,0,0.12), rgba(0,0,0,0.5)); border: 1.5px solid rgba(255,215,0,0.4); border-radius: 18px; padding: 16px; position: relative; overflow: hidden; }
+.promo-card::before { content: '🎁'; position: absolute; top: -10px; right: -10px; font-size: 60px; opacity: 0.08; }
+/* ANALYTICS */
+.an-card { background: linear-gradient(160deg, rgba(0,255,102,0.08), rgba(9,14,11,0.98)); border: 1px solid rgba(0,255,102,0.25); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+.an-val { font-size: 24px; font-weight: 900; color: #00FF66; font-family: 'JetBrains Mono', monospace; }
+/* PWA BANNER */
+#pwaBanner { position: fixed; bottom: 90px; left: 12px; right: 12px; max-width: 424px; margin: 0 auto; background: linear-gradient(135deg, #00FF66, #10B981); color: #000; border-radius: 16px; padding: 14px 16px; display: none; align-items: center; gap: 12px; z-index: 60; box-shadow: 0 15px 45px rgba(0,255,102,0.6); animation: min 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+#pwaBanner.show { display: flex; }
 </style>
 </head>
 <body>
@@ -187,37 +205,65 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('service-worker.js').then(reg => console.log('SW registered')).catch(err => console.log('SW error:', err));
+    navigator.serviceWorker.register('service-worker.js').then(() => console.log('SW registered')).catch(err => console.log('SW error:', err));
   });
 }
 if (window.emailjs) { emailjs.init('jqUMl6CNuI5ijOpCJ'); }
 
 const TG_ICON_SVG = `<svg viewBox="0 0 24 24" fill="currentColor" width="26" height="26"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>`;
 
-// ============ SVG SLIME LOGO ============
+// ============ SVG SLIME LOGO (Reference style - drips + puddle + bubbles + glow) ============
 function toxicLogo(size = 'lg') {
   const cls = size === 'lg' ? 'toxic-svg-logo' : 'toxic-svg-logo-sm';
-  return `<svg class="${cls}" viewBox="0 0 240 82" xmlns="http://www.w3.org/2000/svg">
+  const uid = size + Math.random().toString(36).slice(2, 7);
+  return `<svg class="${cls}" viewBox="0 0 400 175" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
     <defs>
-      <linearGradient id="toxicGrad-${size}" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="#C7FFE0"/>
-        <stop offset="30%" stop-color="#7CFFB2"/>
-        <stop offset="60%" stop-color="#00FF66"/>
-        <stop offset="100%" stop-color="#0a5c3a"/>
+      <linearGradient id="tg-${uid}" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#E8FFB8"/>
+        <stop offset="22%" stop-color="#B4FF6A"/>
+        <stop offset="50%" stop-color="#6BEE22"/>
+        <stop offset="78%" stop-color="#29A800"/>
+        <stop offset="100%" stop-color="#0a3d10"/>
       </linearGradient>
-      <filter id="toxicGlow-${size}" x="-30%" y="-30%" width="160%" height="160%">
-        <feGaussianBlur stdDeviation="2.5" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      <radialGradient id="bg-${uid}" cx="35%" cy="30%">
+        <stop offset="0%" stop-color="#F4FFD8"/>
+        <stop offset="55%" stop-color="#A8FF5C"/>
+        <stop offset="100%" stop-color="#3FCC00" stop-opacity="0"/>
+      </radialGradient>
+      <filter id="glow-${uid}" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="4.5" result="b"/>
+        <feMerge>
+          <feMergeNode in="b"/>
+          <feMergeNode in="b"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
       </filter>
     </defs>
-    <g fill="url(#toxicGrad-${size})" opacity="0.85">
-      <ellipse cx="44" cy="60" rx="3" ry="7"/>
-      <ellipse cx="80" cy="64" rx="2.5" ry="8"/>
-      <ellipse cx="120" cy="58" rx="3" ry="6"/>
-      <ellipse cx="160" cy="66" rx="2.5" ry="9"/>
-      <ellipse cx="196" cy="60" rx="3" ry="7"/>
+    <ellipse cx="200" cy="88" rx="185" ry="62" fill="#6BEE22" opacity="0.16" filter="url(#glow-${uid})"/>
+    <text x="200" y="95" text-anchor="middle" font-family="Inter, Arial Black, sans-serif" font-size="95" font-weight="900" letter-spacing="2" fill="url(#tg-${uid})" stroke="#0a3d10" stroke-width="1" filter="url(#glow-${uid})">TOXIC</text>
+    <g fill="url(#tg-${uid})">
+      <path d="M 78,108 C 74,124 74,142 78,158 C 82,162 84,158 82,142 C 80,126 80,114 78,108 Z"/>
+      <path d="M 148,110 C 143,128 143,148 148,164 C 153,168 155,162 152,146 C 149,128 149,118 148,110 Z"/>
+      <path d="M 220,110 C 216,124 216,138 220,150 C 224,154 226,150 224,138 C 222,126 222,116 220,110 Z"/>
+      <path d="M 292,110 C 288,128 288,146 292,162 C 296,166 298,160 296,146 C 293,128 293,118 292,110 Z"/>
+      <path d="M 352,110 C 349,124 349,138 352,150 C 355,154 357,150 355,138 C 353,126 353,116 352,110 Z"/>
     </g>
-    <text x="120" y="52" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="48" font-weight="900" letter-spacing="6" fill="url(#toxicGrad-${size})" filter="url(#toxicGlow-${size})">TOXIC</text>
+    <ellipse cx="200" cy="162" rx="165" ry="9" fill="url(#tg-${uid})"/>
+    <ellipse cx="200" cy="160" rx="145" ry="5" fill="#B4FF6A" opacity="0.55"/>
+    <g opacity="0.72">
+      <circle cx="88" cy="58" r="3.5" fill="url(#bg-${uid})"/>
+      <circle cx="128" cy="44" r="2.6" fill="url(#bg-${uid})"/>
+      <circle cx="165" cy="52" r="4" fill="url(#bg-${uid})"/>
+      <circle cx="200" cy="46" r="3.2" fill="url(#bg-${uid})"/>
+      <circle cx="240" cy="54" r="3.5" fill="url(#bg-${uid})"/>
+      <circle cx="278" cy="48" r="2.6" fill="url(#bg-${uid})"/>
+      <circle cx="315" cy="56" r="3.2" fill="url(#bg-${uid})"/>
+    </g>
+    <g fill="#E8FFC7" opacity="0.4">
+      <ellipse cx="110" cy="34" rx="14" ry="2"/>
+      <ellipse cx="190" cy="32" rx="18" ry="2"/>
+      <ellipse cx="270" cy="34" rx="14" ry="2"/>
+    </g>
   </svg>`;
 }
 
@@ -225,6 +271,8 @@ let CFG = {
   banner: 'https://i.postimg.cc/Wz818VcZ/1789133259079.png',
   support: 'https://t.me/Toxiconect',
   telegram: 'https://t.me/toxic_connect',
+  telegramChannel: '@toxic_connect',
+  telegramBotToken: '8651868280:AAE_bt7Sjz4UOfOAQvpvA-HdIRwnuKCrWiw',
   upi: 'alamasif2124-1@oksbi',
   upiName: 'Asif Alam',
   usdtBep20: '0xd39ca01aaf830911553c4f06510665b34fb793d0',
@@ -272,7 +320,6 @@ const I18N = {
   ur: {dash:"ڈیش بورڈ",invest:"سرمایہ کاری",active:"فعال",wallet:"والٹ",history:"تاریخ",team:"ٹیم",totalBal:"کل بیلنس",withEarn:"کمائی نکالیں ↗",refBal:"ریفرل",activePlans:"فعال پلانز",calcTitle:"سرمایہ کیلکولیٹر",calcSub:"اپنی واپسی رئیل ٹائم میں دیکھیں ($1 - $5000)",days:"دن",estReturn:"کل واپسی",newsHeading:"اعلان",wdTimeNotice:"⚡ پروسیسنگ ٹائم: وِدھ ڈرال 1 سے 24 گھنٹے میں۔",ldrTitle:"🏆 ٹاپ ایفیلیئٹس",top10:"گلوبل ٹاپ ریفررز",myTeamTitle:"👥 میرے ڈائریکٹ ریفرلز",invFriends:"دوستوں کو مدعو کریں",shareTg:"ٹیلیگرام پر شیئر کریں",welcome:"خوش آمدید",langName:"زبان"},
   ar: {dash:"لوحة التحكم",invest:"استثمار",active:"نشط",wallet:"المحفظة",history:"السجل",team:"الفريق",totalBal:"الرصيد الإجمالي",withEarn:"سحب الأرباح ↗",refBal:"الإحالة",activePlans:"الخطط النشطة",calcTitle:"حاسبة الاستثمار",calcSub:"احسب أرباحك في الوقت الفعلي ($1 - $5000)",days:"أيام",estReturn:"العائد الإجمالي",newsHeading:"إعلان",wdTimeNotice:"⚡ وقت المعالجة: تتم معالجة السحوبات خلال 1 إلى 24 ساعة.",ldrTitle:"🏆 أفضل الشركاء",top10:"الأفضل عالمياً",myTeamTitle:"👥 إحالاتي المباشرة",invFriends:"دعوة الأصدقاء",shareTg:"شارك على تيليجرام",welcome:"مرحبا",langName:"اللغة"}
 };
-
 const t = () => I18N[S.lang] || I18N.en;
 
 const NEWS_LIST = [
@@ -318,122 +365,66 @@ const ACHIEVEMENTS = [
   {id:'first_invest', name:'First Invest', icon:'🥇', desc:'Buy your first investment plan', check:(u,team,plans)=>Number(u.invested||0)>0},
   {id:'club_100', name:'$100 Club', icon:'💰', desc:'Invest $100 or more in total', check:(u)=>Number(u.invested||0)>=100},
   {id:'club_1000', name:'$1000 Club', icon:'💎', desc:'Invest $1000 or more in total', check:(u)=>Number(u.invested||0)>=1000},
-  {id:'refs_10', name:'10 Referrals', icon:'👥', desc:'Invite 10 team members', check:(u,team)=>team.filter(t=>Number(t.invested||0)>0).length>=10},
-  {id:'refs_50', name:'50 Referrals', icon:'🎯', desc:'Invite 50 team members', check:(u,team)=>team.filter(t=>Number(t.invested||0)>0).length>=50},
+  {id:'refs_10', name:'10 Referrals', icon:'👥', desc:'Invite 10 invested team members', check:(u,team)=>team.filter(t=>Number(t.invested||0)>0).length>=10},
+  {id:'refs_50', name:'50 Referrals', icon:'🎯', desc:'Invite 50 invested team members', check:(u,team)=>team.filter(t=>Number(t.invested||0)>0).length>=50},
   {id:'diamond_hands', name:'Diamond Hands', icon:'💎', desc:'Complete a full 40-day plan cycle', check:(u,team,plans)=>plans.some(p=>Number(p.days_collected)>=40)},
   {id:'lucky_spinner', name:'Lucky Spinner', icon:'🎡', desc:'Spin the wheel 5 times', check:()=>(S.spin.totalSpins||0)>=5},
-  {id:'team_leader', name:'Team Leader', icon:'🏆', desc:'Build a team of 25 investors', check:(u,team)=>team.filter(t=>Number(t.invested||0)>0).length>=25},
+  {id:'team_leader', name:'Team Leader', icon:'🏆', desc:'Build a team of 25 invested members', check:(u,team)=>team.filter(t=>Number(t.invested||0)>0).length>=25},
   {id:'whale', name:'Whale', icon:'⚡', desc:'Invest $5000+ total', check:(u)=>Number(u.invested||0)>=5000},
   {id:'active_trader', name:'Active Trader', icon:'🔥', desc:'Run 3 plans at the same time', check:(u,team,plans)=>plans.filter(p=>Number(p.days_collected)<40 && p.status!=='completed').length>=3}
 ];
 
-// ============ WORLDWIDE NAMES POOL ============
-const WORLD_NAMES = [
-  'Rahul','Priya','Ahmed','Sara','Vikram','Anjali','Kiran','Ravi','Neha','Amit','Rohan','Sneha','Raj','Pooja','Arjun','Divya','Karan','Meera','Siddharth','Ananya',
-  'James','Emma','Oliver','Sophie','Harry','Charlotte','Jack','Emily','Liam','Isabella','George','Alice','Henry','Grace','Thomas','Lucy','William','Rose','Charlie','Ella',
-  'Michael','Jessica','David','Ashley','Chris','Amanda','Daniel','Sarah','Matthew','Nicole','Joshua','Hannah','Andrew','Rachel','Brandon','Melissa','Tyler','Lauren','Kevin','Rebecca',
-  'Khalid','Fatima','Omar','Aisha','Saeed','Layla','Rashid','Noor','Hamdan','Mariam','Sultan','Amna','Majid','Hessa','Faisal','Shamma','Saeed','Latifa','Rakan','Maha',
-  'Abdullah','Nora','Faisal','Reem','Turki','Hessa','Bandar','Lama','Saud','Razan','Nawaf','Layan','Khalid','Jood','Yazeed','Dana','Majed','Rawan','Fahad','Bushra',
-  'Ethan','Olivia','Nathan','Chloe','Lucas','Zoe','Ryan','Mia','Noah','Lily','Logan','Ava','Mason','Ella','Jacob','Aria','Elijah','Scarlett','Benjamin','Grace',
-  'Chinedu','Ngozi','Emeka','Adaeze','Tunde','Blessing','Kunle','Ifeoma','Segun','Chioma','Obinna','Amarachi','Uche','Chiamaka','Femi','Yetunde','Bola','Funke','Kola','Ronke',
-  'Ivan','Anastasia','Dmitri','Ekaterina','Sergei','Olga','Alexei','Natasha','Vladimir','Yulia','Nikolai','Svetlana','Mikhail','Irina','Andrei','Tatiana','Pavel','Elena','Viktor','Marina',
-  'Pedro','Ana','Gabriel','Julia','Rafael','Beatriz','Thiago','Camila','Bruno','Larissa','Diego','Isabela','Felipe','Mariana','Rodrigo','Carolina','Mateus','Fernanda','Leonardo','Gabriela',
-  'Budi','Siti','Andi','Dewi','Rizki','Putri','Agus','Indah','Bayu','Maya','Adi','Rina','Eko','Wulan','Hendra','Sari','Fajar','Nurul','Yoga','Ayu',
-  'Mehmet','Ayse','Ali','Zeynep','Emre','Elif','Burak','Selin','Can','Deniz','Kerem','Yasmin','Baris','Melis','Onur','Eda','Cem','Buse','Kaan','Derya',
-  'Jose','Maria','Juan','Ana','Carlos','Rosa','Miguel','Lucia','Rafael','Isabella','Antonio','Sofia','Diego','Camila','Marco','Elena','Paolo','Giulia','Andrea','Francesca',
-  'Lukas','Anna','Felix','Julia','Max','Lena','Jonas','Sophie','Leon','Marie','Paul','Laura','Erik','Hannah','Niklas','Mia','Finn','Amelie','Tim','Klara',
-  'Pierre','Marie','Jean','Sophie','Luc','Camille','Antoine','Emma','Hugo','Chloe','Louis','Lea','Nathan','Manon','Julien','Sarah','Thomas','Emma','Alexandre','Julie',
-  'Rahim','Fatema','Karim','Sumaiya','Rakib','Nusrat','Shakib','Tasnim','Arif','Jannat','Tanvir','Sadia','Imran','Mim','Rifat','Runa','Sabbir','Mou','Hasan','Tisha',
-  'Haruto','Yui','Sota','Aoi','Ren','Sakura','Yuto','Hina','Kaito','Rin','Riku','Yuna','Sora','Himari','Hayato','Mei','Kenta','Ichika','Daiki','Akari',
-  'Minho','Jiyeon','Junho','Soyeon','Hyunwoo','Yuna','Seungmin','Haeun','Jihoon','Chaeyoung','Taehyung','Nayeon','Jungkook','Momo','Jimin','Sana','Yoongi','Mina','Hoseok','Dahyun',
-  'Sipho','Thandi','Bongani','Lerato','Sibusiso','Zanele','Mandla','Nomsa','Kagiso','Palesa','Tebogo','Ayanda','Katlego','Lindiwe','Themba','Zinhle','Mpho','Refilwe','Sizwe','Naledi',
-  'Giuseppe','Maria','Marco','Sofia','Alessandro','Giulia','Lorenzo','Chiara','Matteo','Alessia','Francesco','Martina','Davide','Sara','Simone','Elena','Riccardo','Giorgia','Gabriele','Anna'
-];
+// ============ WORLDWIDE NAMES/LOCATIONS ============
+const WORLD_NAMES = ['Rahul','Priya','Ahmed','Sara','Vikram','Anjali','Kiran','Ravi','Neha','Amit','Rohan','Sneha','Raj','Pooja','Arjun','Divya','Karan','Meera','Siddharth','Ananya','James','Emma','Oliver','Sophie','Harry','Charlotte','Jack','Emily','Liam','Isabella','George','Alice','Henry','Grace','Thomas','Lucy','William','Rose','Charlie','Ella','Michael','Jessica','David','Ashley','Chris','Amanda','Daniel','Sarah','Matthew','Nicole','Joshua','Hannah','Andrew','Rachel','Brandon','Melissa','Tyler','Lauren','Kevin','Rebecca','Khalid','Fatima','Omar','Aisha','Saeed','Layla','Rashid','Noor','Hamdan','Mariam','Sultan','Amna','Majid','Hessa','Faisal','Shamma','Latifa','Rakan','Maha','Abdullah','Nora','Reem','Turki','Bandar','Lama','Saud','Razan','Nawaf','Layan','Jood','Yazeed','Dana','Majed','Rawan','Fahad','Bushra','Ethan','Olivia','Nathan','Chloe','Lucas','Zoe','Ryan','Mia','Noah','Lily','Logan','Ava','Mason','Jacob','Aria','Elijah','Scarlett','Benjamin','Chinedu','Ngozi','Emeka','Adaeze','Tunde','Blessing','Kunle','Ifeoma','Segun','Chioma','Obinna','Amarachi','Uche','Chiamaka','Femi','Yetunde','Bola','Funke','Kola','Ronke','Ivan','Anastasia','Dmitri','Ekaterina','Sergei','Olga','Alexei','Natasha','Vladimir','Yulia','Nikolai','Svetlana','Mikhail','Irina','Andrei','Tatiana','Pavel','Elena','Viktor','Marina','Pedro','Ana','Gabriel','Julia','Rafael','Beatriz','Thiago','Camila','Bruno','Larissa','Diego','Isabela','Felipe','Mariana','Rodrigo','Carolina','Mateus','Fernanda','Leonardo','Gabriela','Budi','Siti','Andi','Dewi','Rizki','Putri','Agus','Indah','Bayu','Maya','Adi','Rina','Eko','Wulan','Hendra','Sari','Fajar','Nurul','Yoga','Ayu','Mehmet','Ayse','Ali','Zeynep','Emre','Elif','Burak','Selin','Can','Deniz','Kerem','Yasmin','Baris','Melis','Onur','Eda','Cem','Buse','Kaan','Derya','Jose','Maria','Juan','Carlos','Rosa','Miguel','Lucia','Antonio','Sofia','Marco','Paolo','Giulia','Andrea','Francesca','Lukas','Anna','Felix','Max','Lena','Jonas','Leon','Marie','Paul','Laura','Erik','Niklas','Finn','Amelie','Tim','Klara','Pierre','Jean','Luc','Camille','Antoine','Hugo','Louis','Lea','Manon','Julien','Alexandre','Julie','Rahim','Fatema','Karim','Sumaiya','Rakib','Nusrat','Shakib','Tasnim','Arif','Jannat','Tanvir','Sadia','Imran','Mim','Rifat','Runa','Sabbir','Mou','Hasan','Tisha','Haruto','Yui','Sota','Aoi','Ren','Sakura','Yuto','Hina','Kaito','Rin','Riku','Yuna','Sora','Himari','Hayato','Mei','Kenta','Ichika','Daiki','Akari','Minho','Jiyeon','Junho','Soyeon','Hyunwoo','Seungmin','Haeun','Jihoon','Chaeyoung','Taehyung','Nayeon','Jungkook','Momo','Jimin','Sana','Yoongi','Mina','Hoseok','Dahyun','Sipho','Thandi','Bongani','Lerato','Sibusiso','Zanele','Mandla','Nomsa','Kagiso','Palesa','Tebogo','Ayanda','Katlego','Lindiwe','Themba','Zinhle','Mpho','Refilwe','Sizwe','Naledi','Giuseppe','Alessandro','Lorenzo','Matteo','Alessia','Francesco','Martina','Davide','Simone','Riccardo','Giorgia','Gabriele'];
 
 const WORLD_LOCATIONS = [
   {city:'Mumbai',c:'🇮🇳'},{city:'Delhi',c:'🇮🇳'},{city:'Bangalore',c:'🇮🇳'},{city:'Chennai',c:'🇮🇳'},{city:'Kolkata',c:'🇮🇳'},
-  {city:'Karachi',c:'🇵🇰'},{city:'Lahore',c:'🇵🇰'},{city:'Islamabad',c:'🇵🇰'},
-  {city:'Dhaka',c:'🇧🇩'},{city:'Chittagong',c:'🇧🇩'},
-  {city:'London',c:'🇬🇧'},{city:'Manchester',c:'🇬🇧'},{city:'Birmingham',c:'🇬🇧'},
-  {city:'New York',c:'🇺🇸'},{city:'Los Angeles',c:'🇺🇸'},{city:'Chicago',c:'🇺🇸'},{city:'Houston',c:'🇺🇸'},
-  {city:'Dubai',c:'🇦🇪'},{city:'Abu Dhabi',c:'🇦🇪'},{city:'Sharjah',c:'🇦🇪'},
-  {city:'Riyadh',c:'🇸🇦'},{city:'Jeddah',c:'🇸🇦'},{city:'Dammam',c:'🇸🇦'},
-  {city:'Toronto',c:'🇨🇦'},{city:'Vancouver',c:'🇨🇦'},{city:'Montreal',c:'🇨🇦'},
-  {city:'Lagos',c:'🇳🇬'},{city:'Abuja',c:'🇳🇬'},{city:'Kano',c:'🇳🇬'},
-  {city:'Moscow',c:'🇷🇺'},{city:'St. Petersburg',c:'🇷🇺'},
-  {city:'São Paulo',c:'🇧🇷'},{city:'Rio',c:'🇧🇷'},{city:'Brasília',c:'🇧🇷'},
-  {city:'Jakarta',c:'🇮🇩'},{city:'Bali',c:'🇮🇩'},{city:'Surabaya',c:'🇮🇩'},
-  {city:'Istanbul',c:'🇹🇷'},{city:'Ankara',c:'🇹🇷'},{city:'Izmir',c:'🇹🇷'},
-  {city:'Manila',c:'🇵🇭'},{city:'Cebu',c:'🇵🇭'},{city:'Davao',c:'🇵🇭'},
-  {city:'Berlin',c:'🇩🇪'},{city:'Munich',c:'🇩🇪'},{city:'Frankfurt',c:'🇩🇪'},
-  {city:'Paris',c:'🇫🇷'},{city:'Lyon',c:'🇫🇷'},{city:'Marseille',c:'🇫🇷'},
-  {city:'Sydney',c:'🇦🇺'},{city:'Melbourne',c:'🇦🇺'},{city:'Brisbane',c:'🇦🇺'},
-  {city:'Tokyo',c:'🇯🇵'},{city:'Osaka',c:'🇯🇵'},{city:'Kyoto',c:'🇯🇵'},
-  {city:'Seoul',c:'🇰🇷'},{city:'Busan',c:'🇰🇷'},
-  {city:'Cape Town',c:'🇿🇦'},{city:'Johannesburg',c:'🇿🇦'},{city:'Durban',c:'🇿🇦'},
-  {city:'Rome',c:'🇮🇹'},{city:'Milan',c:'🇮🇹'},{city:'Naples',c:'🇮🇹'}
+  {city:'Karachi',c:'🇵🇰'},{city:'Lahore',c:'🇵🇰'},{city:'Islamabad',c:'🇵🇰'},{city:'Dhaka',c:'🇧🇩'},{city:'Chittagong',c:'🇧🇩'},
+  {city:'London',c:'🇬🇧'},{city:'Manchester',c:'🇬🇧'},{city:'Birmingham',c:'🇬🇧'},{city:'New York',c:'🇺🇸'},{city:'Los Angeles',c:'🇺🇸'},
+  {city:'Chicago',c:'🇺🇸'},{city:'Houston',c:'🇺🇸'},{city:'Dubai',c:'🇦🇪'},{city:'Abu Dhabi',c:'🇦🇪'},{city:'Sharjah',c:'🇦🇪'},
+  {city:'Riyadh',c:'🇸🇦'},{city:'Jeddah',c:'🇸🇦'},{city:'Dammam',c:'🇸🇦'},{city:'Toronto',c:'🇨🇦'},{city:'Vancouver',c:'🇨🇦'},
+  {city:'Montreal',c:'🇨🇦'},{city:'Lagos',c:'🇳🇬'},{city:'Abuja',c:'🇳🇬'},{city:'Kano',c:'🇳🇬'},{city:'Moscow',c:'🇷🇺'},
+  {city:'St. Petersburg',c:'🇷🇺'},{city:'São Paulo',c:'🇧🇷'},{city:'Rio',c:'🇧🇷'},{city:'Brasília',c:'🇧🇷'},{city:'Jakarta',c:'🇮🇩'},
+  {city:'Bali',c:'🇮🇩'},{city:'Surabaya',c:'🇮🇩'},{city:'Istanbul',c:'🇹🇷'},{city:'Ankara',c:'🇹🇷'},{city:'Izmir',c:'🇹🇷'},
+  {city:'Manila',c:'🇵🇭'},{city:'Cebu',c:'🇵🇭'},{city:'Davao',c:'🇵🇭'},{city:'Berlin',c:'🇩🇪'},{city:'Munich',c:'🇩🇪'},
+  {city:'Frankfurt',c:'🇩🇪'},{city:'Paris',c:'🇫🇷'},{city:'Lyon',c:'🇫🇷'},{city:'Marseille',c:'🇫🇷'},{city:'Sydney',c:'🇦🇺'},
+  {city:'Melbourne',c:'🇦🇺'},{city:'Brisbane',c:'🇦🇺'},{city:'Tokyo',c:'🇯🇵'},{city:'Osaka',c:'🇯🇵'},{city:'Kyoto',c:'🇯🇵'},
+  {city:'Seoul',c:'🇰🇷'},{city:'Busan',c:'🇰🇷'},{city:'Cape Town',c:'🇿🇦'},{city:'Johannesburg',c:'🇿🇦'},{city:'Durban',c:'🇿🇦'},
+  {city:'Rome',c:'🇮🇹'},{city:'Milan',c:'🇮🇹'},{city:'Naples',c:'🇮🇹'},{city:'Amsterdam',c:'🇳🇱'},{city:'Barcelona',c:'🇪🇸'}
 ];
 
-// Generate fake leaderboard (80 fake + top 20 real)
 function generateFakeLeaderboard(count = 80) {
-  const arr = [];
-  const used = new Set();
+  const arr = []; const used = new Set();
   while (arr.length < count) {
     const name = WORLD_NAMES[Math.floor(Math.random() * WORLD_NAMES.length)];
-    const suffix = Math.floor(Math.random() * 9999);
-    const key = name + suffix;
-    if (used.has(key)) continue;
-    used.add(key);
+    const key = name + Math.floor(Math.random() * 9999);
+    if (used.has(key)) continue; used.add(key);
     const loc = WORLD_LOCATIONS[Math.floor(Math.random() * WORLD_LOCATIONS.length)];
-    arr.push({
-      u: name.toLowerCase() + '_' + (Math.floor(Math.random() * 90) + 10),
-      c: loc.c,
-      city: loc.city,
-      vol: Math.floor(Math.random() * 48000) + 2000,
-      refs: Math.floor(Math.random() * 85) + 3,
-      isFake: true
-    });
+    arr.push({ u: name.toLowerCase() + '_' + (Math.floor(Math.random() * 90) + 10), c: loc.c, city: loc.city, vol: Math.floor(Math.random() * 48000) + 2000, refs: Math.floor(Math.random() * 85) + 3, isFake: true });
   }
   return arr;
 }
 
-// Generate fake referrers (50+)
 function generateFakeReferrers(count = 50) {
-  const arr = [];
-  const used = new Set();
+  const arr = []; const used = new Set();
   while (arr.length < count) {
     const name = WORLD_NAMES[Math.floor(Math.random() * WORLD_NAMES.length)];
     const key = name + Math.floor(Math.random() * 999);
-    if (used.has(key)) continue;
-    used.add(key);
+    if (used.has(key)) continue; used.add(key);
     const loc = WORLD_LOCATIONS[Math.floor(Math.random() * WORLD_LOCATIONS.length)];
-    arr.push({
-      u: name.toLowerCase() + '_' + (Math.floor(Math.random() * 90) + 10),
-      c: loc.c,
-      count: Math.floor(Math.random() * 45) + 1
-    });
+    arr.push({ u: name.toLowerCase() + '_' + (Math.floor(Math.random() * 90) + 10), c: loc.c, count: Math.floor(Math.random() * 45) + 1 });
   }
   return arr;
 }
 
-const FAKE_REFERRERS = generateFakeReferrers(50);
-
-// Winner ticker (50 fake + real)
 function generateWinnerTicker() {
-  const fakes = [];
-  const used = new Set();
+  const fakes = []; const used = new Set();
   while (fakes.length < 50) {
     const name = WORLD_NAMES[Math.floor(Math.random() * WORLD_NAMES.length)];
     const key = name + Math.floor(Math.random() * 999);
-    if (used.has(key)) continue;
-    used.add(key);
+    if (used.has(key)) continue; used.add(key);
     const loc = WORLD_LOCATIONS[Math.floor(Math.random() * WORLD_LOCATIONS.length)];
-    fakes.push({
-      name: name.toLowerCase() + '_' + (Math.floor(Math.random() * 90) + 10),
-      country: loc.c,
-      amount: Math.floor(Math.random() * 12000) + 500,
-      period: Math.random() > 0.5 ? 'WEEK' : 'MONTH'
-    });
+    fakes.push({ name: name.toLowerCase() + '_' + (Math.floor(Math.random() * 90) + 10), country: loc.c, amount: Math.floor(Math.random() * 12000) + 500, period: Math.random() > 0.5 ? 'WEEK' : 'MONTH' });
   }
   return fakes;
 }
@@ -474,17 +465,15 @@ let S = {
   otp: { code:'', email:'', expiry:0 },
   otpVerified: false,
   showForgot: false,
-  forgotEmail: '',
-  forgotOtp: '',
-  forgotOtpVerified: false,
-  forgotOtpExpiry: 0,
-  forgotUserId: '',
+  forgotEmail: '', forgotOtp: '', forgotOtpVerified: false, forgotOtpExpiry: 0, forgotUserId: '',
   autoRenew: localStorage.getItem('t_autorenew') === '1',
   achievements: JSON.parse(localStorage.getItem('t_achievements') || '[]'),
   popupQueue: [],
   popupActive: false,
   fakeLeaderboard: generateFakeLeaderboard(80),
-  winnerData: generateWinnerTicker()
+  winnerData: generateWinnerTicker(),
+  leaderboardLoaded: false,
+  combinedTickerIdx: 0
 };
 
 try {
@@ -500,9 +489,7 @@ try {
   const REF_LOCK_MS = 30 * 24 * 60 * 60 * 1000;
   const lockedRef = localStorage.getItem('t_locked_ref');
   const lockedTime = parseInt(localStorage.getItem('t_locked_ref_time') || '0');
-  if (lockedRef && Date.now() - lockedTime > REF_LOCK_MS) {
-    localStorage.removeItem('t_locked_ref'); localStorage.removeItem('t_locked_ref_time');
-  }
+  if (lockedRef && Date.now() - lockedTime > REF_LOCK_MS) { localStorage.removeItem('t_locked_ref'); localStorage.removeItem('t_locked_ref_time'); }
   if (rf) {
     const fresh = localStorage.getItem('t_locked_ref');
     if (!fresh) { S.sd.referredBy = rf; localStorage.setItem('t_locked_ref', rf); localStorage.setItem('t_locked_ref_time', Date.now().toString()); }
@@ -514,7 +501,7 @@ const $ = id => document.getElementById(id);
 const fmt = n => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
 const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
-// ============ FIX #1: Strict 24h gap using last_collect_at ============
+// FIX #1: Strict 24h gap using last_collect_at (fallback to started_at)
 const nextC = p => {
   const base = p.last_collect_at || p.started_at;
   return new Date(base).getTime() + DAY;
@@ -532,19 +519,14 @@ function getTeamBadge(count) {
   return {name:'Newbie', icon:'🌱', c:'#666'};
 }
 
-function saveExtra() {
-  localStorage.setItem('t_extra', JSON.stringify({spin: S.spin, milestones: S.milestones, tgBonus: S.tgBonus}));
-}
+function saveExtra() { localStorage.setItem('t_extra', JSON.stringify({spin: S.spin, milestones: S.milestones, tgBonus: S.tgBonus})); }
 
-// ============ FIX #3: Fake UTR Validation ============
+// FIX #3: Fake UTR Validation
 function isValidUTR(utr) {
   if (!utr || utr.length !== 12) return false;
   if (!/^\d{12}$/.test(utr)) return false;
-  // All same digit
   if (/^(\d)\1{11}$/.test(utr)) return false;
-  // All zeros
   if (utr === '000000000000') return false;
-  // Sequential ascending
   const asc = '0123456789012345678901234567890123456789';
   const desc = '9876543210987654321098765432109876543210';
   if (asc.includes(utr) || desc.includes(utr)) return false;
@@ -580,7 +562,7 @@ function sound(type) {
 function toggleSound() { S.soundOn = !S.soundOn; localStorage.setItem('t_sound', S.soundOn ? '1' : '0'); haptic('medium'); if (S.soundOn) sound('success'); render(); }
 function toggleINR() { S.showInr = !S.showInr; localStorage.setItem('t_inr', S.showInr ? '1' : '0'); haptic('light'); sound('tap'); render(); }
 
-// ============ ADDITION #5: Auto-Renew Toggle ============
+// ADDITION #5: Auto-Renew Toggle
 function toggleAutoRenew() {
   S.autoRenew = !S.autoRenew;
   localStorage.setItem('t_autorenew', S.autoRenew ? '1' : '0');
@@ -591,7 +573,7 @@ function toggleAutoRenew() {
 }
 
 function haptic(type = 'light') {
-  try { const tg = window.Telegram?.WebApp; if (tg && tg.HapticFeedback) { if (type === 'success' || type === 'warning' || type === 'error') { tg.HapticFeedback.notificationOccurred(type); } else { tg.HapticFeedback.impactOccurred(type === 'medium' ? 'medium' : 'light'); } } } catch(e) {}
+  try { const tg = window.Telegram?.WebApp; if (tg && tg.HapticFeedback) { if (type === 'success' || type === 'warning' || type === 'error') tg.HapticFeedback.notificationOccurred(type); else tg.HapticFeedback.impactOccurred(type === 'medium' ? 'medium' : 'light'); } } catch(e) {}
   try { if (typeof navigator !== 'undefined' && navigator.vibrate) { if (type === 'success') navigator.vibrate([45,50,45]); else if (type === 'warning' || type === 'error') navigator.vibrate([80,50,80]); else if (type === 'medium') navigator.vibrate(55); else navigator.vibrate(40); } } catch(e) {}
 }
 
@@ -600,19 +582,13 @@ document.addEventListener('pointerdown', (e) => {
   if (hit) { haptic('light'); sound('tap'); }
 }, {passive:true, capture:true});
 
-// ============ FIX #9: POPUP QUEUE ============
-function enqueuePopup(fn) {
-  S.popupQueue.push(fn);
-  processPopupQueue();
-}
+// FIX #9: POPUP QUEUE
+function enqueuePopup(fn) { S.popupQueue.push(fn); processPopupQueue(); }
 function processPopupQueue() {
   if (S.popupActive || S.popupQueue.length === 0) return;
   S.popupActive = true;
   const fn = S.popupQueue.shift();
-  fn(() => {
-    S.popupActive = false;
-    setTimeout(processPopupQueue, 250);
-  });
+  fn(() => { S.popupActive = false; setTimeout(processPopupQueue, 250); });
 }
 
 function customAlert(title, message, icon = '⚡', cb) {
@@ -657,7 +633,7 @@ function animateCount(elem, start, end, duration = 700, prefix = '$') {
 }
 
 function launchConfetti() {
-  try { if (typeof confetti === 'function') { confetti({particleCount:120, spread:85, origin:{y:0.6}, colors:['#00FF66','#10B981','#FFD700','#ffffff']}); } } catch(e) {}
+  try { if (typeof confetti === 'function') confetti({particleCount:120, spread:85, origin:{y:0.6}, colors:['#00FF66','#10B981','#FFD700','#ffffff']}); } catch(e) {}
 }
 
 function save() {
@@ -673,7 +649,7 @@ function save() {
 
 function toast(m) { const el = $('toast'); if (!el) return; el.textContent = m; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 3000); }
 
-// ============ ADDITION #8: PUSH NOTIFICATIONS ============
+// ADDITION #8: PUSH NOTIFICATIONS
 async function requestPushPermission() {
   if (!('Notification' in window)) return false;
   if (Notification.permission === 'granted') return true;
@@ -681,11 +657,25 @@ async function requestPushPermission() {
   try { const p = await Notification.requestPermission(); return p === 'granted'; } catch(e) { return false; }
 }
 function sendPush(title, body) {
+  try { if ('Notification' in window && Notification.permission === 'granted') new Notification(title, {body, icon:'icon-192.png', badge:'icon-192.png', vibrate:[100,50,100]}); } catch(e) {}
+}
+
+// ============ TELEGRAM BOT SEND ============
+async function sendScreenshotToTelegram(base64Image, username, userId) {
+  if (!CFG.telegramBotToken || CFG.telegramBotToken === 'YOUR_BOT_TOKEN_HERE') {
+    console.warn('Telegram bot not configured');
+    return { ok: false, error: 'Bot not configured' };
+  }
   try {
-    if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification(title, {body, icon:'icon-192.png', badge:'icon-192.png', vibrate:[100,50,100]});
-    }
-  } catch(e) {}
+    const blob = await (await fetch(base64Image)).blob();
+    const fd = new FormData();
+    fd.append('chat_id', CFG.telegramChannel);
+    fd.append('photo', blob, 'screenshot.jpg');
+    fd.append('caption', `📸 Share Bonus Screenshot\n👤 User: @${username}\n🆔 ID: ${userId}\n🕐 ${new Date().toUTCString()}`);
+    const r = await fetch(`https://api.telegram.org/bot${CFG.telegramBotToken}/sendPhoto`, { method:'POST', body: fd });
+    const d = await r.json();
+    return { ok: d.ok, error: d.description };
+  } catch(e) { return { ok: false, error: e.message }; }
 }
 
 // ============ OTP / EMAIL ============
@@ -697,7 +687,7 @@ async function sendOTP() {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return customAlert('Invalid Email', 'Please enter a valid email address.', '⚠️');
   const btn = $('sendOtpBtn');
   if (btn) { btn.disabled = true; btn.textContent = 'SENDING...'; }
-  // Check if email already registered
+  // One Gmail = One Account check
   if (sb) {
     try {
       const r = await sb.from('users').select('user_id').eq('email', email).limit(1);
@@ -847,7 +837,7 @@ async function loadSiteConfig() {
       if (obj.support_link) CFG.support = obj.support_link;
       if (obj.telegram_link) CFG.telegram = obj.telegram_link;
       if (obj.banner_url) CFG.banner = obj.banner_url;
-      if (obj.announcement && !NEWS_LIST[0].includes(obj.announcement)) { NEWS_LIST.unshift('📢 ' + obj.announcement); }
+      if (obj.announcement && !NEWS_LIST[0].includes(obj.announcement)) NEWS_LIST.unshift('📢 ' + obj.announcement);
     }
   } catch(e) { console.warn('Config load failed:', e); }
 }
@@ -856,9 +846,7 @@ async function loadPlansFromDB() {
   if (!sb) return;
   try {
     const r = await sb.from('investment_plans').select('*').eq('is_active', true).order('sort_order', {ascending:true});
-    if (r.data && r.data.length > 0) {
-      PLANS = r.data.map(p => ({id: p.plan_key, n: p.name, d: Number(p.deposit), dly: Number(p.daily), t: Number(p.total), c: p.color || '#00FF66', i: p.icon || '💎'}));
-    }
+    if (r.data && r.data.length > 0) PLANS = r.data.map(p => ({id: p.plan_key, n: p.name, d: Number(p.deposit), dly: Number(p.daily), t: Number(p.total), c: p.color || '#00FF66', i: p.icon || '💎'}));
   } catch(e) { console.warn('Plans load failed:', e); }
 }
 
@@ -875,39 +863,58 @@ async function loadCryptoPrices() {
     const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether,binancecoin,solana&vs_currencies=usd&include_24hr_change=true');
     const d = await r.json();
     S.cryptoData = [
-      {s:'BTC', p: d.bitcoin?.usd || 0, c: d.bitcoin?.usd_24h_change || 0},
-      {s:'ETH', p: d.ethereum?.usd || 0, c: d.ethereum?.usd_24h_change || 0},
-      {s:'USDT', p: d.tether?.usd || 0, c: d.tether?.usd_24h_change || 0},
-      {s:'BNB', p: d.binancecoin?.usd || 0, c: d.binancecoin?.usd_24h_change || 0},
-      {s:'SOL', p: d.solana?.usd || 0, c: d.solana?.usd_24h_change || 0}
+      {s:'BTC', sym:'₿', p: d.bitcoin?.usd || 0, c: d.bitcoin?.usd_24h_change || 0},
+      {s:'ETH', sym:'Ξ', p: d.ethereum?.usd || 0, c: d.ethereum?.usd_24h_change || 0},
+      {s:'USDT', sym:'₮', p: d.tether?.usd || 0, c: d.tether?.usd_24h_change || 0},
+      {s:'BNB', sym:'B', p: d.binancecoin?.usd || 0, c: d.binancecoin?.usd_24h_change || 0},
+      {s:'SOL', sym:'S', p: d.solana?.usd || 0, c: d.solana?.usd_24h_change || 0}
     ];
   } catch(e) { console.warn('crypto fetch failed:', e); }
 }
 
+// PREMIUM CYBER CRYPTO TICKER
 function cryptoUI() {
   if (!S.cryptoData || S.cryptoData.length === 0) {
-    return `<div class="crypto-ticker" style="padding:10px 14px"><div style="display:flex;gap:20px;font-size:11px;color:#666"><span class="skel" style="width:80px;height:14px;display:inline-block"></span><span class="skel" style="width:80px;height:14px;display:inline-block"></span><span class="skel" style="width:80px;height:14px;display:inline-block"></span></div></div>`;
+    return `<div class="cyber-ticker" style="padding:10px 14px"><div style="display:flex;gap:20px"><span class="skel" style="width:90px;height:14px;display:inline-block"></span><span class="skel" style="width:90px;height:14px;display:inline-block"></span><span class="skel" style="width:90px;height:14px;display:inline-block"></span></div></div>`;
   }
-  const items = S.cryptoData.map(c => `<div style="display:flex;align-items:center;gap:5px;padding:0 10px;border-right:1px solid rgba(255,255,255,0.08)"><span style="font-size:11px;font-weight:900;color:#fff">${c.s}</span><span class="mono" style="font-size:11px;color:#ccc">$${Number(c.p).toLocaleString('en-US',{maximumFractionDigits:2})}</span><span class="mono" style="font-size:10px;font-weight:800;color:${c.c>=0?'#00FF66':'#EF4444'}">${c.c>=0?'▲':'▼'}${Math.abs(c.c).toFixed(2)}%</span></div>`).join('');
-  return `<div class="crypto-ticker"><div>${items}${items}</div></div>`;
+  const items = S.cryptoData.map(c => {
+    const up = c.c >= 0;
+    return `<div><span style="font-size:13px;color:#00FF66;font-weight:900;text-shadow:0 0 8px rgba(0,255,102,0.6)">${c.sym}</span><span style="font-size:11px;font-weight:900;color:#fff;letter-spacing:0.5px">${c.s}</span><span class="mono" style="font-size:11px;color:#B4FF6A">$${Number(c.p).toLocaleString('en-US',{maximumFractionDigits:2})}</span><span class="mono" style="font-size:10px;font-weight:800;color:${up?'#00FF66':'#EF4444'};text-shadow:0 0 6px ${up?'rgba(0,255,102,0.5)':'rgba(239,68,68,0.5)'}">${up?'▲':'▼'}${Math.abs(c.c).toFixed(2)}%</span></div>`;
+  }).join('');
+  return `<div class="cyber-ticker"><div>${items}${items}</div></div>`;
 }
 
-// ============ WINNER TICKER UI ============
-function winnerTickerUI() {
-  const fakes = S.winnerData.slice(0, 30);
-  const reals = (S.team || []).filter(x => Number(x.invested||0) > 0).slice(0, 5).map(x => ({
-    name: x.username || 'you',
-    country: '🌍',
-    amount: Number(x.invested || 0),
-    period: 'WEEK',
-    isReal: true
-  }));
-  const all = [...reals, ...fakes].sort((a,b) => b.amount - a.amount).slice(0, 25);
-  const items = all.map((w, i) => {
+// COMBINED WINNERS + NEWS TICKER (auto-rotate)
+function combinedTickerUI() {
+  const fakes = S.winnerData.slice(0, 25);
+  const reals = (S.team || []).filter(x => Number(x.invested||0) > 0).slice(0, 5).map(x => ({ name: x.username || 'you', country: '🌍', amount: Number(x.invested || 0), period: 'WEEK', isReal: true }));
+  const all = [...reals, ...fakes].sort((a,b) => b.amount - a.amount).slice(0, 20);
+  const winnerItems = all.map((w, i) => {
     const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '🏅';
-    return `<span style="display:inline-flex;align-items:center;gap:5px;padding:0 14px;border-right:1px solid rgba(255,215,0,0.2);font-size:11px;color:#fff"><span class="emoji-3d">${medal}</span><b style="color:#FFD700">${esc(w.name)}</b><span style="color:#888;font-size:10px">${w.country}</span><span class="mono" style="color:#00FF66;font-weight:900">$${fmt(w.amount)}</span><span style="font-size:9px;color:#888;background:rgba(255,215,0,0.15);padding:1px 6px;border-radius:8px">${w.period}</span></span>`;
+    return `<span style="display:inline-flex;align-items:center;gap:5px;padding:0 14px;border-right:1px solid rgba(255,215,0,0.2);font-size:11px;color:#fff"><span class="emoji-3d">${medal}</span><b style="color:#FFD700">${esc(w.name)}</b><span style="color:#888;font-size:10px">${w.country}</span><span class="mono" style="color:#00FF66;font-weight:900">$${fmt(w.amount)}</span><span style="font-size:9px;color:#FFD700;background:rgba(255,215,0,0.15);padding:1px 6px;border-radius:8px;font-weight:800">${w.period}</span></span>`;
   }).join('');
-  return `<div class="winner-ticker"><span style="font-size:11px;font-weight:900;color:#FFD700;display:flex;align-items:center;gap:4px;flex-shrink:0">👑 WINNERS:</span><div style="flex:1;overflow:hidden"><div class="winner-scroll mono">${items}${items}</div></div></div>`;
+  const newsItems = NEWS_LIST.join('  •  ');
+  return `<div class="combined-ticker" id="combinedTicker">
+    <div class="combined-row" id="cRowWinner">
+      <span style="font-size:11px;font-weight:900;color:#FFD700;display:flex;align-items:center;gap:4px;flex-shrink:0;text-shadow:0 0 10px rgba(255,215,0,0.5)">👑 WINNERS:</span>
+      <div style="flex:1;overflow:hidden"><div class="winner-scroll mono">${winnerItems}${winnerItems}</div></div>
+    </div>
+    <div class="combined-row" id="cRowNews" style="display:none">
+      <span style="font-size:11px;font-weight:900;color:#00FF66;display:flex;align-items:center;gap:4px;flex-shrink:0">📢 ANNOUNCEMENT:</span>
+      <div style="flex:1;overflow:hidden"><div class="news-scroll mono" style="font-size:11px;color:#ddd">${newsItems}</div></div>
+    </div>
+  </div>`;
+}
+
+function rotateCombinedTicker() {
+  const w = $('cRowWinner'), n = $('cRowNews');
+  if (!w || !n) return;
+  w.style.display = 'flex'; n.style.display = 'none';
+  setTimeout(() => {
+    if (!$('cRowWinner')) return;
+    w.style.display = 'none'; n.style.display = 'flex';
+    setTimeout(() => { if ($('cRowWinner')) rotateCombinedTicker(); }, 5000);
+  }, 10000);
 }
 
 async function loadNotifs() {
@@ -920,13 +927,13 @@ const unread = () => S.notifs.filter(n => !n.is_read).length;
 async function markRead() {
   if (!sb || !S.user) return;
   haptic('medium');
-  for (const n of S.notifs.filter(x => !x.is_read)) { await sb.from('notifications').update({is_read:true}).eq('id', n.id); }
+  for (const n of S.notifs.filter(x => !x.is_read)) await sb.from('notifications').update({is_read:true}).eq('id', n.id);
   await sb.from('users').update({unread_count:0}).eq('user_id', S.user.user_id);
   S.user.unread_count = 0; S.notifs.forEach(n => n.is_read = true);
   save(); render();
 }
 
-// ============ FIX #1b: Team Milestone - only invested>0 counts ============
+// FIX #1b: Team Milestone only counts invested > 0
 async function checkTeamMilestones() {
   if (!S.user || !S.team) return;
   const count = S.team.filter(t => Number(t.invested||0) > 0).length;
@@ -939,12 +946,8 @@ async function checkTeamMilestones() {
       save();
       if (sb) {
         try {
-          // FIX #2 + #7: Save to Supabase with error handling
           const upd = await sb.from('users').update({balance:S.user.balance, milestones_claimed: JSON.stringify(S.milestones.claimed)}).eq('user_id', S.user.user_id);
-          if (upd.error) {
-            console.warn('Milestone save error:', upd.error);
-            toast('⚠️ Milestone sync issue - contact support');
-          }
+          if (upd.error) { console.warn('Milestone save error:', upd.error); toast('⚠️ Milestone sync issue - contact support'); }
         } catch(e) { console.warn('Milestone save exception:', e); }
       }
       setTimeout(() => { launchConfetti(); sound('success'); customAlert('🏆 Milestone Achieved!', `Team Size: ${m.label}\nBonus: +$${m.reward.toFixed(2)}`, '🎉'); }, 800);
@@ -1062,18 +1065,13 @@ function checkVIPBadgeChange() {
   } else if (!oldName) { localStorage.setItem('t_vip_' + S.user.user_id, newBadge.name); }
 }
 
-// ============ ADDITION #2: Achievement Check ============
+// ADDITION #2: Achievement check
 async function checkAchievements() {
   if (!S.user) return;
   const unlocked = [];
   for (const a of ACHIEVEMENTS) {
     if (S.achievements.includes(a.id)) continue;
-    try {
-      if (a.check(S.user, S.team || [], S.plans || [])) {
-        S.achievements.push(a.id);
-        unlocked.push(a);
-      }
-    } catch(e) {}
+    try { if (a.check(S.user, S.team || [], S.plans || [])) { S.achievements.push(a.id); unlocked.push(a); } } catch(e) {}
   }
   if (unlocked.length > 0) {
     save();
@@ -1084,11 +1082,7 @@ async function checkAchievements() {
       } catch(e) { console.warn('Achievement save exception:', e); }
     }
     unlocked.forEach((a, idx) => {
-      setTimeout(() => {
-        launchConfetti();
-        sound('success');
-        customAlert(`${a.icon} Achievement Unlocked!`, `${a.name}\n\n${a.desc}`, '🏆');
-      }, 800 + idx * 1500);
+      setTimeout(() => { launchConfetti(); sound('success'); customAlert(`${a.icon} Achievement Unlocked!`, `${a.name}\n\n${a.desc}`, '🏆'); }, 800 + idx * 1500);
     });
   }
 }
@@ -1182,9 +1176,9 @@ function pageFAQ() {
     {q:'Can I have multiple plans?', a:'Yes! You can run multiple plans simultaneously. Each plan operates independently.'},
     {q:'What happens after 40 days?', a:'After 40 days, your plan completes automatically. Total returns equal 4x your investment.'},
     {q:'How does the Spin & Win work?', a:'You get 1 free spin every 24 hours. Win between $0.01 and $0.50 instantly credited to your balance.'},
-    {q:'Are there any team bonuses?', a:'Yes! Reach team milestones (5, 10, 25, 50, 100 members) to unlock bonus rewards up to $100.'},
+    {q:'Are there any team bonuses?', a:'Yes! Reach team milestones (5, 10, 25, 50, 100 invested members) to unlock bonus rewards up to $100.'},
     {q:'What payment methods are supported?', a:'Deposits: UPI, USDT (BEP20/TRC20), BTC. Withdrawals: USDT or UPI (INR at ₹'+CFG.inrRate+'/USD rate).'},
-    {q:'How can I join the community?', a:'Tap the Telegram icon in the app header or "Join Community" card to enter our official channel.'}
+    {q:'How can I join the community?', a:'Tap the Telegram icon in the app header or the community card in Team tab to enter our official channel.'}
   ];
   return `<h1>❓ Frequently Asked Questions</h1>
   <p style="color:#888;font-size:11px;margin-bottom:20px">Everything you need to know about TOXIC</p>
@@ -1192,9 +1186,8 @@ function pageFAQ() {
   <div style="text-align:center;margin-top:24px;padding:16px;background:rgba(0,255,102,0.06);border:1px solid rgba(0,255,102,0.2);border-radius:14px"><p style="font-size:12px;color:#ccc;margin:0 0 10px">Still have questions?</p><a href="${CFG.support}" target="_blank" style="display:inline-block;text-decoration:none;padding:10px 20px;border-radius:12px;background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-weight:800;font-size:12px">💬 CONTACT SUPPORT</a></div>`;
 }
 
-// ============ FIX #10: Live Notification - only Dashboard ============
+// FIX #10: Live notification only on Dashboard
 function showLive() {
-  // Only run if user is logged in AND on dashboard tab
   if (!S.user) return;
   if (S.tab !== 'dashboard') return;
   if (S.showProfile || S.showNotifs || S.page || S.selPlan || S.showBadges || S.showShare || S.showWinner || S.showQR) return;
@@ -1227,6 +1220,7 @@ function render() {
   }
   a.innerHTML = mainUI() + planModal() + profileModal() + notifsModal() + badgesModal() + shareModal() + winnerModal() + qrModal();
   if (S.tab === 'wallet') setTimeout(loadSavedAddresses, 0);
+  if (S.tab === 'team') setTimeout(loadLeaderboard, 100);
   updateDyn();
 }
 
@@ -1246,9 +1240,12 @@ function updateDyn() {
     if (!p) return;
     const ready = Date.now() >= nextC(p) && Number(p.days_collected) < 40;
     btn.disabled = !ready;
+    const rem = nextC(p) - Date.now();
+    const h = Math.max(0, Math.floor(rem / 3600000)); const m = Math.max(0, Math.floor((rem % 3600000) / 60000)); const s = Math.max(0, Math.floor((rem % 60000) / 1000));
+    const tmrStr = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
     if (ready) btn.textContent = '💰 COLLECT $' + Number(p.dly || p.daily).toFixed(2);
     else if (Number(p.days_collected) >= 40) btn.textContent = '✅ COMPLETED';
-    else btn.textContent = '⏳ WAITING FOR DAILY COLLECT';
+    else btn.textContent = '⚡ REWARD CHARGING · ' + tmrStr;
   });
   const b = $('nb');
   const un = unread();
@@ -1270,7 +1267,7 @@ async function claimReferralBalance() {
   render();
 }
 
-// ============ FIX #4 + #6 + #8: syncUser with 30s + auto-complete + race condition ============
+// FIX #4 + #6 + #8: syncUser with 30s + auto-complete + race condition
 async function syncUser() {
   if (!sb || !S.user) return;
   if (SYNC_LOCK) return;
@@ -1295,36 +1292,24 @@ async function syncUser() {
       S.user.earned = Number(f.earned||0);
       if (f.avatar) S.user.avatar = f.avatar;
       if (f.email) S.user.email = f.email;
-      // Load milestones from Supabase if available
-      if (f.milestones_claimed) {
-        try { const parsed = JSON.parse(f.milestones_claimed); if (Array.isArray(parsed)) S.milestones.claimed = parsed; } catch(e) {}
-      }
-      if (f.achievements) {
-        try { const parsed = JSON.parse(f.achievements); if (Array.isArray(parsed)) S.achievements = parsed; } catch(e) {}
-      }
-      if (f.auto_renew !== undefined && f.auto_renew !== null) {
-        S.autoRenew = !!f.auto_renew;
-        localStorage.setItem('t_autorenew', S.autoRenew ? '1' : '0');
-      }
+      if (f.milestones_claimed) { try { const parsed = JSON.parse(f.milestones_claimed); if (Array.isArray(parsed)) S.milestones.claimed = parsed; } catch(e) {} }
+      if (f.achievements) { try { const parsed = JSON.parse(f.achievements); if (Array.isArray(parsed)) S.achievements = parsed; } catch(e) {} }
+      if (f.auto_renew !== undefined && f.auto_renew !== null) { S.autoRenew = !!f.auto_renew; localStorage.setItem('t_autorenew', S.autoRenew ? '1' : '0'); }
       save();
       if ($('bal') && oldB !== S.user.balance) animateCount($('bal'), oldB, S.user.balance);
     }
     const p = await sb.from('user_plans').select('*').eq('user_id', S.user.user_id).order('id', {ascending:false});
     if (p.data && Array.isArray(p.data)) {
-      // FIX #6: Auto-complete plans at 40 days
       S.plans = p.data.map(pl => {
         const days = Number(pl.days_collected) || 0;
         const started = new Date(pl.started_at).getTime();
         const expired = Date.now() >= started + 40 * DAY;
-        if (days >= 40 || expired) {
-          if (pl.status !== 'completed') {
-            try { sb.from('user_plans').update({status:'completed'}).eq('id', pl.id); } catch(e) {}
-            return {...pl, status:'completed'};
-          }
+        if ((days >= 40 || expired) && pl.status !== 'completed') {
+          try { sb.from('user_plans').update({status:'completed'}).eq('id', pl.id); } catch(e) {}
+          return {...pl, status:'completed'};
         }
         return pl;
       });
-      // AUTO-RENEW check
       if (S.autoRenew) {
         for (const pl of S.plans) {
           if (pl.status === 'completed' && !pl._renewed && Number(S.user.balance) >= Number(pl.deposit)) {
@@ -1339,26 +1324,16 @@ async function syncUser() {
     const sbList = [];
     if (d.data) d.data.forEach(x => {
       const created = x.created_at || new Date().toISOString();
-      // FIX #11: Auto-expire pending deposits > 24h (local only)
       let status = x.status || 'pending';
-      if (status === 'pending' && Date.now() - new Date(created).getTime() > DAY) { status = 'expired'; }
-      sbList.push({
-        id:'sb_dep_'+x.id, type:'deposit', amount:Number(x.amount), method:x.method||'', ref:x.ref||'',
-        status:status, date:created,
-        // FIX #5: Full dedup key
-        _akey: 'deposit_' + Number(x.amount).toFixed(2) + '_' + created.slice(0, 16) + '_' + (x.method||'')
-      });
+      if (status === 'pending' && Date.now() - new Date(created).getTime() > DAY) status = 'expired';
+      sbList.push({ id:'sb_dep_'+x.id, type:'deposit', amount:Number(x.amount), method:x.method||'', ref:x.ref||'', status, date:created, _akey: 'deposit_' + Number(x.amount).toFixed(2) + '_' + created.slice(0, 16) + '_' + (x.method||'') });
     });
     if (w.data) w.data.forEach(x => {
       let cm = x.method; let ca = x.address || '';
-      if (!cm) { cm = ca.includes(':') ? ca.split(':')[0].trim() : 'USDT'; }
-      if (ca.includes(':')) { ca = ca.split(':')[1].trim(); }
+      if (!cm) cm = ca.includes(':') ? ca.split(':')[0].trim() : 'USDT';
+      if (ca.includes(':')) ca = ca.split(':')[1].trim();
       const created = x.created_at || new Date().toISOString();
-      sbList.push({
-        id:'sb_wd_'+x.id, type:'withdrawal', amount:Number(x.amount), method:cm, address:ca,
-        status:(x.status||'pending'), date:created,
-        _akey: 'withdrawal_' + Number(x.amount).toFixed(2) + '_' + created.slice(0, 16) + '_' + cm
-      });
+      sbList.push({ id:'sb_wd_'+x.id, type:'withdrawal', amount:Number(x.amount), method:cm, address:ca, status:(x.status||'pending'), date:created, _akey: 'withdrawal_' + Number(x.amount).toFixed(2) + '_' + created.slice(0, 16) + '_' + cm });
     });
     const sbKeys = new Set(sbList.map(x => x._akey));
     const finalList = [...sbList];
@@ -1366,7 +1341,6 @@ async function syncUser() {
       const lid = String(local.id || '');
       if (lid.startsWith('sb_dep_') || lid.startsWith('sb_wd_')) return;
       if (local.type === 'deposit' || local.type === 'withdrawal') {
-        // FIX #5: full dedup
         const created = local.date || new Date().toISOString();
         const key = local.type + '_' + Number(local.amount).toFixed(2) + '_' + created.slice(0, 16) + '_' + (local.method || '');
         if (sbKeys.has(key)) return;
@@ -1375,17 +1349,14 @@ async function syncUser() {
     });
     finalList.forEach(x => delete x._akey);
     finalList.sort((a,b) => new Date(b.date) - new Date(a.date));
-    // Withdrawal status change detection
     S.tx.forEach(old => {
       if (old.type !== 'withdrawal') return;
       const updated = finalList.find(n => String(n.id) === String(old.id));
       if (!updated) return;
-      const oldSt = (old.status || '').toLowerCase();
-      const newSt = (updated.status || '').toLowerCase();
+      const oldSt = (old.status || '').toLowerCase(); const newSt = (updated.status || '').toLowerCase();
       if (oldSt === 'pending' && (newSt === 'approved' || newSt === 'paid' || newSt === 'success')) {
         haptic('success'); sound('notif');
         setTimeout(() => { launchConfetti(); customAlert('✅ Withdrawal Approved!', `$${fmt(updated.amount)} withdrawal has been approved and processed!`, '💰'); }, 800);
-        // PUSH
         sendPush('✅ Withdrawal Approved', `$${fmt(updated.amount)} has been processed`);
       } else if (oldSt === 'pending' && (newSt === 'rejected' || newSt === 'failed')) {
         haptic('warning'); sound('error');
@@ -1393,13 +1364,11 @@ async function syncUser() {
         sendPush('❌ Withdrawal Rejected', `$${fmt(updated.amount)} was rejected`);
       }
     });
-    // Deposit status change detection
     S.tx.forEach(old => {
       if (old.type !== 'deposit') return;
       const updated = finalList.find(n => String(n.id) === String(old.id));
       if (!updated) return;
-      const oldSt = (old.status || '').toLowerCase();
-      const newSt = (updated.status || '').toLowerCase();
+      const oldSt = (old.status || '').toLowerCase(); const newSt = (updated.status || '').toLowerCase();
       if (oldSt === 'pending' && (newSt === 'approved' || newSt === 'success' || newSt === 'completed')) {
         haptic('success'); sound('notif');
         setTimeout(() => { launchConfetti(); customAlert('✅ Deposit Approved!', `$${fmt(updated.amount)} has been added to your balance!`, '💰'); }, 800);
@@ -1427,7 +1396,6 @@ async function syncUser() {
     }
     await loadNotifs();
     save();
-    // FIX #3b: Instantly check milestones after team update
     checkTeamMilestones();
     checkAchievements();
   } catch(e) { console.warn('Sync note:', e); }
@@ -1435,26 +1403,19 @@ async function syncUser() {
   SYNC_LOCK = false;
 }
 
-// ============ AUTO-RENEW ============
 async function autoRenewPlan(completedPlan) {
   if (!S.autoRenew || !S.user) return;
   const planDef = PLANS.find(x => x.id === completedPlan.plan_id);
   if (!planDef) return;
   const bal = Number(S.user.balance || 0);
   if (bal < Number(completedPlan.deposit)) {
-    // Not enough balance - skip + notification
     if (sb) { try { await sb.from('notifications').insert([{user_id:S.user.user_id, title:'⚠️ Auto-Renew Skipped', message:`Your ${completedPlan.plan_name} plan completed but auto-renew was skipped due to insufficient balance ($${fmt(bal)} < $${fmt(completedPlan.deposit)}).`, type:'warning', is_read:false}]); } catch(e) {} }
     return;
   }
   customConfirm('🔄 Auto-Renew Plan?', `Your ${completedPlan.plan_name} plan has completed.\n\nWould you like to renew it for another 40 days?\n\nAmount: $${fmt(completedPlan.deposit)}\nBalance: $${fmt(bal)}`, async () => {
     if (Number(S.user.balance) < Number(completedPlan.deposit)) return customAlert('Low Balance', 'Insufficient balance for auto-renew.', '⚠️');
     const now = new Date();
-    const np = {
-      user_id:S.user.user_id, username:S.user.username, plan_id:planDef.id, plan_name:planDef.n,
-      deposit:planDef.d, daily:planDef.dly, total:planDef.t, days_collected:0, status:'active',
-      started_at:now.toISOString(), expires_at:new Date(now.getTime() + 40 * DAY).toISOString(),
-      last_collect_at: null
-    };
+    const np = { user_id:S.user.user_id, username:S.user.username, plan_id:planDef.id, plan_name:planDef.n, deposit:planDef.d, daily:planDef.dly, total:planDef.t, days_collected:0, status:'active', started_at:now.toISOString(), expires_at:new Date(now.getTime() + 40 * DAY).toISOString(), last_collect_at: null };
     S.user.balance = Number(S.user.balance) - planDef.d;
     S.user.invested = Number(S.user.invested||0) + planDef.d;
     S.tx.unshift({type:'deposit', amount:planDef.d, status:'success', method:'AUTO-RENEW · ' + planDef.n, date:new Date().toISOString()});
@@ -1503,7 +1464,7 @@ function handleAvatarUpload(event) {
   reader.readAsDataURL(file);
 }
 
-// ============ AUTH UI - FULL SCREEN BANNER ============
+// AUTH UI (Full screen banner, logo overlay top)
 function authHero(children) {
   return `<div class="auth-hero">
     <img src="${CFG.banner}" class="auth-hero-bg" alt="TOXIC">
@@ -1563,14 +1524,15 @@ function signupUI() {
   const steps = [1,2].map(n => {
     const bg = step > n ? '#10B981' : step === n ? '#00FF66' : 'rgba(255,255,255,0.06)';
     const tc = step >= n ? '#000' : '#4B5563';
-    return `<div style="width:38px;height:38px;border-radius:12px;background:${bg};color:${tc};display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;box-shadow:${step===n?'0 0 15px #00FF66':'none'};transition:all 0.3s">${step>n?'✓':n}</div>`;
+    const glow = step === n ? '0 0 20px rgba(0,255,102,0.8)' : 'none';
+    return `<div style="width:36px;height:36px;border-radius:12px;background:${bg};color:${tc};display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;box-shadow:${glow};transition:all 0.3s">${step>n?'✓':n}</div>`;
   }).join('');
   return authHero(`
-    <div class="flex items-center justify-center gap-3 mb-4">${steps}</div>
+    <div class="flex items-center justify-center gap-3 mb-3">${steps}</div>
     <div class="glass-card shadow-2xl w-full max-w-md mx-auto modal-in" style="border-top: 2px solid rgba(0,255,102,0.4)">
       ${step===1?step1():step2()}
     </div>
-    <div style="text-align:center;font-size:10px;color:#888;margin-top:14px">
+    <div style="text-align:center;font-size:10px;color:#888;margin-top:12px">
       <p>By signing up, you agree to our <span onclick="S.page='tnc';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Terms</span> & <span onclick="S.page='privacy';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Privacy</span></p>
     </div>
   `);
@@ -1579,39 +1541,47 @@ function signupUI() {
 function step1() {
   const cs = ['Afghanistan','Albania','Algeria','Andorra','Angola','Antigua and Barbuda','Argentina','Armenia','Australia','Austria','Azerbaijan','Bahamas','Bahrain','Bangladesh','Barbados','Belarus','Belgium','Belize','Benin','Bhutan','Bolivia','Bosnia and Herzegovina','Botswana','Brazil','Brunei','Bulgaria','Burkina Faso','Burundi','Cabo Verde','Cambodia','Cameroon','Canada','Central African Republic','Chad','Chile','China','Colombia','Comoros','Congo','Costa Rica','Croatia','Cuba','Cyprus','Czech Republic','Denmark','Djibouti','Dominica','Dominican Republic','Ecuador','Egypt','El Salvador','Equatorial Guinea','Eritrea','Estonia','Eswatini','Ethiopia','Fiji','Finland','France','Gabon','Gambia','Georgia','Germany','Ghana','Greece','Grenada','Guatemala','Guinea','Guinea-Bissau','Guyana','Haiti','Honduras','Hungary','Iceland','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy','Jamaica','Japan','Jordan','Kazakhstan','Kenya','Kiribati','Korea North','Korea South','Kosovo','Kuwait','Kyrgyzstan','Laos','Latvia','Lebanon','Lesotho','Liberia','Libya','Liechtenstein','Lithuania','Luxembourg','Madagascar','Malawi','Malaysia','Maldives','Mali','Malta','Marshall Islands','Mauritania','Mauritius','Mexico','Micronesia','Moldova','Monaco','Mongolia','Montenegro','Morocco','Mozambique','Myanmar','Namibia','Nauru','Nepal','Netherlands','New Zealand','Nicaragua','Niger','Nigeria','North Macedonia','Norway','Oman','Pakistan','Palau','Palestine','Panama','Papua New Guinea','Paraguay','Peru','Philippines','Poland','Portugal','Qatar','Romania','Russia','Rwanda','Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines','Samoa','San Marino','Sao Tome and Principe','Saudi Arabia','Senegal','Serbia','Seychelles','Sierra Leone','Singapore','Slovakia','Slovenia','Solomon Islands','Somalia','South Africa','South Sudan','Spain','Sri Lanka','Sudan','Suriname','Sweden','Switzerland','Syria','Taiwan','Tajikistan','Tanzania','Thailand','Timor-Leste','Togo','Tonga','Trinidad and Tobago','Tunisia','Turkey','Turkmenistan','Tuvalu','Uganda','Ukraine','United Arab Emirates','United Kingdom','United States','Uruguay','Uzbekistan','Vanuatu','Vatican City','Venezuela','Vietnam','Yemen','Zambia','Zimbabwe'];
   const ops = cs.map(c => `<option ${S.sd.country===c?'selected':''}>${c}</option>`).join('');
-  const rn = S.sd.referredBy ? `<div style="border-radius:10px;padding:10px;margin-bottom:12px;background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.3)"><p style="font-size:9px;color:#888;margin:0">Referred by</p><p class="text-toxic mono" style="font-weight:900;font-size:12px;margin:2px 0 0">${esc(S.sd.referredBy)}</p></div>` : '';
+  const rn = S.sd.referredBy ? `
+    <div style="border-radius:12px;padding:10px 14px;margin-bottom:18px;background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.3);display:flex;align-items:center;justify-content:space-between">
+      <div><p style="font-size:9px;color:#888;margin:0;letter-spacing:1.2px">REFERRED BY</p><p class="text-toxic mono" style="font-weight:900;font-size:13px;margin:2px 0 0">${esc(S.sd.referredBy)}</p></div>
+      <span style="font-size:22px" class="emoji-3d">👥</span>
+    </div>` : '';
   return `${rn}
-    <p style="font-size:9px;color:#666;font-weight:700;margin:0 0 2px;letter-spacing:1.5px">STEP 1 / 2</p>
-    <h2 class="text-xl font-black mb-1">Create your account</h2>
-    <p class="text-xs text-gray-500 mb-4">Select country & verify Gmail.</p>
-    <div style="background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.2);border-radius:10px;padding:8px 12px;margin-bottom:12px">
-      <p style="font-size:10px;color:#00FF66;font-weight:700;margin:0">🎁 Get $${CFG.signupBonus.toFixed(2)} FREE signup bonus!</p>
+    <p style="font-size:10px;color:#666;font-weight:700;margin:0 0 8px;letter-spacing:1.8px">STEP 1 / 2 · EMAIL VERIFICATION</p>
+    <h2 style="font-size:24px;font-weight:900;margin:0 0 8px;letter-spacing:-0.3px">Create your account</h2>
+    <p style="font-size:13px;color:#888;margin:0 0 24px">Verify your Gmail with OTP.</p>
+    <div style="background:linear-gradient(135deg,rgba(0,255,102,0.14),rgba(0,255,102,0.04));border:1px solid rgba(0,255,102,0.35);border-radius:14px;padding:14px 16px;margin-bottom:26px;display:flex;align-items:center;gap:12px">
+      <span style="font-size:24px" class="emoji-3d">🎁</span>
+      <p style="font-size:12px;font-weight:800;color:#00FF66;margin:0;line-height:1.4">Get $${CFG.signupBonus.toFixed(2)} FREE signup bonus!</p>
     </div>
-    <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:4px">COUNTRY</label>
-    <select id="cs" class="inp mb-3"><option value="" disabled selected>Select your country</option>${ops}</select>
-    <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:4px">GMAIL ADDRESS</label>
-    <input id="sd_email" type="email" class="inp mb-2" placeholder="yourname@gmail.com" value="${S.sd.email||''}">
-    <button id="sendOtpBtn" onclick="sendOTP()" class="w-full btn-green py-2.5 rounded-xl text-xs mb-3">SEND OTP</button>
-    <div id="otpSection" style="display:${S.otpVerified?'none':'block'};margin-bottom:12px">
-      <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:4px">ENTER 6-DIGIT OTP</label>
-      <input id="otpCode" type="text" maxlength="6" class="inp otp-input mb-2" placeholder="••••••">
-      <button onclick="verifyOTP()" class="w-full btn-green py-2.5 rounded-xl text-xs">VERIFY OTP</button>
+    <label style="font-size:10px;color:#888;font-weight:700;letter-spacing:1.5px;display:block;margin-bottom:8px">COUNTRY</label>
+    <select id="cs" class="inp" style="margin-bottom:22px;padding:13px 14px"><option value="" disabled selected>Select your country</option>${ops}</select>
+    <label style="font-size:10px;color:#888;font-weight:700;letter-spacing:1.5px;display:block;margin-bottom:8px">GMAIL ADDRESS</label>
+    <input id="sd_email" type="email" class="inp" style="margin-bottom:14px;padding:13px 14px" placeholder="yourname@gmail.com" value="${S.sd.email||''}">
+    <button id="sendOtpBtn" onclick="sendOTP()" class="btn-green" style="width:100%;padding:13px;border-radius:12px;font-size:13px;margin-bottom:22px">SEND OTP</button>
+    <div id="otpSection" style="display:${S.otpVerified?'none':'block'};margin-bottom:22px">
+      <label style="font-size:10px;color:#888;font-weight:700;letter-spacing:1.5px;display:block;margin-bottom:8px">ENTER 6-DIGIT OTP</label>
+      <input id="otpCode" type="text" maxlength="6" class="inp otp-input" style="margin-bottom:12px;padding:13px 14px" placeholder="••••••">
+      <button onclick="verifyOTP()" class="btn-green" style="width:100%;padding:13px;border-radius:12px;font-size:13px">VERIFY OTP</button>
     </div>
-    ${S.otpVerified ? `<div style="background:rgba(0,255,102,0.1);border:1px solid rgba(0,255,102,0.4);border-radius:10px;padding:8px 12px;margin-bottom:10px"><p style="font-size:10px;color:#00FF66;font-weight:700;margin:0">✅ Email verified! Continue below.</p></div>` : ''}
-    <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:4px">REFERRAL CODE (OPTIONAL)</label>
-    <input id="manualRef" class="inp mb-4" placeholder="Enter code" value="${S.sd.referredBy||''}" style="text-transform:uppercase;">
-    <button onclick="goStep2()" class="w-full btn-green py-3 rounded-xl text-xs glow" ${S.otpVerified?'':'disabled style="opacity:0.5"'}>NEXT →</button>
-    <p class="text-center text-xs text-gray-500 mt-3">Already have an account? <span onclick="S.tab='signin';render()" class="text-yellow-400 font-bold cursor:pointer">Sign in</span></p>`;
+    ${S.otpVerified ? `<div style="background:rgba(0,255,102,0.1);border:1px solid rgba(0,255,102,0.4);border-radius:12px;padding:11px 14px;margin-bottom:20px;display:flex;align-items:center;gap:10px"><span style="font-size:16px" class="emoji-3d">✅</span><p style="font-size:12px;color:#00FF66;font-weight:700;margin:0">Email verified successfully!</p></div>` : ''}
+    <label style="font-size:10px;color:#888;font-weight:700;letter-spacing:1.5px;display:block;margin-bottom:8px">REFERRAL CODE (OPTIONAL)</label>
+    <input id="manualRef" class="inp" placeholder="Enter code" value="${S.sd.referredBy||''}" style="text-transform:uppercase;padding:10px 14px;font-size:13px;letter-spacing:1px;margin-bottom:26px">
+    <button onclick="goStep2()" class="btn-green glow" style="width:100%;padding:15px;border-radius:14px;font-size:14px" ${S.otpVerified?'':'disabled style="opacity:0.4;cursor:not-allowed"'}>NEXT →</button>
+    <p class="text-center text-sm text-gray-500" style="margin-top:18px">Already have an account? <span onclick="S.tab='signin';render()" class="text-toxic font-bold cursor:pointer">Sign in</span></p>`;
 }
 
 function step2() {
-  return `<p style="font-size:9px;color:#666;font-weight:700;margin:0 0 2px;letter-spacing:1.5px">STEP 2 / 2</p>
-    <h2 class="text-xl font-black mb-1">Create Access</h2>
-    <p class="text-xs text-gray-500 mb-4">Set username & password.</p>
-    <input class="inp mb-3" id="un" placeholder="Username" value="${S.sd.username||''}">
-    <input class="inp mb-3" id="pw" type="password" placeholder="Password">
-    <input class="inp mb-4" id="pw2" type="password" placeholder="Confirm Password">
-    <div style="display:flex;gap:10px"><button onclick="S.step=1;render()" style="padding:12px 18px;border-radius:12px;background:rgba(255,255,255,0.05);font-weight:700;font-size:12px;border:none;color:#fff;cursor:pointer">← BACK</button><button onclick="finishSignup()" style="flex:1;padding:12px;border-radius:12px;font-weight:800;font-size:12px;border:none;cursor:pointer" class="btn-green">FINISH →</button></div>`;
+  return `<p style="font-size:10px;color:#666;font-weight:700;margin:0 0 8px;letter-spacing:1.8px">STEP 2 / 2 · SETUP</p>
+    <h2 style="font-size:24px;font-weight:900;margin:0 0 8px;letter-spacing:-0.3px">Create Access</h2>
+    <p style="font-size:13px;color:#888;margin:0 0 24px">Set username & password.</p>
+    <label style="font-size:10px;color:#888;font-weight:700;letter-spacing:1.5px;display:block;margin-bottom:8px">USERNAME</label>
+    <input class="inp" id="un" style="margin-bottom:20px;padding:13px 14px" placeholder="Username" value="${S.sd.username||''}">
+    <label style="font-size:10px;color:#888;font-weight:700;letter-spacing:1.5px;display:block;margin-bottom:8px">PASSWORD</label>
+    <input class="inp" id="pw" type="password" style="margin-bottom:20px;padding:13px 14px" placeholder="Password (min 4 chars)">
+    <label style="font-size:10px;color:#888;font-weight:700;letter-spacing:1.5px;display:block;margin-bottom:8px">CONFIRM PASSWORD</label>
+    <input class="inp" id="pw2" type="password" style="margin-bottom:26px;padding:13px 14px" placeholder="Confirm Password">
+    <div style="display:flex;gap:10px"><button onclick="S.step=1;render()" style="padding:14px 18px;border-radius:12px;background:rgba(255,255,255,0.05);font-weight:700;font-size:13px;border:none;color:#fff;cursor:pointer">← BACK</button><button onclick="finishSignup()" style="flex:1;padding:14px;border-radius:12px;font-weight:800;font-size:13px;border:none;cursor:pointer" class="btn-green">FINISH →</button></div>`;
 }
 
 function goStep2() {
@@ -1639,7 +1609,6 @@ async function finishSignup() {
     try {
       const checkUser = await sb.from('users').select('username').eq('username', un).limit(1);
       if (checkUser.data && checkUser.data.length > 0) { sound('error'); return customAlert('Username Taken', 'This username is already registered.\n\nPlease choose a different username.', '⚠️'); }
-      // FIX #7: Email uniqueness check
       const checkEmail = await sb.from('users').select('user_id').eq('email', S.sd.email).limit(1);
       if (checkEmail.data && checkEmail.data.length > 0) { sound('error'); return customAlert('Email Already Registered', 'This Gmail is already linked to an account.\n\nPlease use another Gmail or login.', '⚠️'); }
     } catch(e) { console.warn('Check error:', e); }
@@ -1650,12 +1619,9 @@ async function finishSignup() {
   S.plans = [];
   localStorage.setItem('t_pwd_' + uid, pw);
   if (sb) {
-    try {
-      await sb.from('users').insert([{user_id:uid, username:un, email:S.sd.email, phone:'', balance:0, referral_balance:0, invested:0, referral_code:rc, referred_by:S.sd.referredBy, is_banned:false, password_hash: btoa(pw)}]);
-    } catch(e) { console.warn('Signup insert error:', e); }
+    try { await sb.from('users').insert([{user_id:uid, username:un, email:S.sd.email, phone:'', balance:0, referral_balance:0, invested:0, referral_code:rc, referred_by:S.sd.referredBy, is_banned:false, password_hash: btoa(pw)}]); } catch(e) { console.warn('Signup insert error:', e); }
   }
-  localStorage.removeItem('t_locked_ref');
-  localStorage.removeItem('t_locked_ref_time');
+  localStorage.removeItem('t_locked_ref'); localStorage.removeItem('t_locked_ref_time');
   S.otpVerified = false; S.otp = {code:'', email:'', expiry:0};
   haptic('success'); sound('success'); S.tab = 'dashboard'; save(); render();
   setTimeout(() => applySignupBonus(), 800);
@@ -1747,6 +1713,7 @@ function setTab(t2) {
   if (t2 === 'history') S.historyLimit = CFG.historyPageSize;
   window.scrollTo(0, 0); render();
   if (S.user) syncUser().then(render);
+  if (t2 === 'team') setTimeout(loadLeaderboard, 200);
 }
 
 function renderTab() {
@@ -1759,41 +1726,50 @@ function renderTab() {
   return '';
 }
 
-function newsBannerUI() {
-  const items = NEWS_LIST.join('  •  ');
-  return `<div class="news-ticker"><span style="font-size:10px;font-weight:900;color:#00FF66;display:flex;align-items:center;gap:4px">📢 ${t().newsHeading}:</span><div style="flex:1;overflow:hidden"><div class="news-scroll mono" style="font-size:11px;color:#ddd">${items}</div></div></div>`;
-}
-
 function dashUI() {
   const u = S.user;
   const rl = refLink();
   const ap = S.plans.filter(p => Number(p.days_collected) < 40 && p.status !== 'completed');
   const badge = getVIPBadge(Number(u.invested||0));
   const bars = [20,35,28,50,42,65,55,80,70,95].map((h, i) => `<div style="flex:1;border-radius:4px 4px 0 0;height:${h}%;background:linear-gradient(180deg,#00FF66,rgba(0,255,102,0.15));opacity:${0.4+i*0.06}"></div>`).join('');
+  const unlockedCount = ACHIEVEMENTS.filter(a => S.achievements.includes(a.id)).length;
   let plansHTML = '';
   if (ap.length === 0) {
     plansHTML = `<div class="glass-card" style="text-align:center;padding:36px 20px;margin-bottom:12px"><div style="font-size:42px;opacity:0.5;margin-bottom:10px" class="emoji-3d">📊</div><p style="font-weight:900;font-size:15px;margin:0 0 6px">No Active Plans</p><p style="font-size:12px;color:#888;margin:0 0 18px">Choose a plan to start earning</p><button onclick="setTab('plans')" class="btn-green" style="padding:12px 28px;border-radius:14px;font-size:12px">BROWSE PLANS →</button></div>`;
   } else {
-    plansHTML = ap.slice(0, 3).map(pl => {
+    plansHTML = ap.slice(0, 2).map(pl => {
       const p = PLANS.find(x => x.id === pl.plan_id) || {c:'#00FF66', i:'💰', dly:pl.daily, t:pl.total, n:pl.plan_name};
       const days = Number(pl.days_collected) || 0;
       const pct = (days / 40) * 100;
       const earned = days * Number(pl.dly || pl.daily);
       return `<div class="plan-active" style="margin-bottom:12px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:12px;position:relative;z-index:1"><div style="display:flex;gap:12px;align-items:center"><div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;background:${p.c}25;border:1px solid ${p.c}66" class="emoji-3d">${p.i}</div><div><p style="font-weight:900;font-size:15px;color:${p.c};margin:0">${p.n}</p><p style="font-size:10px;color:#888;margin:2px 0 0">Invested $${fmt(pl.deposit)}</p></div></div><div style="display:flex;align-items:center;gap:5px"><span style="width:6px;height:6px;border-radius:50%;display:inline-block" class="bg-toxic pdot"></span><span style="font-size:9px;font-weight:900" class="text-toxic">LIVE</span></div></div>
-        <div style="background:linear-gradient(135deg,${p.c}20,transparent);border:1px solid ${p.c}44;border-radius:16px;padding:12px;margin-bottom:10px;position:relative;z-index:1"><p style="font-size:9px;color:#888;font-weight:800;text-align:center;margin:0 0 4px;letter-spacing:1px">⏳ NEXT COLLECT IN</p><p class="mono timer-glow" style="font-size:22px;font-weight:900;text-align:center;margin:0 0 10px" data-timer="${pl.id}">--:--:--</p><button data-collect="${pl.id}" onclick="collect(${pl.id})" class="collect-btn" style="width:100%;padding:12px;border-radius:12px;font-size:12px">⏳ WAITING FOR DAILY COLLECT</button></div>
-        <div style="display:flex;justify-content:space-between;font-size:10px;color:#888;margin-bottom:6px;position:relative;z-index:1"><span>Day ${days}/40</span><span class="text-toxic">$${earned.toFixed(2)} / $${Number(pl.t||pl.total).toFixed(2)}</span></div>
-        <div style="width:100%;height:5px;border-radius:3px;background:rgba(255,255,255,0.05);overflow:hidden;position:relative;z-index:1"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,${p.c},#10B981);box-shadow:0 0 12px ${p.c}88"></div></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;position:relative;z-index:1">
+          <div style="display:flex;gap:10px;align-items:center">
+            <div style="width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;background:${p.c}25;border:1px solid ${p.c}66" class="emoji-3d">${p.i}</div>
+            <div><p style="font-weight:900;font-size:14px;color:${p.c};margin:0;letter-spacing:0.3px">${p.n}</p><p style="font-size:9px;color:#888;margin:2px 0 0">$${fmt(pl.deposit)} invested · Day ${days}/40</p></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="width:5px;height:5px;border-radius:50%;display:inline-block" class="bg-toxic pdot"></span><span style="font-size:9px;font-weight:900" class="text-toxic">LIVE</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;position:relative;z-index:1">
+          <div style="background:rgba(0,0,0,0.5);border-radius:10px;padding:8px;text-align:center"><p style="font-size:8px;color:#888;margin:0 0 2px;letter-spacing:0.5px">EARNED</p><p class="mono text-toxic" style="font-size:11px;font-weight:900;margin:0">$${earned.toFixed(2)}</p></div>
+          <div style="background:rgba(0,0,0,0.5);border-radius:10px;padding:8px;text-align:center"><p style="font-size:8px;color:#888;margin:0 0 2px;letter-spacing:0.5px">DAILY</p><p class="mono text-toxic" style="font-size:11px;font-weight:900;margin:0">$${Number(pl.dly||pl.daily).toFixed(2)}</p></div>
+          <div style="background:rgba(0,0,0,0.5);border-radius:10px;padding:8px;text-align:center"><p style="font-size:8px;color:#888;margin:0 0 2px;letter-spacing:0.5px">TARGET</p><p class="mono" style="font-size:11px;font-weight:900;margin:0;color:${p.c}">$${Number(pl.t||pl.total).toFixed(0)}</p></div>
+        </div>
+        <div style="background:linear-gradient(135deg,${p.c}22,transparent);border:1px solid ${p.c}55;border-radius:14px;padding:10px 12px;margin-bottom:8px;position:relative;z-index:1">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <p style="font-size:9px;color:#888;font-weight:800;margin:0;letter-spacing:1px">⏳ NEXT COLLECT IN</p>
+            <p class="mono timer-glow" style="font-size:14px;font-weight:900;margin:0;color:${p.c}" data-timer="${pl.id}">--:--:--</p>
+          </div>
+          <button data-collect="${pl.id}" onclick="collect(${pl.id})" class="collect-btn" style="width:100%;padding:11px;border-radius:11px;font-size:11px">⚡ REWARD CHARGING...</button>
+        </div>
+        <div style="width:100%;height:4px;border-radius:2px;background:rgba(255,255,255,0.05);overflow:hidden;position:relative;z-index:1"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,${p.c},#10B981);box-shadow:0 0 10px ${p.c}88"></div></div>
       </div>`;
     }).join('');
-    if (ap.length > 3) { plansHTML += `<button onclick="setTab('active')" class="btn-green" style="width:100%;padding:12px;border-radius:14px;font-size:12px">VIEW ALL ${ap.length} ACTIVE PLANS →</button>`; }
+    if (ap.length > 2) plansHTML += `<button onclick="setTab('active')" class="btn-green" style="width:100%;padding:11px;border-radius:12px;font-size:11px">VIEW ALL ${ap.length} ACTIVE PLANS →</button>`;
   }
-  // Count unlocked achievements
-  const unlockedCount = ACHIEVEMENTS.filter(a => S.achievements.includes(a.id)).length;
   return `<div style="display:flex;flex-direction:column;gap:14px">
     ${cryptoUI()}
-    ${winnerTickerUI()}
-    ${newsBannerUI()}
+    ${combinedTickerUI()}
     <div style="position:relative;width:100%;height:180px;border-radius:24px;overflow:hidden;border:1px solid rgba(0,255,102,0.2)"><img src="${CFG.banner}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.2),rgba(5,9,7,0.96))"></div><div style="position:absolute;bottom:16px;left:12px"><p style="font-size:10px;font-weight:800;letter-spacing:3px;color:#00FF66;margin:0 0 2px;text-transform:uppercase;text-shadow:0 0 18px rgba(0,255,102,0.8),0 0 6px rgba(0,255,102,0.5)">${t().welcome}</p><h2 class="text-3d" style="font-size:24px;font-weight:900;margin:2px 0 0">${esc(u.username)}</h2><div style="display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:3px 10px;border-radius:12px;background:${badge.c}25;border:1px solid ${badge.c}66"><span style="font-size:11px" class="emoji-3d">${badge.icon}</span><span style="font-size:10px;font-weight:800;color:${badge.c}">${badge.name}</span></div></div></div>
     <div class="glass-card card-gradient">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><p style="font-size:10px;color:#10B981;font-weight:800;margin:0;letter-spacing:1.5px">💎 ${t().totalBal}</p><div style="display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;display:inline-block" class="bg-toxic pdot"></span><span style="font-size:9px;font-weight:800" class="text-toxic">LIVE</span></div></div>
@@ -1804,10 +1780,10 @@ function dashUI() {
         <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px"><p style="font-size:9px;color:#888;margin:0 0 4px;letter-spacing:0.5px">${t().activePlans}</p><p id="pc" class="mono" style="font-size:15px;font-weight:900;margin:0">${ap.length}</p></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><button onclick="setTab('wallet')" class="btn-green" style="width:100%;padding:14px;border-radius:14px;font-size:11px">${t().withEarn}</button><button onclick="openPage('analytics')" style="width:100%;padding:14px;border-radius:14px;font-size:11px;font-weight:900;background:linear-gradient(135deg,#A855F7,#6366F1);color:#fff;border:none;cursor:pointer">📊 ANALYTICS</button></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px">
-        <button onclick="S.showBadges=true;render()" style="padding:12px 6px;border-radius:14px;background:linear-gradient(135deg,rgba(255,215,0,0.18),rgba(255,215,0,0.05));border:1px solid rgba(255,215,0,0.4);color:#FFD700;font-size:11px;font-weight:900;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px"><span style="font-size:16px" class="emoji-3d">🏆</span>Badges <span style="font-size:9px;color:#888">${unlockedCount}/${ACHIEVEMENTS.length}</span></button>
-        <button onclick="S.showShare=true;render()" style="padding:12px 6px;border-radius:14px;background:linear-gradient(135deg,rgba(0,255,102,0.15),rgba(0,255,102,0.03));border:1px solid rgba(0,255,102,0.35);color:#00FF66;font-size:11px;font-weight:900;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px"><span style="font-size:16px" class="emoji-3d">📸</span>Share <span style="font-size:9px;color:#888">+$0.10</span></button>
-        <button onclick="S.showWinner=true;render()" style="padding:12px 6px;border-radius:14px;background:linear-gradient(135deg,rgba(239,68,68,0.15),rgba(239,68,68,0.03));border:1px solid rgba(239,68,68,0.35);color:#EF4444;font-size:11px;font-weight:900;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px"><span style="font-size:16px" class="emoji-3d">👑</span>Winner <span style="font-size:9px;color:#888">Top 100</span></button>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:12px">
+        <button onclick="S.showBadges=true;render()" class="ach-btn" style="background:linear-gradient(135deg,rgba(255,215,0,0.18),rgba(255,215,0,0.05));border-color:rgba(255,215,0,0.4);color:#FFD700"><span class="ach-emoji emoji-3d">🏆</span>Badges<span class="ach-sub">${unlockedCount}/${ACHIEVEMENTS.length}</span></button>
+        <button onclick="S.showShare=true;render()" class="ach-btn" style="background:linear-gradient(135deg,rgba(0,255,102,0.15),rgba(0,255,102,0.03));border-color:rgba(0,255,102,0.35);color:#00FF66"><span class="ach-emoji emoji-3d">📸</span>Share<span class="ach-sub">+$0.10</span></button>
+        <button onclick="S.showWinner=true;render()" class="ach-btn" style="background:linear-gradient(135deg,rgba(239,68,68,0.15),rgba(239,68,68,0.03));border-color:rgba(239,68,68,0.35);color:#EF4444"><span class="ach-emoji emoji-3d">👑</span>Winner<span class="ach-sub">Top 100</span></button>
       </div>
     </div>
     ${spinUI()}
@@ -1876,7 +1852,6 @@ function calcUI() {
 
 function onCalcSlider(val) { S.calcAmt = Number(val); if ($('calcAmtInput')) $('calcAmtInput').value = val; renderCalcVals(); }
 function onCalcNumInput(val) { const n = Math.min(Math.max(Number(val||1), 1), 5000); S.calcAmt = n; if ($('calcSlider')) $('calcSlider').value = n; renderCalcVals(); }
-
 function renderCalcVals() {
   const amt = Math.min(Math.max(Number(S.calcAmt||50), 1), 5000);
   let matchedPlan = PLANS[0];
@@ -1988,7 +1963,7 @@ async function invest(id) {
   } finally { INVEST_LOCK = false; }
 }
 
-// ============ FIX #2: Referral Commission Idempotency ============
+// FIX #2: Referral Commission Idempotency
 async function distributeReferralCommissions(planAmount, planName, investTxId) {
   if (!sb || !S.user || !S.user.referred_by) return;
   const COMMISSIONS = [0.10, 0.05, 0.02, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01];
@@ -2011,7 +1986,6 @@ async function distributeReferralCommissions(planAmount, planName, investTxId) {
       const pct = COMMISSIONS[level-1] || 0;
       const comm = planAmount * pct;
       if (comm > 0) {
-        // Idempotency: unique key check
         const idempotencyKey = `comm_${txKey}_L${level}_${upline.user_id}`;
         try {
           const existing = await sb.from('notifications').select('id').eq('user_id', upline.user_id).ilike('message', `%[${idempotencyKey}]%`).limit(1);
@@ -2029,7 +2003,7 @@ async function distributeReferralCommissions(planAmount, planName, investTxId) {
   }
 }
 
-// ============ FIX #1: Daily collect with last_collect_at ============
+// FIX #1: Daily collect with last_collect_at (strict 24h gap)
 async function collect(pid) {
   const pl = S.plans.find(x => String(x.id) === String(pid));
   if (!pl) return;
@@ -2047,7 +2021,7 @@ async function collect(pid) {
   if (sb) {
     try {
       const upd = await sb.from('user_plans').update({days_collected:pl.days_collected, status:pl.status, last_collect_at: nowIso}).eq('id', pl.id);
-      if (upd.error) console.warn('Plan update error (last_collect_at column missing?):', upd.error);
+      if (upd.error) console.warn('Plan update error:', upd.error);
       await sb.from('users').update({balance:S.user.balance, earned:S.user.earned}).eq('user_id', S.user.user_id);
     } catch(e) { console.warn('Collect save error:', e); }
   }
@@ -2067,16 +2041,27 @@ function activeUI() {
     const p = PLANS.find(x => x.id === pl.plan_id) || {c:'#00FF66', i:'💰', dly:pl.daily, t:pl.total, n:pl.plan_name};
     const days = Number(pl.days_collected) || 0, pct = (days / 40) * 100, earned = days * Number(pl.dly || pl.daily);
     return `<div class="plan-active">
-      <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;position:relative;z-index:1"><div style="width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:30px;background:${p.c}25;border:1px solid ${p.c}66" class="emoji-3d-lg">${p.i}</div><div style="flex:1"><p style="font-weight:900;color:${p.c};font-size:17px;margin:0">${p.n}</p><p style="font-size:10px;color:#888;margin:2px 0 0">Active · 40 Days</p></div><div style="display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;display:inline-block" class="bg-toxic pdot"></span><span style="font-size:9px;font-weight:900" class="text-toxic">LIVE</span></div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;position:relative;z-index:1">
-        <div style="background:rgba(0,0,0,0.5);border-radius:14px;padding:13px"><p style="font-size:9px;color:#888;margin:0 0 4px">INVESTED</p><p class="mono" style="font-size:15px;font-weight:900;margin:0">$${fmt(pl.deposit)}</p></div>
-        <div style="background:rgba(0,0,0,0.5);border-radius:14px;padding:13px"><p style="font-size:9px;color:#888;margin:0 0 4px">EARNED</p><p class="mono text-toxic" style="font-size:15px;font-weight:900;margin:0">$${earned.toFixed(2)}</p></div>
-        <div style="background:rgba(0,0,0,0.5);border-radius:14px;padding:13px"><p style="font-size:9px;color:#888;margin:0 0 4px">DAILY</p><p class="mono text-toxic" style="font-size:15px;font-weight:900;margin:0">$${Number(pl.dly||pl.daily).toFixed(2)}</p></div>
-        <div style="background:rgba(0,0,0,0.5);border-radius:14px;padding:13px"><p style="font-size:9px;color:#888;margin:0 0 4px">TARGET</p><p class="mono" style="font-size:15px;font-weight:900;margin:0">$${Number(pl.t||pl.total).toFixed(2)}</p></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px;position:relative;z-index:1">
+        <div style="display:flex;gap:10px;align-items:center">
+          <div style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;background:${p.c}25;border:1px solid ${p.c}66" class="emoji-3d-lg">${p.i}</div>
+          <div><p style="font-weight:900;color:${p.c};font-size:15px;margin:0;letter-spacing:0.3px">${p.n}</p><p style="font-size:9px;color:#888;margin:2px 0 0">Day ${days}/40 · ${40-days} left</p></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:4px"><span style="width:5px;height:5px;border-radius:50%;display:inline-block" class="bg-toxic pdot"></span><span style="font-size:9px;font-weight:900" class="text-toxic">LIVE</span></div>
       </div>
-      <div style="background:linear-gradient(135deg,${p.c}18,transparent);border:1px solid ${p.c}44;border-radius:18px;padding:16px;margin-bottom:14px;position:relative;z-index:1"><p style="font-size:10px;color:#888;font-weight:800;text-align:center;margin:0 0 8px;letter-spacing:1px">⏳ NEXT COLLECT IN</p><p class="mono timer-glow" style="font-size:30px;font-weight:900;text-align:center;margin:0 0 16px" data-timer="${pl.id}">--:--:--</p><button data-collect="${pl.id}" onclick="collect(${pl.id})" class="collect-btn" style="width:100%;padding:16px;border-radius:16px;font-size:13px">⏳ WAITING FOR DAILY COLLECT</button></div>
-      <div style="display:flex;justify-content:space-between;font-size:10px;color:#888;margin-bottom:8px;position:relative;z-index:1"><span>Day ${days} / 40</span><span>${40-days} days left</span></div>
-      <div style="width:100%;height:8px;border-radius:4px;background:rgba(255,255,255,0.05);overflow:hidden;position:relative;z-index:1"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,${p.c},#10B981);box-shadow:0 0 12px ${p.c}88"></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin-bottom:10px;position:relative;z-index:1">
+        <div style="background:rgba(0,0,0,0.5);border-radius:10px;padding:8px 4px;text-align:center"><p style="font-size:8px;color:#888;margin:0 0 2px">INV</p><p class="mono" style="font-size:10px;font-weight:900;margin:0">$${fmt(pl.deposit).replace('.00','')}</p></div>
+        <div style="background:rgba(0,0,0,0.5);border-radius:10px;padding:8px 4px;text-align:center"><p style="font-size:8px;color:#888;margin:0 0 2px">EARN</p><p class="mono text-toxic" style="font-size:10px;font-weight:900;margin:0">$${earned.toFixed(1)}</p></div>
+        <div style="background:rgba(0,0,0,0.5);border-radius:10px;padding:8px 4px;text-align:center"><p style="font-size:8px;color:#888;margin:0 0 2px">DAILY</p><p class="mono text-toxic" style="font-size:10px;font-weight:900;margin:0">$${Number(pl.dly||pl.daily).toFixed(2)}</p></div>
+        <div style="background:rgba(0,0,0,0.5);border-radius:10px;padding:8px 4px;text-align:center"><p style="font-size:8px;color:#888;margin:0 0 2px">TGT</p><p class="mono" style="font-size:10px;font-weight:900;margin:0;color:${p.c}">$${Number(pl.t||pl.total).toFixed(0)}</p></div>
+      </div>
+      <div style="background:linear-gradient(135deg,${p.c}22,transparent);border:1px solid ${p.c}55;border-radius:14px;padding:10px 12px;margin-bottom:10px;position:relative;z-index:1">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <p style="font-size:9px;color:#888;font-weight:800;margin:0;letter-spacing:1px">⏳ NEXT COLLECT IN</p>
+          <p class="mono timer-glow" style="font-size:18px;font-weight:900;margin:0;color:${p.c}" data-timer="${pl.id}">--:--:--</p>
+        </div>
+        <button data-collect="${pl.id}" onclick="collect(${pl.id})" class="collect-btn" style="width:100%;padding:12px;border-radius:12px;font-size:12px">⚡ REWARD CHARGING...</button>
+      </div>
+      <div style="width:100%;height:5px;border-radius:3px;background:rgba(255,255,255,0.05);overflow:hidden;position:relative;z-index:1"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,${p.c},#10B981);box-shadow:0 0 10px ${p.c}88"></div></div>
     </div>`;
   }).join('')}</div>`;
 }
@@ -2090,16 +2075,13 @@ function pickNetwork(n) {
 }
 
 function loadSavedAddresses() {
-  const box = $('savedAddrList');
-  if (!box) return;
+  const box = $('savedAddrList'); if (!box) return;
   const list = S.savedAddresses.filter(a => a.method === S.wdMethod);
   if (list.length === 0) { box.innerHTML = ''; return; }
   box.innerHTML = `<p style="font-size:9px;color:#888;margin:0 0 6px;letter-spacing:1px">💾 SAVED ADDRESSES</p>` + list.map((a, i) => `<div style="display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,0.45);border:1px solid rgba(0,255,102,0.15);border-radius:10px;padding:8px 12px;margin-bottom:6px"><span class="mono" style="font-size:10px;color:#ccc;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-right:8px">${esc(a.addr)} <span style="color:#00FF66">[${esc(a.net||'-')}]</span></span><div style="display:flex;gap:6px;flex-shrink:0"><button onclick="useSavedAddr(${i})" style="background:#00FF66;color:#000;border:none;padding:4px 10px;border-radius:8px;font-size:10px;font-weight:800;cursor:pointer">USE</button><button onclick="delSavedAddr(${i})" style="background:rgba(239,68,68,0.15);color:#EF4444;border:none;padding:4px 8px;border-radius:8px;font-size:10px;font-weight:800;cursor:pointer">×</button></div></div>`).join('');
 }
-
 function useSavedAddr(i) { const list = S.savedAddresses.filter(a => a.method === S.wdMethod); const a = list[i]; if (!a) return; if ($('wdAddr')) $('wdAddr').value = a.addr; if (a.net && a.net !== 'UPI') pickNetwork(a.net); haptic('success'); toast('✅ Address loaded'); }
 function delSavedAddr(i) { const list = S.savedAddresses.filter(a => a.method === S.wdMethod); const a = list[i]; if (!a) return; const idx = S.savedAddresses.indexOf(a); S.savedAddresses.splice(idx, 1); localStorage.setItem('t_saved_addr', JSON.stringify(S.savedAddresses)); haptic('medium'); loadSavedAddresses(); }
-
 function saveAddrIfChecked(addr, net, method) {
   if (!$('saveAddrChk') || !$('saveAddrChk').checked) return;
   const exists = S.savedAddresses.find(a => a.addr === addr && a.method === method);
@@ -2161,15 +2143,11 @@ function walletUI() {
 }
 
 async function redeemCode() {
-  const inp = $('promoInput');
-  if (!inp) return;
+  const inp = $('promoInput'); if (!inp) return;
   const code = inp.value.trim().toUpperCase();
   if (!code) return customAlert('Enter Code', 'Please enter a promo code.', '⚠️');
   if (!sb) return customAlert('Offline', 'Cannot connect to server. Try again.', '⚠️');
-  try {
-    const dup = await sb.from('promo_redemptions').select('id').eq('code', code).eq('user_id', S.user.user_id).limit(1);
-    if (dup.data && dup.data.length > 0) { sound('error'); return customAlert('Already Used', 'You have already redeemed this code.\n\nEach code can be used only once per user.', 'ℹ️'); }
-  } catch(e) {}
+  try { const dup = await sb.from('promo_redemptions').select('id').eq('code', code).eq('user_id', S.user.user_id).limit(1); if (dup.data && dup.data.length > 0) { sound('error'); return customAlert('Already Used', 'You have already redeemed this code.\n\nEach code can be used only once per user.', 'ℹ️'); } } catch(e) {}
   let promo = null;
   try { const r = await sb.from('promo_codes').select('*').eq('code', code).eq('is_active', true).limit(1); if (r.data && r.data[0]) promo = r.data[0]; } catch(e) {}
   if (!promo) { sound('error'); return customAlert('Invalid Code', 'This promo code is not valid or has expired.\n\nPlease check and try again.', '❌'); }
@@ -2259,7 +2237,6 @@ async function subDep() {
   const usdAmt = isC ? amt : (amt / CFG.inrRate);
   if (usdAmt < CFG.minDep) return customAlert('Minimum Limit', `Minimum deposit is $${CFG.minDep} USD (₹${CFG.minDep * CFG.inrRate} INR).\n\nYour amount: $${usdAmt.toFixed(2)}`, '⚠️');
   if (isC && !ref) return customAlert('Missing Info', 'Please enter Transaction Hash.', '⚠️');
-  // FIX #3: Fake UTR validation
   if (!isC) {
     if (!isValidUTR(utr)) {
       sound('error');
@@ -2272,7 +2249,7 @@ async function subDep() {
   if (sb) {
     try {
       let ins = await sb.from('deposits').insert([{user_id:S.user.user_id, username:S.user.username, amount:usdAmt, method:method, ref:ref, status:'pending'}]);
-      if (ins.error && String(ins.error.message||'').toLowerCase().includes('method')) { ins = await sb.from('deposits').insert([{user_id:S.user.user_id, username:S.user.username, amount:usdAmt, ref:ref, status:'pending'}]); }
+      if (ins.error && String(ins.error.message||'').toLowerCase().includes('method')) ins = await sb.from('deposits').insert([{user_id:S.user.user_id, username:S.user.username, amount:usdAmt, ref:ref, status:'pending'}]);
       if (ins.error) throw ins.error;
     } catch(e) {
       console.error('Deposit error:', e);
@@ -2317,7 +2294,7 @@ async function subWd() {
   if (sb) {
     try {
       let ins = await sb.from('withdrawals').insert([{user_id:S.user.user_id, username:S.user.username, amount:net, address:addrFull, method:method, status:'pending'}]);
-      if (ins.error && String(ins.error.message||'').toLowerCase().includes('method')) { ins = await sb.from('withdrawals').insert([{user_id:S.user.user_id, username:S.user.username, amount:net, address:addrFull, status:'pending'}]); }
+      if (ins.error && String(ins.error.message||'').toLowerCase().includes('method')) ins = await sb.from('withdrawals').insert([{user_id:S.user.user_id, username:S.user.username, amount:net, address:addrFull, status:'pending'}]);
       if (ins.error) throw ins.error;
       const upd = await sb.from('users').update({balance:S.user.balance}).eq('user_id', S.user.user_id);
       if (upd.error) console.warn('Balance sync warning:', upd.error);
@@ -2341,6 +2318,7 @@ async function subWd() {
 async function manualRefresh() {
   haptic('medium'); toast('🔄 Refreshing from server...');
   await loadSiteConfig(); await loadPlansFromDB(); await syncUser(); await loadPromoCodes(); await loadCryptoPrices();
+  if (S.tab === 'team') S.leaderboardLoaded = false;
   render(); setTimeout(() => toast('✅ Updated!'), 600);
 }
 
@@ -2358,23 +2336,13 @@ function historyUI() {
     return h + filterBar + `<div class="glass-card" style="text-align:center;padding:52px 20px"><div style="font-size:42px;opacity:0.4;margin-bottom:14px" class="emoji-3d">📋</div><p style="font-weight:900;font-size:17px;margin:0 0 6px">No transactions yet</p><p style="font-size:12px;color:#888;margin:0">Your earning & transaction history will appear here</p></div>`;
   }
   const list = tx.map(x => {
-    const isWd = x.type === 'withdrawal';
-    const isSpin = x.type === 'spin';
-    const isBonus = x.type === 'bonus';
-    const isCollect = x.type === 'daily_collect';
-    const isMilestone = x.type === 'milestone';
-    let icon = '💳';
-    let label = 'Deposit';
-    if (isWd) { icon = '💸'; label = 'Withdrawal'; }
-    else if (isSpin) { icon = '🎡'; label = 'Spin & Win'; }
-    else if (isBonus) { icon = '🎁'; label = 'Bonus'; }
-    else if (isCollect) { icon = '💰'; label = 'Daily Collect'; }
-    else if (isMilestone) { icon = '🏆'; label = 'Team Milestone'; }
+    const isWd = x.type === 'withdrawal'; const isSpin = x.type === 'spin'; const isBonus = x.type === 'bonus'; const isCollect = x.type === 'daily_collect'; const isMilestone = x.type === 'milestone';
+    let icon = '💳'; let label = 'Deposit';
+    if (isWd) { icon = '💸'; label = 'Withdrawal'; } else if (isSpin) { icon = '🎡'; label = 'Spin & Win'; } else if (isBonus) { icon = '🎁'; label = 'Bonus'; } else if (isCollect) { icon = '💰'; label = 'Daily Collect'; } else if (isMilestone) { icon = '🏆'; label = 'Team Milestone'; }
     const col = isWd ? 'text-red-400' : 'text-toxic';
     const sign = isWd ? '-' : '+';
     const st = (x.status || 'success').toLowerCase();
-    let stBadge = 'background:rgba(0,255,102,0.15);color:#00FF66';
-    let stText = 'SUCCESS';
+    let stBadge = 'background:rgba(0,255,102,0.15);color:#00FF66'; let stText = 'SUCCESS';
     if (st === 'pending') { stBadge = 'background:rgba(251,191,36,0.15);color:#FBBF24'; stText = 'PENDING'; }
     else if (st === 'rejected' || st === 'failed') { stBadge = 'background:rgba(239,68,68,0.15);color:#EF4444'; stText = 'REJECTED'; }
     else if (st === 'expired') { stBadge = 'background:rgba(107,114,128,0.15);color:#9CA3AF'; stText = 'EXPIRED'; }
@@ -2383,46 +2351,18 @@ function historyUI() {
     if (isCollect && x.plan_id) subInfo = 'Plan: ' + esc(x.method || '');
     let dateTime = '—';
     if (x.date || x.created_at) {
-      try {
-        const dt = new Date(x.date || x.created_at);
-        if (!isNaN(dt.getTime())) {
-          const dd = String(dt.getDate()).padStart(2, '0');
-          const mm = String(dt.getMonth() + 1).padStart(2, '0');
-          const yy = dt.getFullYear();
-          let hh = dt.getHours();
-          const ampm = hh >= 12 ? 'PM' : 'AM';
-          hh = hh % 12 || 12;
-          const mi = String(dt.getMinutes()).padStart(2, '0');
-          dateTime = `${dd}/${mm}/${yy} • ${String(hh).padStart(2,'0')}:${mi} ${ampm}`;
-        }
-      } catch(e) {}
+      try { const dt = new Date(x.date || x.created_at); if (!isNaN(dt.getTime())) { const dd = String(dt.getDate()).padStart(2, '0'); const mm = String(dt.getMonth() + 1).padStart(2, '0'); const yy = dt.getFullYear(); let hh = dt.getHours(); const ampm = hh >= 12 ? 'PM' : 'AM'; hh = hh % 12 || 12; const mi = String(dt.getMinutes()).padStart(2, '0'); dateTime = `${dd}/${mm}/${yy} • ${String(hh).padStart(2,'0')}:${mi} ${ampm}`; } } catch(e) {}
     }
     return `<div class="glass-card" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:16px"><div style="flex:1;min-width:0"><p style="font-weight:800;font-size:13px;margin:0">${icon} ${label}</p>${subInfo ? `<p style="font-size:10px;color:#888;margin:4px 0 0;word-break:break-all">${subInfo}</p>` : ''}<p class="mono" style="font-size:9px;color:#666;margin:5px 0 0">🕐 ${dateTime}</p></div><div style="text-align:right;flex-shrink:0;margin-left:10px"><p class="mono font-black ${col}" style="margin:0;font-size:14px">${sign}$${fmt(x.amount)}</p><span style="font-size:9px;padding:3px 10px;border-radius:20px;${stBadge};font-weight:800;margin-top:6px;display:inline-block;text-transform:uppercase;letter-spacing:0.5px">${stText}</span></div></div>`;
   }).join('');
   let loadMoreHTML = '';
-  if (hasMore) {
-    loadMoreHTML = `<button onclick="loadMoreHistory()" class="btn-green glow" style="width:100%;padding:14px;border-radius:14px;font-size:13px;margin-top:6px">⬇️ LOAD MORE (${allTx.length - S.historyLimit} remaining)</button>`;
-  } else if (allTx.length > CFG.historyPageSize) {
-    loadMoreHTML = `<p style="text-align:center;font-size:11px;color:#666;margin:14px 0 0">— End of history —</p>`;
-  }
+  if (hasMore) loadMoreHTML = `<button onclick="loadMoreHistory()" class="btn-green glow" style="width:100%;padding:14px;border-radius:14px;font-size:13px;margin-top:6px">⬇️ LOAD MORE (${allTx.length - S.historyLimit} remaining)</button>`;
+  else if (allTx.length > CFG.historyPageSize) loadMoreHTML = `<p style="text-align:center;font-size:11px;color:#666;margin:14px 0 0">— End of history —</p>`;
   return h + filterBar + list + loadMoreHTML;
 }
-
 function loadMoreHistory() { haptic('light'); S.historyLimit += CFG.historyPageSize; render(); }
 
-function commissionHistoryUI() {
-  const comms = (S.notifs || []).filter(n => (n.title||'').toLowerCase().includes('commission') || (n.title||'').toLowerCase().includes('level'));
-  if (comms.length === 0) {
-    return `<div class="glass-card" style="text-align:center;padding:28px 16px"><p style="font-size:28px;opacity:0.4;margin:0 0 8px" class="emoji-3d">💎</p><p style="font-size:13px;font-weight:800;margin:0 0 4px">No Commissions Yet</p><p style="font-size:11px;color:#888;margin:0">Invite friends to start earning 10% on L1, 5% on L2, 2% on L3, 1% on L4-L10</p></div>`;
-  }
-  return `<div class="glass-card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><p style="font-size:10px;color:#FFD700;font-weight:800;margin:0;letter-spacing:1.5px">💎 COMMISSION HISTORY</p><p style="font-size:10px;color:#888;margin:0">${comms.length} entries</p></div>${comms.slice(0, 20).map(n => {
-    let dt = '—';
-    try { const d = new Date(n.created_at); dt = String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth()+1).padStart(2, '0') + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); } catch(e) {}
-    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:rgba(0,0,0,0.4);border-radius:12px;margin-bottom:6px;border-left:3px solid #FFD700"><div style="flex:1;min-width:0"><p style="font-size:12px;font-weight:800;margin:0">${esc(n.title||'Commission')}</p><p style="font-size:10px;color:#aaa;margin:3px 0 0;word-break:break-word">${esc((n.message||'').split('[')[0].trim())}</p><p style="font-size:9px;color:#666;margin:3px 0 0">${dt}</p></div></div>`;
-  }).join('')}</div>`;
-}
-
-// ============ FIX #6: Referral Race - real team + 50 fake ============
+// FIX #6: Referral Race with real team + 50 fake
 function referralRaceUI() {
   const realMembers = (S.team || []).filter(t => Number(t.invested||0) > 0);
   const myCount = realMembers.length;
@@ -2439,41 +2379,46 @@ function referralRaceUI() {
 function teamMilestonesUI() {
   const count = (S.team || []).filter(t => Number(t.invested||0) > 0).length;
   return `<div class="glass-card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><p style="font-size:10px;color:#FFD700;font-weight:800;margin:0;letter-spacing:1.5px">🏆 TEAM MILESTONES</p><span style="font-size:10px;font-weight:800" class="text-toxic">${count} investors</span></div>${TEAM_MILESTONES.map((m, i) => {
-    const reached = count >= m.size;
-    const claimed = S.milestones.claimed.includes(i);
+    const reached = count >= m.size; const claimed = S.milestones.claimed.includes(i);
     return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:12px;background:${claimed?'rgba(0,255,102,0.1)':(reached?'rgba(255,215,0,0.1)':'rgba(0,0,0,0.35)')};border:1px solid ${claimed?'rgba(0,255,102,0.3)':(reached?'rgba(255,215,0,0.3)':'rgba(255,255,255,0.05)')};margin-bottom:6px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px" class="emoji-3d">${claimed?'✅':(reached?'🎉':'🔒')}</span><div><p style="font-size:12px;font-weight:800;margin:0;color:${claimed?'#00FF66':(reached?'#FFD700':'#888')}">${m.label} invested</p></div></div><span class="mono" style="font-size:12px;font-weight:900;color:${claimed?'#00FF66':(reached?'#FFD700':'#666')}">+$${m.reward.toFixed(2)}</span></div>`;
   }).join('')}</div>`;
 }
 
-// ============ FIX #5: Leaderboard 20 real + 80 fake ============
+// FIX: Leaderboard loads on demand
 async function buildLeaderboard() {
   let real = [];
   if (sb) {
     try {
       const r = await sb.from('users').select('username,invested,referral_code').order('invested', {ascending:false}).limit(20);
-      if (r.data) real = r.data.filter(u => Number(u.invested||0) > 0).map(u => ({
-        u: u.username,
-        c: '🌍',
-        vol: Number(u.invested||0),
-        refs: 0,
-        isReal: true
-      }));
-      // Get refs count for each real user
-      for (const u of real) {
-        try {
-          const refR = await sb.from('users').select('user_id', {count:'exact'}).eq('referred_by', u.referral_code || '');
-          u.refs = refR.count || 0;
-        } catch(e) {}
+      if (r.data) {
+        real = r.data.filter(u => Number(u.invested||0) > 0).map(u => ({ u: u.username, c: '🌍', vol: Number(u.invested||0), refs: 0, isReal: true, referral_code: u.referral_code }));
+        for (const u of real) {
+          try { const refR = await sb.from('users').select('user_id', {count:'exact'}).eq('referred_by', u.referral_code || ''); u.refs = refR.count || 0; } catch(e) {}
+        }
       }
-    } catch(e) {}
+    } catch(e) { console.warn('Leaderboard fetch err:', e); }
   }
-  // Mix: real first (with their real vol), then 80 fake, then sort
   const all = [...real, ...S.fakeLeaderboard];
-  all.sort((a,b) => {
-    if (b.vol !== a.vol) return b.vol - a.vol;
-    return (b.refs || 0) - (a.refs || 0);
-  });
+  all.sort((a,b) => { if (b.vol !== a.vol) return b.vol - a.vol; return (b.refs || 0) - (a.refs || 0); });
   return all.slice(0, 100);
+}
+
+async function loadLeaderboard() {
+  const box = $('leaderboardList');
+  if (!box) return;
+  if (S.leaderboardLoaded) return;
+  box.innerHTML = '<p style="text-align:center;padding:16px;color:#666;font-size:11px">Loading leaderboard...</p>';
+  try {
+    const lb = await buildLeaderboard();
+    S.leaderboardLoaded = true;
+    const medals = ['🥇','🥈','🥉'];
+    box.innerHTML = `<div style="text-align:left">${lb.slice(0, 100).map((item, i) => {
+      const rank = i + 1;
+      const medal = rank <= 3 ? medals[rank-1] : `#${rank}`;
+      const isReal = item.isReal;
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:10px;background:${isReal?'rgba(0,255,102,0.08)':'rgba(0,0,0,0.35)'};margin-bottom:5px;border:1px solid ${isReal?'rgba(0,255,102,0.25)':'transparent'}"><div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0"><span style="font-size:13px;width:22px;color:${rank===1?'#FFD700':rank===2?'#C0C0C0':rank===3?'#CD7F32':'#666'};font-weight:900">${medal}</span><span style="font-size:11px;font-weight:800;color:${isReal?'#00FF66':'#fff'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(item.u)}</span><span style="font-size:10px">${item.c}</span>${isReal?'<span style="font-size:8px;background:#00FF66;color:#000;padding:1px 5px;border-radius:6px;font-weight:900">REAL</span>':''}</div><div style="text-align:right"><p class="mono" style="font-size:11px;font-weight:900;color:#FFD700;margin:0">$${fmt(item.vol)}</p><p style="font-size:8px;color:#888;margin:1px 0 0">${item.refs || 0} refs</p></div></div>`;
+    }).join('')}</div>`;
+  } catch(e) { box.innerHTML = '<p style="text-align:center;padding:16px;color:#666;font-size:11px">Leaderboard unavailable</p>'; }
 }
 
 function teamUI() {
@@ -2506,7 +2451,6 @@ function teamUI() {
     </div>
     ${referralRaceUI()}
     ${teamMilestonesUI()}
-    ${commissionHistoryUI()}
     <div class="glass-card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><p style="font-size:10px;color:#00FF66;font-weight:800;margin:0;letter-spacing:1px">${t().myTeamTitle}</p><span style="font-size:10px;font-weight:800" class="text-toxic">${myTeam.length} Members</span></div><div>${myTeamHTML}</div></div>
     <div class="glass-card" id="leaderboardBox"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><p style="font-size:10px;color:#FFD700;font-weight:800;margin:0;letter-spacing:1px">${t().ldrTitle}</p><span style="font-size:10px;color:#888">${t().top10}</span></div><div id="leaderboardList" style="text-align:center;padding:16px 0;color:#666;font-size:11px">Loading leaderboard...</div></div>
     <a href="${CFG.telegram}" target="_blank" onclick="${S.tgBonus?'':'event.preventDefault();claimTelegramBonus();'}" style="text-decoration:none;display:block"><div class="glass-card" style="background:linear-gradient(135deg,rgba(0,136,204,0.25),rgba(9,14,11,0.98) 70%);border:1.5px solid rgba(0,166,237,0.5);display:flex;align-items:center;gap:14px"><div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#0088cc,#00a6ed);display:flex;align-items:center;justify-content:center;box-shadow:0 0 25px rgba(0,166,237,0.7);flex-shrink:0;color:#fff">${TG_ICON_SVG}</div><div style="flex:1"><p style="font-size:10px;color:#00a6ed;font-weight:900;margin:0;letter-spacing:1px">📢 OFFICIAL COMMUNITY</p><p style="font-size:14px;font-weight:900;margin:4px 0 2px;color:#fff">${S.tgBonus?'Join Our Channel':'Claim $0.20 & Join'}</p><p style="font-size:10px;color:#888;margin:0">${S.tgBonus?'Daily updates & support':'Telegram community bonus'}</p></div><div style="font-size:22px;color:#00a6ed;font-weight:900">→</div></div></a>
@@ -2516,22 +2460,6 @@ function teamUI() {
   </div>`;
 }
 
-// Load leaderboard async
-setTimeout(async () => {
-  const box = $('leaderboardList');
-  if (!box) return;
-  try {
-    const lb = await buildLeaderboard();
-    const medals = ['🥇','🥈','🥉'];
-    box.innerHTML = `<div style="text-align:left">${lb.slice(0, 100).map((item, i) => {
-      const rank = i + 1;
-      const medal = rank <= 3 ? medals[rank-1] : `#${rank}`;
-      const isReal = item.isReal;
-      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:10px;background:${isReal?'rgba(0,255,102,0.08)':'rgba(0,0,0,0.35)'};margin-bottom:5px;border:1px solid ${isReal?'rgba(0,255,102,0.25)':'transparent'}"><div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0"><span style="font-size:13px;width:22px;color:${rank===1?'#FFD700':rank===2?'#C0C0C0':rank===3?'#CD7F32':'#666'};font-weight:900">${medal}</span><span style="font-size:11px;font-weight:800;color:${isReal?'#00FF66':'#fff'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(item.u)}</span><span style="font-size:10px">${item.c}</span>${isReal?'<span style="font-size:8px;background:#00FF66;color:#000;padding:1px 5px;border-radius:6px;font-weight:900">REAL</span>':''}</div><div style="text-align:right"><p class="mono" style="font-size:11px;font-weight:900;color:#FFD700;margin:0">$${fmt(item.vol)}</p><p style="font-size:8px;color:#888;margin:1px 0 0">${item.refs || 0} refs</p></div></div>`;
-    }).join('')}</div>`;
-  } catch(e) { box.innerHTML = '<p style="text-align:center;padding:16px;color:#666;font-size:11px">Leaderboard unavailable</p>'; }
-}, 500);
-
 function shareTg() { const link = refLink(); window.open('https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent('Join TOXIC and start earning daily! 🚀'), '_blank'); }
 
 function notifsModal() {
@@ -2540,7 +2468,6 @@ function notifsModal() {
   return `<div style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);overflow-y:auto" onclick="S.showNotifs=false;render()"><div class="glass-card modal-in" onclick="event.stopPropagation()" style="max-width:440px;margin:20px auto;max-height:90vh;overflow-y:auto"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px"><h2 style="font-size:18px;font-weight:900;margin:0">🔔 Notifications${un>0?` <span style="font-size:11px;background:#EF4444;color:#fff;padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:900">${un} NEW</span>`:''}</h2><button onclick="S.showNotifs=false;render()" style="background:none;border:none;color:#888;font-size:26px;cursor:pointer">×</button></div>${un>0?`<button onclick="markRead()" class="btn-green" style="width:100%;padding:11px;border-radius:12px;font-size:12px;margin-bottom:14px">✓ MARK ALL AS READ</button>`:''}${S.notifs.length === 0 ? `<div style="text-align:center;padding:44px 0;color:#666"><div style="font-size:44px;margin-bottom:12px;opacity:0.5">📭</div><p style="font-weight:700">No notifications yet</p></div>` : S.notifs.map(n => { const cls = n.type === 'warning' ? 'warning' : n.type === 'bonus' ? 'bonus' : n.type === 'update' ? 'update' : ''; return `<div class="nitem ${cls}${n.is_read?'':' unread'}"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><p style="font-weight:900;font-size:13px;margin:0">${esc(n.title||'Notification')}</p>${n.is_read?'':'<span style="font-size:9px;color:#EF4444;font-weight:900">● NEW</span>'}</div><p style="font-size:12px;color:#ddd;margin:0;line-height:1.5">${esc((n.message||'').split('[')[0].trim())}</p><p style="font-size:9px;color:#666;margin:8px 0 0">${n.created_at?String(n.created_at).slice(0,16).replace('T',' '):''}</p></div>`; }).join('')}</div></div>`;
 }
 
-// ============ BADGES MODAL (Addition #2) ============
 function badgesModal() {
   if (!S.showBadges) return '';
   const unlockedCount = ACHIEVEMENTS.filter(a => S.achievements.includes(a.id)).length;
@@ -2548,14 +2475,10 @@ function badgesModal() {
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h2 style="font-size:18px;font-weight:900;margin:0">🏆 My Achievements</h2><button onclick="S.showBadges=false;render()" style="background:none;border:none;color:#888;font-size:26px;cursor:pointer">×</button></div>
     <p style="font-size:12px;color:#888;margin:0 0 16px">Unlocked <b style="color:#00FF66">${unlockedCount}</b> of ${ACHIEVEMENTS.length}</p>
     <div style="height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;margin-bottom:20px"><div style="height:100%;width:${(unlockedCount/ACHIEVEMENTS.length)*100}%;background:linear-gradient(90deg,#00FF66,#10B981);box-shadow:0 0 12px #00FF66"></div></div>
-    ${ACHIEVEMENTS.map(a => {
-      const unlocked = S.achievements.includes(a.id);
-      return `<div class="ach-card ${unlocked?'unlocked':'locked'}"><span class="ach-icon emoji-3d">${a.icon}</span><div style="flex:1"><p style="font-size:13px;font-weight:900;margin:0;color:${unlocked?'#00FF66':'#ccc'}">${a.name}</p><p style="font-size:11px;color:#888;margin:3px 0 0">${a.desc}</p></div>${unlocked?'<span style="font-size:20px" class="emoji-3d">✅</span>':'<span style="font-size:20px;opacity:0.5">🔒</span>'}</div>`;
-    }).join('')}
+    ${ACHIEVEMENTS.map(a => { const unlocked = S.achievements.includes(a.id); return `<div class="ach-card ${unlocked?'unlocked':'locked'}"><span class="ach-icon emoji-3d">${a.icon}</span><div style="flex:1"><p style="font-size:13px;font-weight:900;margin:0;color:${unlocked?'#00FF66':'#ccc'}">${a.name}</p><p style="font-size:11px;color:#888;margin:3px 0 0">${a.desc}</p></div>${unlocked?'<span style="font-size:20px" class="emoji-3d">✅</span>':'<span style="font-size:20px;opacity:0.5">🔒</span>'}</div>`; }).join('')}
   </div></div>`;
 }
 
-// ============ SHARE MODAL (Addition #9) ============
 function shareModal() {
   if (!S.showShare) return '';
   const lastShare = localStorage.getItem('t_last_share_' + S.user.user_id);
@@ -2563,14 +2486,14 @@ function shareModal() {
   const nextTime = lastShare ? new Date(parseInt(lastShare) + 7 * DAY) : null;
   return `<div style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);overflow-y:auto" onclick="S.showShare=false;render()"><div class="glass-card modal-in" onclick="event.stopPropagation()" style="max-width:440px;margin:20px auto;max-height:90vh;overflow-y:auto">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 style="font-size:18px;font-weight:900;margin:0">📸 Share Bonus</h2><button onclick="S.showShare=false;render()" style="background:none;border:none;color:#888;font-size:26px;cursor:pointer">×</button></div>
-    <div class="ach-card unlocked" style="padding:16px"><span class="ach-icon emoji-3d">💰</span><div style="flex:1"><p style="font-size:14px;font-weight:900;margin:0;color:#00FF66">+$${CFG.shareBonus.toFixed(2)} Bonus</p><p style="font-size:11px;color:#ccc;margin:3px 0 0">Share your referral link on Telegram and upload proof screenshot</p></div></div>
+    <div class="ach-card unlocked" style="padding:16px"><span class="ach-icon emoji-3d">💰</span><div style="flex:1"><p style="font-size:14px;font-weight:900;margin:0;color:#00FF66">+$${CFG.shareBonus.toFixed(2)} Bonus</p><p style="font-size:11px;color:#ccc;margin:3px 0 0">Share your referral link on Telegram and upload proof screenshot. It goes to our channel for verification.</p></div></div>
     ${!canShare ? `<div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:12px;padding:12px;margin-bottom:14px;text-align:center"><p style="font-size:11px;color:#FBBF24;font-weight:700;margin:0">⏳ You can claim again on ${nextTime ? nextTime.toLocaleDateString() : '-'}</p></div>` : ''}
     <button onclick="copy('${refLink()}');toast('✅ Link copied! Now share & screenshot');" class="btn-green" style="width:100%;padding:12px;border-radius:14px;font-size:12px;margin-bottom:10px">1️⃣ COPY MY REFERRAL LINK</button>
     <button onclick="shareTg()" style="width:100%;padding:12px;border-radius:14px;font-size:12px;font-weight:800;background:rgba(0,166,237,0.15);border:1px solid rgba(0,166,237,0.4);color:#00A6ED;cursor:pointer;margin-bottom:14px">2️⃣ SHARE ON TELEGRAM</button>
     <p style="font-size:10px;color:#888;margin:0 0 8px;letter-spacing:1px">3️⃣ UPLOAD SCREENSHOT</p>
     <input type="file" id="shareFileInput" accept="image/*" style="display:none" onchange="handleShareScreenshot(event)">
     <button onclick="if(${canShare?'true':'false'}){$('shareFileInput').click()}else{customAlert('Wait','Come back after weekly reset.','⏳')}" style="width:100%;padding:14px;border-radius:14px;font-size:12px;font-weight:800;background:${canShare?'rgba(0,255,102,0.1)':'rgba(255,255,255,0.05)'};border:1.5px dashed ${canShare?'rgba(0,255,102,0.4)':'rgba(255,255,255,0.1)'};color:${canShare?'#00FF66':'#666'};cursor:${canShare?'pointer':'not-allowed'}">📷 ${canShare?'CHOOSE SCREENSHOT':'NOT AVAILABLE YET'}</button>
-    <p style="font-size:9px;color:#666;margin:10px 0 0;text-align:center">Max 2MB · Admin will verify within 24h</p>
+    <p style="font-size:9px;color:#666;margin:10px 0 0;text-align:center">Max 2MB · Admin will verify within 24h · Sends to our Telegram channel</p>
   </div></div>`;
 }
 
@@ -2590,26 +2513,18 @@ async function handleShareScreenshot(event) {
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       const b64 = canvas.toDataURL('image/jpeg', 0.6);
+      toast('📤 Sending to Telegram...');
+      // Send to Telegram bot (channel)
+      const tgResult = await sendScreenshotToTelegram(b64, S.user.username, S.user.user_id);
       if (sb) {
         try {
-          await sb.from('share_bonus').insert([{
-            user_id: S.user.user_id,
-            username: S.user.username,
-            screenshot: b64,
-            status: 'pending',
-            created_at: new Date().toISOString()
-          }]);
-          await sb.from('notifications').insert([{
-            user_id: S.user.user_id,
-            title: '📸 Share Bonus Submitted',
-            message: `Your share bonus screenshot is under review. +$${CFG.shareBonus.toFixed(2)} will be credited once approved by admin.`,
-            type: 'update',
-            is_read: false
-          }]);
+          await sb.from('share_bonus').insert([{ user_id: S.user.user_id, username: S.user.username, screenshot: b64, status: 'pending', created_at: new Date().toISOString() }]);
+          await sb.from('notifications').insert([{ user_id: S.user.user_id, title: '📸 Share Bonus Submitted', message: `Your share bonus screenshot is under review. +$${CFG.shareBonus.toFixed(2)} will be credited once approved by admin.`, type: 'update', is_read: false }]);
           localStorage.setItem('t_last_share_' + S.user.user_id, Date.now().toString());
           haptic('success'); sound('success');
           S.showShare = false; render();
-          customAlert('✅ Screenshot Submitted!', `Your screenshot has been sent for admin verification.\n\n+$${CFG.shareBonus.toFixed(2)} will be credited once approved.`, '🎉');
+          if (tgResult.ok) customAlert('✅ Screenshot Submitted!', `Screenshot sent to our Telegram channel for review.\n\n+$${CFG.shareBonus.toFixed(2)} will be credited once approved.`, '🎉');
+          else customAlert('⚠️ Submitted (Partial)', `Screenshot saved for review, but Telegram delivery failed:\n\n${tgResult.error || 'Unknown error'}\n\nAdmin will still see it in the database.`, '⚠️');
         } catch(err) {
           console.warn('Share submit error:', err);
           customAlert('Submission Failed', 'Could not save screenshot. Please try again.\n\n' + (err.message || ''), '❌');
@@ -2623,13 +2538,10 @@ async function handleShareScreenshot(event) {
   reader.readAsDataURL(file);
 }
 
-// ============ WINNER MODAL (Addition #10) ============
 function winnerModal() {
   if (!S.showWinner) return '';
   const fakes = S.winnerData.slice(0, 50);
-  const reals = (S.team || []).filter(x => Number(x.invested||0) > 0).slice(0, 10).map(x => ({
-    name: x.username || 'you', country: '🌍', amount: Number(x.invested || 0), period: 'WEEK', isReal: true
-  }));
+  const reals = (S.team || []).filter(x => Number(x.invested||0) > 0).slice(0, 10).map(x => ({ name: x.username || 'you', country: '🌍', amount: Number(x.invested || 0), period: 'WEEK', isReal: true }));
   const all = [...reals, ...fakes].sort((a,b) => b.amount - a.amount).slice(0, 100);
   return `<div style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);overflow-y:auto" onclick="S.showWinner=false;render()"><div class="glass-card modal-in" onclick="event.stopPropagation()" style="max-width:440px;margin:20px auto;max-height:90vh;overflow-y:auto">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 style="font-size:18px;font-weight:900;margin:0">👑 Top Winners</h2><button onclick="S.showWinner=false;render()" style="background:none;border:none;color:#888;font-size:26px;cursor:pointer">×</button></div>
@@ -2642,7 +2554,6 @@ function winnerModal() {
   </div></div>`;
 }
 
-// ============ QR MODAL (Addition #3) ============
 function qrModal() {
   if (!S.showQR) return '';
   const rl = refLink();
@@ -2742,16 +2653,11 @@ window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault(); deferredPrompt = e;
   if (!localStorage.getItem('t_pwa_dismissed')) { setTimeout(() => { const b = $('pwaBanner'); if (b) b.classList.add('show'); }, 5000); }
 });
-
-function installPWA() {
-  if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then(() => { deferredPrompt = null; dismissPWA(); }); }
-  else { customAlert('Install Manually', 'Tap browser menu (3 dots) → "Add to Home Screen" to install TOXIC as an app.', '📲'); dismissPWA(); }
-}
+function installPWA() { if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then(() => { deferredPrompt = null; dismissPWA(); }); } else { customAlert('Install Manually', 'Tap browser menu (3 dots) → "Add to Home Screen" to install TOXIC as an app.', '📲'); dismissPWA(); } }
 function dismissPWA() { const b = $('pwaBanner'); if (b) b.classList.remove('show'); localStorage.setItem('t_pwa_dismissed', '1'); }
 
 let pullStartY = 0; let pulling = false; let pullDist = 0;
 const PULL_THRESHOLD = 80;
-
 document.addEventListener('touchstart', (e) => {
   if (window.scrollY <= 2 && !S.showProfile && !S.showNotifs && !S.page && !S.showForgot && !S.showBadges && !S.showShare && !S.showWinner && !S.showQR && S.user) { pullStartY = e.touches[0].clientY; pulling = true; pullDist = 0; }
 }, {passive:true});
@@ -2768,6 +2674,7 @@ document.addEventListener('touchend', async () => {
     if (ind) { ind.classList.add('spin'); ind.textContent = '⟳'; ind.style.transform = 'translateX(-50%) translateY(60px)'; }
     haptic('medium'); sound('tap');
     await loadSiteConfig(); await loadPlansFromDB(); await syncUser(); await loadPromoCodes(); await loadCryptoPrices();
+    S.leaderboardLoaded = false;
     render();
     setTimeout(() => { if (ind) { ind.classList.remove('spin', 'active'); ind.textContent = '↓'; ind.style.transform = 'translateX(-50%) translateY(-80px)'; } toast('✅ Updated!'); }, 700);
   } else { if (ind) { ind.classList.remove('active'); ind.style.transform = 'translateX(-50%) translateY(-80px)'; } }
@@ -2805,13 +2712,14 @@ function hideLoading() { if (loadingHidden) return; loadingHidden = true; const 
   try { await Promise.all([loadSiteConfig(), loadPlansFromDB(), loadPromoCodes(), loadCryptoPrices(), S.user ? syncUser() : Promise.resolve()]); } catch(e) { console.warn('Init error:', e); }
   clearTimeout(failsafe); render(); hideLoading();
   setTimeout(showLive, 3500);
+  setTimeout(rotateCombinedTicker, 500);
   setTimeout(() => { if (S.user) { checkTeamMilestones(); checkVIPBadgeChange(); checkAchievements(); } }, 2000);
   setInterval(loadCryptoPrices, 90000);
   setInterval(loadPromoCodes, 60000);
   setInterval(async () => { await loadSiteConfig(); await loadPlansFromDB(); }, 120000);
 })();
 
-// FIX #4: 30 seconds sync interval (was 5s)
+// FIX #4: 30 seconds sync interval
 setInterval(async () => {
   if (S.user && !SYNC_LOCK && !INVEST_LOCK) {
     const before = S.tx.map(x => x.id + '|' + x.status).join(',');
