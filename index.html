@@ -62,20 +62,18 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .modal-in { animation: min 0.35s cubic-bezier(0.34,1.56,0.64,1); }
 @keyframes min { from { opacity: 0; transform: scale(0.9) translateY(30px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 /* LOADING */
-.loading { position: fixed; inset: 0; background: radial-gradient(circle at center, rgba(0,255,102,0.06), #050907 70%); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s, visibility 0.6s; overflow: hidden; }
+.loading { position: fixed; inset: 0; background: #050907; background-image: radial-gradient(circle at center, rgba(0,255,102,0.10), transparent 65%); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s, visibility 0.6s; overflow: hidden; }
 .loading.hide { opacity: 0; visibility: hidden; }
 .loading-particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 .loading-particles .p { position: absolute; width: 4px; height: 4px; background: #00FF66; border-radius: 50%; box-shadow: 0 0 10px #00FF66; animation: floatP 4s infinite ease-in-out; }
 @keyframes floatP { 0%,100% { transform: translateY(0) scale(1); opacity: 0.3; } 50% { transform: translateY(-30px) scale(1.5); opacity: 1; } }
 .l-logo-wrap { position: relative; display: inline-block; }
-.l-logo-wrap::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); animation: sweep 2.5s infinite; pointer-events: none; }
-@keyframes sweep { 0% { left: -100%; } 60%, 100% { left: 200%; } }
 .l-logo { animation: ll 2s infinite; }
 @keyframes ll { 0%,100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(0,255,102,0.5)); } 50% { transform: scale(1.04); filter: drop-shadow(0 0 40px rgba(0,255,102,0.8)); } }
 .l-bar { width: 220px; height: 4px; background: rgba(0,255,102,0.15); border-radius: 4px; margin-top: 26px; overflow: hidden; position: relative; }
-.l-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #00FF66, #10B981); animation: lf 2.2s forwards; position: relative; }
-.l-fill::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); animation: sweep 1.2s infinite; }
-@keyframes lf { to { width: 100%; } }
+.l-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #00FF66, #10B981); transition: width 0.3s ease; position: relative; }
+.l-fill::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); animation: sweepBar 1.2s infinite; }
+@keyframes sweepBar { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 .l-pct { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #00FF66; margin-top: 12px; font-weight: 800; letter-spacing: 2px; text-shadow: 0 0 12px rgba(0,255,102,0.8); }
 .live-b { position: fixed; bottom: 100px; left: 12px; right: 12px; max-width: 420px; margin: 0 auto; background: linear-gradient(135deg, rgba(9,18,14,0.98), rgba(5,12,8,0.99)); backdrop-filter: blur(20px); border: 1px solid rgba(0,255,102,0.45); border-radius: 16px; padding: 12px 16px; z-index: 45; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s; transform: translateY(180%); opacity: 0; display: flex; align-items: center; gap: 12px; box-shadow: 0 15px 40px rgba(0,255,102,0.25); }
 .live-b.show { transform: translateY(0); opacity: 1; }
@@ -121,9 +119,10 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .winner-scroll { white-space: nowrap; display: inline-flex; animation: winnerAnim 45s linear infinite; }
 @keyframes winnerAnim { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 .emoji-3d { display: inline-block; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.7)) drop-shadow(0 0 6px rgba(0,255,102,0.25)); transform: translateY(-1px); }
-.ach-btn { padding: 7px 4px; border-radius: 10px; font-size: 9px; font-weight: 900; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 1px; border-width: 1px; border-style: solid; }
-.ach-btn .ach-emoji { font-size: 13px; }
-.ach-btn .ach-sub { font-size: 8px; color: #888; font-weight: 700; }
+/* COMPACT ACHIEVEMENT BUTTONS */
+.ach-btn { padding: 5px 3px; border-radius: 9px; font-size: 8px; font-weight: 900; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 1px; border-width: 1px; border-style: solid; }
+.ach-btn .ach-emoji { font-size: 11px; }
+.ach-btn .ach-sub { font-size: 7px; color: #888; font-weight: 700; }
 .auth-hero { position: relative; width: 100%; min-height: 100vh; overflow: hidden; }
 .auth-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; }
 .auth-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,9,7,0.05) 0%, rgba(5,9,7,0.30) 25%, rgba(5,9,7,0.72) 55%, rgba(5,9,7,0.95) 78%, #050907 100%); }
@@ -161,6 +160,18 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .tour-dots { display: flex; gap: 6px; justify-content: center; margin: 18px 0; }
 .tour-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.15); transition: all 0.3s; }
 .tour-dot.active { background: #00FF66; width: 22px; border-radius: 4px; box-shadow: 0 0 10px #00FF66; }
+/* SIGNUP PREMIUM SPACING */
+.signup-section { margin-bottom: 18px; }
+.signup-label { font-size: 9px; color: #888; font-weight: 700; letter-spacing: 1.6px; display: block; margin-bottom: 8px; text-transform: uppercase; }
+.signup-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(0,255,102,0.2), transparent); margin: 18px 0; }
+/* FLOATING SUPPORT - z-index 61, above PWA banner */
+.float-support { position: fixed; bottom: calc(115px + env(safe-area-inset-bottom)); right: 16px; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-size: 22px; z-index: 61; text-decoration: none; background: #00FF66; box-shadow: 0 0 30px rgba(0,255,102,0.6); transition: bottom 0.3s; }
+.float-support:active { transform: scale(0.95); }
+/* SEE ALL BTN */
+.see-all-btn { width: 100%; padding: 10px; border-radius: 11px; font-size: 11px; font-weight: 900; background: linear-gradient(135deg, rgba(0,255,102,0.15), rgba(0,255,102,0.05)); border: 1px solid rgba(0,255,102,0.4); color: #00FF66; cursor: pointer; margin-top: 10px; }
+/* SYNC INDICATOR */
+.sync-ind { width: 14px; height: 14px; border: 2px solid rgba(0,255,102,0.3); border-top-color: #00FF66; border-radius: 50%; animation: spinR2 0.7s linear infinite; display: none; }
+@keyframes spinR2 { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -221,7 +232,7 @@ if (window.emailjs) { emailjs.init('jqUMl6CNuI5ijOpCJ'); }
 
 const TG_ICON_SVG = `<svg viewBox="0 0 24 24" fill="currentColor" width="26" height="26"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>`;
 
-// ============ SVG LOGO (No drips, no shadow, clean) ============
+// ============ SVG LOGO (Clean: no drips, no shadow, no ellipses, no bubbles inside text) ============
 function toxicLogo(size = 'lg') {
   const cls = size === 'lg' ? 'toxic-svg-logo' : 'toxic-svg-logo-sm';
   const uid = size + Math.random().toString(36).slice(2, 7);
@@ -234,31 +245,12 @@ function toxicLogo(size = 'lg') {
         <stop offset="78%" stop-color="#29A800"/>
         <stop offset="100%" stop-color="#0a3d10"/>
       </linearGradient>
-      <radialGradient id="bg-${uid}" cx="35%" cy="30%">
-        <stop offset="0%" stop-color="#F4FFD8"/>
-        <stop offset="55%" stop-color="#A8FF5C"/>
-        <stop offset="100%" stop-color="#3FCC00" stop-opacity="0"/>
-      </radialGradient>
       <filter id="glow-${uid}" x="-50%" y="-50%" width="200%" height="200%">
         <feGaussianBlur stdDeviation="3.5" result="b"/>
         <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
     </defs>
     <text x="200" y="88" text-anchor="middle" font-family="Inter, Arial Black, sans-serif" font-size="92" font-weight="900" letter-spacing="2" fill="url(#tg-${uid})" stroke="#0a3d10" stroke-width="0.8" filter="url(#glow-${uid})">TOXIC</text>
-    <g opacity="0.75">
-      <circle cx="88" cy="42" r="3.5" fill="url(#bg-${uid})"/>
-      <circle cx="128" cy="28" r="2.6" fill="url(#bg-${uid})"/>
-      <circle cx="165" cy="36" r="4" fill="url(#bg-${uid})"/>
-      <circle cx="200" cy="30" r="3.2" fill="url(#bg-${uid})"/>
-      <circle cx="240" cy="38" r="3.5" fill="url(#bg-${uid})"/>
-      <circle cx="278" cy="32" r="2.6" fill="url(#bg-${uid})"/>
-      <circle cx="315" cy="40" r="3.2" fill="url(#bg-${uid})"/>
-    </g>
-    <g fill="#E8FFC7" opacity="0.42">
-      <ellipse cx="110" cy="18" rx="14" ry="1.8"/>
-      <ellipse cx="190" cy="16" rx="18" ry="1.8"/>
-      <ellipse cx="270" cy="18" rx="14" ry="1.8"/>
-    </g>
   </svg>`;
 }
 
@@ -400,7 +392,6 @@ function generateWinnerTicker() {
   return fakes;
 }
 
-// ⚠️ CRITICAL: These constants MUST be declared before use
 const FAKE_REFERRERS = generateFakeReferrers(50);
 
 let S = {
@@ -411,6 +402,7 @@ let S = {
   notifs: [], tab: 'dashboard', step: 1,
   sd: {country:'', email:'', username:'', password:'', referredBy:null},
   selPlan: null, showProfile: false, showNotifs: false, showBadges: false, showShare: false, showWinner: false, showQR: false,
+  showSeeAllLb: false, showSeeAllTeam: false,
   calcAmt: 50, lang: localStorage.getItem('t_lang') || 'en', wdMethod: 'USDT',
   spin: {lastSpin:0, totalSpins:0}, milestones: {claimed:[]}, tgBonus: false,
   page: null, syncing: false, historyLimit: CFG.historyPageSize,
@@ -633,9 +625,10 @@ function initOfflineMode() {
   update();
 }
 
+// ============ TOUR (FIX: key renamed so logout won't clear it) ============
 function showTour() {
   if (!S.user) return;
-  const tourKey = 't_tour_' + S.user.user_id;
+  const tourKey = 'xtour_' + S.user.user_id;
   if (localStorage.getItem(tourKey)) return;
   const steps = [
     {icon:'👋', title:'Welcome to TOXIC!', desc:'Your gateway to daily investment returns. Let us show you around in 20 seconds.'},
@@ -665,12 +658,14 @@ function renderTour(steps) {
   window._tourSteps = steps;
 }
 function nextTour() { S.tourStep++; renderTour(window._tourSteps); }
-function finishTour() { localStorage.setItem('t_tour_' + S.user.user_id, '1'); $('tourOverlay').classList.remove('show'); haptic('success'); sound('success'); }
-function skipTour() { localStorage.setItem('t_tour_' + S.user.user_id, '1'); $('tourOverlay').classList.remove('show'); }
+function finishTour() { localStorage.setItem('xtour_' + S.user.user_id, '1'); $('tourOverlay').classList.remove('show'); haptic('success'); sound('success'); }
+function skipTour() { localStorage.setItem('xtour_' + S.user.user_id, '1'); $('tourOverlay').classList.remove('show'); }
 
 function generateOTP() { return String(Math.floor(100000 + Math.random() * 900000)); }
 
+// ============ FIX #5: Offline check added ============
 async function sendOTP() {
+  if (!navigator.onLine) return customAlert('Offline', 'You are offline. Please check your internet connection.', '📡');
   const email = ($('sd_email') || {}).value ? $('sd_email').value.trim() : '';
   if (!email) return customAlert('Missing Email', 'Please enter your Gmail address.', '⚠️');
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return customAlert('Invalid Email', 'Please enter a valid email address.', '⚠️');
@@ -723,6 +718,7 @@ function verifyOTP() {
   S.step = 2; render();
 }
 async function sendForgotOTP() {
+  if (!navigator.onLine) return customAlert('Offline', 'You are offline. Please check your internet connection.', '📡');
   const email = ($('fp_email') || {}).value ? $('fp_email').value.trim() : '';
   if (!email) return customAlert('Missing Email', 'Please enter your registered Gmail.', '⚠️');
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return customAlert('Invalid Email', 'Please enter a valid email.', '⚠️');
@@ -1102,10 +1098,13 @@ function pageFAQ() {
   return `<h1>❓ FAQ</h1><p style="color:#888;font-size:11px;margin-bottom:20px">Everything you need to know</p>${faqs.map((f, i) => `<div style="background:rgba(0,0,0,0.4);border:1px solid rgba(0,255,102,0.12);border-radius:14px;padding:14px;margin-bottom:10px;cursor:pointer" onclick="this.querySelector('.faq-a').style.display=this.querySelector('.faq-a').style.display==='block'?'none':'block'"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><p style="font-weight:800;font-size:13px;margin:0"><span style="color:#00FF66">Q${i+1}.</span> ${f.q}</p><span style="color:#00FF66">▼</span></div><p class="faq-a" style="display:none;font-size:12px;color:#ccc;line-height:1.6;margin:10px 0 0;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06)">${f.a}</p></div>`).join('')}<div style="text-align:center;margin-top:24px;padding:16px;background:rgba(0,255,102,0.06);border:1px solid rgba(0,255,102,0.2);border-radius:14px"><p style="font-size:12px;color:#ccc;margin:0 0 10px">Still have questions?</p><a href="${CFG.support}" target="_blank" style="display:inline-block;text-decoration:none;padding:10px 20px;border-radius:12px;background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-weight:800;font-size:12px">💬 CONTACT SUPPORT</a></div>`;
 }
 
+// ============ FIX #2: Live notification skip during tour ============
 function showLive() {
   if (!S.user) return;
   if (S.tab !== 'dashboard') return;
-  if (S.showProfile || S.showNotifs || S.page || S.selPlan || S.showBadges || S.showShare || S.showWinner || S.showQR) return;
+  if (S.showProfile || S.showNotifs || S.page || S.selPlan || S.showBadges || S.showShare || S.showWinner || S.showQR || S.showSeeAllLb || S.showSeeAllTeam) return;
+  const tourOverlay = $('tourOverlay');
+  if (tourOverlay && tourOverlay.classList.contains('show')) { setTimeout(showLive, 8000); return; }
   const b = $('liveB'); if (!b) return;
   const n = WORLD_NAMES[Math.floor(Math.random() * WORLD_NAMES.length)];
   const loc = WORLD_LOCATIONS[Math.floor(Math.random() * WORLD_LOCATIONS.length)];
@@ -1125,7 +1124,7 @@ function render() {
     a.innerHTML = S.tab === 'signin' ? loginUI() : signupUI();
     return;
   }
-  a.innerHTML = mainUI() + planModal() + profileModal() + notifsModal() + badgesModal() + shareModal() + winnerModal() + qrModal();
+  a.innerHTML = mainUI() + planModal() + profileModal() + notifsModal() + badgesModal() + shareModal() + winnerModal() + qrModal() + seeAllModals();
   if (S.tab === 'wallet') setTimeout(loadSavedAddresses, 0);
   if (S.tab === 'team') setTimeout(loadLeaderboardSafe, 150);
   updateDyn();
@@ -1156,6 +1155,9 @@ function updateDyn() {
   });
   const b = $('nb'); const un = unread();
   if (b) { if (un > 0) { b.textContent = un; b.style.display = 'flex'; } else b.style.display = 'none'; }
+  // FIX #4: Sync indicator toggle
+  const si = $('syncInd');
+  if (si) si.style.display = S.syncing ? 'inline-block' : 'none';
 }
 setInterval(updateDyn, 1000);
 
@@ -1177,6 +1179,7 @@ async function syncUser() {
   if (SYNC_LOCK) return;
   if (INVEST_LOCK) return;
   SYNC_LOCK = true; S.syncing = true;
+  updateDyn();
   try {
     const u = await sb.from('users').select('*').eq('user_id', S.user.user_id).limit(1);
     if (u.data && u.data[0]) {
@@ -1185,7 +1188,7 @@ async function syncUser() {
         sound('error');
         customAlert('Account Suspended', 'Your account has been suspended.\n\nContact support: @Toxiconect', '🚫');
         setTimeout(() => { Object.keys(localStorage).forEach(k => { if (k.startsWith('t_')) localStorage.removeItem(k); }); S.user = null; S.plans = []; S.team = []; S.tx = []; S.tab = 'signin'; render(); }, 3000);
-        SYNC_LOCK = false; return;
+        SYNC_LOCK = false; S.syncing = false; return;
       }
       const oldB = Number(S.user.balance||0);
       S.user.balance = Number(f.balance||0);
@@ -1284,6 +1287,7 @@ async function syncUser() {
     checkAchievements();
   } catch(e) { console.warn('Sync note:', e); }
   S.syncing = false; SYNC_LOCK = false;
+  updateDyn();
 }
 
 async function autoRenewCombined(completedPlans) {
@@ -1404,57 +1408,74 @@ function signupUI() {
     return `<div style="width:34px;height:34px;border-radius:11px;background:${bg};color:${tc};display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;box-shadow:${glow};transition:all 0.3s">${step>n?'✓':n}</div>`;
   }).join('');
   return authHero(`
-    <div class="flex items-center justify-center gap-3 mb-2.5">${steps}</div>
-    <div class="glass-card shadow-2xl w-full max-w-md mx-auto modal-in" style="border-top: 2px solid rgba(0,255,102,0.4);padding:14px 16px">
+    <div class="flex items-center justify-center gap-3 mb-3">${steps}</div>
+    <div class="glass-card shadow-2xl w-full max-w-md mx-auto modal-in" style="border-top: 2px solid rgba(0,255,102,0.4);padding:20px 18px">
       ${step===1?step1():step2()}
     </div>
-    <div style="text-align:center;font-size:10px;color:#888;margin-top:10px"><p>By signing up, you agree to our <span onclick="S.page='tnc';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Terms</span> & <span onclick="S.page='privacy';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Privacy</span></p></div>
+    <div style="text-align:center;font-size:10px;color:#888;margin-top:12px"><p>By signing up, you agree to our <span onclick="S.page='tnc';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Terms</span> & <span onclick="S.page='privacy';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Privacy</span></p></div>
   `);
 }
 
 function step1() {
   const cs = ['Afghanistan','Albania','Algeria','Argentina','Australia','Austria','Bahrain','Bangladesh','Belgium','Brazil','Canada','Chile','China','Colombia','Croatia','Czech Republic','Denmark','Ecuador','Egypt','Ethiopia','Finland','France','Germany','Ghana','Greece','Hungary','Iceland','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy','Japan','Jordan','Kazakhstan','Kenya','Kuwait','Kyrgyzstan','Lebanon','Libya','Malaysia','Maldives','Malta','Mexico','Mongolia','Morocco','Myanmar','Nepal','Netherlands','New Zealand','Nigeria','Norway','Oman','Pakistan','Palestine','Panama','Paraguay','Peru','Philippines','Poland','Portugal','Qatar','Romania','Russia','Saudi Arabia','Senegal','Serbia','Singapore','Slovakia','Slovenia','Somalia','South Africa','South Korea','Spain','Sri Lanka','Sudan','Sweden','Switzerland','Syria','Taiwan','Tajikistan','Tanzania','Thailand','Tunisia','Turkey','Turkmenistan','Uganda','Ukraine','United Arab Emirates','United Kingdom','United States','Uruguay','Uzbekistan','Venezuela','Vietnam','Yemen','Zambia','Zimbabwe'];
   const ops = cs.map(c => `<option ${S.sd.country===c?'selected':''}>${c}</option>`).join('');
-  const rn = S.sd.referredBy ? `<div style="border-radius:10px;padding:8px 12px;margin-bottom:12px;background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.3);display:flex;align-items:center;justify-content:space-between"><div><p style="font-size:9px;color:#888;margin:0;letter-spacing:1.2px">REFERRED BY</p><p class="text-toxic mono" style="font-weight:900;font-size:12px;margin:2px 0 0">${esc(S.sd.referredBy)}</p></div><span style="font-size:18px" class="emoji-3d">👥</span></div>` : '';
+  const rn = S.sd.referredBy ? `<div style="border-radius:12px;padding:10px 14px;margin-bottom:16px;background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.3);display:flex;align-items:center;justify-content:space-between"><div><p style="font-size:9px;color:#888;margin:0;letter-spacing:1.2px">REFERRED BY</p><p class="text-toxic mono" style="font-weight:900;font-size:13px;margin:2px 0 0">${esc(S.sd.referredBy)}</p></div><span style="font-size:20px" class="emoji-3d">👥</span></div>` : '';
   return `${rn}
-    <p style="font-size:9px;color:#666;font-weight:700;margin:0 0 6px;letter-spacing:1.6px">STEP 1 / 2 · EMAIL VERIFICATION</p>
-    <h2 style="font-size:20px;font-weight:900;margin:0 0 4px;letter-spacing:-0.3px">Create your account</h2>
-    <p style="font-size:11px;color:#888;margin:0 0 14px">Verify your Gmail with OTP.</p>
-    <div style="background:linear-gradient(135deg,rgba(0,255,102,0.14),rgba(0,255,102,0.04));border:1px solid rgba(0,255,102,0.35);border-radius:11px;padding:10px 12px;margin-bottom:14px;display:flex;align-items:center;gap:10px">
+    <p style="font-size:9px;color:#666;font-weight:700;margin:0 0 6px;letter-spacing:1.8px">STEP 1 / 2 · EMAIL VERIFICATION</p>
+    <h2 style="font-size:22px;font-weight:900;margin:0 0 6px;letter-spacing:-0.3px">Create your account</h2>
+    <p style="font-size:12px;color:#888;margin:0 0 18px">Verify your Gmail with OTP.</p>
+    <div style="background:linear-gradient(135deg,rgba(0,255,102,0.14),rgba(0,255,102,0.04));border:1px solid rgba(0,255,102,0.35);border-radius:12px;padding:12px 14px;margin-bottom:18px;display:flex;align-items:center;gap:10px">
       <span style="font-size:20px" class="emoji-3d">🎁</span>
       <p style="font-size:11px;font-weight:800;color:#00FF66;margin:0;line-height:1.3">Get $${CFG.signupBonus.toFixed(2)} FREE signup bonus!</p>
     </div>
-    <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1.4px;display:block;margin-bottom:5px">COUNTRY</label>
-    <select id="cs" class="inp" style="margin-bottom:12px;padding:10px 12px;font-size:13px"><option value="" disabled selected>Select your country</option>${ops}</select>
-    <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1.4px;display:block;margin-bottom:5px">GMAIL ADDRESS</label>
-    <input id="sd_email" type="email" class="inp" style="margin-bottom:10px;padding:10px 12px;font-size:13px" placeholder="yourname@gmail.com" value="${S.sd.email||''}">
-    <button id="sendOtpBtn" onclick="sendOTP()" class="btn-green" style="width:100%;padding:11px;border-radius:11px;font-size:12px;margin-bottom:12px">SEND OTP</button>
-    <div id="otpSection" style="display:${S.otpVerified?'none':'block'};margin-bottom:12px">
-      <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1.4px;display:block;margin-bottom:5px">ENTER 6-DIGIT OTP</label>
-      <input id="otpCode" type="text" maxlength="6" class="inp otp-input" style="margin-bottom:8px" placeholder="••••••">
-      <button onclick="verifyOTP()" class="btn-green" style="width:100%;padding:11px;border-radius:11px;font-size:12px">VERIFY OTP</button>
+    <div class="signup-section">
+      <label class="signup-label">Country</label>
+      <select id="cs" class="inp" style="padding:11px 14px;font-size:13px"><option value="" disabled selected>Select your country</option>${ops}</select>
     </div>
-    ${S.otpVerified ? `<div style="background:rgba(0,255,102,0.1);border:1px solid rgba(0,255,102,0.4);border-radius:10px;padding:8px 12px;margin-bottom:12px;display:flex;align-items:center;gap:8px"><span style="font-size:14px" class="emoji-3d">✅</span><p style="font-size:11px;color:#00FF66;font-weight:700;margin:0">Email verified!</p></div>` : ''}
-    <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1.4px;display:block;margin-bottom:5px">REFERRAL CODE (OPTIONAL)</label>
-    <input id="manualRef" class="inp ref-input" placeholder="ENTER CODE" value="${S.sd.referredBy||''}" style="margin-bottom:14px">
-    <button onclick="goStep2()" class="btn-green glow" style="width:100%;padding:13px;border-radius:12px;font-size:13px" ${S.otpVerified?'':'disabled style="opacity:0.4;cursor:not-allowed"'}>NEXT →</button>
-    <p class="text-center text-xs text-gray-500" style="margin-top:12px">Already have an account? <span onclick="S.tab='signin';render()" class="text-toxic font-bold cursor:pointer">Sign in</span></p>`;
+    <div class="signup-divider"></div>
+    <div class="signup-section">
+      <label class="signup-label">Gmail Address</label>
+      <input id="sd_email" type="email" class="inp" style="padding:11px 14px;font-size:13px" placeholder="yourname@gmail.com" value="${S.sd.email||''}">
+      <button id="sendOtpBtn" onclick="sendOTP()" class="btn-green" style="width:100%;padding:12px;border-radius:12px;font-size:12px;margin-top:10px">SEND OTP</button>
+    </div>
+    <div id="otpSection" class="signup-section" style="display:${S.otpVerified?'none':'block'}">
+      <label class="signup-label">Enter 6-Digit OTP</label>
+      <input id="otpCode" type="text" maxlength="6" class="inp otp-input" style="margin-bottom:10px" placeholder="••••••">
+      <button onclick="verifyOTP()" class="btn-green" style="width:100%;padding:12px;border-radius:12px;font-size:12px">VERIFY OTP</button>
+    </div>
+    ${S.otpVerified ? `<div style="background:rgba(0,255,102,0.1);border:1px solid rgba(0,255,102,0.4);border-radius:12px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px"><span style="font-size:16px" class="emoji-3d">✅</span><p style="font-size:11px;color:#00FF66;font-weight:700;margin:0">Email verified!</p></div>` : ''}
+    <div class="signup-divider"></div>
+    <div class="signup-section">
+      <label class="signup-label">Referral Code (Optional)</label>
+      <input id="manualRef" class="inp ref-input" placeholder="ENTER CODE" value="${S.sd.referredBy||''}">
+    </div>
+    <button onclick="goStep2()" class="btn-green glow" style="width:100%;padding:14px;border-radius:14px;font-size:13px;margin-top:6px" ${S.otpVerified?'':'disabled style="opacity:0.4;cursor:not-allowed"'}>NEXT →</button>
+    <p class="text-center text-xs text-gray-500" style="margin-top:16px">Already have an account? <span onclick="S.tab='signin';render()" class="text-toxic font-bold cursor:pointer">Sign in</span></p>`;
 }
 
 function step2() {
-  return `<p style="font-size:9px;color:#666;font-weight:700;margin:0 0 6px;letter-spacing:1.6px">STEP 2 / 2 · SETUP</p>
-    <h2 style="font-size:20px;font-weight:900;margin:0 0 4px;letter-spacing:-0.3px">Create Access</h2>
-    <p style="font-size:11px;color:#888;margin:0 0 14px">Set username & password.</p>
-    <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1.4px;display:block;margin-bottom:5px">USERNAME</label>
-    <input class="inp" id="un" style="margin-bottom:12px;padding:10px 12px;font-size:13px" placeholder="Username" value="${S.sd.username||''}">
-    <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1.4px;display:block;margin-bottom:5px">PASSWORD</label>
-    <input class="inp" id="pw" type="password" style="margin-bottom:12px;padding:10px 12px;font-size:13px" placeholder="Password (min 4 chars)">
-    <label style="font-size:9px;color:#888;font-weight:700;letter-spacing:1.4px;display:block;margin-bottom:5px">CONFIRM PASSWORD</label>
-    <input class="inp" id="pw2" type="password" style="margin-bottom:14px;padding:10px 12px;font-size:13px" placeholder="Confirm Password">
-    <div style="display:flex;gap:10px"><button onclick="S.step=1;render()" style="padding:12px 16px;border-radius:11px;background:rgba(255,255,255,0.05);font-weight:700;font-size:12px;border:none;color:#fff;cursor:pointer">← BACK</button><button onclick="finishSignup()" style="flex:1;padding:12px;border-radius:11px;font-weight:800;font-size:12px;border:none;cursor:pointer" class="btn-green">FINISH →</button></div>`;
+  return `<p style="font-size:9px;color:#666;font-weight:700;margin:0 0 6px;letter-spacing:1.8px">STEP 2 / 2 · SETUP</p>
+    <h2 style="font-size:22px;font-weight:900;margin:0 0 6px;letter-spacing:-0.3px">Create Access</h2>
+    <p style="font-size:12px;color:#888;margin:0 0 18px">Set username & password.</p>
+    <div class="signup-section">
+      <label class="signup-label">Username</label>
+      <input class="inp" id="un" style="padding:11px 14px;font-size:13px" placeholder="Username" value="${S.sd.username||''}">
+    </div>
+    <div class="signup-divider"></div>
+    <div class="signup-section">
+      <label class="signup-label">Password</label>
+      <input class="inp" id="pw" type="password" style="padding:11px 14px;font-size:13px" placeholder="Password (min 4 chars)">
+    </div>
+    <div class="signup-divider"></div>
+    <div class="signup-section">
+      <label class="signup-label">Confirm Password</label>
+      <input class="inp" id="pw2" type="password" style="padding:11px 14px;font-size:13px" placeholder="Confirm Password">
+    </div>
+    <div style="display:flex;gap:10px;margin-top:6px"><button onclick="S.step=1;render()" style="padding:13px 18px;border-radius:12px;background:rgba(255,255,255,0.05);font-weight:700;font-size:12px;border:none;color:#fff;cursor:pointer">← BACK</button><button onclick="finishSignup()" style="flex:1;padding:13px;border-radius:12px;font-weight:800;font-size:12px;border:none;cursor:pointer" class="btn-green">FINISH →</button></div>`;
 }
 
-function goStep2() {
+// ============ FIX #7: Referral code validation ============
+async function goStep2() {
   const cs = $('cs').value;
   const email = $('sd_email').value.trim();
   if (!cs) return customAlert('Missing Info', 'Please select your country.', '⚠️');
@@ -1463,7 +1484,20 @@ function goStep2() {
   if (!S.otpVerified) return customAlert('Verify OTP', 'Please verify your email with OTP first.', '⚠️');
   S.sd.country = cs; S.sd.email = email;
   const mr = $('manualRef').value.trim().toUpperCase();
-  if (mr) { S.sd.referredBy = mr; localStorage.setItem('t_locked_ref', mr); localStorage.setItem('t_locked_ref_time', Date.now().toString()); }
+  if (mr) {
+    // Validate referral code exists in Supabase
+    if (sb && navigator.onLine) {
+      try {
+        const chk = await sb.from('users').select('referral_code').eq('referral_code', mr).limit(1);
+        if (!chk.data || chk.data.length === 0) {
+          return customAlert('Invalid Referral Code', `The referral code "${mr}" does not exist.\n\nPlease check and try again, or leave it empty.`, '⚠️');
+        }
+      } catch(e) { /* network fail - allow */ }
+    }
+    S.sd.referredBy = mr; 
+    localStorage.setItem('t_locked_ref', mr); 
+    localStorage.setItem('t_locked_ref_time', Date.now().toString());
+  }
   S.step = 2; render();
 }
 
@@ -1495,6 +1529,7 @@ async function finishSignup() {
 }
 
 async function doLogin() {
+  if (!navigator.onLine && !localStorage.getItem('t_user')) return customAlert('Offline', 'You are offline. Please check your internet connection.', '📡');
   const u = $('lu').value.trim(), p = $('lp').value;
   if (!u || !p) return customAlert('Required', 'Please enter your username/email and password.', '⚠️');
   const ex = JSON.parse(localStorage.getItem('t_user') || 'null');
@@ -1533,11 +1568,16 @@ async function doLogin() {
   customAlert('User Not Found', 'No account found.\n\nPlease create a new account first.', '⚠️');
 }
 
+// ============ FIX #1: Logout preserves tour key ============
 function logout() {
   customConfirm('Logout', 'Are you sure you want to sign out?', () => {
-    Object.keys(localStorage).forEach(k => { if (k.startsWith('t_')) localStorage.removeItem(k); });
+    Object.keys(localStorage).forEach(k => { 
+      if (k.startsWith('t_')) localStorage.removeItem(k); 
+      // FIX: Don't clear tour key (starts with 'xtour_') so it persists
+    });
     S.user = null; S.plans = []; S.team = []; S.tx = []; S.tab = 'signin';
     S.showProfile = false; S.showNotifs = false; S.showBadges = false; S.showShare = false; S.showWinner = false; S.showQR = false;
+    S.showSeeAllLb = false; S.showSeeAllTeam = false;
     render();
   }, '🚪');
 }
@@ -1549,6 +1589,7 @@ function mainUI() {
     <header style="padding:16px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:40;background:rgba(5,9,7,0.95);backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,255,102,0.08)">
       <div>${toxicLogo('sm')}</div>
       <div style="display:flex;align-items:center;gap:10px">
+        <span id="syncInd" class="sync-ind" title="Syncing..."></span>
         <a href="${CFG.telegram}" target="_blank" style="text-decoration:none;padding:4px;display:flex;align-items:center;justify-content:center;color:#00a6ed">${TG_ICON_SVG}</a>
         <div onclick="S.showNotifs=true;render()" style="position:relative;cursor:pointer;padding:4px">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
@@ -1561,6 +1602,7 @@ function mainUI() {
       </div>
     </header>
     <main style="padding:16px">${renderTab()}</main>
+    <a href="${CFG.support}" target="_blank" class="float-support">💬</a>
     <nav class="nav"><div style="display:flex;justify-content:space-around;align-items:center">
       ${nav('dashboard', t().dash, 'M3 5h7v7H3zM14 5h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z')}
       ${nav('plans', t().invest, 'M3 17l6-6 4 4 8-8M21 7v6h-6')}
@@ -1746,6 +1788,7 @@ function quickInvest(id) {
 }
 async function invest(id) {
   if (INVEST_LOCK) { haptic('warning'); toast('⏳ Please wait...'); return; }
+  if (!navigator.onLine) return customAlert('Offline', 'You are offline. Please check your internet connection.', '📡');
   const p = PLANS.find(x => x.id === id); if (!p) return;
   if (isActive(id)) return customAlert('Plan Active', 'Already active.', '🔒');
   if (Number(S.user.balance) < p.d) return customAlert('Low Balance', 'Required: $' + p.d.toFixed(2) + '\nCurrent: $' + fmt(S.user.balance), '💰');
@@ -1818,9 +1861,11 @@ async function distributeReferralCommissions(planAmount, planName, investTxId) {
   }
 }
 
+// ============ FIX #6: Push notification on plan complete ============
 async function collect(pid) {
   const pl = S.plans.find(x => String(x.id) === String(pid));
   if (!pl) return;
+  if (!navigator.onLine) return customAlert('Offline', 'You are offline. Please check your internet connection.', '📡');
   if (Date.now() < nextC(pl)) return customAlert('Wait', 'Your daily reward is not ready yet.\n\nWait for the timer to complete.', '⏳');
   if (Number(pl.days_collected) >= 40) return customAlert('Done', 'This plan cycle is completed.', '✅');
   const rw = Number(pl.dly || pl.daily);
@@ -1840,7 +1885,11 @@ async function collect(pid) {
   }
   haptic('success'); sound('coin');
   showCoinAnim(rw);
-  if (done) { launchConfetti(); customAlert('Plan Completed!', `Total return collected: $${rw.toFixed(2)}`, '🎉'); }
+  if (done) { 
+    launchConfetti(); 
+    sendPush('🎉 Plan Completed', `Your ${pl.plan_name} plan completed! Total: $${rw.toFixed(2)}`);
+    customAlert('Plan Completed!', `Total return collected: $${rw.toFixed(2)}`, '🎉'); 
+  }
   else customAlert('Reward Collected!', `Collected: $${rw.toFixed(2)}\nDay: ${pl.days_collected} / 40`, '💰');
   save(); render();
   checkAchievements();
@@ -2032,7 +2081,9 @@ function calcWd() {
     else $('upiCalcRow').style.display = 'none';
   } else $('feeBox').style.display = 'none';
 }
+// ============ FIX #5: Offline check in subDep ============
 async function subDep() {
+  if (!navigator.onLine) return customAlert('Offline', 'You are offline. Please check your internet connection.', '📡');
   const amt = parseFloat($('depAmt').value);
   const isC = sM !== 0;
   const utr = $('depUtr') ? $('depUtr').value.trim() : '';
@@ -2074,6 +2125,7 @@ function getTodayWdCount() {
 }
 
 async function subWd() {
+  if (!navigator.onLine) return customAlert('Offline', 'You are offline. Please check your internet connection.', '📡');
   const amt = parseFloat($('wdAmt').value);
   const addr = $('wdAddr').value.trim();
   const method = S.wdMethod || 'USDT';
@@ -2130,7 +2182,7 @@ async function subWd() {
 async function manualRefresh() {
   haptic('medium'); toast('🔄 Refreshing...');
   await loadSiteConfig(); await loadPlansFromDB(); await syncUser(); await loadPromoCodes(); await loadCryptoPrices();
-  S.leaderboardLoaded = false;
+  S.leaderboardLoaded = false; LB_CACHE = [];
   render(); setTimeout(() => toast('✅ Updated!'), 600);
 }
 
@@ -2211,33 +2263,41 @@ async function buildLeaderboard() {
   return all.slice(0, 100);
 }
 
+function leaderboardRow(item, rank) {
+  const medals = ['🥇','🥈','🥉'];
+  const medal = rank <= 3 ? medals[rank-1] : `#${rank}`;
+  const name = esc(item.u || '?');
+  const flag = item.c || '🌍';
+  const vol = item.vol || 0;
+  const refs = item.refs || 0;
+  return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:10px;background:rgba(0,0,0,0.35);margin-bottom:5px"><div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0"><span style="font-size:13px;width:22px;color:${rank===1?'#FFD700':rank===2?'#C0C0C0':rank===3?'#CD7F32':'#666'};font-weight:900">${medal}</span><span style="font-size:11px;font-weight:800;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span><span style="font-size:10px">${flag}</span></div><div style="text-align:right"><p class="mono" style="font-size:11px;font-weight:900;color:#FFD700;margin:0">$${fmt(vol)}</p><p style="font-size:8px;color:#888;margin:1px 0 0">${refs} refs</p></div></div>`;
+}
+
+let LB_CACHE = [];
+
 async function loadLeaderboardSafe() {
   try {
     const box = $('leaderboardList'); if (!box) return;
-    if (S.leaderboardLoaded) return;
-    box.innerHTML = '<p style="text-align:center;padding:16px;color:#666;font-size:11px">Loading...</p>';
-    const lb = await buildLeaderboard();
-    S.leaderboardLoaded = true;
-    if (!lb || lb.length === 0) {
-      box.innerHTML = '<p style="text-align:center;padding:16px;color:#666;font-size:11px">No data available</p>';
+    if (S.leaderboardLoaded && LB_CACHE.length > 0) {
+      const top5 = LB_CACHE.slice(0, 5);
+      box.innerHTML = `<div style="text-align:left">${top5.map((item, i) => leaderboardRow(item, i + 1)).join('')}</div><button onclick="S.showSeeAllLb=true;render()" class="see-all-btn">SEE ALL ${LB_CACHE.length} →</button>`;
       return;
     }
-    const medals = ['🥇','🥈','🥉'];
-    box.innerHTML = `<div style="text-align:left">${lb.slice(0, 100).map((item, i) => {
-      try {
-        const rank = i + 1;
-        const medal = rank <= 3 ? medals[rank-1] : `#${rank}`;
-        const isReal = item.isReal;
-        return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:10px;background:${isReal?'rgba(0,255,102,0.08)':'rgba(0,0,0,0.35)'};margin-bottom:5px;border:1px solid ${isReal?'rgba(0,255,102,0.25)':'transparent'}"><div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0"><span style="font-size:13px;width:22px;color:${rank===1?'#FFD700':rank===2?'#C0C0C0':rank===3?'#CD7F32':'#666'};font-weight:900">${medal}</span><span style="font-size:11px;font-weight:800;color:${isReal?'#00FF66':'#fff'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(item.u||'?')}</span><span style="font-size:10px">${item.c||'🌍'}</span>${isReal?'<span style="font-size:8px;background:#00FF66;color:#000;padding:1px 5px;border-radius:6px;font-weight:900">REAL</span>':''}</div><div style="text-align:right"><p class="mono" style="font-size:11px;font-weight:900;color:#FFD700;margin:0">$${fmt(item.vol||0)}</p><p style="font-size:8px;color:#888;margin:1px 0 0">${item.refs || 0} refs</p></div></div>`;
-      } catch(e) { return ''; }
-    }).join('')}</div>`;
+    box.innerHTML = '<p style="text-align:center;padding:16px;color:#666;font-size:11px">Loading...</p>';
+    const lb = await buildLeaderboard();
+    LB_CACHE = lb;
+    S.leaderboardLoaded = true;
+    if (!lb || lb.length === 0) { box.innerHTML = '<p style="text-align:center;padding:16px;color:#666;font-size:11px">No data</p>'; return; }
+    const top5 = lb.slice(0, 5);
+    box.innerHTML = `<div style="text-align:left">${top5.map((item, i) => leaderboardRow(item, i + 1)).join('')}</div><button onclick="S.showSeeAllLb=true;render()" class="see-all-btn">SEE ALL ${lb.length} →</button>`;
   } catch(e) {
     console.warn('Leaderboard error:', e);
     const box = $('leaderboardList');
-    if (box) box.innerHTML = '<p style="text-align:center;padding:16px;color:#666;font-size:11px">Leaderboard unavailable</p>';
+    if (box) box.innerHTML = '<p style="text-align:center;padding:16px;color:#666;font-size:11px">Unavailable</p>';
   }
 }
 
+// ============ FIX #10: Active Investors count ============
 function teamUI() {
   try {
     const rl = refLink();
@@ -2249,12 +2309,15 @@ function teamUI() {
     if (myTeam.length === 0) {
       myTeamHTML = `<div style="text-align:center;padding:24px 10px;background:rgba(0,0,0,0.3);border-radius:14px;border:1px dashed rgba(0,255,102,0.15)"><p style="font-size:12px;color:#888;margin:0">No members yet.</p><p style="font-size:10px;color:#00FF66;margin:4px 0 0">Share your link to earn 10%!</p></div>`;
     } else {
-      myTeamHTML = myTeam.map(m => {
+      const top5 = myTeam.slice(0, 5);
+      const rows = top5.map(m => {
         const joinD = m.joined_at ? String(m.joined_at).slice(0, 10) : 'Recent';
         const inv = Number(m.invested || 0);
         const isPlanActive = inv > 0;
         return `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:14px;background:rgba(0,0,0,0.45);border:1px solid ${isPlanActive?'rgba(0,255,102,0.25)':'rgba(255,255,255,0.06)'};margin-bottom:8px"><div style="display:flex;align-items:center;gap:10px"><div style="width:34px;height:34px;border-radius:50%;background:${isPlanActive?'rgba(0,255,102,0.15)':'rgba(255,255,255,0.05)'};display:flex;align-items:center;justify-content:center;color:${isPlanActive?'#00FF66':'#888'};font-weight:900;font-size:14px">${(m.username||'U')[0].toUpperCase()}</div><div><p style="font-weight:900;font-size:13px;margin:0">${esc(m.username||'User')}</p><p style="font-size:9px;color:#888;margin:2px 0 0">Joined: ${joinD}</p></div></div><div style="text-align:right"><p class="mono ${isPlanActive?'text-toxic':'text-gray-400'} font-black" style="margin:0;font-size:13px">$${fmt(inv)}</p><span style="font-size:8px;padding:2px 6px;border-radius:8px;${isPlanActive?'background:rgba(0,255,102,0.12);color:#00FF66':'background:rgba(255,255,255,0.05);color:#777'};font-weight:800;text-transform:uppercase">${isPlanActive?'Invested':'No Plan'}</span></div></div>`;
       }).join('');
+      const seeAll = myTeam.length > 5 ? `<button onclick="S.showSeeAllTeam=true;render()" class="see-all-btn">SEE ALL ${myTeam.length} →</button>` : '';
+      myTeamHTML = rows + seeAll;
     }
     return `<div style="display:flex;flex-direction:column;gap:16px">
       <div class="glass-card">
@@ -2264,7 +2327,7 @@ function teamUI() {
         <p style="font-size:12px;color:#888;margin:0">Earn 10% commission on referral investments</p>
         <div style="background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.25);border-radius:12px;padding:10px 14px;margin-top:14px"><p style="font-size:11px;color:#00FF66;font-weight:700;margin:0">⚡ Click 'ADD TO BALANCE' to claim referral earnings</p></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.08)">
-          <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px;text-align:center"><p style="font-size:9px;color:#888;margin:0 0 4px">MEMBERS</p><p class="mono text-toxic" style="font-size:20px;font-weight:900;margin:0">${myTeam.length}</p></div>
+          <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px;text-align:center"><p style="font-size:9px;color:#888;margin:0 0 4px">MEMBERS</p><p class="mono text-toxic" style="font-size:20px;font-weight:900;margin:0">${myTeam.length}</p><p style="font-size:8px;color:#00FF66;font-weight:700;margin:4px 0 0">${activeCount} active</p></div>
           <div style="background:rgba(0,0,0,0.45);border-radius:14px;padding:12px;text-align:center"><p style="font-size:9px;color:#888;margin:0 0 4px">REF EARNINGS</p><p class="mono text-toxic" style="font-size:20px;font-weight:900;margin:0">$${fmt(refBal)}</p>${refBal > 0 ? `<button onclick="claimReferralBalance()" class="btn-green" style="margin-top:10px;padding:8px 12px;border-radius:10px;font-size:11px;width:100%;font-weight:900">➕ ADD TO BALANCE</button>` : ''}</div>
         </div>
       </div>
@@ -2279,11 +2342,35 @@ function teamUI() {
     </div>`;
   } catch(e) {
     console.error('Team UI error:', e);
-    return `<div class="glass-card" style="text-align:center;padding:32px 20px"><div style="font-size:38px;margin-bottom:10px">⚠️</div><p style="font-weight:900;font-size:15px;margin:0 0 6px">Something went wrong</p><p style="font-size:12px;color:#888;margin:0 0 16px">Please refresh or contact support</p><button onclick="location.reload()" class="btn-green" style="padding:11px 24px;border-radius:12px;font-size:12px">🔄 RELOAD</button></div>`;
+    return `<div class="glass-card" style="text-align:center;padding:32px 20px"><div style="font-size:38px;margin-bottom:10px">⚠️</div><p style="font-weight:900;font-size:15px;margin:0 0 6px">Something went wrong</p><button onclick="location.reload()" class="btn-green" style="padding:11px 24px;border-radius:12px;font-size:12px;margin-top:10px">🔄 RELOAD</button></div>`;
   }
 }
 
 function shareTg() { const link = refLink(); window.open('https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent('Join TOXIC and start earning daily! 🚀'), '_blank'); }
+
+function seeAllModals() {
+  let out = '';
+  if (S.showSeeAllLb) {
+    out += `<div style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.94);backdrop-filter:blur(12px);overflow-y:auto" onclick="S.showSeeAllLb=false;render()"><div class="glass-card modal-in" onclick="event.stopPropagation()" style="max-width:440px;margin:20px auto;max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;position:sticky;top:0;background:linear-gradient(180deg,rgba(10,20,15,1),rgba(10,20,15,0.95));padding:8px 0;z-index:2"><h2 style="font-size:18px;font-weight:900;margin:0">🏆 Top Affiliates</h2><button onclick="S.showSeeAllLb=false;render()" style="background:none;border:none;color:#888;font-size:26px;cursor:pointer">×</button></div>
+      <div style="text-align:left">${LB_CACHE.slice(0, 100).map((item, i) => leaderboardRow(item, i + 1)).join('')}</div>
+    </div></div>`;
+  }
+  if (S.showSeeAllTeam) {
+    const myTeam = S.team || [];
+    const rows = myTeam.map(m => {
+      const joinD = m.joined_at ? String(m.joined_at).slice(0, 10) : 'Recent';
+      const inv = Number(m.invested || 0);
+      const isPlanActive = inv > 0;
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:14px;background:rgba(0,0,0,0.45);border:1px solid ${isPlanActive?'rgba(0,255,102,0.25)':'rgba(255,255,255,0.06)'};margin-bottom:8px"><div style="display:flex;align-items:center;gap:10px"><div style="width:34px;height:34px;border-radius:50%;background:${isPlanActive?'rgba(0,255,102,0.15)':'rgba(255,255,255,0.05)'};display:flex;align-items:center;justify-content:center;color:${isPlanActive?'#00FF66':'#888'};font-weight:900;font-size:14px">${(m.username||'U')[0].toUpperCase()}</div><div><p style="font-weight:900;font-size:13px;margin:0">${esc(m.username||'User')}</p><p style="font-size:9px;color:#888;margin:2px 0 0">Joined: ${joinD}</p></div></div><div style="text-align:right"><p class="mono ${isPlanActive?'text-toxic':'text-gray-400'} font-black" style="margin:0;font-size:13px">$${fmt(inv)}</p><span style="font-size:8px;padding:2px 6px;border-radius:8px;${isPlanActive?'background:rgba(0,255,102,0.12);color:#00FF66':'background:rgba(255,255,255,0.05);color:#777'};font-weight:800;text-transform:uppercase">${isPlanActive?'Invested':'No Plan'}</span></div></div>`;
+    }).join('');
+    out += `<div style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.94);backdrop-filter:blur(12px);overflow-y:auto" onclick="S.showSeeAllTeam=false;render()"><div class="glass-card modal-in" onclick="event.stopPropagation()" style="max-width:440px;margin:20px auto;max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;position:sticky;top:0;background:linear-gradient(180deg,rgba(10,20,15,1),rgba(10,20,15,0.95));padding:8px 0;z-index:2"><h2 style="font-size:18px;font-weight:900;margin:0">👥 All Direct Referrals</h2><button onclick="S.showSeeAllTeam=false;render()" style="background:none;border:none;color:#888;font-size:26px;cursor:pointer">×</button></div>
+      <div>${rows || '<p style="text-align:center;color:#666;padding:20px 0">No referrals yet</p>'}</div>
+    </div></div>`;
+  }
+  return out;
+}
 
 function notifsModal() {
   if (!S.showNotifs) return '';
@@ -2314,7 +2401,7 @@ function shareModal() {
     <p style="font-size:10px;color:#888;margin:0 0 8px;letter-spacing:1px">3️⃣ UPLOAD SCREENSHOT</p>
     <input type="file" id="shareFileInput" accept="image/*" style="display:none" onchange="handleShareScreenshot(event)">
     <button onclick="if(${canShare?'true':'false'}){$('shareFileInput').click()}else{customAlert('Wait','Come back after weekly reset.','⏳')}" style="width:100%;padding:14px;border-radius:14px;font-size:12px;font-weight:800;background:${canShare?'rgba(0,255,102,0.1)':'rgba(255,255,255,0.05)'};border:1.5px dashed ${canShare?'rgba(0,255,102,0.4)':'rgba(255,255,255,0.1)'};color:${canShare?'#00FF66':'#666'};cursor:${canShare?'pointer':'not-allowed'}">📷 ${canShare?'CHOOSE SCREENSHOT':'NOT AVAILABLE'}</button>
-    <p style="font-size:9px;color:#666;margin:10px 0 0;text-align:center">Max 2MB · Admin verify 24h · Sends to our Telegram</p>
+    <p style="font-size:9px;color:#666;margin:10px 0 0;text-align:center">Max 2MB · Admin verify 24h</p>
   </div></div>`;
 }
 async function handleShareScreenshot(event) {
@@ -2329,7 +2416,7 @@ async function handleShareScreenshot(event) {
       canvas.width = img.width * scale; canvas.height = img.height * scale;
       const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       const b64 = canvas.toDataURL('image/jpeg', 0.6);
-      toast('📤 Sending to Telegram...');
+      toast('📤 Sending...');
       const tgResult = await sendScreenshotToTelegram(b64, S.user.username, S.user.user_id);
       if (sb) {
         try {
@@ -2338,8 +2425,8 @@ async function handleShareScreenshot(event) {
           localStorage.setItem('t_last_share_' + S.user.user_id, Date.now().toString());
           haptic('success'); sound('success');
           S.showShare = false; render();
-          if (tgResult.ok) customAlert('✅ Submitted!', 'Screenshot sent to Telegram channel.\n\n+$0.10 will be credited after approval.', '🎉');
-          else customAlert('⚠️ Partial', `Saved to database, but Telegram failed:\n\n${tgResult.error||'Unknown'}\n\nAdmin will still see it.`, '⚠️');
+          if (tgResult.ok) customAlert('✅ Submitted!', 'Screenshot sent.\n\n+$0.10 after approval.', '🎉');
+          else customAlert('⚠️ Partial', `Saved but Telegram failed:\n\n${tgResult.error||'Unknown'}`, '⚠️');
         } catch(err) { customAlert('Submission Failed', 'Try again.\n\n' + (err.message || ''), '❌'); }
       } else customAlert('Offline', 'Check internet.', '⚠️');
     };
@@ -2355,7 +2442,7 @@ function winnerModal() {
   return `<div style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);overflow-y:auto" onclick="S.showWinner=false;render()"><div class="glass-card modal-in" onclick="event.stopPropagation()" style="max-width:440px;margin:20px auto;max-height:90vh;overflow-y:auto">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 style="font-size:18px;font-weight:900;margin:0">👑 Top Winners</h2><button onclick="S.showWinner=false;render()" style="background:none;border:none;color:#888;font-size:26px;cursor:pointer">×</button></div>
     <p style="font-size:11px;color:#888;margin:0 0 14px">Weekly & Monthly — Global</p>
-    ${all.map((w, i) => { const rank = i + 1; const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`; return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:10px;background:${w.isReal?'rgba(0,255,102,0.1)':'rgba(0,0,0,0.4)'};margin-bottom:5px;border:1px solid ${rank<=3?'rgba(255,215,0,0.4)':(w.isReal?'rgba(0,255,102,0.25)':'transparent')}"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px;width:26px;color:${rank===1?'#FFD700':rank===2?'#C0C0C0':rank===3?'#CD7F32':'#666'};font-weight:900">${medal}</span><span style="font-size:11px;font-weight:800;color:${w.isReal?'#00FF66':'#fff'}">${esc(w.name)}</span><span style="font-size:10px">${w.country}</span></div><div style="text-align:right"><p class="mono" style="font-size:11px;font-weight:900;color:#FFD700;margin:0">$${fmt(w.amount)}</p><p style="font-size:8px;color:#888;margin:1px 0 0">${w.period}</p></div></div>`; }).join('')}
+    ${all.map((w, i) => { const rank = i + 1; const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`; return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:10px;background:rgba(0,0,0,0.4);margin-bottom:5px;border:1px solid ${rank<=3?'rgba(255,215,0,0.4)':'transparent'}"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px;width:26px;color:${rank===1?'#FFD700':rank===2?'#C0C0C0':rank===3?'#CD7F32':'#666'};font-weight:900">${medal}</span><span style="font-size:11px;font-weight:800;color:#fff">${esc(w.name)}</span><span style="font-size:10px">${w.country}</span></div><div style="text-align:right"><p class="mono" style="font-size:11px;font-weight:900;color:#FFD700;margin:0">$${fmt(w.amount)}</p><p style="font-size:8px;color:#888;margin:1px 0 0">${w.period}</p></div></div>`; }).join('')}
   </div></div>`;
 }
 function qrModal() {
@@ -2458,7 +2545,7 @@ function dismissPWA() { const b = $('pwaBanner'); if (b) b.classList.remove('sho
 let pullStartY = 0; let pulling = false; let pullDist = 0;
 const PULL_THRESHOLD = 80;
 document.addEventListener('touchstart', (e) => {
-  if (window.scrollY <= 2 && !S.showProfile && !S.showNotifs && !S.page && !S.showForgot && !S.showBadges && !S.showShare && !S.showWinner && !S.showQR && S.user) { pullStartY = e.touches[0].clientY; pulling = true; pullDist = 0; }
+  if (window.scrollY <= 2 && !S.showProfile && !S.showNotifs && !S.page && !S.showForgot && !S.showBadges && !S.showShare && !S.showWinner && !S.showQR && !S.showSeeAllLb && !S.showSeeAllTeam && S.user) { pullStartY = e.touches[0].clientY; pulling = true; pullDist = 0; }
 }, {passive:true});
 document.addEventListener('touchmove', (e) => {
   if (!pulling) return;
@@ -2473,7 +2560,7 @@ document.addEventListener('touchend', async () => {
     if (ind) { ind.classList.add('spin'); ind.textContent = '⟳'; ind.style.transform = 'translateX(-50%) translateY(60px)'; }
     haptic('medium'); sound('tap');
     await loadSiteConfig(); await loadPlansFromDB(); await syncUser(); await loadPromoCodes(); await loadCryptoPrices();
-    S.leaderboardLoaded = false;
+    S.leaderboardLoaded = false; LB_CACHE = [];
     render();
     setTimeout(() => { if (ind) { ind.classList.remove('spin', 'active'); ind.textContent = '↓'; ind.style.transform = 'translateX(-50%) translateY(-80px)'; } toast('✅ Updated!'); }, 700);
   } else { if (ind) { ind.classList.remove('active'); ind.style.transform = 'translateX(-50%) translateY(-80px)'; } }
@@ -2485,6 +2572,8 @@ window.addEventListener('popstate', () => {
   let closed = false;
   if ($('cModal') && $('cModal').style.display === 'flex') { closeCModal(); closed = true; }
   else if ($('tourOverlay') && $('tourOverlay').classList.contains('show')) { skipTour(); closed = true; }
+  else if (S.showSeeAllLb) { S.showSeeAllLb = false; closed = true; }
+  else if (S.showSeeAllTeam) { S.showSeeAllTeam = false; closed = true; }
   else if (S.showProfile) { S.showProfile = false; closed = true; }
   else if (S.showNotifs) { S.showNotifs = false; closed = true; }
   else if (S.selPlan) { S.selPlan = null; closed = true; }
@@ -2503,16 +2592,28 @@ try { if (window.Telegram && window.Telegram.WebApp) { window.Telegram.WebApp.re
 if (!S.user) S.tab = 'signup';
 
 let loadingHidden = false;
-function hideLoading() { if (loadingHidden) return; loadingHidden = true; const l = $('loading'); if (l) l.classList.add('hide'); }
+// ============ FIX #11: Loading % reaches 100 ============
+function hideLoading() { 
+  if (loadingHidden) return; 
+  loadingHidden = true; 
+  const pctEl = $('loadingPct');
+  const fill = $('loadingFill');
+  if (pctEl) pctEl.textContent = '100%';
+  if (fill) fill.style.width = '100%';
+  setTimeout(() => {
+    const l = $('loading'); 
+    if (l) l.classList.add('hide');
+  }, 450);
+}
 
-// Loading percentage animation
 function animateLoadingPct() {
   const pctEl = $('loadingPct');
   if (!pctEl) return;
   let pct = 0;
   const int = setInterval(() => {
+    if (loadingHidden) { clearInterval(int); return; }
     pct += Math.floor(Math.random() * 8) + 3;
-    if (pct >= 100) { pct = 100; clearInterval(int); }
+    if (pct >= 95) { pct = 95; clearInterval(int); }  // Cap at 95, hideLoading takes to 100
     pctEl.textContent = pct + '%';
     const fill = $('loadingFill');
     if (fill) fill.style.width = pct + '%';
@@ -2546,7 +2647,7 @@ setInterval(async () => {
     updateDyn();
     const ae = document.activeElement;
     const typing = ae && ['INPUT','SELECT','TEXTAREA'].includes(ae.tagName);
-    if (before !== after && !typing && !S.showProfile && !S.showNotifs && !S.page && !S.selPlan && S.tab !== 'wallet' && !S.showForgot && !S.showBadges && !S.showShare && !S.showWinner && !S.showQR) { render(); }
+    if (before !== after && !typing && !S.showProfile && !S.showNotifs && !S.page && !S.selPlan && S.tab !== 'wallet' && !S.showForgot && !S.showBadges && !S.showShare && !S.showWinner && !S.showQR && !S.showSeeAllLb && !S.showSeeAllTeam) { render(); }
   }
 }, 30000);
 </script>
