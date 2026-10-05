@@ -61,7 +61,6 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .timer-glow { text-shadow: 0 0 30px rgba(0,255,102,0.8); }
 .modal-in { animation: min 0.35s cubic-bezier(0.34,1.56,0.64,1); }
 @keyframes min { from { opacity: 0; transform: scale(0.9) translateY(30px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-/* LOADING */
 .loading { position: fixed; inset: 0; background: #050907; background-image: radial-gradient(circle at center, rgba(0,255,102,0.10), transparent 65%); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s, visibility 0.6s; overflow: hidden; }
 .loading.hide { opacity: 0; visibility: hidden; }
 .loading-particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
@@ -119,7 +118,6 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .winner-scroll { white-space: nowrap; display: inline-flex; animation: winnerAnim 45s linear infinite; }
 @keyframes winnerAnim { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 .emoji-3d { display: inline-block; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.7)) drop-shadow(0 0 6px rgba(0,255,102,0.25)); transform: translateY(-1px); }
-/* COMPACT ACHIEVEMENT BUTTONS */
 .ach-btn { padding: 5px 3px; border-radius: 9px; font-size: 8px; font-weight: 900; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 1px; border-width: 1px; border-style: solid; }
 .ach-btn .ach-emoji { font-size: 11px; }
 .ach-btn .ach-sub { font-size: 7px; color: #888; font-weight: 700; }
@@ -160,18 +158,56 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .tour-dots { display: flex; gap: 6px; justify-content: center; margin: 18px 0; }
 .tour-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.15); transition: all 0.3s; }
 .tour-dot.active { background: #00FF66; width: 22px; border-radius: 4px; box-shadow: 0 0 10px #00FF66; }
-/* SIGNUP PREMIUM SPACING */
 .signup-section { margin-bottom: 18px; }
 .signup-label { font-size: 9px; color: #888; font-weight: 700; letter-spacing: 1.6px; display: block; margin-bottom: 8px; text-transform: uppercase; }
 .signup-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(0,255,102,0.2), transparent); margin: 18px 0; }
-/* FLOATING SUPPORT - z-index 61, above PWA banner */
 .float-support { position: fixed; bottom: calc(115px + env(safe-area-inset-bottom)); right: 16px; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-size: 22px; z-index: 61; text-decoration: none; background: #00FF66; box-shadow: 0 0 30px rgba(0,255,102,0.6); transition: bottom 0.3s; }
 .float-support:active { transform: scale(0.95); }
-/* SEE ALL BTN */
 .see-all-btn { width: 100%; padding: 10px; border-radius: 11px; font-size: 11px; font-weight: 900; background: linear-gradient(135deg, rgba(0,255,102,0.15), rgba(0,255,102,0.05)); border: 1px solid rgba(0,255,102,0.4); color: #00FF66; cursor: pointer; margin-top: 10px; }
-/* SYNC INDICATOR */
 .sync-ind { width: 14px; height: 14px; border: 2px solid rgba(0,255,102,0.3); border-top-color: #00FF66; border-radius: 50%; animation: spinR2 0.7s linear infinite; display: none; }
 @keyframes spinR2 { to { transform: rotate(360deg); } }
+
+/* ============ SIGNUP REDESIGN ============ */
+.signup-page { min-height: 100vh; padding-bottom: 40px; background: #050907; }
+.signup-hero { position: sticky; top: 0; z-index: 50; width: 100%; max-width: 448px; margin: 0 auto; height: 150px; overflow: hidden; background: #050907; box-shadow: 0 4px 24px rgba(0,0,0,0.7); }
+.signup-hero-img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; display: block; }
+.signup-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgba(5,9,7,0.55) 70%, rgba(5,9,7,0.98) 100%); pointer-events: none; }
+.signup-hero-logo { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); z-index: 3; }
+.signup-card-wrap { padding: 14px 16px 24px; max-width: 448px; margin: 0 auto; }
+.signup-card { border-top: 2px solid rgba(0,255,102,0.4); padding: 20px 18px; }
+.signup-steps { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 4px 0 14px; }
+.signup-step-dot { width: 34px; height: 34px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; transition: all 0.3s; }
+.signup-header { margin-bottom: 16px; }
+.signup-step-label { font-size: 9px; color: #666; font-weight: 700; margin: 0 0 6px; letter-spacing: 1.8px; }
+.signup-title { font-size: 22px; font-weight: 900; margin: 0 0 6px; letter-spacing: -0.3px; }
+.signup-sub { font-size: 12px; color: #888; margin: 0; }
+.signup-label { font-size: 9px; color: #888; font-weight: 700; letter-spacing: 1.6px; display: block; margin-bottom: 8px; text-transform: uppercase; }
+.signup-section { margin-bottom: 16px; }
+.signup-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(0,255,102,0.2), transparent); margin: 16px 0; }
+.bonus-box { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; background: linear-gradient(135deg, rgba(0,255,102,0.16), rgba(0,255,102,0.04)); border: 1.5px solid rgba(0,255,102,0.55); box-shadow: 0 0 24px rgba(0,255,102,0.18), inset 0 0 18px rgba(0,255,102,0.04); margin-bottom: 18px; position: relative; overflow: hidden; }
+.bonus-box::before { content: ''; position: absolute; top: -50%; right: -20%; width: 120px; height: 120px; background: radial-gradient(circle, rgba(0,255,102,0.25), transparent 70%); pointer-events: none; }
+.bonus-emoji { font-size: 26px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6)) drop-shadow(0 0 8px rgba(0,255,102,0.5)); flex-shrink: 0; }
+.bonus-title { font-size: 9px; color: #00FF66; font-weight: 900; letter-spacing: 1.4px; margin: 0 0 2px; text-transform: uppercase; }
+.bonus-text { font-size: 13px; color: #00FF66; font-weight: 900; margin: 0; letter-spacing: 0.2px; text-shadow: 0 0 12px rgba(0,255,102,0.5); }
+.ref-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: rgba(0,0,0,0.35); border: 1px dashed rgba(255,215,0,0.35); border-radius: 12px; margin-bottom: 16px; }
+.ref-row-label { font-size: 11px; font-weight: 800; color: #FFD700; display: flex; align-items: center; gap: 5px; flex-shrink: 0; white-space: nowrap; }
+.ref-row input { flex: 1; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,215,0,0.2); border-radius: 8px; padding: 8px 10px; color: #fff; font-size: 11px; font-family: 'JetBrains Mono', monospace; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; outline: none; min-width: 0; }
+.ref-row input:focus { border-color: rgba(255,215,0,0.6); }
+.ref-row input::placeholder { color: #6B7280; letter-spacing: 1px; }
+.otp-masked { letter-spacing: 8px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 900; padding: 10px 12px; }
+.otp-masked::placeholder { letter-spacing: 6px; color: #4B5563; }
+.verified-badge { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(0,255,102,0.1); border: 1px solid rgba(0,255,102,0.4); border-radius: 12px; margin-bottom: 16px; font-size: 11px; color: #00FF66; font-weight: 700; }
+.signup-next-btn { width: 100%; padding: 14px; border-radius: 14px; font-size: 13px; margin-top: 6px; }
+.signup-otp-btn { width: 100%; padding: 12px; border-radius: 12px; font-size: 12px; margin-top: 10px; }
+.signup-footer { text-align: center; font-size: 12px; color: #888; margin-top: 16px; }
+.signup-footer span { color: #00FF66; font-weight: 700; cursor: pointer; }
+.signup-terms { text-align: center; font-size: 10px; color: #888; margin-top: 12px; }
+.signup-terms span { color: #00FF66; font-weight: 700; cursor: pointer; }
+.signup-back-btn { padding: 13px 18px; border-radius: 12px; background: rgba(255,255,255,0.05); font-weight: 700; font-size: 12px; border: none; color: #fff; cursor: pointer; }
+.signup-finish-btn { flex: 1; padding: 13px; border-radius: 12px; font-weight: 800; font-size: 12px; border: none; cursor: pointer; }
+.signup-select { padding: 11px 14px; font-size: 13px; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2300FF66' stroke-width='3'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+.signup-select option { background: #0a1410; color: #fff; }
+@media (min-width: 640px) { .signup-hero { height: 200px; border-radius: 0 0 20px 20px; } }
 </style>
 </head>
 <body>
@@ -232,7 +268,6 @@ if (window.emailjs) { emailjs.init('jqUMl6CNuI5ijOpCJ'); }
 
 const TG_ICON_SVG = `<svg viewBox="0 0 24 24" fill="currentColor" width="26" height="26"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>`;
 
-// ============ SVG LOGO (Clean: no drips, no shadow, no ellipses, no bubbles inside text) ============
 function toxicLogo(size = 'lg') {
   const cls = size === 'lg' ? 'toxic-svg-logo' : 'toxic-svg-logo-sm';
   const uid = size + Math.random().toString(36).slice(2, 7);
@@ -258,7 +293,7 @@ let CFG = {
   banner: 'https://i.postimg.cc/Wz818VcZ/1789133259079.png',
   support: 'https://t.me/Toxiconect',
   telegram: 'https://t.me/toxic_connect',
-  telegramChannel: '@toxic_connect',
+  telegramChannel: '-1004272776827',
   telegramBotToken: '8651868280:AAE_bt7Sjz4UOfOAQvpvA-HdIRwnuKCrWiw',
   upi: 'alamasif2124-1@oksbi',
   upiName: 'Asif Alam',
@@ -273,11 +308,26 @@ let CFG = {
   emailjs: { serviceId: 'service_73147hr', templateId: 'template_527mz75', publicKey: 'jqUMl6CNuI5ijOpCJ' }
 };
 
+// FIX Bug #4: Safe base64 for unicode passwords
+function safeBtoa(s) { try { return btoa(unescape(encodeURIComponent(String(s)))); } catch(e) { return ''; } }
+function safeAtob(s) { try { return decodeURIComponent(escape(atob(String(s)))); } catch(e) { return ''; } }
+
+// Country list for signup
+const COUNTRY_LIST = [
+  {c:'AF',n:'Afghanistan'},{c:'AL',n:'Albania'},{c:'DZ',n:'Algeria'},{c:'AD',n:'Andorra'},{c:'AO',n:'Angola'},{c:'AR',n:'Argentina'},{c:'AM',n:'Armenia'},{c:'AU',n:'Australia'},{c:'AT',n:'Austria'},{c:'AZ',n:'Azerbaijan'},{c:'BH',n:'Bahrain'},{c:'BD',n:'Bangladesh'},{c:'BY',n:'Belarus'},{c:'BE',n:'Belgium'},{c:'BJ',n:'Benin'},{c:'BT',n:'Bhutan'},{c:'BO',n:'Bolivia'},{c:'BA',n:'Bosnia and Herzegovina'},{c:'BW',n:'Botswana'},{c:'BR',n:'Brazil'},{c:'BN',n:'Brunei'},{c:'BG',n:'Bulgaria'},{c:'BF',n:'Burkina Faso'},{c:'BI',n:'Burundi'},{c:'KH',n:'Cambodia'},{c:'CM',n:'Cameroon'},{c:'CA',n:'Canada'},{c:'CV',n:'Cape Verde'},{c:'CF',n:'Central African Republic'},{c:'TD',n:'Chad'},{c:'CL',n:'Chile'},{c:'CN',n:'China'},{c:'CO',n:'Colombia'},{c:'KM',n:'Comoros'},{c:'CG',n:'Congo'},{c:'CD',n:'Congo (DRC)'},{c:'CR',n:'Costa Rica'},{c:'CI',n:"Côte d'Ivoire"},{c:'HR',n:'Croatia'},{c:'CU',n:'Cuba'},{c:'CY',n:'Cyprus'},{c:'CZ',n:'Czech Republic'},{c:'DK',n:'Denmark'},{c:'DJ',n:'Djibouti'},{c:'DM',n:'Dominica'},{c:'DO',n:'Dominican Republic'},{c:'EC',n:'Ecuador'},{c:'EG',n:'Egypt'},{c:'SV',n:'El Salvador'},{c:'GQ',n:'Equatorial Guinea'},{c:'ER',n:'Eritrea'},{c:'EE',n:'Estonia'},{c:'ET',n:'Ethiopia'},{c:'FJ',n:'Fiji'},{c:'FI',n:'Finland'},{c:'FR',n:'France'},{c:'GA',n:'Gabon'},{c:'GM',n:'Gambia'},{c:'GE',n:'Georgia'},{c:'DE',n:'Germany'},{c:'GH',n:'Ghana'},{c:'GR',n:'Greece'},{c:'GT',n:'Guatemala'},{c:'GN',n:'Guinea'},{c:'GY',n:'Guyana'},{c:'HT',n:'Haiti'},{c:'HN',n:'Honduras'},{c:'HK',n:'Hong Kong'},{c:'HU',n:'Hungary'},{c:'IS',n:'Iceland'},{c:'IN',n:'India'},{c:'ID',n:'Indonesia'},{c:'IR',n:'Iran'},{c:'IQ',n:'Iraq'},{c:'IE',n:'Ireland'},{c:'IL',n:'Israel'},{c:'IT',n:'Italy'},{c:'JM',n:'Jamaica'},{c:'JP',n:'Japan'},{c:'JO',n:'Jordan'},{c:'KZ',n:'Kazakhstan'},{c:'KE',n:'Kenya'},{c:'KW',n:'Kuwait'},{c:'KG',n:'Kyrgyzstan'},{c:'LA',n:'Laos'},{c:'LV',n:'Latvia'},{c:'LB',n:'Lebanon'},{c:'LS',n:'Lesotho'},{c:'LR',n:'Liberia'},{c:'LY',n:'Libya'},{c:'LI',n:'Liechtenstein'},{c:'LT',n:'Lithuania'},{c:'LU',n:'Luxembourg'},{c:'MO',n:'Macau'},{c:'MK',n:'Macedonia'},{c:'MG',n:'Madagascar'},{c:'MW',n:'Malawi'},{c:'MY',n:'Malaysia'},{c:'MV',n:'Maldives'},{c:'ML',n:'Mali'},{c:'MT',n:'Malta'},{c:'MR',n:'Mauritania'},{c:'MU',n:'Mauritius'},{c:'MX',n:'Mexico'},{c:'MD',n:'Moldova'},{c:'MC',n:'Monaco'},{c:'MN',n:'Mongolia'},{c:'ME',n:'Montenegro'},{c:'MA',n:'Morocco'},{c:'MZ',n:'Mozambique'},{c:'MM',n:'Myanmar'},{c:'NA',n:'Namibia'},{c:'NP',n:'Nepal'},{c:'NL',n:'Netherlands'},{c:'NZ',n:'New Zealand'},{c:'NI',n:'Nicaragua'},{c:'NE',n:'Niger'},{c:'NG',n:'Nigeria'},{c:'KP',n:'North Korea'},{c:'NO',n:'Norway'},{c:'OM',n:'Oman'},{c:'PK',n:'Pakistan'},{c:'PS',n:'Palestine'},{c:'PA',n:'Panama'},{c:'PG',n:'Papua New Guinea'},{c:'PY',n:'Paraguay'},{c:'PE',n:'Peru'},{c:'PH',n:'Philippines'},{c:'PL',n:'Poland'},{c:'PT',n:'Portugal'},{c:'QA',n:'Qatar'},{c:'RO',n:'Romania'},{c:'RU',n:'Russia'},{c:'RW',n:'Rwanda'},{c:'SA',n:'Saudi Arabia'},{c:'SN',n:'Senegal'},{c:'RS',n:'Serbia'},{c:'SC',n:'Seychelles'},{c:'SL',n:'Sierra Leone'},{c:'SG',n:'Singapore'},{c:'SK',n:'Slovakia'},{c:'SI',n:'Slovenia'},{c:'SO',n:'Somalia'},{c:'ZA',n:'South Africa'},{c:'KR',n:'South Korea'},{c:'SS',n:'South Sudan'},{c:'ES',n:'Spain'},{c:'LK',n:'Sri Lanka'},{c:'SD',n:'Sudan'},{c:'SR',n:'Suriname'},{c:'SZ',n:'Swaziland'},{c:'SE',n:'Sweden'},{c:'CH',n:'Switzerland'},{c:'SY',n:'Syria'},{c:'TW',n:'Taiwan'},{c:'TJ',n:'Tajikistan'},{c:'TZ',n:'Tanzania'},{c:'TH',n:'Thailand'},{c:'TG',n:'Togo'},{c:'TO',n:'Tonga'},{c:'TT',n:'Trinidad and Tobago'},{c:'TN',n:'Tunisia'},{c:'TR',n:'Turkey'},{c:'TM',n:'Turkmenistan'},{c:'UG',n:'Uganda'},{c:'UA',n:'Ukraine'},{c:'AE',n:'United Arab Emirates'},{c:'GB',n:'United Kingdom'},{c:'US',n:'United States'},{c:'UY',n:'Uruguay'},{c:'UZ',n:'Uzbekistan'},{c:'VU',n:'Vanuatu'},{c:'VE',n:'Venezuela'},{c:'VN',n:'Vietnam'},{c:'YE',n:'Yemen'},{c:'ZM',n:'Zambia'},{c:'ZW',n:'Zimbabwe'}
+];
+
+function flagEmoji(code) {
+  if (!code || code.length !== 2) return '🌍';
+  return code.toUpperCase().replace(/./g, ch => String.fromCodePoint(0x1F1E6 + ch.charCodeAt(0) - 65));
+}
+
 const sb = window.supabase ? window.supabase.createClient(CFG.sbUrl, CFG.sbKey) : null;
 let PROMO_CODES = [];
 let PROMO_LOADED = false;
 let INVEST_LOCK = false;
 let SYNC_LOCK = false;
+let SPIN_LOCK = false; // FIX Bug #1: Prevent double spin
 
 let PLANS = [
   {id:'l1', n:'BRONZE', d:1, dly:0.10, t:4.00, c:'#CD7F32', i:'🥉'},
@@ -625,7 +675,6 @@ function initOfflineMode() {
   update();
 }
 
-// ============ TOUR (FIX: key renamed so logout won't clear it) ============
 function showTour() {
   if (!S.user) return;
   const tourKey = 'xtour_' + S.user.user_id;
@@ -663,7 +712,6 @@ function skipTour() { localStorage.setItem('xtour_' + S.user.user_id, '1'); $('t
 
 function generateOTP() { return String(Math.floor(100000 + Math.random() * 900000)); }
 
-// ============ FIX #5: Offline check added ============
 async function sendOTP() {
   if (!navigator.onLine) return customAlert('Offline', 'You are offline. Please check your internet connection.', '📡');
   const email = ($('sd_email') || {}).value ? $('sd_email').value.trim() : '';
@@ -707,12 +755,14 @@ function startOtpResendTimer() {
     if (sec <= 0) { clearInterval(otpResendInterval); otpResendInterval = null; if (btn) { btn.disabled = false; btn.textContent = 'RESEND OTP'; } }
   }, 1000);
 }
+// FIX Bug #5: Clear OTP resend timer
 function verifyOTP() {
   const otp = ($('otpCode') || {}).value ? $('otpCode').value.trim() : '';
   if (!otp || otp.length !== 6) return customAlert('Invalid OTP', 'Please enter the 6-digit OTP.', '⚠️');
   if (!S.otp.code) return customAlert('OTP Expired', 'Please request a new OTP.', '⏳');
   if (Date.now() > S.otp.expiry) return customAlert('OTP Expired', 'Your OTP has expired. Please request a new one.', '⏳');
   if (String(otp) !== String(S.otp.code)) return customAlert('Wrong OTP', 'The OTP you entered is incorrect.\n\nPlease check your email and try again.', '❌');
+  if (otpResendInterval) { clearInterval(otpResendInterval); otpResendInterval = null; }
   S.otpVerified = true; S.sd.email = S.otp.email;
   haptic('success'); sound('success');
   S.step = 2; render();
@@ -758,12 +808,14 @@ function startForgotResendTimer() {
     if (sec <= 0) { clearInterval(fpResendInterval); fpResendInterval = null; if (btn) { btn.disabled = false; btn.textContent = 'RESEND OTP'; } }
   }, 1000);
 }
+// FIX Bug #5: Clear forgot OTP timer
 function verifyForgotOTP() {
   const otp = ($('fp_otp') || {}).value ? $('fp_otp').value.trim() : '';
   if (!otp || otp.length !== 6) return customAlert('Invalid OTP', 'Enter 6-digit OTP.', '⚠️');
   if (!S.forgotOtp) return customAlert('OTP Expired', 'Request a new OTP.', '⏳');
   if (Date.now() > S.forgotOtpExpiry) return customAlert('OTP Expired', 'Your OTP expired. Request a new one.', '⏳');
   if (String(otp) !== String(S.forgotOtp)) return customAlert('Wrong OTP', 'OTP is incorrect.', '❌');
+  if (fpResendInterval) { clearInterval(fpResendInterval); fpResendInterval = null; }
   S.forgotOtpVerified = true;
   haptic('success'); sound('success');
   if ($('fpOtpSection')) $('fpOtpSection').style.display = 'none';
@@ -777,7 +829,7 @@ async function resetPassword() {
   if (newPw !== confPw) return customAlert('Mismatch', 'Passwords do not match.', '⚠️');
   if (!S.forgotOtpVerified) return customAlert('Not Verified', 'Please verify OTP first.', '⚠️');
   localStorage.setItem('t_pwd_' + S.forgotUserId, newPw);
-  if (sb) { try { await sb.from('users').update({ password_hash: btoa(newPw) }).eq('user_id', S.forgotUserId); } catch(e) {} }
+  if (sb) { try { await sb.from('users').update({ password_hash: safeBtoa(newPw) }).eq('user_id', S.forgotUserId); } catch(e) {} }
   haptic('success'); sound('success'); launchConfetti();
   customAlert('🔑 Password Reset!', 'Your password has been reset successfully.\n\nPlease login with your new password.', '🎉');
   S.showForgot = false; S.forgotEmail = ''; S.forgotOtp = ''; S.forgotOtpVerified = false; S.forgotUserId = '';
@@ -868,13 +920,18 @@ function combinedTickerUI() {
     </div>
   </div>`;
 }
+// FIX Bug #3: Safe rotation with dashboard check
 function rotateCombinedTicker() {
+  if (!S.user) return;
+  if (S.tab !== 'dashboard') { setTimeout(rotateCombinedTicker, 3000); return; }
   const w = $('cRowWinner'), n = $('cRowNews');
-  if (!w || !n) return;
+  if (!w || !n) { setTimeout(rotateCombinedTicker, 3000); return; }
   w.style.display = 'flex'; n.style.display = 'none';
   setTimeout(() => {
-    if (!$('cRowWinner')) return;
-    w.style.display = 'none'; n.style.display = 'flex';
+    if (!S.user || S.tab !== 'dashboard') { setTimeout(rotateCombinedTicker, 3000); return; }
+    const w2 = $('cRowWinner'), n2 = $('cRowNews');
+    if (!w2 || !n2) { setTimeout(rotateCombinedTicker, 3000); return; }
+    w2.style.display = 'none'; n2.style.display = 'flex';
     setTimeout(() => { if ($('cRowWinner')) rotateCombinedTicker(); }, 5000);
   }, 10000);
 }
@@ -949,9 +1006,12 @@ function pickPrize() {
   for (let i = 0; i < SPIN_PRIZES.length; i++) { r -= SPIN_PRIZES[i].w; if (r <= 0) return i; }
   return 0;
 }
+// FIX Bug #1: Prevent double spin
 async function spinWheel() {
   if (!S.user) return;
+  if (SPIN_LOCK) return;
   if (!canSpin()) return customAlert('Wait', 'Come back later to spin again.', '⏳');
+  SPIN_LOCK = true;
   const idx = pickPrize(); const prize = SPIN_PRIZES[idx];
   const sliceAngle = 360 / SPIN_PRIZES.length;
   const targetAngle = 360 * 5 + (360 - sliceAngle * idx - sliceAngle / 2);
@@ -969,6 +1029,7 @@ async function spinWheel() {
       if (prize.value >= 0.20) { launchConfetti(); customAlert('🎉 YOU WON!', `+$${prize.value.toFixed(2)} added to your balance!`, '🏆'); }
       else customAlert('🎊 You Won!', `+$${prize.value.toFixed(2)} added!`, '💰');
     } else { save(); customAlert('Try Again', 'Better luck next time!', '😅'); }
+    SPIN_LOCK = false;
     render();
   }, 4600);
 }
@@ -1098,14 +1159,14 @@ function pageFAQ() {
   return `<h1>❓ FAQ</h1><p style="color:#888;font-size:11px;margin-bottom:20px">Everything you need to know</p>${faqs.map((f, i) => `<div style="background:rgba(0,0,0,0.4);border:1px solid rgba(0,255,102,0.12);border-radius:14px;padding:14px;margin-bottom:10px;cursor:pointer" onclick="this.querySelector('.faq-a').style.display=this.querySelector('.faq-a').style.display==='block'?'none':'block'"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><p style="font-weight:800;font-size:13px;margin:0"><span style="color:#00FF66">Q${i+1}.</span> ${f.q}</p><span style="color:#00FF66">▼</span></div><p class="faq-a" style="display:none;font-size:12px;color:#ccc;line-height:1.6;margin:10px 0 0;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06)">${f.a}</p></div>`).join('')}<div style="text-align:center;margin-top:24px;padding:16px;background:rgba(0,255,102,0.06);border:1px solid rgba(0,255,102,0.2);border-radius:14px"><p style="font-size:12px;color:#ccc;margin:0 0 10px">Still have questions?</p><a href="${CFG.support}" target="_blank" style="display:inline-block;text-decoration:none;padding:10px 20px;border-radius:12px;background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-weight:800;font-size:12px">💬 CONTACT SUPPORT</a></div>`;
 }
 
-// ============ FIX #2: Live notification skip during tour ============
+// FIX Bug #2: Reschedule before early return
 function showLive() {
   if (!S.user) return;
-  if (S.tab !== 'dashboard') return;
-  if (S.showProfile || S.showNotifs || S.page || S.selPlan || S.showBadges || S.showShare || S.showWinner || S.showQR || S.showSeeAllLb || S.showSeeAllTeam) return;
+  const reschedule = () => setTimeout(showLive, 12000 + Math.random() * 10000);
+  if (S.tab !== 'dashboard' || S.showProfile || S.showNotifs || S.page || S.selPlan || S.showBadges || S.showShare || S.showWinner || S.showQR || S.showSeeAllLb || S.showSeeAllTeam) { reschedule(); return; }
   const tourOverlay = $('tourOverlay');
   if (tourOverlay && tourOverlay.classList.contains('show')) { setTimeout(showLive, 8000); return; }
-  const b = $('liveB'); if (!b) return;
+  const b = $('liveB'); if (!b) { reschedule(); return; }
   const n = WORLD_NAMES[Math.floor(Math.random() * WORLD_NAMES.length)];
   const loc = WORLD_LOCATIONS[Math.floor(Math.random() * WORLD_LOCATIONS.length)];
   const opts = [' just earned <b>$' + [0.10,0.36,0.70,1.60,3.50,9.00][Math.floor(Math.random()*6)].toFixed(2) + '</b>',' invested in <b>' + ['BRONZE','SILVER','GOLD','ELITE','ULTRA','LEGEND','MASTER','MYTHIC'][Math.floor(Math.random()*8)] + '</b>',' just joined TOXIC 🎉',' just withdrew <b>$' + [10,25,15,50,20,100][Math.floor(Math.random()*6)] + '.00</b>',' unlocked <b>Diamond Hands 💎</b>'];
@@ -1113,7 +1174,7 @@ function showLive() {
   $('lTx').innerHTML = '<b>' + n + '</b> ' + loc.c + ' ' + loc.city + opts[Math.floor(Math.random() * opts.length)];
   b.classList.add('show');
   setTimeout(() => b.classList.remove('show'), 4500);
-  setTimeout(showLive, 12000 + Math.random() * 10000);
+  reschedule();
 }
 
 function render() {
@@ -1128,6 +1189,7 @@ function render() {
   if (S.tab === 'wallet') setTimeout(loadSavedAddresses, 0);
   if (S.tab === 'team') setTimeout(loadLeaderboardSafe, 150);
   updateDyn();
+  if (S.tab === 'dashboard') setTimeout(() => { const w = $('cRowWinner'); if (!w) rotateCombinedTicker(); }, 400);
 }
 
 function updateDyn() {
@@ -1155,7 +1217,6 @@ function updateDyn() {
   });
   const b = $('nb'); const un = unread();
   if (b) { if (un > 0) { b.textContent = un; b.style.display = 'flex'; } else b.style.display = 'none'; }
-  // FIX #4: Sync indicator toggle
   const si = $('syncInd');
   if (si) si.style.display = S.syncing ? 'inline-block' : 'none';
 }
@@ -1216,7 +1277,8 @@ async function syncUser() {
         return pl;
       });
       if (S.autoRenew) {
-        const completedPlans = S.plans.filter(pl => pl.status === 'completed' && !pl._renewed && Number(S.user.balance) >= Number(pl.deposit));
+        const renewedIds = JSON.parse(localStorage.getItem('t_renewed_plans') || '[]');
+        const completedPlans = S.plans.filter(pl => pl.status === 'completed' && !renewedIds.includes(String(pl.id)) && Number(S.user.balance) >= Number(pl.deposit));
         if (completedPlans.length > 0) setTimeout(() => autoRenewCombined(completedPlans), 1500);
       }
     }
@@ -1290,18 +1352,22 @@ async function syncUser() {
   updateDyn();
 }
 
+// FIX Bug #6: Persist renewed plan IDs to localStorage
 async function autoRenewCombined(completedPlans) {
   if (!S.autoRenew || !S.user || completedPlans.length === 0) return;
   const totalCost = completedPlans.reduce((s, p) => s + Number(p.deposit), 0);
   const bal = Number(S.user.balance || 0);
   if (bal < totalCost) {
     if (sb) { try { await sb.from('notifications').insert([{user_id:S.user.user_id, title:'⚠️ Auto-Renew Skipped', message:`${completedPlans.length} completed plan(s) could not auto-renew due to insufficient balance.`, type:'warning', is_read:false}]); } catch(e) {} }
-    completedPlans.forEach(p => { p._renewed = true; });
+    const renewedIds = JSON.parse(localStorage.getItem('t_renewed_plans') || '[]');
+    completedPlans.forEach(p => { if (!renewedIds.includes(String(p.id))) renewedIds.push(String(p.id)); });
+    localStorage.setItem('t_renewed_plans', JSON.stringify(renewedIds));
     return;
   }
   const planNames = completedPlans.map(p => p.plan_name).join(', ');
   customConfirm('🔄 Auto-Renew Plans?', `${completedPlans.length} completed plan(s) can be renewed:\n\n${planNames}\n\nTotal: $${fmt(totalCost)}\nBalance: $${fmt(bal)}`, async () => {
     let renewedCount = 0;
+    const renewedIds = JSON.parse(localStorage.getItem('t_renewed_plans') || '[]');
     for (const cp of completedPlans) {
       const planDef = PLANS.find(x => x.id === cp.plan_id);
       if (!planDef) continue;
@@ -1317,13 +1383,20 @@ async function autoRenewCombined(completedPlans) {
           if (r.data && r.data[0]) S.plans.unshift(r.data[0]); else S.plans.unshift(np);
           await sb.from('users').update({balance:S.user.balance, invested:S.user.invested}).eq('user_id', S.user.user_id);
         } else S.plans.unshift(np);
-        cp._renewed = true;
+        if (!renewedIds.includes(String(cp.id))) renewedIds.push(String(cp.id));
         renewedCount++;
       } catch(e) { console.warn('Renew err:', e); }
     }
+    localStorage.setItem('t_renewed_plans', JSON.stringify(renewedIds));
     save(); render();
     if (renewedCount > 0) { haptic('success'); sound('success'); launchConfetti(); customAlert('🔄 Plans Renewed!', `${renewedCount} plan(s) have been auto-renewed!`, '🎉'); }
   }, '🔄');
+  // If user cancels, remember the choice
+  setTimeout(() => {
+    const ids = JSON.parse(localStorage.getItem('t_renewed_plans') || '[]');
+    completedPlans.forEach(p => { if (!ids.includes(String(p.id))) ids.push(String(p.id)); });
+    localStorage.setItem('t_renewed_plans', JSON.stringify(ids));
+  }, 30000);
 }
 
 function userAvatar(u, size = 36, fontSize = 13) {
@@ -1399,82 +1472,117 @@ function forgotPasswordUI() {
   `);
 }
 
+// ============ SIGNUP REDESIGN ============
 function signupUI() {
   const step = S.step;
   const steps = [1,2].map(n => {
-    const bg = step > n ? '#10B981' : step === n ? '#00FF66' : 'rgba(255,255,255,0.06)';
+    const active = step === n;
+    const done = step > n;
+    const bg = done ? '#10B981' : active ? '#00FF66' : 'rgba(255,255,255,0.06)';
     const tc = step >= n ? '#000' : '#4B5563';
-    const glow = step === n ? '0 0 20px rgba(0,255,102,0.8)' : 'none';
-    return `<div style="width:34px;height:34px;border-radius:11px;background:${bg};color:${tc};display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;box-shadow:${glow};transition:all 0.3s">${step>n?'✓':n}</div>`;
+    const glow = active ? '0 0 20px rgba(0,255,102,0.8)' : 'none';
+    return `<div class="signup-step-dot" style="background:${bg};color:${tc};box-shadow:${glow}">${done?'✓':n}</div>`;
   }).join('');
-  return authHero(`
-    <div class="flex items-center justify-center gap-3 mb-3">${steps}</div>
-    <div class="glass-card shadow-2xl w-full max-w-md mx-auto modal-in" style="border-top: 2px solid rgba(0,255,102,0.4);padding:20px 18px">
-      ${step===1?step1():step2()}
+  return `<div class="signup-page">
+    <div class="signup-hero">
+      <img src="${CFG.banner}" class="signup-hero-img" alt="TOXIC">
+      <div class="signup-hero-overlay"></div>
+      <div class="signup-hero-logo">${toxicLogo('lg')}</div>
     </div>
-    <div style="text-align:center;font-size:10px;color:#888;margin-top:12px"><p>By signing up, you agree to our <span onclick="S.page='tnc';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Terms</span> & <span onclick="S.page='privacy';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Privacy</span></p></div>
-  `);
+    <div class="signup-card-wrap">
+      <div class="signup-steps">${steps}</div>
+      <div class="glass-card signup-card modal-in">
+        ${step === 1 ? step1() : step2()}
+      </div>
+      <div class="signup-terms">By signing up, you agree to our <span onclick="S.page='tnc';render()">Terms</span> &amp; <span onclick="S.page='privacy';render()">Privacy</span></div>
+    </div>
+  </div>`;
 }
 
 function step1() {
-  const cs = ['Afghanistan','Albania','Algeria','Argentina','Australia','Austria','Bahrain','Bangladesh','Belgium','Brazil','Canada','Chile','China','Colombia','Croatia','Czech Republic','Denmark','Ecuador','Egypt','Ethiopia','Finland','France','Germany','Ghana','Greece','Hungary','Iceland','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy','Japan','Jordan','Kazakhstan','Kenya','Kuwait','Kyrgyzstan','Lebanon','Libya','Malaysia','Maldives','Malta','Mexico','Mongolia','Morocco','Myanmar','Nepal','Netherlands','New Zealand','Nigeria','Norway','Oman','Pakistan','Palestine','Panama','Paraguay','Peru','Philippines','Poland','Portugal','Qatar','Romania','Russia','Saudi Arabia','Senegal','Serbia','Singapore','Slovakia','Slovenia','Somalia','South Africa','South Korea','Spain','Sri Lanka','Sudan','Sweden','Switzerland','Syria','Taiwan','Tajikistan','Tanzania','Thailand','Tunisia','Turkey','Turkmenistan','Uganda','Ukraine','United Arab Emirates','United Kingdom','United States','Uruguay','Uzbekistan','Venezuela','Vietnam','Yemen','Zambia','Zimbabwe'];
-  const ops = cs.map(c => `<option ${S.sd.country===c?'selected':''}>${c}</option>`).join('');
-  const rn = S.sd.referredBy ? `<div style="border-radius:12px;padding:10px 14px;margin-bottom:16px;background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.3);display:flex;align-items:center;justify-content:space-between"><div><p style="font-size:9px;color:#888;margin:0;letter-spacing:1.2px">REFERRED BY</p><p class="text-toxic mono" style="font-weight:900;font-size:13px;margin:2px 0 0">${esc(S.sd.referredBy)}</p></div><span style="font-size:20px" class="emoji-3d">👥</span></div>` : '';
-  return `${rn}
-    <p style="font-size:9px;color:#666;font-weight:700;margin:0 0 6px;letter-spacing:1.8px">STEP 1 / 2 · EMAIL VERIFICATION</p>
-    <h2 style="font-size:22px;font-weight:900;margin:0 0 6px;letter-spacing:-0.3px">Create your account</h2>
-    <p style="font-size:12px;color:#888;margin:0 0 18px">Verify your Gmail with OTP.</p>
-    <div style="background:linear-gradient(135deg,rgba(0,255,102,0.14),rgba(0,255,102,0.04));border:1px solid rgba(0,255,102,0.35);border-radius:12px;padding:12px 14px;margin-bottom:18px;display:flex;align-items:center;gap:10px">
-      <span style="font-size:20px" class="emoji-3d">🎁</span>
-      <p style="font-size:11px;font-weight:800;color:#00FF66;margin:0;line-height:1.3">Get $${CFG.signupBonus.toFixed(2)} FREE signup bonus!</p>
+  const countries = COUNTRY_LIST.map(c =>
+    `<option value="${c.n}" ${S.sd.country===c.n?'selected':''}>${flagEmoji(c.c)} ${c.n}</option>`
+  ).join('');
+  return `<div class="signup-header">
+    <p class="signup-step-label">STEP 1 / 2 · EMAIL VERIFICATION</p>
+    <h2 class="signup-title">Create your account</h2>
+    <p class="signup-sub">Verify your Gmail with OTP</p>
+  </div>
+
+  <div class="bonus-box">
+    <span class="bonus-emoji">🎁</span>
+    <div style="flex:1;position:relative;z-index:2">
+      <p class="bonus-title">Welcome Bonus</p>
+      <p class="bonus-text">Get $${CFG.signupBonus.toFixed(2)} FREE on signup!</p>
     </div>
-    <div class="signup-section">
-      <label class="signup-label">Country</label>
-      <select id="cs" class="inp" style="padding:11px 14px;font-size:13px"><option value="" disabled selected>Select your country</option>${ops}</select>
-    </div>
-    <div class="signup-divider"></div>
-    <div class="signup-section">
-      <label class="signup-label">Gmail Address</label>
-      <input id="sd_email" type="email" class="inp" style="padding:11px 14px;font-size:13px" placeholder="yourname@gmail.com" value="${S.sd.email||''}">
-      <button id="sendOtpBtn" onclick="sendOTP()" class="btn-green" style="width:100%;padding:12px;border-radius:12px;font-size:12px;margin-top:10px">SEND OTP</button>
-    </div>
-    <div id="otpSection" class="signup-section" style="display:${S.otpVerified?'none':'block'}">
-      <label class="signup-label">Enter 6-Digit OTP</label>
-      <input id="otpCode" type="text" maxlength="6" class="inp otp-input" style="margin-bottom:10px" placeholder="••••••">
-      <button onclick="verifyOTP()" class="btn-green" style="width:100%;padding:12px;border-radius:12px;font-size:12px">VERIFY OTP</button>
-    </div>
-    ${S.otpVerified ? `<div style="background:rgba(0,255,102,0.1);border:1px solid rgba(0,255,102,0.4);border-radius:12px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px"><span style="font-size:16px" class="emoji-3d">✅</span><p style="font-size:11px;color:#00FF66;font-weight:700;margin:0">Email verified!</p></div>` : ''}
-    <div class="signup-divider"></div>
-    <div class="signup-section">
-      <label class="signup-label">Referral Code (Optional)</label>
-      <input id="manualRef" class="inp ref-input" placeholder="ENTER CODE" value="${S.sd.referredBy||''}">
-    </div>
-    <button onclick="goStep2()" class="btn-green glow" style="width:100%;padding:14px;border-radius:14px;font-size:13px;margin-top:6px" ${S.otpVerified?'':'disabled style="opacity:0.4;cursor:not-allowed"'}>NEXT →</button>
-    <p class="text-center text-xs text-gray-500" style="margin-top:16px">Already have an account? <span onclick="S.tab='signin';render()" class="text-toxic font-bold cursor:pointer">Sign in</span></p>`;
+  </div>
+
+  <div class="signup-section">
+    <label class="signup-label">Country / Region</label>
+    <select id="cs" class="inp signup-select">
+      <option value="" disabled ${!S.sd.country?'selected':''}>🌍 Select your country</option>
+      ${countries}
+    </select>
+  </div>
+
+  <div class="signup-divider"></div>
+
+  <div class="signup-section">
+    <label class="signup-label">Gmail Address</label>
+    <input id="sd_email" type="email" class="inp" placeholder="yourname@gmail.com" value="${S.sd.email||''}">
+    <button id="sendOtpBtn" onclick="sendOTP()" class="btn-green signup-otp-btn">SEND OTP</button>
+  </div>
+
+  <div id="otpSection" class="signup-section" style="display:${S.otpVerified?'none':'block'}">
+    <label class="signup-label">OTP</label>
+    <input id="otpCode" type="password" inputmode="numeric" maxlength="6" class="inp otp-masked" placeholder="******" autocomplete="one-time-code">
+    <button onclick="verifyOTP()" class="btn-green signup-otp-btn" style="margin-top:10px">VERIFY OTP</button>
+  </div>
+
+  ${S.otpVerified ? `<div class="verified-badge"><span style="font-size:16px">✅</span> Email verified successfully</div>` : ''}
+
+  <div class="ref-row">
+    <span class="ref-row-label">🎁 Referral</span>
+    <input id="manualRef" placeholder="OPTIONAL" value="${S.sd.referredBy||''}" maxlength="20">
+  </div>
+
+  <button onclick="goStep2()" class="btn-green signup-next-btn" ${S.otpVerified?'':'disabled'}>NEXT →</button>
+
+  <p class="signup-footer">Already have an account? <span onclick="S.tab='signin';render()">Sign in</span></p>`;
 }
 
 function step2() {
-  return `<p style="font-size:9px;color:#666;font-weight:700;margin:0 0 6px;letter-spacing:1.8px">STEP 2 / 2 · SETUP</p>
-    <h2 style="font-size:22px;font-weight:900;margin:0 0 6px;letter-spacing:-0.3px">Create Access</h2>
-    <p style="font-size:12px;color:#888;margin:0 0 18px">Set username & password.</p>
-    <div class="signup-section">
-      <label class="signup-label">Username</label>
-      <input class="inp" id="un" style="padding:11px 14px;font-size:13px" placeholder="Username" value="${S.sd.username||''}">
-    </div>
-    <div class="signup-divider"></div>
-    <div class="signup-section">
-      <label class="signup-label">Password</label>
-      <input class="inp" id="pw" type="password" style="padding:11px 14px;font-size:13px" placeholder="Password (min 4 chars)">
-    </div>
-    <div class="signup-divider"></div>
-    <div class="signup-section">
-      <label class="signup-label">Confirm Password</label>
-      <input class="inp" id="pw2" type="password" style="padding:11px 14px;font-size:13px" placeholder="Confirm Password">
-    </div>
-    <div style="display:flex;gap:10px;margin-top:6px"><button onclick="S.step=1;render()" style="padding:13px 18px;border-radius:12px;background:rgba(255,255,255,0.05);font-weight:700;font-size:12px;border:none;color:#fff;cursor:pointer">← BACK</button><button onclick="finishSignup()" style="flex:1;padding:13px;border-radius:12px;font-weight:800;font-size:12px;border:none;cursor:pointer" class="btn-green">FINISH →</button></div>`;
+  return `<div class="signup-header">
+    <p class="signup-step-label">STEP 2 / 2 · SETUP</p>
+    <h2 class="signup-title">Create your access</h2>
+    <p class="signup-sub">Set your username &amp; password</p>
+  </div>
+
+  <div class="signup-section">
+    <label class="signup-label">Username</label>
+    <input class="inp" id="un" placeholder="Choose a username" value="${S.sd.username||''}">
+  </div>
+
+  <div class="signup-divider"></div>
+
+  <div class="signup-section">
+    <label class="signup-label">Password</label>
+    <input class="inp" id="pw" type="password" placeholder="Min 4 characters">
+  </div>
+
+  <div class="signup-divider"></div>
+
+  <div class="signup-section">
+    <label class="signup-label">Confirm Password</label>
+    <input class="inp" id="pw2" type="password" placeholder="Re-enter password">
+  </div>
+
+  <div style="display:flex;gap:10px;margin-top:6px">
+    <button onclick="S.step=1;render()" class="signup-back-btn">← BACK</button>
+    <button onclick="finishSignup()" class="btn-green signup-finish-btn">FINISH →</button>
+  </div>`;
 }
 
-// ============ FIX #7: Referral code validation ============
 async function goStep2() {
   const cs = $('cs').value;
   const email = $('sd_email').value.trim();
@@ -1485,17 +1593,16 @@ async function goStep2() {
   S.sd.country = cs; S.sd.email = email;
   const mr = $('manualRef').value.trim().toUpperCase();
   if (mr) {
-    // Validate referral code exists in Supabase
     if (sb && navigator.onLine) {
       try {
         const chk = await sb.from('users').select('referral_code').eq('referral_code', mr).limit(1);
         if (!chk.data || chk.data.length === 0) {
           return customAlert('Invalid Referral Code', `The referral code "${mr}" does not exist.\n\nPlease check and try again, or leave it empty.`, '⚠️');
         }
-      } catch(e) { /* network fail - allow */ }
+      } catch(e) {}
     }
-    S.sd.referredBy = mr; 
-    localStorage.setItem('t_locked_ref', mr); 
+    S.sd.referredBy = mr;
+    localStorage.setItem('t_locked_ref', mr);
     localStorage.setItem('t_locked_ref_time', Date.now().toString());
   }
   S.step = 2; render();
@@ -1520,7 +1627,7 @@ async function finishSignup() {
   S.user = {user_id:uid, username:un, email:S.sd.email, phone:'', avatar:'', balance:0, referral_balance:0, invested:0, earned:0, referral_code:rc, referred_by:S.sd.referredBy, is_banned:false, joined_at:new Date().toISOString()};
   S.plans = [];
   localStorage.setItem('t_pwd_' + uid, pw);
-  if (sb) { try { await sb.from('users').insert([{user_id:uid, username:un, email:S.sd.email, phone:'', balance:0, referral_balance:0, invested:0, referral_code:rc, referred_by:S.sd.referredBy, is_banned:false, password_hash: btoa(pw)}]); } catch(e) {} }
+  if (sb) { try { await sb.from('users').insert([{user_id:uid, username:un, email:S.sd.email, phone:'', balance:0, referral_balance:0, invested:0, referral_code:rc, referred_by:S.sd.referredBy, is_banned:false, password_hash: safeBtoa(pw)}]); } catch(e) {} }
   localStorage.removeItem('t_locked_ref'); localStorage.removeItem('t_locked_ref_time');
   S.otpVerified = false; S.otp = {code:'', email:'', expiry:0};
   haptic('success'); sound('success'); S.tab = 'dashboard'; save(); render();
@@ -1549,12 +1656,12 @@ async function doLogin() {
       const r = await sb.from('users').select('*').or(`username.eq.${u},email.eq.${u}`).limit(1);
       if (r.data && r.data[0]) {
         const dbUser = r.data[0];
-        let dbPwd = dbUser.password_hash ? atob(dbUser.password_hash) : null;
+        let dbPwd = dbUser.password_hash ? safeAtob(dbUser.password_hash) : null;
         if (dbPwd && dbPwd !== p) { sound('error'); return customAlert('Access Denied', 'Wrong password entered.', '❌'); }
         if (!dbPwd) {
           const localPwd = localStorage.getItem('t_pwd_' + dbUser.user_id);
           if (localPwd && localPwd !== p) { sound('error'); return customAlert('Access Denied', 'Wrong password.', '❌'); }
-          try { await sb.from('users').update({ password_hash: btoa(p) }).eq('user_id', dbUser.user_id); } catch(e) {}
+          try { await sb.from('users').update({ password_hash: safeBtoa(p) }).eq('user_id', dbUser.user_id); } catch(e) {}
         }
         S.user = dbUser; S.tab = 'dashboard'; save();
         haptic('success'); sound('success');
@@ -1568,16 +1675,23 @@ async function doLogin() {
   customAlert('User Not Found', 'No account found.\n\nPlease create a new account first.', '⚠️');
 }
 
-// ============ FIX #1: Logout preserves tour key ============
+// FIX Bug #7: Reset all modal/state flags on logout
 function logout() {
   customConfirm('Logout', 'Are you sure you want to sign out?', () => {
-    Object.keys(localStorage).forEach(k => { 
-      if (k.startsWith('t_')) localStorage.removeItem(k); 
-      // FIX: Don't clear tour key (starts with 'xtour_') so it persists
+    Object.keys(localStorage).forEach(k => {
+      if (k.startsWith('t_')) localStorage.removeItem(k);
     });
     S.user = null; S.plans = []; S.team = []; S.tx = []; S.tab = 'signin';
     S.showProfile = false; S.showNotifs = false; S.showBadges = false; S.showShare = false; S.showWinner = false; S.showQR = false;
-    S.showSeeAllLb = false; S.showSeeAllTeam = false;
+    S.showSeeAllLb = false; S.showSeeAllTeam = false; S.showForgot = false;
+    S.selPlan = null; S.page = null;
+    S.otpVerified = false; S.otp = {code:'', email:'', expiry:0};
+    S.forgotOtp = ''; S.forgotEmail = ''; S.forgotOtpVerified = false; S.forgotUserId = ''; S.forgotOtpExpiry = 0;
+    S.popupQueue = []; S.popupActive = false;
+    S.step = 1; S.sd = {country:'', email:'', username:'', password:'', referredBy:null};
+    S.notifs = []; S.historyLimit = CFG.historyPageSize; S.txFilter = 'all';
+    if (otpResendInterval) { clearInterval(otpResendInterval); otpResendInterval = null; }
+    if (fpResendInterval) { clearInterval(fpResendInterval); fpResendInterval = null; }
     render();
   }, '🚪');
 }
@@ -1861,7 +1975,6 @@ async function distributeReferralCommissions(planAmount, planName, investTxId) {
   }
 }
 
-// ============ FIX #6: Push notification on plan complete ============
 async function collect(pid) {
   const pl = S.plans.find(x => String(x.id) === String(pid));
   if (!pl) return;
@@ -1885,10 +1998,10 @@ async function collect(pid) {
   }
   haptic('success'); sound('coin');
   showCoinAnim(rw);
-  if (done) { 
-    launchConfetti(); 
+  if (done) {
+    launchConfetti();
     sendPush('🎉 Plan Completed', `Your ${pl.plan_name} plan completed! Total: $${rw.toFixed(2)}`);
-    customAlert('Plan Completed!', `Total return collected: $${rw.toFixed(2)}`, '🎉'); 
+    customAlert('Plan Completed!', `Total return collected: $${rw.toFixed(2)}`, '🎉');
   }
   else customAlert('Reward Collected!', `Collected: $${rw.toFixed(2)}\nDay: ${pl.days_collected} / 40`, '💰');
   save(); render();
@@ -2081,7 +2194,6 @@ function calcWd() {
     else $('upiCalcRow').style.display = 'none';
   } else $('feeBox').style.display = 'none';
 }
-// ============ FIX #5: Offline check in subDep ============
 async function subDep() {
   if (!navigator.onLine) return customAlert('Offline', 'You are offline. Please check your internet connection.', '📡');
   const amt = parseFloat($('depAmt').value);
@@ -2146,7 +2258,7 @@ async function subWd() {
       else if (sb) {
         try {
           const r = await sb.from('users').select('password_hash').eq('user_id', S.user.user_id).limit(1);
-          if (r.data && r.data[0] && r.data[0].password_hash && atob(r.data[0].password_hash) === pwd) valid = true;
+          if (r.data && r.data[0] && r.data[0].password_hash && safeAtob(r.data[0].password_hash) === pwd) valid = true;
         } catch(e) {}
       }
       if (!valid) { sound('error'); return customAlert('Wrong Password', 'The password you entered is incorrect.\n\nWithdrawal cancelled.', '❌'); }
@@ -2297,7 +2409,6 @@ async function loadLeaderboardSafe() {
   }
 }
 
-// ============ FIX #10: Active Investors count ============
 function teamUI() {
   try {
     const rl = refLink();
@@ -2522,7 +2633,7 @@ function changePw() {
   const st = localStorage.getItem('t_pwd_' + S.user.user_id);
   if (st && st !== o) return customAlert('Error', 'Current password is incorrect', '❌');
   localStorage.setItem('t_pwd_' + S.user.user_id, n);
-  if (sb && S.user) { try { sb.from('users').update({password_hash: btoa(n)}).eq('user_id', S.user.user_id); } catch(e) {} }
+  if (sb && S.user) { try { sb.from('users').update({password_hash: safeBtoa(n)}).eq('user_id', S.user.user_id); } catch(e) {} }
   $('oldPw').value = ''; $('newPw').value = ''; $('newPw2').value = '';
   haptic('success'); sound('success');
   customAlert('Success', 'Password updated!', '✅');
@@ -2592,16 +2703,15 @@ try { if (window.Telegram && window.Telegram.WebApp) { window.Telegram.WebApp.re
 if (!S.user) S.tab = 'signup';
 
 let loadingHidden = false;
-// ============ FIX #11: Loading % reaches 100 ============
-function hideLoading() { 
-  if (loadingHidden) return; 
-  loadingHidden = true; 
+function hideLoading() {
+  if (loadingHidden) return;
+  loadingHidden = true;
   const pctEl = $('loadingPct');
   const fill = $('loadingFill');
   if (pctEl) pctEl.textContent = '100%';
   if (fill) fill.style.width = '100%';
   setTimeout(() => {
-    const l = $('loading'); 
+    const l = $('loading');
     if (l) l.classList.add('hide');
   }, 450);
 }
@@ -2613,7 +2723,7 @@ function animateLoadingPct() {
   const int = setInterval(() => {
     if (loadingHidden) { clearInterval(int); return; }
     pct += Math.floor(Math.random() * 8) + 3;
-    if (pct >= 95) { pct = 95; clearInterval(int); }  // Cap at 95, hideLoading takes to 100
+    if (pct >= 95) { pct = 95; clearInterval(int); }
     pctEl.textContent = pct + '%';
     const fill = $('loadingFill');
     if (fill) fill.style.width = pct + '%';
