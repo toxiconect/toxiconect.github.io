@@ -172,7 +172,8 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .signup-hero { position: sticky; top: 0; z-index: 50; width: 100%; max-width: 448px; margin: 0 auto; height: 150px; overflow: hidden; background: #050907; box-shadow: 0 4px 24px rgba(0,0,0,0.7); }
 .signup-hero-img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; display: block; }
 .signup-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgba(5,9,7,0.55) 70%, rgba(5,9,7,0.98) 100%); pointer-events: none; }
-.signup-hero-logo { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); z-index: 3; }
+.signup-hero-logo { position: absolute; bottom: 6px; left: 8px; transform: none; z-index: 3; opacity: 0.9; }
+.signup-hero-logo .toxic-svg-logo { height: 32px !important; }
 .signup-card-wrap { padding: 14px 16px 24px; max-width: 448px; margin: 0 auto; }
 .signup-card { border-top: 2px solid rgba(0,255,102,0.4); padding: 20px 18px; }
 .signup-steps { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 4px 0 14px; }
@@ -189,9 +190,9 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .bonus-emoji { font-size: 26px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6)) drop-shadow(0 0 8px rgba(0,255,102,0.5)); flex-shrink: 0; }
 .bonus-title { font-size: 9px; color: #00FF66; font-weight: 900; letter-spacing: 1.4px; margin: 0 0 2px; text-transform: uppercase; }
 .bonus-text { font-size: 13px; color: #00FF66; font-weight: 900; margin: 0; letter-spacing: 0.2px; text-shadow: 0 0 12px rgba(0,255,102,0.5); }
-.ref-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: rgba(0,0,0,0.35); border: 1px dashed rgba(255,215,0,0.35); border-radius: 12px; margin-bottom: 16px; }
-.ref-row-label { font-size: 11px; font-weight: 800; color: #FFD700; display: flex; align-items: center; gap: 5px; flex-shrink: 0; white-space: nowrap; }
-.ref-row input { flex: 1; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,215,0,0.2); border-radius: 8px; padding: 8px 10px; color: #fff; font-size: 11px; font-family: 'JetBrains Mono', monospace; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; outline: none; min-width: 0; }
+.ref-row { display: flex; align-items: center; gap: 6px; padding: 6px 8px; background: rgba(0,0,0,0.35); border: 1px dashed rgba(255,215,0,0.35); border-radius: 10px; margin-bottom: 10px; }
+.ref-row-label { font-size: 9px; font-weight: 800; color: #FFD700; display: flex; align-items: center; gap: 3px; flex-shrink: 0; white-space: nowrap; }
+.ref-row input { flex: 1; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,215,0,0.2); border-radius: 6px; padding: 5px 8px; color: #fff; font-size: 10px; font-family: 'JetBrains Mono', monospace; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; outline: none; min-width: 0; }
 .ref-row input:focus { border-color: rgba(255,215,0,0.6); }
 .ref-row input::placeholder { color: #6B7280; letter-spacing: 1px; }
 .otp-masked { letter-spacing: 8px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 900; padding: 10px 12px; }
@@ -327,7 +328,7 @@ let PROMO_CODES = [];
 let PROMO_LOADED = false;
 let INVEST_LOCK = false;
 let SYNC_LOCK = false;
-let SPIN_LOCK = false; // FIX Bug #1: Prevent double spin
+let SPIN_LOCK = false;
 
 let PLANS = [
   {id:'l1', n:'BRONZE', d:1, dly:0.10, t:4.00, c:'#CD7F32', i:'🥉'},
@@ -755,7 +756,6 @@ function startOtpResendTimer() {
     if (sec <= 0) { clearInterval(otpResendInterval); otpResendInterval = null; if (btn) { btn.disabled = false; btn.textContent = 'RESEND OTP'; } }
   }, 1000);
 }
-// FIX Bug #5: Clear OTP resend timer
 function verifyOTP() {
   const otp = ($('otpCode') || {}).value ? $('otpCode').value.trim() : '';
   if (!otp || otp.length !== 6) return customAlert('Invalid OTP', 'Please enter the 6-digit OTP.', '⚠️');
@@ -808,7 +808,6 @@ function startForgotResendTimer() {
     if (sec <= 0) { clearInterval(fpResendInterval); fpResendInterval = null; if (btn) { btn.disabled = false; btn.textContent = 'RESEND OTP'; } }
   }, 1000);
 }
-// FIX Bug #5: Clear forgot OTP timer
 function verifyForgotOTP() {
   const otp = ($('fp_otp') || {}).value ? $('fp_otp').value.trim() : '';
   if (!otp || otp.length !== 6) return customAlert('Invalid OTP', 'Enter 6-digit OTP.', '⚠️');
@@ -920,7 +919,6 @@ function combinedTickerUI() {
     </div>
   </div>`;
 }
-// FIX Bug #3: Safe rotation with dashboard check
 function rotateCombinedTicker() {
   if (!S.user) return;
   if (S.tab !== 'dashboard') { setTimeout(rotateCombinedTicker, 3000); return; }
@@ -1006,7 +1004,6 @@ function pickPrize() {
   for (let i = 0; i < SPIN_PRIZES.length; i++) { r -= SPIN_PRIZES[i].w; if (r <= 0) return i; }
   return 0;
 }
-// FIX Bug #1: Prevent double spin
 async function spinWheel() {
   if (!S.user) return;
   if (SPIN_LOCK) return;
@@ -1159,7 +1156,6 @@ function pageFAQ() {
   return `<h1>❓ FAQ</h1><p style="color:#888;font-size:11px;margin-bottom:20px">Everything you need to know</p>${faqs.map((f, i) => `<div style="background:rgba(0,0,0,0.4);border:1px solid rgba(0,255,102,0.12);border-radius:14px;padding:14px;margin-bottom:10px;cursor:pointer" onclick="this.querySelector('.faq-a').style.display=this.querySelector('.faq-a').style.display==='block'?'none':'block'"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><p style="font-weight:800;font-size:13px;margin:0"><span style="color:#00FF66">Q${i+1}.</span> ${f.q}</p><span style="color:#00FF66">▼</span></div><p class="faq-a" style="display:none;font-size:12px;color:#ccc;line-height:1.6;margin:10px 0 0;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06)">${f.a}</p></div>`).join('')}<div style="text-align:center;margin-top:24px;padding:16px;background:rgba(0,255,102,0.06);border:1px solid rgba(0,255,102,0.2);border-radius:14px"><p style="font-size:12px;color:#ccc;margin:0 0 10px">Still have questions?</p><a href="${CFG.support}" target="_blank" style="display:inline-block;text-decoration:none;padding:10px 20px;border-radius:12px;background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-weight:800;font-size:12px">💬 CONTACT SUPPORT</a></div>`;
 }
 
-// FIX Bug #2: Reschedule before early return
 function showLive() {
   if (!S.user) return;
   const reschedule = () => setTimeout(showLive, 12000 + Math.random() * 10000);
@@ -1352,7 +1348,6 @@ async function syncUser() {
   updateDyn();
 }
 
-// FIX Bug #6: Persist renewed plan IDs to localStorage
 async function autoRenewCombined(completedPlans) {
   if (!S.autoRenew || !S.user || completedPlans.length === 0) return;
   const totalCost = completedPlans.reduce((s, p) => s + Number(p.deposit), 0);
@@ -1391,7 +1386,6 @@ async function autoRenewCombined(completedPlans) {
     save(); render();
     if (renewedCount > 0) { haptic('success'); sound('success'); launchConfetti(); customAlert('🔄 Plans Renewed!', `${renewedCount} plan(s) have been auto-renewed!`, '🎉'); }
   }, '🔄');
-  // If user cancels, remember the choice
   setTimeout(() => {
     const ids = JSON.parse(localStorage.getItem('t_renewed_plans') || '[]');
     completedPlans.forEach(p => { if (!ids.includes(String(p.id))) ids.push(String(p.id)); });
@@ -1472,7 +1466,6 @@ function forgotPasswordUI() {
   `);
 }
 
-// ============ SIGNUP REDESIGN ============
 function signupUI() {
   const step = S.step;
   const steps = [1,2].map(n => {
@@ -1487,7 +1480,7 @@ function signupUI() {
     <div class="signup-hero">
       <img src="${CFG.banner}" class="signup-hero-img" alt="TOXIC">
       <div class="signup-hero-overlay"></div>
-      <div class="signup-hero-logo">${toxicLogo('lg')}</div>
+      <div class="signup-hero-logo">${toxicLogo('sm')}</div>
     </div>
     <div class="signup-card-wrap">
       <div class="signup-steps">${steps}</div>
@@ -1675,7 +1668,6 @@ async function doLogin() {
   customAlert('User Not Found', 'No account found.\n\nPlease create a new account first.', '⚠️');
 }
 
-// FIX Bug #7: Reset all modal/state flags on logout
 function logout() {
   customConfirm('Logout', 'Are you sure you want to sign out?', () => {
     Object.keys(localStorage).forEach(k => {
