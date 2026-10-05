@@ -33,8 +33,6 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .inp { background: rgba(0,0,0,0.45); border: 1.5px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 11px 14px; color: #fff; outline: none; width: 100%; font-size: 14px; font-family: inherit; transition: all 0.2s; }
 .inp:focus { border-color: rgba(0, 255, 102, 0.6); box-shadow: 0 0 0 3px rgba(0, 255, 102, 0.08); }
 .inp::placeholder { color: #4B5563; }
-.otp-input { letter-spacing: 4px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 900; padding: 9px 10px; }
-.ref-input { text-transform: uppercase; letter-spacing: 3px; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 800; padding: 9px 14px; text-align: center; border-style: dashed; }
 .nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 448px; margin: 0 auto; z-index: 50; background: rgba(5,9,7,0.98); backdrop-filter: blur(30px); border-top: 1px solid rgba(0,255,102,0.1); padding: 8px 4px calc(8px + env(safe-area-inset-bottom)); }
 .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 2px; border-radius: 14px; cursor: pointer; color: #6B7280; transition: all 0.2s; position: relative; }
 .nav-item.active { color: #00FF66; }
@@ -121,13 +119,6 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .ach-btn { padding: 5px 3px; border-radius: 9px; font-size: 8px; font-weight: 900; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 1px; border-width: 1px; border-style: solid; }
 .ach-btn .ach-emoji { font-size: 11px; }
 .ach-btn .ach-sub { font-size: 7px; color: #888; font-weight: 700; }
-.auth-hero { position: relative; width: 100%; min-height: 100vh; overflow: hidden; }
-.auth-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; }
-.auth-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,9,7,0.05) 0%, rgba(5,9,7,0.30) 25%, rgba(5,9,7,0.72) 55%, rgba(5,9,7,0.95) 78%, #050907 100%); }
-.auth-logo-wrap { position: absolute; top: 3%; left: 50%; transform: translateX(-50%); z-index: 3; text-align: center; }
-.auth-card-wrap { position: relative; z-index: 5; min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 130px 16px calc(16px + env(safe-area-inset-bottom)); }
-.toxic-svg-logo { height: 70px; width: auto; display: inline-block; }
-.toxic-svg-logo-sm { height: 40px; width: auto; display: inline-block; }
 .ach-card { display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(0,0,0,0.45); border-radius: 14px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); }
 .ach-card.unlocked { background: linear-gradient(135deg, rgba(0,255,102,0.12), rgba(0,0,0,0.5)); border-color: rgba(0,255,102,0.35); box-shadow: 0 0 20px rgba(0,255,102,0.1); }
 .ach-card.locked { opacity: 0.55; }
@@ -158,57 +149,96 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .tour-dots { display: flex; gap: 6px; justify-content: center; margin: 18px 0; }
 .tour-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.15); transition: all 0.3s; }
 .tour-dot.active { background: #00FF66; width: 22px; border-radius: 4px; box-shadow: 0 0 10px #00FF66; }
-.signup-section { margin-bottom: 18px; }
-.signup-label { font-size: 9px; color: #888; font-weight: 700; letter-spacing: 1.6px; display: block; margin-bottom: 8px; text-transform: uppercase; }
-.signup-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(0,255,102,0.2), transparent); margin: 18px 0; }
 .float-support { position: fixed; bottom: calc(115px + env(safe-area-inset-bottom)); right: 16px; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-size: 22px; z-index: 61; text-decoration: none; background: #00FF66; box-shadow: 0 0 30px rgba(0,255,102,0.6); transition: bottom 0.3s; }
 .float-support:active { transform: scale(0.95); }
 .see-all-btn { width: 100%; padding: 10px; border-radius: 11px; font-size: 11px; font-weight: 900; background: linear-gradient(135deg, rgba(0,255,102,0.15), rgba(0,255,102,0.05)); border: 1px solid rgba(0,255,102,0.4); color: #00FF66; cursor: pointer; margin-top: 10px; }
 .sync-ind { width: 14px; height: 14px; border: 2px solid rgba(0,255,102,0.3); border-top-color: #00FF66; border-radius: 50%; animation: spinR2 0.7s linear infinite; display: none; }
 @keyframes spinR2 { to { transform: rotate(360deg); } }
 
-/* ============ SIGNUP REDESIGN ============ */
-.signup-page { min-height: 100vh; padding-bottom: 40px; background: #050907; }
-.signup-hero { position: sticky; top: 0; z-index: 50; width: 100%; max-width: 448px; margin: 0 auto; height: 150px; overflow: hidden; background: #050907; box-shadow: 0 4px 24px rgba(0,0,0,0.7); }
-.signup-hero-img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; display: block; }
-.signup-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgba(5,9,7,0.55) 70%, rgba(5,9,7,0.98) 100%); pointer-events: none; }
-.signup-hero-logo { position: absolute; bottom: 6px; left: 8px; transform: none; z-index: 3; opacity: 0.9; }
-.signup-hero-logo .toxic-svg-logo { height: 32px !important; }
-.signup-card-wrap { padding: 14px 16px 24px; max-width: 448px; margin: 0 auto; }
-.signup-card { border-top: 2px solid rgba(0,255,102,0.4); padding: 20px 18px; }
-.signup-steps { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 4px 0 14px; }
-.signup-step-dot { width: 34px; height: 34px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; transition: all 0.3s; }
-.signup-header { margin-bottom: 16px; }
-.signup-step-label { font-size: 9px; color: #666; font-weight: 700; margin: 0 0 6px; letter-spacing: 1.8px; }
-.signup-title { font-size: 22px; font-weight: 900; margin: 0 0 6px; letter-spacing: -0.3px; }
-.signup-sub { font-size: 12px; color: #888; margin: 0; }
-.signup-label { font-size: 9px; color: #888; font-weight: 700; letter-spacing: 1.6px; display: block; margin-bottom: 8px; text-transform: uppercase; }
-.signup-section { margin-bottom: 16px; }
-.signup-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(0,255,102,0.2), transparent); margin: 16px 0; }
-.bonus-box { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; background: linear-gradient(135deg, rgba(0,255,102,0.16), rgba(0,255,102,0.04)); border: 1.5px solid rgba(0,255,102,0.55); box-shadow: 0 0 24px rgba(0,255,102,0.18), inset 0 0 18px rgba(0,255,102,0.04); margin-bottom: 18px; position: relative; overflow: hidden; }
-.bonus-box::before { content: ''; position: absolute; top: -50%; right: -20%; width: 120px; height: 120px; background: radial-gradient(circle, rgba(0,255,102,0.25), transparent 70%); pointer-events: none; }
-.bonus-emoji { font-size: 26px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6)) drop-shadow(0 0 8px rgba(0,255,102,0.5)); flex-shrink: 0; }
-.bonus-title { font-size: 9px; color: #00FF66; font-weight: 900; letter-spacing: 1.4px; margin: 0 0 2px; text-transform: uppercase; }
-.bonus-text { font-size: 13px; color: #00FF66; font-weight: 900; margin: 0; letter-spacing: 0.2px; text-shadow: 0 0 12px rgba(0,255,102,0.5); }
-.ref-row { display: flex; align-items: center; gap: 6px; padding: 6px 8px; background: rgba(0,0,0,0.35); border: 1px dashed rgba(255,215,0,0.35); border-radius: 10px; margin-bottom: 10px; }
-.ref-row-label { font-size: 9px; font-weight: 800; color: #FFD700; display: flex; align-items: center; gap: 3px; flex-shrink: 0; white-space: nowrap; }
-.ref-row input { flex: 1; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,215,0,0.2); border-radius: 6px; padding: 5px 8px; color: #fff; font-size: 10px; font-family: 'JetBrains Mono', monospace; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; outline: none; min-width: 0; }
-.ref-row input:focus { border-color: rgba(255,215,0,0.6); }
-.ref-row input::placeholder { color: #6B7280; letter-spacing: 1px; }
-.otp-masked { letter-spacing: 8px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 900; padding: 10px 12px; }
-.otp-masked::placeholder { letter-spacing: 6px; color: #4B5563; }
-.verified-badge { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(0,255,102,0.1); border: 1px solid rgba(0,255,102,0.4); border-radius: 12px; margin-bottom: 16px; font-size: 11px; color: #00FF66; font-weight: 700; }
-.signup-next-btn { width: 100%; padding: 14px; border-radius: 14px; font-size: 13px; margin-top: 6px; }
-.signup-otp-btn { width: 100%; padding: 12px; border-radius: 12px; font-size: 12px; margin-top: 10px; }
-.signup-footer { text-align: center; font-size: 12px; color: #888; margin-top: 16px; }
-.signup-footer span { color: #00FF66; font-weight: 700; cursor: pointer; }
-.signup-terms { text-align: center; font-size: 10px; color: #888; margin-top: 12px; }
+/* ============ TOXIC SVG ============ */
+.toxic-svg-logo { height: 70px; width: auto; display: inline-block; }
+.toxic-svg-logo-sm { height: 40px; width: auto; display: inline-block; }
+
+/* ============ NEW SIGNUP REDESIGN ============ */
+.signup-page { min-height: 100vh; padding-bottom: 40px; background: #050907; position: relative; overflow-x: hidden; }
+.signup-hero { position: relative; width: 100%; max-width: 448px; margin: 0 auto; height: 230px; overflow: hidden; }
+.signup-hero-img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; display: block; }
+.signup-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,9,7,0.15) 0%, rgba(5,9,7,0.35) 40%, rgba(5,9,7,0.85) 80%, #050907 100%); pointer-events: none; }
+.signup-hero-glow { position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%); width: 300px; height: 100px; background: radial-gradient(ellipse, rgba(0,255,102,0.35), transparent 70%); filter: blur(30px); pointer-events: none; z-index: 1; }
+.signup-hero-logo { position: absolute; bottom: 14px; left: 16px; z-index: 3; }
+.signup-hero-logo .toxic-svg-logo { height: 48px; }
+
+.signup-back-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; max-width: 448px; margin: 0 auto; }
+.signup-back-btn { width: 40px; height: 40px; border-radius: 12px; background: rgba(0,255,102,0.1); border: 1.5px solid rgba(0,255,102,0.35); color: #00FF66; font-size: 18px; font-weight: 900; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
+.signup-back-btn:active { transform: scale(0.92); }
+.signup-back-btn.hidden { visibility: hidden; pointer-events: none; }
+
+.signup-steps { display: flex; align-items: center; gap: 10px; }
+.signup-step-circle { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; transition: all 0.3s; }
+.signup-step-circle.active { background: linear-gradient(135deg, #00FF66, #10B981); color: #000; box-shadow: 0 0 22px rgba(0,255,102,0.7); }
+.signup-step-circle.done { background: rgba(0,255,102,0.15); color: #00FF66; border: 1.5px solid rgba(0,255,102,0.5); }
+.signup-step-circle.pending { background: rgba(255,255,255,0.05); color: #555; border: 1.5px solid rgba(255,255,255,0.08); }
+
+.signup-card-wrap { padding: 0 14px 32px; max-width: 448px; margin: 0 auto; position: relative; }
+.signup-card { border-radius: 20px; padding: 22px 18px 24px; background: linear-gradient(180deg, rgba(10,20,15,0.98), rgba(5,10,8,0.99)); border: 1px solid rgba(0,255,102,0.18); box-shadow: 0 24px 48px -20px rgba(0,0,0,0.9), inset 0 1px 0 rgba(0,255,102,0.06); position: relative; overflow: hidden; }
+.signup-card::before { content: ''; position: absolute; top: 0; left: 12%; right: 12%; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,255,102,0.5), transparent); }
+
+.signup-header { margin-bottom: 20px; }
+.signup-eyebrow { font-size: 9px; color: #00FF66; font-weight: 800; margin: 0 0 10px; letter-spacing: 2.5px; text-transform: uppercase; opacity: 0.9; }
+.signup-title { font-size: 23px; font-weight: 900; margin: 0 0 6px; letter-spacing: -0.4px; line-height: 1.2; color: #fff; }
+.signup-sub { font-size: 12.5px; color: #888; margin: 0; line-height: 1.5; }
+
+.bonus-box { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 16px; background: linear-gradient(135deg, rgba(0,255,102,0.14), rgba(0,255,102,0.02)); border: 1.5px solid rgba(0,255,102,0.4); box-shadow: 0 0 24px rgba(0,255,102,0.12), inset 0 0 18px rgba(0,255,102,0.03); margin-bottom: 20px; position: relative; overflow: hidden; }
+.bonus-box::before { content: ''; position: absolute; top: -50%; right: -15%; width: 130px; height: 130px; background: radial-gradient(circle, rgba(0,255,102,0.28), transparent 70%); pointer-events: none; }
+.bonus-box::after { content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent); animation: shine 3.5s infinite; pointer-events: none; }
+.bonus-emoji-wrap { width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, rgba(0,255,102,0.25), rgba(0,255,102,0.08)); border: 1px solid rgba(0,255,102,0.35); display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; z-index: 2; }
+.bonus-emoji { font-size: 22px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6)) drop-shadow(0 0 8px rgba(0,255,102,0.55)); }
+.bonus-title { font-size: 9px; color: #00FF66; font-weight: 900; letter-spacing: 1.6px; margin: 0 0 3px; text-transform: uppercase; }
+.bonus-text { font-size: 14px; color: #00FF66; font-weight: 900; margin: 0; letter-spacing: 0.2px; text-shadow: 0 0 12px rgba(0,255,102,0.5); }
+
+.signup-field { margin-bottom: 16px; }
+.signup-field-label { font-size: 10px; color: #00FF66; font-weight: 800; letter-spacing: 1.4px; display: block; margin-bottom: 8px; text-transform: uppercase; opacity: 0.85; }
+
+/* Input with embedded button */
+.input-with-btn { position: relative; display: flex; align-items: center; background: rgba(0,0,0,0.5); border: 1.5px solid rgba(0,255,102,0.15); border-radius: 14px; padding: 5px 5px 5px 42px; transition: all 0.2s; min-height: 50px; }
+.input-with-btn:focus-within { border-color: rgba(0,255,102,0.55); box-shadow: 0 0 0 3px rgba(0,255,102,0.09); background: rgba(0,255,102,0.025); }
+.input-with-btn.verified { border-color: rgba(0,255,102,0.55); background: linear-gradient(135deg, rgba(0,255,102,0.08), rgba(0,255,102,0.02)); }
+.input-with-btn .field-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 15px; opacity: 0.7; pointer-events: none; z-index: 2; }
+.input-with-btn input { flex: 1; background: transparent; border: none; outline: none; color: #fff; font-size: 13.5px; font-weight: 600; padding: 10px 8px 10px 0; min-width: 0; font-family: inherit; }
+.input-with-btn input::placeholder { color: #555; font-weight: 500; }
+.input-with-btn input:disabled { color: #00FF66; font-weight: 700; }
+.input-with-btn .inline-btn { padding: 10px 14px; border-radius: 10px; background: linear-gradient(135deg, #00FF66, #10B981); color: #000; font-weight: 900; font-size: 10.5px; letter-spacing: 0.5px; border: none; cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: all 0.15s; box-shadow: 0 0 14px rgba(0,255,102,0.35); }
+.input-with-btn .inline-btn:active { transform: scale(0.95); }
+.input-with-btn .inline-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+/* verified badge inside input */
+.otp-verified-badge { padding: 9px 13px; border-radius: 10px; background: linear-gradient(135deg, rgba(0,255,102,0.22), rgba(16,185,129,0.15)); border: 1px solid rgba(0,255,102,0.5); color: #00FF66; font-weight: 900; font-size: 10.5px; letter-spacing: 0.6px; display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+.otp-verified-badge .check-dot { width: 14px; height: 14px; border-radius: 50%; background: linear-gradient(135deg, #00FF66, #10B981); color: #000; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 900; }
+
+/* Country select with icon */
+.select-with-icon { position: relative; }
+.select-with-icon .field-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 15px; opacity: 0.75; pointer-events: none; z-index: 2; }
+.select-with-icon select { width: 100%; background: rgba(0,0,0,0.5); border: 1.5px solid rgba(0,255,102,0.15); border-radius: 14px; padding: 15px 40px 15px 42px; color: #fff; font-size: 13.5px; font-weight: 600; outline: none; appearance: none; transition: all 0.2s; font-family: inherit; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2300FF66' stroke-width='3' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+.select-with-icon select:focus { border-color: rgba(0,255,102,0.55); box-shadow: 0 0 0 3px rgba(0,255,102,0.09); }
+.select-with-icon select option { background: #0a1410; color: #fff; }
+.select-with-icon select option:disabled { color: #555; }
+
+/* Referral mini box */
+.referral-mini { display: flex; align-items: center; gap: 10px; padding: 11px 14px; background: rgba(0,0,0,0.42); border: 1.5px dashed rgba(255,215,0,0.35); border-radius: 12px; margin-bottom: 16px; }
+.referral-mini .ref-icon { font-size: 14px; opacity: 0.9; flex-shrink: 0; }
+.referral-mini .ref-label { font-size: 10.5px; color: #FFD700; font-weight: 800; letter-spacing: 0.5px; white-space: nowrap; flex-shrink: 0; }
+.referral-mini input { flex: 1; background: transparent; border: none; outline: none; color: #fff; font-size: 11px; font-family: 'JetBrains Mono', monospace; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; min-width: 0; padding: 0; }
+.referral-mini input::placeholder { color: #555; letter-spacing: 1.2px; font-family: Inter, sans-serif; font-weight: 600; font-size: 10px; text-transform: uppercase; }
+.referral-mini:focus-within { border-color: rgba(255,215,0,0.65); border-style: solid; }
+
+.signup-next-btn { width: 100%; padding: 15px; border-radius: 14px; font-size: 13px; margin-top: 6px; font-weight: 900; letter-spacing: 0.8px; }
+.signup-back-btn-mini { padding: 15px 20px; border-radius: 14px; background: rgba(255,255,255,0.06); font-weight: 800; font-size: 12px; border: 1px solid rgba(255,255,255,0.1); color: #ccc; cursor: pointer; }
+.signup-footer { text-align: center; font-size: 12px; color: #888; margin-top: 18px; }
+.signup-footer span { color: #00FF66; font-weight: 800; cursor: pointer; }
+.signup-terms { text-align: center; font-size: 10px; color: #666; margin-top: 14px; line-height: 1.6; padding: 0 8px; }
 .signup-terms span { color: #00FF66; font-weight: 700; cursor: pointer; }
-.signup-back-btn { padding: 13px 18px; border-radius: 12px; background: rgba(255,255,255,0.05); font-weight: 700; font-size: 12px; border: none; color: #fff; cursor: pointer; }
-.signup-finish-btn { flex: 1; padding: 13px; border-radius: 12px; font-weight: 800; font-size: 12px; border: none; cursor: pointer; }
-.signup-select { padding: 11px 14px; font-size: 13px; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2300FF66' stroke-width='3'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
-.signup-select option { background: #0a1410; color: #fff; }
-@media (min-width: 640px) { .signup-hero { height: 200px; border-radius: 0 0 20px 20px; } }
+
+@media (min-width: 640px) { .signup-hero { height: 260px; border-radius: 0 0 24px 24px; } .signup-hero-logo .toxic-svg-logo { height: 56px; } }
 </style>
 </head>
 <body>
@@ -260,12 +290,25 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 <div id="app"></div>
 
 <script>
+/* ============================================================
+   FIXES APPLIED:
+   #1  Offline plan id undefined → collect wrong plan
+   #2  Signup bonus re-credited on logout→login
+   #3  INVEST_LOCK stuck after render
+   #4  rotateCombinedTicker multiple parallel loops
+   #5  finishSignup silent catch → ghost accounts
+   #6  emailjs hardcoded publicKey
+   #7  sendPush invalid vibrate option
+   #8  safeBtoa/safeAtob deprecated escape/unescape
+   #9  verifyForgotOTP clears OTP after success
+   #10 usdtNetwork persists in localStorage
+   ============================================================ */
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('service-worker.js').then(() => console.log('SW ok')).catch(err => console.log('SW err:', err));
   });
 }
-if (window.emailjs) { emailjs.init('jqUMl6CNuI5ijOpCJ'); }
 
 const TG_ICON_SVG = `<svg viewBox="0 0 24 24" fill="currentColor" width="26" height="26"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>`;
 
@@ -309,11 +352,27 @@ let CFG = {
   emailjs: { serviceId: 'service_73147hr', templateId: 'template_527mz75', publicKey: 'jqUMl6CNuI5ijOpCJ' }
 };
 
-// FIX Bug #4: Safe base64 for unicode passwords
-function safeBtoa(s) { try { return btoa(unescape(encodeURIComponent(String(s)))); } catch(e) { return ''; } }
-function safeAtob(s) { try { return decodeURIComponent(escape(atob(String(s)))); } catch(e) { return ''; } }
+// FIX #6: use CFG value for emailjs init
+if (window.emailjs) { emailjs.init(CFG.emailjs.publicKey); }
 
-// Country list for signup
+// FIX #8: modern safe base64 (no deprecated escape/unescape)
+function safeBtoa(s) {
+  try {
+    const bytes = new TextEncoder().encode(String(s));
+    let bin = '';
+    bytes.forEach(b => { bin += String.fromCharCode(b); });
+    return btoa(bin);
+  } catch(e) { return ''; }
+}
+function safeAtob(s) {
+  try {
+    const bin = atob(String(s));
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  } catch(e) { return ''; }
+}
+
 const COUNTRY_LIST = [
   {c:'AF',n:'Afghanistan'},{c:'AL',n:'Albania'},{c:'DZ',n:'Algeria'},{c:'AD',n:'Andorra'},{c:'AO',n:'Angola'},{c:'AR',n:'Argentina'},{c:'AM',n:'Armenia'},{c:'AU',n:'Australia'},{c:'AT',n:'Austria'},{c:'AZ',n:'Azerbaijan'},{c:'BH',n:'Bahrain'},{c:'BD',n:'Bangladesh'},{c:'BY',n:'Belarus'},{c:'BE',n:'Belgium'},{c:'BJ',n:'Benin'},{c:'BT',n:'Bhutan'},{c:'BO',n:'Bolivia'},{c:'BA',n:'Bosnia and Herzegovina'},{c:'BW',n:'Botswana'},{c:'BR',n:'Brazil'},{c:'BN',n:'Brunei'},{c:'BG',n:'Bulgaria'},{c:'BF',n:'Burkina Faso'},{c:'BI',n:'Burundi'},{c:'KH',n:'Cambodia'},{c:'CM',n:'Cameroon'},{c:'CA',n:'Canada'},{c:'CV',n:'Cape Verde'},{c:'CF',n:'Central African Republic'},{c:'TD',n:'Chad'},{c:'CL',n:'Chile'},{c:'CN',n:'China'},{c:'CO',n:'Colombia'},{c:'KM',n:'Comoros'},{c:'CG',n:'Congo'},{c:'CD',n:'Congo (DRC)'},{c:'CR',n:'Costa Rica'},{c:'CI',n:"Côte d'Ivoire"},{c:'HR',n:'Croatia'},{c:'CU',n:'Cuba'},{c:'CY',n:'Cyprus'},{c:'CZ',n:'Czech Republic'},{c:'DK',n:'Denmark'},{c:'DJ',n:'Djibouti'},{c:'DM',n:'Dominica'},{c:'DO',n:'Dominican Republic'},{c:'EC',n:'Ecuador'},{c:'EG',n:'Egypt'},{c:'SV',n:'El Salvador'},{c:'GQ',n:'Equatorial Guinea'},{c:'ER',n:'Eritrea'},{c:'EE',n:'Estonia'},{c:'ET',n:'Ethiopia'},{c:'FJ',n:'Fiji'},{c:'FI',n:'Finland'},{c:'FR',n:'France'},{c:'GA',n:'Gabon'},{c:'GM',n:'Gambia'},{c:'GE',n:'Georgia'},{c:'DE',n:'Germany'},{c:'GH',n:'Ghana'},{c:'GR',n:'Greece'},{c:'GT',n:'Guatemala'},{c:'GN',n:'Guinea'},{c:'GY',n:'Guyana'},{c:'HT',n:'Haiti'},{c:'HN',n:'Honduras'},{c:'HK',n:'Hong Kong'},{c:'HU',n:'Hungary'},{c:'IS',n:'Iceland'},{c:'IN',n:'India'},{c:'ID',n:'Indonesia'},{c:'IR',n:'Iran'},{c:'IQ',n:'Iraq'},{c:'IE',n:'Ireland'},{c:'IL',n:'Israel'},{c:'IT',n:'Italy'},{c:'JM',n:'Jamaica'},{c:'JP',n:'Japan'},{c:'JO',n:'Jordan'},{c:'KZ',n:'Kazakhstan'},{c:'KE',n:'Kenya'},{c:'KW',n:'Kuwait'},{c:'KG',n:'Kyrgyzstan'},{c:'LA',n:'Laos'},{c:'LV',n:'Latvia'},{c:'LB',n:'Lebanon'},{c:'LS',n:'Lesotho'},{c:'LR',n:'Liberia'},{c:'LY',n:'Libya'},{c:'LI',n:'Liechtenstein'},{c:'LT',n:'Lithuania'},{c:'LU',n:'Luxembourg'},{c:'MO',n:'Macau'},{c:'MK',n:'Macedonia'},{c:'MG',n:'Madagascar'},{c:'MW',n:'Malawi'},{c:'MY',n:'Malaysia'},{c:'MV',n:'Maldives'},{c:'ML',n:'Mali'},{c:'MT',n:'Malta'},{c:'MR',n:'Mauritania'},{c:'MU',n:'Mauritius'},{c:'MX',n:'Mexico'},{c:'MD',n:'Moldova'},{c:'MC',n:'Monaco'},{c:'MN',n:'Mongolia'},{c:'ME',n:'Montenegro'},{c:'MA',n:'Morocco'},{c:'MZ',n:'Mozambique'},{c:'MM',n:'Myanmar'},{c:'NA',n:'Namibia'},{c:'NP',n:'Nepal'},{c:'NL',n:'Netherlands'},{c:'NZ',n:'New Zealand'},{c:'NI',n:'Nicaragua'},{c:'NE',n:'Niger'},{c:'NG',n:'Nigeria'},{c:'KP',n:'North Korea'},{c:'NO',n:'Norway'},{c:'OM',n:'Oman'},{c:'PK',n:'Pakistan'},{c:'PS',n:'Palestine'},{c:'PA',n:'Panama'},{c:'PG',n:'Papua New Guinea'},{c:'PY',n:'Paraguay'},{c:'PE',n:'Peru'},{c:'PH',n:'Philippines'},{c:'PL',n:'Poland'},{c:'PT',n:'Portugal'},{c:'QA',n:'Qatar'},{c:'RO',n:'Romania'},{c:'RU',n:'Russia'},{c:'RW',n:'Rwanda'},{c:'SA',n:'Saudi Arabia'},{c:'SN',n:'Senegal'},{c:'RS',n:'Serbia'},{c:'SC',n:'Seychelles'},{c:'SL',n:'Sierra Leone'},{c:'SG',n:'Singapore'},{c:'SK',n:'Slovakia'},{c:'SI',n:'Slovenia'},{c:'SO',n:'Somalia'},{c:'ZA',n:'South Africa'},{c:'KR',n:'South Korea'},{c:'SS',n:'South Sudan'},{c:'ES',n:'Spain'},{c:'LK',n:'Sri Lanka'},{c:'SD',n:'Sudan'},{c:'SR',n:'Suriname'},{c:'SZ',n:'Swaziland'},{c:'SE',n:'Sweden'},{c:'CH',n:'Switzerland'},{c:'SY',n:'Syria'},{c:'TW',n:'Taiwan'},{c:'TJ',n:'Tajikistan'},{c:'TZ',n:'Tanzania'},{c:'TH',n:'Thailand'},{c:'TG',n:'Togo'},{c:'TO',n:'Tonga'},{c:'TT',n:'Trinidad and Tobago'},{c:'TN',n:'Tunisia'},{c:'TR',n:'Turkey'},{c:'TM',n:'Turkmenistan'},{c:'UG',n:'Uganda'},{c:'UA',n:'Ukraine'},{c:'AE',n:'United Arab Emirates'},{c:'GB',n:'United Kingdom'},{c:'US',n:'United States'},{c:'UY',n:'Uruguay'},{c:'UZ',n:'Uzbekistan'},{c:'VU',n:'Vanuatu'},{c:'VE',n:'Venezuela'},{c:'VN',n:'Vietnam'},{c:'YE',n:'Yemen'},{c:'ZM',n:'Zambia'},{c:'ZW',n:'Zimbabwe'}
 ];
@@ -329,6 +388,7 @@ let PROMO_LOADED = false;
 let INVEST_LOCK = false;
 let SYNC_LOCK = false;
 let SPIN_LOCK = false;
+let TICKER_ACTIVE = false; // FIX #4
 
 let PLANS = [
   {id:'l1', n:'BRONZE', d:1, dly:0.10, t:4.00, c:'#CD7F32', i:'🥉'},
@@ -462,7 +522,8 @@ let S = {
   showInr: localStorage.getItem('t_inr') === '1', txFilter: 'all',
   savedAddresses: JSON.parse(localStorage.getItem('t_saved_addr') || '[]'),
   lastTeamCount: parseInt(localStorage.getItem('t_last_team') || '0'),
-  usdtNetwork: 'BEP20', otp: { code:'', email:'', expiry:0 }, otpVerified: false,
+  usdtNetwork: localStorage.getItem('t_usdt_net') || 'BEP20', // FIX #10
+  otp: { code:'', email:'', expiry:0 }, otpVerified: false,
   showForgot: false, forgotEmail: '', forgotOtp: '', forgotOtpVerified: false, forgotOtpExpiry: 0, forgotUserId: '',
   autoRenew: localStorage.getItem('t_autorenew') === '1',
   achievements: JSON.parse(localStorage.getItem('t_achievements') || '[]'),
@@ -641,6 +702,7 @@ function save() {
   localStorage.setItem('t_lang', S.lang);
   localStorage.setItem('t_redeemed', JSON.stringify(S.redeemedCodes));
   localStorage.setItem('t_achievements', JSON.stringify(S.achievements));
+  localStorage.setItem('t_usdt_net', S.usdtNetwork);
   saveExtra();
 }
 function toast(m) { const el = $('toast'); if (!el) return; el.textContent = m; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 3000); }
@@ -651,8 +713,9 @@ async function requestPushPermission() {
   if (Notification.permission === 'denied') return false;
   try { const p = await Notification.requestPermission(); return p === 'granted'; } catch(e) { return false; }
 }
+// FIX #7: remove invalid vibrate option
 function sendPush(title, body) {
-  try { if ('Notification' in window && Notification.permission === 'granted') new Notification(title, {body, icon:'icon-192.png', badge:'icon-192.png', vibrate:[100,50,100]}); } catch(e) {}
+  try { if ('Notification' in window && Notification.permission === 'granted') new Notification(title, {body, icon:'icon-192.png', badge:'icon-192.png'}); } catch(e) {}
 }
 
 async function sendScreenshotToTelegram(base64Image, username, userId) {
@@ -678,7 +741,7 @@ function initOfflineMode() {
 
 function showTour() {
   if (!S.user) return;
-  const tourKey = 'xtour_' + S.user.user_id;
+  const tourKey = 'x_tour_' + S.user.user_id; // FIX #2: use x_ prefix so logout doesn't wipe
   if (localStorage.getItem(tourKey)) return;
   const steps = [
     {icon:'👋', title:'Welcome to TOXIC!', desc:'Your gateway to daily investment returns. Let us show you around in 20 seconds.'},
@@ -708,8 +771,8 @@ function renderTour(steps) {
   window._tourSteps = steps;
 }
 function nextTour() { S.tourStep++; renderTour(window._tourSteps); }
-function finishTour() { localStorage.setItem('xtour_' + S.user.user_id, '1'); $('tourOverlay').classList.remove('show'); haptic('success'); sound('success'); }
-function skipTour() { localStorage.setItem('xtour_' + S.user.user_id, '1'); $('tourOverlay').classList.remove('show'); }
+function finishTour() { localStorage.setItem('x_tour_' + S.user.user_id, '1'); $('tourOverlay').classList.remove('show'); haptic('success'); sound('success'); }
+function skipTour() { localStorage.setItem('x_tour_' + S.user.user_id, '1'); $('tourOverlay').classList.remove('show'); }
 
 function generateOTP() { return String(Math.floor(100000 + Math.random() * 900000)); }
 
@@ -752,7 +815,7 @@ function startOtpResendTimer() {
   if (otpResendInterval) clearInterval(otpResendInterval);
   otpResendInterval = setInterval(() => {
     sec--;
-    if (btn) { btn.disabled = true; btn.textContent = `RESEND IN ${sec}s`; }
+    if (btn) { btn.disabled = true; btn.textContent = `RESEND ${sec}s`; }
     if (sec <= 0) { clearInterval(otpResendInterval); otpResendInterval = null; if (btn) { btn.disabled = false; btn.textContent = 'RESEND OTP'; } }
   }, 1000);
 }
@@ -765,7 +828,8 @@ function verifyOTP() {
   if (otpResendInterval) { clearInterval(otpResendInterval); otpResendInterval = null; }
   S.otpVerified = true; S.sd.email = S.otp.email;
   haptic('success'); sound('success');
-  S.step = 2; render();
+  render(); // re-render so verified badge shows
+  setTimeout(() => { S.step = 2; render(); }, 900);
 }
 async function sendForgotOTP() {
   if (!navigator.onLine) return customAlert('Offline', 'You are offline. Please check your internet connection.', '📡');
@@ -804,10 +868,11 @@ function startForgotResendTimer() {
   if (fpResendInterval) clearInterval(fpResendInterval);
   fpResendInterval = setInterval(() => {
     sec--;
-    if (btn) { btn.disabled = true; btn.textContent = `RESEND IN ${sec}s`; }
+    if (btn) { btn.disabled = true; btn.textContent = `RESEND ${sec}s`; }
     if (sec <= 0) { clearInterval(fpResendInterval); fpResendInterval = null; if (btn) { btn.disabled = false; btn.textContent = 'RESEND OTP'; } }
   }, 1000);
 }
+// FIX #9: clear forgot OTP after success
 function verifyForgotOTP() {
   const otp = ($('fp_otp') || {}).value ? $('fp_otp').value.trim() : '';
   if (!otp || otp.length !== 6) return customAlert('Invalid OTP', 'Enter 6-digit OTP.', '⚠️');
@@ -816,6 +881,7 @@ function verifyForgotOTP() {
   if (String(otp) !== String(S.forgotOtp)) return customAlert('Wrong OTP', 'OTP is incorrect.', '❌');
   if (fpResendInterval) { clearInterval(fpResendInterval); fpResendInterval = null; }
   S.forgotOtpVerified = true;
+  S.forgotOtp = ''; // FIX #9: clear used OTP
   haptic('success'); sound('success');
   if ($('fpOtpSection')) $('fpOtpSection').style.display = 'none';
   if ($('fpPwSection')) $('fpPwSection').style.display = 'block';
@@ -919,19 +985,24 @@ function combinedTickerUI() {
     </div>
   </div>`;
 }
+// FIX #4: single global ticker loop
 function rotateCombinedTicker() {
-  if (!S.user) return;
-  if (S.tab !== 'dashboard') { setTimeout(rotateCombinedTicker, 3000); return; }
-  const w = $('cRowWinner'), n = $('cRowNews');
-  if (!w || !n) { setTimeout(rotateCombinedTicker, 3000); return; }
-  w.style.display = 'flex'; n.style.display = 'none';
-  setTimeout(() => {
-    if (!S.user || S.tab !== 'dashboard') { setTimeout(rotateCombinedTicker, 3000); return; }
-    const w2 = $('cRowWinner'), n2 = $('cRowNews');
-    if (!w2 || !n2) { setTimeout(rotateCombinedTicker, 3000); return; }
-    w2.style.display = 'none'; n2.style.display = 'flex';
-    setTimeout(() => { if ($('cRowWinner')) rotateCombinedTicker(); }, 5000);
-  }, 10000);
+  if (TICKER_ACTIVE) return;
+  TICKER_ACTIVE = true;
+  const run = () => {
+    if (!S.user) { TICKER_ACTIVE = false; return; }
+    if (S.tab !== 'dashboard' || S.showProfile || S.showNotifs || S.page) { setTimeout(run, 3000); return; }
+    const w = $('cRowWinner'), n = $('cRowNews');
+    if (!w || !n) { setTimeout(run, 3000); return; }
+    w.style.display = 'flex'; n.style.display = 'none';
+    setTimeout(() => {
+      const w2 = $('cRowWinner'), n2 = $('cRowNews');
+      if (!w2 || !n2) { setTimeout(run, 3000); return; }
+      w2.style.display = 'none'; n2.style.display = 'flex';
+      setTimeout(run, 5000);
+    }, 10000);
+  };
+  run();
 }
 
 async function loadNotifs() {
@@ -1064,9 +1135,10 @@ function spinUI() {
   </div>`;
 }
 
+// FIX #2: use x_ prefix so logout doesn't wipe
 async function applySignupBonus() {
   if (!S.user) return;
-  const key = 't_signup_bonus_' + S.user.user_id;
+  const key = 'x_signup_bonus_' + S.user.user_id;
   if (localStorage.getItem(key)) return;
   localStorage.setItem(key, '1');
   S.user.balance = Number(S.user.balance||0) + CFG.signupBonus;
@@ -1076,14 +1148,15 @@ async function applySignupBonus() {
   setTimeout(() => { launchConfetti(); sound('coin'); showCoinAnim(CFG.signupBonus); customAlert('🎁 Welcome Bonus!', `+$${CFG.signupBonus.toFixed(2)} FREE signup bonus credited!\n\nInvest to start earning daily rewards.`, '🎉'); }, 1500);
 }
 
+// FIX #2: use x_ prefix
 function checkVIPBadgeChange() {
   if (!S.user) return;
   const newBadge = getVIPBadge(Number(S.user.invested||0));
-  const oldName = localStorage.getItem('t_vip_' + S.user.user_id);
+  const oldName = localStorage.getItem('x_vip_' + S.user.user_id);
   if (oldName !== newBadge.name && newBadge.min > 0) {
-    localStorage.setItem('t_vip_' + S.user.user_id, newBadge.name);
+    localStorage.setItem('x_vip_' + S.user.user_id, newBadge.name);
     if (oldName !== null) { setTimeout(() => { sound('success'); customAlert(`${newBadge.icon} VIP LEVEL UP!`, `Congratulations! You are now a\n${newBadge.name}!`, '🏆'); launchConfetti(); }, 1800); }
-  } else if (!oldName) localStorage.setItem('t_vip_' + S.user.user_id, newBadge.name);
+  } else if (!oldName) localStorage.setItem('x_vip_' + S.user.user_id, newBadge.name);
 }
 
 async function checkAchievements() {
@@ -1185,7 +1258,7 @@ function render() {
   if (S.tab === 'wallet') setTimeout(loadSavedAddresses, 0);
   if (S.tab === 'team') setTimeout(loadLeaderboardSafe, 150);
   updateDyn();
-  if (S.tab === 'dashboard') setTimeout(() => { const w = $('cRowWinner'); if (!w) rotateCombinedTicker(); }, 400);
+  if (S.tab === 'dashboard' && !TICKER_ACTIVE) setTimeout(rotateCombinedTicker, 400);
 }
 
 function updateDyn() {
@@ -1375,9 +1448,9 @@ async function autoRenewCombined(completedPlans) {
       try {
         if (sb) {
           const r = await sb.from('user_plans').insert([np]).select();
-          if (r.data && r.data[0]) S.plans.unshift(r.data[0]); else S.plans.unshift(np);
+          if (r.data && r.data[0]) S.plans.unshift(r.data[0]); else S.plans.unshift({...np, id: 'local_' + Date.now()});
           await sb.from('users').update({balance:S.user.balance, invested:S.user.invested}).eq('user_id', S.user.user_id);
-        } else S.plans.unshift(np);
+        } else S.plans.unshift({...np, id: 'local_' + Date.now()});
         if (!renewedIds.includes(String(cp.id))) renewedIds.push(String(cp.id));
         renewedCount++;
       } catch(e) { console.warn('Renew err:', e); }
@@ -1419,12 +1492,12 @@ function handleAvatarUpload(event) {
   reader.readAsDataURL(file);
 }
 
+/* ============ AUTH SCREENS ============ */
 function authHero(children) {
-  return `<div class="auth-hero">
-    <img src="${CFG.banner}" class="auth-hero-bg" alt="TOXIC">
-    <div class="auth-hero-overlay"></div>
-    <div class="auth-logo-wrap">${toxicLogo('lg')}</div>
-    <div class="auth-card-wrap">${children}</div>
+  return `<div style="position:relative;width:100%;min-height:100vh;overflow:hidden">
+    <img src="${CFG.banner}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 25%">
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(5,9,7,0.05) 0%, rgba(5,9,7,0.30) 25%, rgba(5,9,7,0.72) 55%, rgba(5,9,7,0.95) 78%, #050907 100%)"></div>
+    <div style="position:relative;z-index:5;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:130px 16px calc(16px + env(safe-area-inset-bottom))">${children}</div>
   </div>`;
 }
 
@@ -1442,6 +1515,7 @@ function loginUI() {
     <div style="text-align:center;font-size:10px;color:#888;margin-top:12px"><p>By continuing, you accept our <span onclick="S.page='tnc';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Terms</span> & <span onclick="S.page='privacy';render()" style="color:#00FF66;font-weight:700;cursor:pointer">Privacy</span></p></div>
   `);
 }
+
 function forgotPasswordUI() {
   return authHero(`
     <div class="glass-card shadow-2xl w-full max-w-md mx-auto modal-in" style="border-top: 2px solid rgba(0,255,102,0.4)">
@@ -1453,7 +1527,7 @@ function forgotPasswordUI() {
       <button id="fpSendBtn" onclick="sendForgotOTP()" class="w-full btn-green py-2.5 rounded-xl text-xs mb-3">SEND OTP</button>
       <div id="fpOtpSection" style="display:${S.forgotOtp?'block':'none'};margin-bottom:12px">
         <label style="font-size:10px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:4px">ENTER OTP</label>
-        <input id="fp_otp" type="text" maxlength="6" class="inp otp-input mb-2" placeholder="••••••">
+        <input id="fp_otp" type="text" maxlength="6" class="inp mb-2" style="letter-spacing:8px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:900" placeholder="••••••">
         <button onclick="verifyForgotOTP()" class="w-full btn-green py-2.5 rounded-xl text-xs">VERIFY OTP</button>
       </div>
       <div id="fpPwSection" style="display:${S.forgotOtpVerified?'block':'none'}">
@@ -1466,25 +1540,33 @@ function forgotPasswordUI() {
   `);
 }
 
+/* ============ NEW SIGNUP REDESIGN ============ */
 function signupUI() {
   const step = S.step;
-  const steps = [1,2].map(n => {
-    const active = step === n;
-    const done = step > n;
-    const bg = done ? '#10B981' : active ? '#00FF66' : 'rgba(255,255,255,0.06)';
-    const tc = step >= n ? '#000' : '#4B5563';
-    const glow = active ? '0 0 20px rgba(0,255,102,0.8)' : 'none';
-    return `<div class="signup-step-dot" style="background:${bg};color:${tc};box-shadow:${glow}">${done?'✓':n}</div>`;
-  }).join('');
+  const step1Active = step === 1;
+  const step2Active = step === 2;
+  const step1Done = step > 1;
+  const step2Done = step > 2;
+  const step1Cls = step1Done ? 'done' : (step1Active ? 'active' : 'pending');
+  const step2Cls = step2Done ? 'done' : (step2Active ? 'active' : 'pending');
+  const step1Content = step1Done ? '✓' : '1';
+  const step2Content = step2Done ? '✓' : '2';
   return `<div class="signup-page">
     <div class="signup-hero">
       <img src="${CFG.banner}" class="signup-hero-img" alt="TOXIC">
       <div class="signup-hero-overlay"></div>
-      <div class="signup-hero-logo">${toxicLogo('sm')}</div>
+      <div class="signup-hero-glow"></div>
+      <div class="signup-hero-logo">${toxicLogo('lg')}</div>
+    </div>
+    <div class="signup-back-row">
+      <button class="signup-back-btn ${step === 1 ? 'hidden' : ''}" onclick="signupBack()">←</button>
+      <div class="signup-steps">
+        <div class="signup-step-circle ${step1Cls}">${step1Content}</div>
+        <div class="signup-step-circle ${step2Cls}">${step2Content}</div>
+      </div>
     </div>
     <div class="signup-card-wrap">
-      <div class="signup-steps">${steps}</div>
-      <div class="glass-card signup-card modal-in">
+      <div class="signup-card modal-in">
         ${step === 1 ? step1() : step2()}
       </div>
       <div class="signup-terms">By signing up, you agree to our <span onclick="S.page='tnc';render()">Terms</span> &amp; <span onclick="S.page='privacy';render()">Privacy</span></div>
@@ -1496,84 +1578,107 @@ function step1() {
   const countries = COUNTRY_LIST.map(c =>
     `<option value="${c.n}" ${S.sd.country===c.n?'selected':''}>${flagEmoji(c.c)} ${c.n}</option>`
   ).join('');
+  const verified = S.otpVerified;
+  const otpBtnLabel = verified ? '' : 'VERIFY';
+  const emailDisabled = verified ? 'disabled' : '';
+  const otpDisabled = verified ? 'disabled' : '';
   return `<div class="signup-header">
-    <p class="signup-step-label">STEP 1 / 2 · EMAIL VERIFICATION</p>
+    <p class="signup-eyebrow">STEP 1 / 2 · EMAIL VERIFICATION</p>
     <h2 class="signup-title">Create your account</h2>
     <p class="signup-sub">Verify your Gmail with OTP</p>
   </div>
 
   <div class="bonus-box">
-    <span class="bonus-emoji">🎁</span>
+    <div class="bonus-emoji-wrap"><span class="bonus-emoji">🎁</span></div>
     <div style="flex:1;position:relative;z-index:2">
       <p class="bonus-title">Welcome Bonus</p>
       <p class="bonus-text">Get $${CFG.signupBonus.toFixed(2)} FREE on signup!</p>
     </div>
   </div>
 
-  <div class="signup-section">
-    <label class="signup-label">Country / Region</label>
-    <select id="cs" class="inp signup-select">
-      <option value="" disabled ${!S.sd.country?'selected':''}>🌍 Select your country</option>
-      ${countries}
-    </select>
+  <div class="signup-field">
+    <label class="signup-field-label">Country / Region</label>
+    <div class="select-with-icon">
+      <span class="field-icon">🌍</span>
+      <select id="cs">
+        <option value="" disabled ${!S.sd.country?'selected':''}>Select your country</option>
+        ${countries}
+      </select>
+    </div>
   </div>
 
-  <div class="signup-divider"></div>
-
-  <div class="signup-section">
-    <label class="signup-label">Gmail Address</label>
-    <input id="sd_email" type="email" class="inp" placeholder="yourname@gmail.com" value="${S.sd.email||''}">
-    <button id="sendOtpBtn" onclick="sendOTP()" class="btn-green signup-otp-btn">SEND OTP</button>
+  <div class="signup-field">
+    <label class="signup-field-label">Gmail Address</label>
+    <div class="input-with-btn ${verified?'verified':''}">
+      <span class="field-icon">✉️</span>
+      <input id="sd_email" type="email" placeholder="yourname@gmail.com" value="${S.sd.email||''}" ${emailDisabled}>
+      ${verified
+        ? `<span class="otp-verified-badge"><span class="check-dot">✓</span>VERIFIED</span>`
+        : `<button id="sendOtpBtn" class="inline-btn" onclick="sendOTP()">SEND OTP</button>`}
+    </div>
   </div>
 
-  <div id="otpSection" class="signup-section" style="display:${S.otpVerified?'none':'block'}">
-    <label class="signup-label">OTP</label>
-    <input id="otpCode" type="password" inputmode="numeric" maxlength="6" class="inp otp-masked" placeholder="******" autocomplete="one-time-code">
-    <button onclick="verifyOTP()" class="btn-green signup-otp-btn" style="margin-top:10px">VERIFY OTP</button>
+  <div class="signup-field" id="otpSection" style="display:${S.otp.code && !verified ? 'block' : 'none'}">
+    <label class="signup-field-label">OTP</label>
+    <div class="input-with-btn ${verified?'verified':''}">
+      <span class="field-icon">🔒</span>
+      <input id="otpCode" type="password" inputmode="numeric" maxlength="6" placeholder="* * * * * *" autocomplete="one-time-code" ${otpDisabled}>
+      ${verified
+        ? `<span class="otp-verified-badge"><span class="check-dot">✓</span>VERIFIED</span>`
+        : `<button class="inline-btn" onclick="verifyOTP()">VERIFY</button>`}
+    </div>
   </div>
 
-  ${S.otpVerified ? `<div class="verified-badge"><span style="font-size:16px">✅</span> Email verified successfully</div>` : ''}
-
-  <div class="ref-row">
-    <span class="ref-row-label">🎁 Referral</span>
+  <div class="referral-mini">
+    <span class="ref-icon">🎁</span>
+    <span class="ref-label">Referral</span>
     <input id="manualRef" placeholder="OPTIONAL" value="${S.sd.referredBy||''}" maxlength="20">
   </div>
 
-  <button onclick="goStep2()" class="btn-green signup-next-btn" ${S.otpVerified?'':'disabled'}>NEXT →</button>
+  <button onclick="goStep2()" class="btn-green signup-next-btn" ${verified?'':'disabled'}>NEXT →</button>
 
   <p class="signup-footer">Already have an account? <span onclick="S.tab='signin';render()">Sign in</span></p>`;
 }
 
 function step2() {
   return `<div class="signup-header">
-    <p class="signup-step-label">STEP 2 / 2 · SETUP</p>
+    <p class="signup-eyebrow">STEP 2 / 2 · SETUP</p>
     <h2 class="signup-title">Create your access</h2>
     <p class="signup-sub">Set your username &amp; password</p>
   </div>
 
-  <div class="signup-section">
-    <label class="signup-label">Username</label>
-    <input class="inp" id="un" placeholder="Choose a username" value="${S.sd.username||''}">
+  <div class="signup-field">
+    <label class="signup-field-label">Username</label>
+    <div class="input-with-btn">
+      <span class="field-icon">👤</span>
+      <input class="signup-input" id="un" placeholder="Choose a username" value="${S.sd.username||''}" style="padding-left:0;padding-top:10px;padding-bottom:10px">
+    </div>
   </div>
 
-  <div class="signup-divider"></div>
-
-  <div class="signup-section">
-    <label class="signup-label">Password</label>
-    <input class="inp" id="pw" type="password" placeholder="Min 4 characters">
+  <div class="signup-field">
+    <label class="signup-field-label">Password</label>
+    <div class="input-with-btn">
+      <span class="field-icon">🔑</span>
+      <input id="pw" type="password" placeholder="Min 4 characters" style="padding-left:0;padding-top:10px;padding-bottom:10px">
+    </div>
   </div>
 
-  <div class="signup-divider"></div>
-
-  <div class="signup-section">
-    <label class="signup-label">Confirm Password</label>
-    <input class="inp" id="pw2" type="password" placeholder="Re-enter password">
+  <div class="signup-field">
+    <label class="signup-field-label">Confirm Password</label>
+    <div class="input-with-btn">
+      <span class="field-icon">🔐</span>
+      <input id="pw2" type="password" placeholder="Re-enter password" style="padding-left:0;padding-top:10px;padding-bottom:10px">
+    </div>
   </div>
 
   <div style="display:flex;gap:10px;margin-top:6px">
-    <button onclick="S.step=1;render()" class="signup-back-btn">← BACK</button>
-    <button onclick="finishSignup()" class="btn-green signup-finish-btn">FINISH →</button>
+    <button onclick="signupBack()" class="signup-back-btn-mini">← BACK</button>
+    <button onclick="finishSignup()" class="btn-green" style="flex:1;padding:15px;border-radius:14px;font-weight:900;font-size:12px;letter-spacing:0.8px">FINISH →</button>
   </div>`;
+}
+
+function signupBack() {
+  if (S.step === 2) { S.step = 1; render(); }
 }
 
 async function goStep2() {
@@ -1601,6 +1706,7 @@ async function goStep2() {
   S.step = 2; render();
 }
 
+// FIX #5: show error if server insert fails (no silent ghost account)
 async function finishSignup() {
   const un = $('un').value.trim(), pw = $('pw').value, pw2 = $('pw2').value;
   if (!un || un.length < 3) return customAlert('Invalid Username', 'Username must be at least 3 characters.', '⚠️');
@@ -1617,10 +1723,28 @@ async function finishSignup() {
   }
   const uid = 'TG' + Date.now();
   const rc = 'TOXIC' + Math.floor(1000 + Math.random() * 9000);
-  S.user = {user_id:uid, username:un, email:S.sd.email, phone:'', avatar:'', balance:0, referral_balance:0, invested:0, earned:0, referral_code:rc, referred_by:S.sd.referredBy, is_banned:false, joined_at:new Date().toISOString()};
+  const newUser = {user_id:uid, username:un, email:S.sd.email, phone:'', avatar:'', balance:0, referral_balance:0, invested:0, earned:0, referral_code:rc, referred_by:S.sd.referredBy, is_banned:false, joined_at:new Date().toISOString()};
+
+  // FIX #5: require successful server insert (if sb is available)
+  if (sb) {
+    let insertOk = false, lastErr = null;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const r = await sb.from('users').insert([{user_id:uid, username:un, email:S.sd.email, phone:'', balance:0, referral_balance:0, invested:0, referral_code:rc, referred_by:S.sd.referredBy, is_banned:false, password_hash: safeBtoa(pw)}]);
+        if (!r.error) { insertOk = true; break; }
+        lastErr = r.error;
+      } catch(e) { lastErr = e; }
+      await new Promise(res => setTimeout(res, 800));
+    }
+    if (!insertOk) {
+      sound('error');
+      return customAlert('Signup Failed', 'Could not create your account on server.\n\nPlease check your internet and try again.\n\n' + (lastErr?.message || ''), '❌');
+    }
+  }
+
+  S.user = newUser;
   S.plans = [];
   localStorage.setItem('t_pwd_' + uid, pw);
-  if (sb) { try { await sb.from('users').insert([{user_id:uid, username:un, email:S.sd.email, phone:'', balance:0, referral_balance:0, invested:0, referral_code:rc, referred_by:S.sd.referredBy, is_banned:false, password_hash: safeBtoa(pw)}]); } catch(e) {} }
   localStorage.removeItem('t_locked_ref'); localStorage.removeItem('t_locked_ref_time');
   S.otpVerified = false; S.otp = {code:'', email:'', expiry:0};
   haptic('success'); sound('success'); S.tab = 'dashboard'; save(); render();
@@ -1668,6 +1792,7 @@ async function doLogin() {
   customAlert('User Not Found', 'No account found.\n\nPlease create a new account first.', '⚠️');
 }
 
+// FIX #2: preserve x_ prefixed keys on logout
 function logout() {
   customConfirm('Logout', 'Are you sure you want to sign out?', () => {
     Object.keys(localStorage).forEach(k => {
@@ -1682,6 +1807,7 @@ function logout() {
     S.popupQueue = []; S.popupActive = false;
     S.step = 1; S.sd = {country:'', email:'', username:'', password:'', referredBy:null};
     S.notifs = []; S.historyLimit = CFG.historyPageSize; S.txFilter = 'all';
+    TICKER_ACTIVE = false;
     if (otpResendInterval) { clearInterval(otpResendInterval); otpResendInterval = null; }
     if (fpResendInterval) { clearInterval(fpResendInterval); fpResendInterval = null; }
     render();
@@ -1892,6 +2018,7 @@ function quickInvest(id) {
   if (Number(S.user.balance) < p.d) { customConfirm('Add Funds?', `Required: $${p.d.toFixed(2)}\nCurrent: $${fmt(S.user.balance)}\n\nOpen wallet to deposit?`, () => setTab('wallet'), '💰'); return; }
   invest(id);
 }
+// FIX #1 (offline plan id) + FIX #3 (INVEST_LOCK before render)
 async function invest(id) {
   if (INVEST_LOCK) { haptic('warning'); toast('⏳ Please wait...'); return; }
   if (!navigator.onLine) return customAlert('Offline', 'You are offline. Please check your internet connection.', '📡');
@@ -1900,35 +2027,43 @@ async function invest(id) {
   if (Number(S.user.balance) < p.d) return customAlert('Low Balance', 'Required: $' + p.d.toFixed(2) + '\nCurrent: $' + fmt(S.user.balance), '💰');
   INVEST_LOCK = true; render();
   const now = new Date();
-  let np = {user_id:S.user.user_id, username:S.user.username, plan_id:p.id, plan_name:p.n, deposit:p.d, daily:p.dly, total:p.t, days_collected:0, status:'active', started_at:now.toISOString(), expires_at:new Date(now.getTime() + 40 * DAY).toISOString(), last_collect_at: null};
+  // FIX #1: always give a local id (fallback if offline / insert fails)
+  let np = {id: 'local_' + Date.now(), user_id:S.user.user_id, username:S.user.username, plan_id:p.id, plan_name:p.n, deposit:p.d, daily:p.dly, total:p.t, days_collected:0, status:'active', started_at:now.toISOString(), expires_at:new Date(now.getTime() + 40 * DAY).toISOString(), last_collect_at: null};
   S.user.balance = Number(S.user.balance) - p.d;
   S.user.invested = Number(S.user.invested||0) + p.d;
   try {
     if (sb) {
-      const r = await sb.from('user_plans').insert([np]).select();
+      const insertPayload = {...np};
+      delete insertPayload.id; // let DB assign its own
+      const r = await sb.from('user_plans').insert([insertPayload]).select();
       if (r.error) {
         if (r.error.code === '23505' || String(r.error.message||'').toLowerCase().includes('unique')) {
           S.user.balance += p.d; S.user.invested -= p.d;
           INVEST_LOCK = false; render();
           return customAlert('Already Active', 'Plan already running.', '🔒');
         }
-        throw r.error;
+        // fallback: continue with local id
+        console.warn('Plan insert failed, using local id:', r.error);
+      } else if (r.data && r.data[0]) {
+        np = r.data[0];
       }
-      if (r.data && r.data[0]) np = r.data[0];
-      await sb.from('users').update({balance:S.user.balance, invested:S.user.invested}).eq('user_id', S.user.user_id);
-      await distributeReferralCommissions(p.d, p.n, np.id);
+      try { await sb.from('users').update({balance:S.user.balance, invested:S.user.invested}).eq('user_id', S.user.user_id); } catch(e) {}
+      try { await distributeReferralCommissions(p.d, p.n, np.id); } catch(e) {}
     }
     S.tx.unshift({type:'deposit', amount:p.d, status:'success', method:'INVEST · ' + p.n, date:new Date().toISOString()});
     S.plans.unshift(np);
-    haptic('success'); sound('success'); save(); render();
+    haptic('success'); sound('success'); save();
+    INVEST_LOCK = false; // FIX #3: clear lock BEFORE render so buttons re-enable
+    render();
     customAlert('Investment Successful!', `Plan: ${p.n}\nInvested: $${p.d.toFixed(2)}\n\nCollect daily profit in 24 hours!`, '🎉');
     setTimeout(() => { checkVIPBadgeChange(); checkAchievements(); }, 1500);
   } catch(e) {
     S.user.balance += p.d; S.user.invested -= p.d;
     save(); haptic('error'); sound('error');
     showDetailedError('Investment Failed', (e.message || String(e)), 'Balance restored.', '❌');
+    INVEST_LOCK = false;
     render();
-  } finally { INVEST_LOCK = false; }
+  }
 }
 async function distributeReferralCommissions(planAmount, planName, investTxId) {
   if (!sb || !S.user || !S.user.referred_by) return;
@@ -1982,9 +2117,19 @@ async function collect(pid) {
   const done = pl.days_collected >= 40;
   if (done) pl.status = 'completed';
   S.tx.unshift({type:'daily_collect', amount:rw, status:'success', method:pl.plan_name, date:nowIso, plan_id:pl.plan_id});
-  if (sb) {
+  if (sb && !String(pl.id).startsWith('local_')) {
     try {
       await sb.from('user_plans').update({days_collected:pl.days_collected, status:pl.status, last_collect_at: nowIso}).eq('id', pl.id);
+      await sb.from('users').update({balance:S.user.balance, earned:S.user.earned}).eq('user_id', S.user.user_id);
+    } catch(e) {}
+  } else if (sb && String(pl.id).startsWith('local_')) {
+    // try to find by matching (offline plan that was created locally)
+    try {
+      const findRes = await sb.from('user_plans').select('id').eq('user_id', S.user.user_id).eq('plan_id', pl.plan_id).eq('status', 'active').order('id', {ascending:false}).limit(1);
+      if (findRes.data && findRes.data[0]) {
+        pl.id = findRes.data[0].id;
+        await sb.from('user_plans').update({days_collected:pl.days_collected, status:pl.status, last_collect_at: nowIso}).eq('id', pl.id);
+      }
       await sb.from('users').update({balance:S.user.balance, earned:S.user.earned}).eq('user_id', S.user.user_id);
     } catch(e) {}
   }
@@ -2026,7 +2171,7 @@ function activeUI() {
           <p style="font-size:10px;color:#888;font-weight:800;margin:0;letter-spacing:1px">⏳ NEXT COLLECT IN</p>
           <p class="mono timer-glow" style="font-size:20px;font-weight:900;margin:0;color:${p.c}" data-timer="${pl.id}">--:--:--</p>
         </div>
-        <button data-collect="${pl.id}" onclick="collect(${pl.id})" class="collect-btn" style="width:100%;padding:13px;border-radius:12px;font-size:12px">⚡ REWARD CHARGING...</button>
+        <button data-collect="${pl.id}" onclick="collect('${pl.id}')" class="collect-btn" style="width:100%;padding:13px;border-radius:12px;font-size:12px">⚡ REWARD CHARGING...</button>
       </div>
       <div style="width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,0.05);overflow:hidden;position:relative;z-index:1"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,${p.c},#10B981);box-shadow:0 0 12px ${p.c}88"></div></div>
     </div>`;
@@ -2034,7 +2179,7 @@ function activeUI() {
 }
 
 function pickNetwork(n) {
-  S.usdtNetwork = n; haptic('light');
+  S.usdtNetwork = n; localStorage.setItem('t_usdt_net', n); haptic('light');
   const b20 = $('net-BEP20'), trc = $('net-TRC20'), inp = $('wdAddr');
   if (!b20 || !trc) return;
   if (n === 'BEP20') { b20.classList.add('active'); trc.classList.remove('active'); if (inp) inp.placeholder = 'Enter USDT BEP20 Address (0x...)'; }
@@ -2492,7 +2637,7 @@ function badgesModal() {
 }
 function shareModal() {
   if (!S.showShare) return '';
-  const lastShare = localStorage.getItem('t_last_share_' + S.user.user_id);
+  const lastShare = localStorage.getItem('x_last_share_' + S.user.user_id);
   const canShare = !lastShare || (Date.now() - parseInt(lastShare)) > 7 * DAY;
   const nextTime = lastShare ? new Date(parseInt(lastShare) + 7 * DAY) : null;
   return `<div style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);overflow-y:auto" onclick="S.showShare=false;render()"><div class="glass-card modal-in" onclick="event.stopPropagation()" style="max-width:440px;margin:20px auto;max-height:90vh;overflow-y:auto">
@@ -2525,7 +2670,7 @@ async function handleShareScreenshot(event) {
         try {
           await sb.from('share_bonus').insert([{ user_id: S.user.user_id, username: S.user.username, screenshot: b64, status: 'pending', created_at: new Date().toISOString() }]);
           await sb.from('notifications').insert([{ user_id: S.user.user_id, title: '📸 Share Bonus Submitted', message: `Your share bonus screenshot is under review. +$${CFG.shareBonus.toFixed(2)} will be credited once approved.`, type: 'update', is_read: false }]);
-          localStorage.setItem('t_last_share_' + S.user.user_id, Date.now().toString());
+          localStorage.setItem('x_last_share_' + S.user.user_id, Date.now().toString());
           haptic('success'); sound('success');
           S.showShare = false; render();
           if (tgResult.ok) customAlert('✅ Submitted!', 'Screenshot sent.\n\n+$0.10 after approval.', '🎉');
@@ -2731,7 +2876,7 @@ function animateLoadingPct() {
   try { await Promise.all([loadSiteConfig(), loadPlansFromDB(), loadPromoCodes(), loadCryptoPrices(), S.user ? syncUser() : Promise.resolve()]); } catch(e) {}
   clearTimeout(failsafe); render(); hideLoading();
   setTimeout(showLive, 3500);
-  setTimeout(rotateCombinedTicker, 500);
+  if (S.tab === 'dashboard' && S.user) setTimeout(() => { if (!TICKER_ACTIVE) rotateCombinedTicker(); }, 500);
   setTimeout(() => { if (S.user) { checkTeamMilestones(); checkVIPBadgeChange(); checkAchievements(); } }, 2000);
   if (S.user) setTimeout(() => showTour(), 3500);
   setInterval(loadCryptoPrices, 90000);
