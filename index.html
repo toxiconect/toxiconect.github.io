@@ -100,11 +100,31 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .page-content strong { color: #00FF66; }
 .skel { background: linear-gradient(90deg, rgba(0,255,102,0.05) 25%, rgba(0,255,102,0.15) 50%, rgba(0,255,102,0.05) 75%); background-size: 200% 100%; animation: shim 1.4s infinite; border-radius: 14px; }
 @keyframes shim { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-#pullIndicator { position: fixed; top: 6px; left: 50%; transform: translateX(-50%) translateY(-90px); width: 46px; height: 46px; z-index: 999; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s; opacity: 0; pointer-events: none; display: flex; align-items: center; justify-content: center; }
+
+/* ================= PULL-TO-REFRESH · PROFESSIONAL RING ================= */
+#pullIndicator {
+  position: fixed; top: 0; left: 50%;
+  transform: translateX(-50%) translateY(-90px);
+  width: 52px; height: 52px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(5,9,7,0.98), rgba(10,20,15,0.98));
+  backdrop-filter: blur(14px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 999; opacity: 0; pointer-events: none;
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s;
+  box-shadow: 0 0 24px rgba(0,255,102,0.45), 0 8px 24px rgba(0,0,0,0.7), inset 0 0 12px rgba(0,255,102,0.06);
+  border: 1px solid rgba(0,255,102,0.35);
+}
 #pullIndicator.active { opacity: 1; }
-#pullIndicator svg { filter: drop-shadow(0 0 12px rgba(0,255,102,0.7)); }
-#pullIndicator.spin #pullRing { animation: spinRing 0.9s linear infinite; transform-origin: 23px 23px; }
-@keyframes spinRing { to { transform: rotate(360deg); } }
+#pullIndicator svg { position: absolute; inset: 0; width: 52px; height: 52px; transform: rotate(-90deg); }
+#pullIndicator #pullRingBg { fill: none; stroke: rgba(0,255,102,0.12); stroke-width: 3; }
+#pullIndicator #pullProgressRing { fill: none; stroke: url(#pullGrad); stroke-width: 3; stroke-linecap: round; transition: stroke-dashoffset 0.15s ease-out; }
+#pullIndicator #pullIcon { position: relative; z-index: 2; font-size: 15px; font-weight: 900; color: #00FF66; transition: transform 0.3s; }
+#pullIndicator.spin svg { animation: ringSpin 0.9s linear infinite; }
+#pullIndicator.spin #pullIcon { transform: scale(0.85); }
+@keyframes ringSpin { from { transform: rotate(-90deg); } to { transform: rotate(270deg); } }
+#pullIndicator.ready { box-shadow: 0 0 30px rgba(0,255,102,0.85), 0 8px 24px rgba(0,0,0,0.7); border-color: #00FF66; }
+#pullIndicator.ready #pullIcon { transform: scale(1.15); }
+
 .cyber-ticker { position: relative; background: linear-gradient(135deg, rgba(0,20,10,0.95), rgba(0,10,5,0.98)); border: 1px solid rgba(0,255,102,0.35); border-radius: 14px; padding: 9px 0; overflow: hidden; box-shadow: 0 0 20px rgba(0,255,102,0.12), inset 0 0 20px rgba(0,255,102,0.04); }
 .cyber-ticker::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0, transparent 3px, rgba(0,255,102,0.04) 3px, rgba(0,255,102,0.04) 4px); pointer-events: none; z-index: 1; }
 .cyber-ticker::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,255,102,0.8), transparent); animation: scan 3s linear infinite; }
@@ -113,8 +133,10 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .cyber-ticker > div > div { display: flex; align-items: center; gap: 8px; padding: 0 16px; border-right: 1px solid rgba(0,255,102,0.12); }
 @keyframes scrollL { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 .combined-ticker { position: relative; background: linear-gradient(135deg, rgba(30,20,0,0.75), rgba(5,10,5,0.98) 50%, rgba(0,20,10,0.75)); border: 1px solid rgba(255,215,0,0.35); border-radius: 14px; padding: 10px 14px; overflow: hidden; box-shadow: 0 0 22px rgba(255,215,0,0.12); }
+.combined-ticker.green-theme { border-color: rgba(0,255,102,0.4); box-shadow: 0 0 22px rgba(0,255,102,0.14); background: linear-gradient(135deg, rgba(0,30,15,0.75), rgba(5,10,5,0.98) 50%, rgba(0,25,12,0.75)); }
 .combined-row { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; }
 .winner-scroll { white-space: nowrap; display: inline-flex; animation: winnerAnim 45s linear infinite; }
+.announce-scroll { white-space: nowrap; display: inline-flex; animation: winnerAnim 40s linear infinite; }
 @keyframes winnerAnim { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 .emoji-3d { display: inline-block; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.7)) drop-shadow(0 0 6px rgba(0,255,102,0.25)); transform: translateY(-1px); }
 .ach-btn { padding: 5px 3px; border-radius: 9px; font-size: 8px; font-weight: 900; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 1px; border-width: 1px; border-style: solid; }
@@ -156,16 +178,19 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .sync-ind { width: 14px; height: 14px; border: 2px solid rgba(0,255,102,0.3); border-top-color: #00FF66; border-radius: 50%; animation: spinR2 0.7s linear infinite; display: none; }
 @keyframes spinR2 { to { transform: rotate(360deg); } }
 
+/* ============ TOXIC SVG ============ */
 .toxic-svg-logo { height: 70px; width: auto; display: inline-block; }
 .toxic-svg-logo-sm { height: 40px; width: auto; display: inline-block; }
 
+/* ============ NEW SIGNUP REDESIGN ============ */
 .signup-page { min-height: 100vh; padding-bottom: 40px; background: #050907; position: relative; overflow-x: hidden; }
-.signup-hero { position: relative; width: 100%; max-width: 448px; margin: 0 auto; height: 230px; overflow: hidden; }
+.signup-hero { position: relative; width: 100%; max-width: 448px; margin: 0 auto; height: 250px; overflow: hidden; }
 .signup-hero-img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; display: block; }
 .signup-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,9,7,0.15) 0%, rgba(5,9,7,0.35) 40%, rgba(5,9,7,0.85) 80%, #050907 100%); pointer-events: none; }
 .signup-hero-glow { position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%); width: 300px; height: 100px; background: radial-gradient(ellipse, rgba(0,255,102,0.35), transparent 70%); filter: blur(30px); pointer-events: none; z-index: 1; }
-.signup-hero-logo { position: absolute; bottom: 14px; left: 16px; z-index: 3; }
-.signup-hero-logo .toxic-svg-logo { height: 48px; }
+/* TOXIC logo → left side, attractive, prominent */
+.signup-hero-logo { position: absolute; bottom: 22px; left: 18px; z-index: 6; filter: drop-shadow(0 0 22px rgba(0,255,102,0.55)) drop-shadow(0 4px 12px rgba(0,0,0,0.9)); }
+.signup-hero-logo .toxic-svg-logo { height: 56px; }
 
 .signup-back-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; max-width: 448px; margin: 0 auto; }
 .signup-back-btn { width: 40px; height: 40px; border-radius: 12px; background: rgba(0,255,102,0.1); border: 1.5px solid rgba(0,255,102,0.35); color: #00FF66; font-size: 18px; font-weight: 900; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
@@ -233,10 +258,18 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .signup-terms { text-align: center; font-size: 10px; color: #666; margin-top: 14px; line-height: 1.6; padding: 0 8px; }
 .signup-terms span { color: #00FF66; font-weight: 700; cursor: pointer; }
 
-@media (min-width: 640px) { .signup-hero { height: 260px; border-radius: 0 0 24px 24px; } .signup-hero-logo .toxic-svg-logo { height: 56px; } }
+@media (min-width: 640px) { .signup-hero { height: 280px; border-radius: 0 0 24px 24px; } .signup-hero-logo .toxic-svg-logo { height: 64px; } }
 </style>
 </head>
 <body>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+  <linearGradient id="pullGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#00FF66"/>
+    <stop offset="50%" stop-color="#10B981"/>
+    <stop offset="100%" stop-color="#00FF66"/>
+  </linearGradient>
+</defs></svg>
 
 <div id="offlineBanner">📡 You are offline — Data will refresh when connected</div>
 
@@ -261,11 +294,13 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 
 <div class="toast" id="toast"></div>
 
+<!-- ✅ PULL-TO-REFRESH · PROFESSIONAL CIRCULAR RING -->
 <div id="pullIndicator">
-  <svg width="46" height="46" viewBox="0 0 46 46" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="23" cy="23" r="18" fill="rgba(5,9,7,0.95)" stroke="rgba(0,255,102,0.18)" stroke-width="3"/>
-    <circle id="pullRing" cx="23" cy="23" r="18" fill="none" stroke="#00FF66" stroke-width="3" stroke-dasharray="113" stroke-dashoffset="113" stroke-linecap="round" transform="rotate(-90 23 23)"/>
+  <svg viewBox="0 0 52 52">
+    <circle id="pullRingBg" cx="26" cy="26" r="21"/>
+    <circle id="pullProgressRing" cx="26" cy="26" r="21" stroke-dasharray="131.95" stroke-dashoffset="131.95"/>
   </svg>
+  <span id="pullIcon">↓</span>
 </div>
 
 <div id="pwaBanner">
@@ -292,7 +327,15 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 
 <script>
 /* ============================================================
-   VERSION 2 — All bugs fixed + Suggestions 1,3,7,8 added
+   TOXIC v2 · Changes applied:
+   1. TOXIC logo left side + attractive (signup hero)
+   2. Announcement top → Winners → Crypto (order)
+   3. Chart combined earnings card
+   4. History combined + summary + accurate date/time
+   5. Spin server-side (per user per day)
+   6. First collect immediate after plan buy
+   7. Crypto min: no ₹ (only UPI shows ₹)
+   8. Pull-to-refresh circular ring
    ============================================================ */
 
 if ('serviceWorker' in navigator) {
@@ -303,12 +346,9 @@ if ('serviceWorker' in navigator) {
 
 const TG_ICON_SVG = `<svg viewBox="0 0 24 24" fill="currentColor" width="26" height="26"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>`;
 
-/* CHANGE #1: toxicLogo now supports 'left' alignment for hero */
-function toxicLogo(size = 'lg', align = 'center') {
+function toxicLogo(size = 'lg') {
   const cls = size === 'lg' ? 'toxic-svg-logo' : 'toxic-svg-logo-sm';
   const uid = size + Math.random().toString(36).slice(2, 7);
-  const anchor = align === 'left' ? 'start' : 'middle';
-  const xPos = align === 'left' ? 15 : 200;
   return `<svg class="${cls}" viewBox="0 0 400 110" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
     <defs>
       <linearGradient id="tg-${uid}" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -323,7 +363,7 @@ function toxicLogo(size = 'lg', align = 'center') {
         <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
     </defs>
-    <text x="${xPos}" y="88" text-anchor="${anchor}" font-family="Inter, Arial Black, sans-serif" font-size="92" font-weight="900" letter-spacing="2" fill="url(#tg-${uid})" stroke="#0a3d10" stroke-width="0.8" filter="url(#glow-${uid})">TOXIC</text>
+    <text x="200" y="88" text-anchor="middle" font-family="Inter, Arial Black, sans-serif" font-size="92" font-weight="900" letter-spacing="2" fill="url(#tg-${uid})" stroke="#0a3d10" stroke-width="0.8" filter="url(#glow-${uid})">TOXIC</text>
   </svg>`;
 }
 
@@ -338,16 +378,11 @@ let CFG = {
   usdtBep20: '0xd39ca01aaf830911553c4f06510665b34fb793d0',
   usdtTrc20: 'TMqeccMCttEYBQoLVnEWSs1KSHBhFgaexq',
   btcBep20: '0xd39ca01aaf830911553c4f06510665b34fb793d0',
-  inrRate: 98,
-  /* CHANGE #7: min $2 for both */
-  minDep: 2,
-  minDepUPI: 2,       // USD equivalent — display will show $2 (₹196)
-  minDepCrypto: 2,    // USD only
-  minWd: 5, fee: 5, maxDailyWd: 3, historyPageSize: 10,
+  inrRate: 90, minDep: 2, minWd: 5, fee: 5, maxDailyWd: 3, historyPageSize: 10,
   appUrl: 'https://toxiconect.github.io',
   signupBonus: 0.50, telegramBonus: 0.20, shareBonus: 0.10,
   sbUrl: 'https://uaeyjqfwqxhgbhrvlbdr.supabase.co',
-  sbKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZXlqcWZ3cXhoZ2JocnZsYmRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1Njk4MzExLCJleHAiOjIxMDUxNDQzMTF9.gmxzj18TuS6Zckjf7d41uBUFMHfsUxl92e-QoI-a-rc',
+  sbKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhZXlqcWZ3cXhoZ2JocnZsYmRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NjgzMTEsImV4cCI6MjEwNTE0NDMxMX0.gmxzj18TuS6Zckjf7d41uBUFMHfsUxl92e-QoI-a-rc',
   emailjs: { serviceId: 'service_73147hr', templateId: 'template_527mz75', publicKey: 'jqUMl6CNuI5ijOpCJ' }
 };
 
@@ -385,7 +420,6 @@ let PROMO_LOADED = false;
 let INVEST_LOCK = false;
 let SYNC_LOCK = false;
 let SPIN_LOCK = false;
-let TICKER_ACTIVE = false;
 
 let PLANS = [
   {id:'l1', n:'BRONZE', d:1, dly:0.10, t:4.00, c:'#CD7F32', i:'🥉'},
@@ -440,8 +474,7 @@ const SPIN_PRIZES = [
 ];
 
 const ACHIEVEMENTS = [
-  {id:'welcome_bonus_claimed', name:'Welcome Bonus', icon:'🎁', desc:'Claim your signup bonus', check:()=>false, hidden:true},
-  {id:'first_invest', name:'First Invest', icon:'🥇', desc:'Buy your first investment plan', check:(u)=>Number(u.invested||0)>0},
+  {id:'first_invest', name:'First Invest', icon:'🥇', desc:'Buy your first investment plan', check:(u,tm,p)=>Number(u.invested||0)>0},
   {id:'club_100', name:'$100 Club', icon:'💰', desc:'Invest $100 or more in total', check:(u)=>Number(u.invested||0)>=100},
   {id:'club_1000', name:'$1000 Club', icon:'💎', desc:'Invest $1000 or more in total', check:(u)=>Number(u.invested||0)>=1000},
   {id:'refs_10', name:'10 Referrals', icon:'👥', desc:'Invite 10 invested team members', check:(u,tm)=>tm.filter(x=>Number(x.invested||0)>0).length>=10},
@@ -526,30 +559,17 @@ let S = {
   autoRenew: localStorage.getItem('t_autorenew') === '1',
   achievements: JSON.parse(localStorage.getItem('t_achievements') || '[]'),
   popupQueue: [], popupActive: false,
-  toastQueue: [], toastActive: false,
   fakeLeaderboard: generateFakeLeaderboard(80),
   winnerData: generateWinnerTicker(),
-  winnerDataCached: null,
   leaderboardLoaded: false,
   tourStep: 0,
-  /* SUGGESTION #3: Offline action queue */
-  offlineQueue: JSON.parse(localStorage.getItem('t_offline_queue') || '[]')
+  spinServerChecked: false // #5
 };
 
 try {
   const ex = JSON.parse(localStorage.getItem('t_extra') || '{}');
   S.spin = ex.spin || S.spin; S.milestones = ex.milestones || S.milestones; S.tgBonus = ex.tgBonus || false;
 } catch(e) {}
-
-/* BUG FIX #14: Session timeout (90 days inactivity) */
-try {
-  const lastActive = parseInt(localStorage.getItem('t_last_active') || '0');
-  if (S.user && lastActive && Date.now() - lastActive > 90 * DAY) {
-    localStorage.removeItem('t_user');
-    S.user = null;
-  }
-} catch(e) {}
-if (S.user) localStorage.setItem('t_last_active', Date.now().toString());
 
 try {
   const up = new URLSearchParams(location.search); const rf = up.get('ref');
@@ -566,13 +586,9 @@ try {
 
 const $ = id => document.getElementById(id);
 const fmt = n => Number(n||0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
-/* CHANGE #2: First collect immediate after plan buy */
-const nextC = p => {
-  if (!p.last_collect_at) return new Date(p.started_at).getTime();
-  return new Date(p.last_collect_at).getTime() + DAY;
-};
+const nextC = p => { const base = p.last_collect_at || p.started_at; return new Date(base).getTime() + DAY; };
 const isActive = pid => S.plans.some(p => p.plan_id === pid && Number(p.days_collected) < 40 && p.status !== 'completed');
 const refLink = () => S.user ? CFG.appUrl + '/?ref=' + S.user.referral_code : CFG.appUrl;
 
@@ -644,25 +660,6 @@ document.addEventListener('pointerdown', (e) => {
   const hit = e.target.closest('button, .nav-item, .plan-card, [onclick], input[type="range"], select, .lang-btn, .switch, .netbtn');
   if (hit) { haptic('light'); sound('tap'); }
 }, {passive:true, capture:true});
-
-/* BUG FIX #10: Toast queue — no more overlap */
-function toast(m) {
-  S.toastQueue.push(m);
-  processToastQueue();
-}
-function processToastQueue() {
-  if (S.toastActive || S.toastQueue.length === 0) return;
-  S.toastActive = true;
-  const msg = S.toastQueue.shift();
-  const el = $('toast');
-  if (!el) { S.toastActive = false; return; }
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => {
-    el.classList.remove('show');
-    setTimeout(() => { S.toastActive = false; processToastQueue(); }, 300);
-  }, 2600);
-}
 
 function enqueuePopup(fn) { S.popupQueue.push(fn); processPopupQueue(); }
 function processPopupQueue() {
@@ -738,9 +735,9 @@ function save() {
   localStorage.setItem('t_redeemed', JSON.stringify(S.redeemedCodes));
   localStorage.setItem('t_achievements', JSON.stringify(S.achievements));
   localStorage.setItem('t_usdt_net', S.usdtNetwork);
-  localStorage.setItem('t_last_active', Date.now().toString());
   saveExtra();
 }
+function toast(m) { const el = $('toast'); if (!el) return; el.textContent = m; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 3000); }
 
 async function requestPushPermission() {
   if (!('Notification' in window)) return false;
@@ -768,66 +765,10 @@ async function sendScreenshotToTelegram(base64Image, username, userId) {
 
 function initOfflineMode() {
   const update = () => { const b = $('offlineBanner'); if (!b) return; if (navigator.onLine) b.classList.remove('show'); else b.classList.add('show'); };
-  window.addEventListener('online', () => { update(); toast('✅ Back online'); processOfflineQueue(); });
+  window.addEventListener('online', () => { update(); toast('✅ Back online'); });
   window.addEventListener('offline', () => { update(); toast('📡 You are offline'); });
   update();
 }
-
-/* SUGGESTION #3: Offline action queue */
-function enqueueOfflineAction(action) {
-  S.offlineQueue.push({...action, id: 'oq_' + Date.now() + Math.random().toString(36).slice(2,5), ts: Date.now()});
-  localStorage.setItem('t_offline_queue', JSON.stringify(S.offlineQueue));
-}
-async function processOfflineQueue() {
-  if (!navigator.onLine || S.offlineQueue.length === 0) return;
-  const queue = [...S.offlineQueue];
-  let successCount = 0;
-  for (const action of queue) {
-    try {
-      if (action.type === 'collect') {
-        const pl = S.plans.find(x => String(x.id) === String(action.planId));
-        if (pl && Date.now() >= nextC(pl) && Number(pl.days_collected) < 40) {
-          await collect(action.planId, true);
-          successCount++;
-        }
-        S.offlineQueue = S.offlineQueue.filter(a => a.id !== action.id);
-        localStorage.setItem('t_offline_queue', JSON.stringify(S.offlineQueue));
-      }
-    } catch(e) { console.warn('Offline queue error:', e); }
-  }
-  if (successCount > 0) {
-    toast(`✅ ${successCount} pending action${successCount>1?'s':''} completed`);
-    render();
-  }
-}
-
-/* SUGGESTION #7: Error boundary */
-function showErrorBoundary(err) {
-  console.error('Error boundary:', err);
-  const app = $('app');
-  if (!app) return;
-  const errMsg = err ? String(err.message || err).slice(0, 200) : 'Unknown error';
-  app.innerHTML = `<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;max-width:448px;margin:0 auto">
-    <div class="glass-card" style="width:100%;text-align:center;padding:32px 24px;border-color:rgba(239,68,68,0.4)">
-      <div style="font-size:56px;margin-bottom:14px">⚠️</div>
-      <h2 style="font-size:20px;font-weight:900;margin:0 0 8px;color:#EF4444">Something went wrong</h2>
-      <p style="font-size:12px;color:#888;margin:0 0 8px;line-height:1.6">The app hit an unexpected error. Please reload.</p>
-      <p style="font-size:10px;color:#555;margin:0 0 20px;font-family:'JetBrains Mono',monospace;word-break:break-all">${esc(errMsg)}</p>
-      <button onclick="location.reload()" class="btn-green" style="width:100%;padding:14px;border-radius:14px;font-size:13px;margin-bottom:10px">🔄 RELOAD APP</button>
-      <a href="${CFG.support}" target="_blank" style="text-decoration:none;display:block;padding:14px;border-radius:14px;font-size:13px;font-weight:800;background:rgba(255,255,255,0.05);color:#ccc;border:1px solid rgba(255,255,255,0.1)">💬 CONTACT SUPPORT</a>
-    </div>
-  </div>`;
-}
-
-window.addEventListener('error', (e) => {
-  if (e && e.error && String(e.message||'').includes('ResizeObserver')) return;
-  console.warn('Global error caught');
-});
-window.addEventListener('unhandledrejection', (e) => {
-  console.warn('Unhandled promise rejection:', e.reason);
-});
-
-/* BUG FIX #11: esc() everywhere — mostly handled via esc() calls */
 
 function showTour() {
   if (!S.user) return;
@@ -836,8 +777,8 @@ function showTour() {
   const steps = [
     {icon:'👋', title:'Welcome to TOXIC!', desc:'Your gateway to daily investment returns. Let us show you around in 20 seconds.'},
     {icon:'💰', title:'Your Balance', desc:'This is your total balance. Tap the USD/INR button to switch currencies. Withdraw anytime from Wallet tab.'},
-    {icon:'⚡', title:'Invest & Collect Daily', desc:'Choose a plan from INVEST. First collect is instant! Then return every 24 hours to collect your daily reward.'},
-    {icon:'👥', title:'Refer & Earn', desc:'Share your referral link to earn up to 10% commission across 10 levels. Invite 5+ invested members to unlock milestone bonuses!'}
+    {icon:'⚡', title:'Invest & Collect Daily', desc:'Choose a plan from INVEST. First reward is instant! Then collect every 24 hours.'},
+    {icon:'👥', title:'Refer & Earn', desc:'Share your referral link to earn up to 10% commission across 10 levels.'}
   ];
   S.tourStep = 0; renderTour(steps);
   const overlay = $('tourOverlay'); overlay.classList.add('show');
@@ -1042,15 +983,10 @@ async function loadCryptoPrices() {
       {s:'BNB', sym:'B', p: d.binancecoin?.usd || 0, c: d.binancecoin?.usd_24h_change || 0},
       {s:'SOL', sym:'S', p: d.solana?.usd || 0, c: d.solana?.usd_24h_change || 0}
     ];
-    S.cryptoError = false;
-  } catch(e) { S.cryptoError = true; }
+  } catch(e) {}
 }
-/* BUG FIX #13: Crypto fallback when API fails */
 function cryptoUI() {
   if (!S.cryptoData || S.cryptoData.length === 0) {
-    if (S.cryptoError) {
-      return `<div class="cyber-ticker" style="padding:10px 14px"><div style="display:flex;gap:14px;align-items:center"><span style="font-size:11px;color:#888">📊 Crypto prices unavailable</span><button onclick="loadCryptoPrices().then(render)" style="background:rgba(0,255,102,0.12);border:1px solid rgba(0,255,102,0.35);color:#00FF66;border-radius:8px;padding:4px 10px;font-size:10px;font-weight:800;cursor:pointer">RETRY</button></div></div>`;
-    }
     return `<div class="cyber-ticker" style="padding:10px 14px"><div style="display:flex;gap:20px"><span class="skel" style="width:90px;height:14px;display:inline-block"></span><span class="skel" style="width:90px;height:14px;display:inline-block"></span></div></div>`;
   }
   const items = S.cryptoData.map(c => {
@@ -1059,47 +995,32 @@ function cryptoUI() {
   }).join('');
   return `<div class="cyber-ticker"><div>${items}${items}</div></div>`;
 }
-/* BUG FIX #9 + CHANGE #4: Cache winners + announcement first */
-function combinedTickerUI() {
-  if (!S.winnerDataCached) S.winnerDataCached = [...S.winnerData];
-  const fakes = S.winnerDataCached.slice(0, 25);
+
+/* ✅ #2 · ANNOUNCEMENT TICKER (TOP) */
+function announcementTickerUI() {
+  const newsItems = NEWS_LIST.map(n => `<span style="display:inline-flex;align-items:center;gap:6px;padding:0 18px;border-right:1px solid rgba(0,255,102,0.2);font-size:11px;color:#ddd;white-space:nowrap">${n}</span>`).join('');
+  return `<div class="combined-ticker green-theme">
+    <div class="combined-row">
+      <span style="font-size:11px;font-weight:900;color:#00FF66;display:flex;align-items:center;gap:4px;flex-shrink:0">📢 ANNOUNCEMENT:</span>
+      <div style="flex:1;overflow:hidden"><div class="announce-scroll mono">${newsItems}${newsItems}</div></div>
+    </div>
+  </div>`;
+}
+/* ✅ #2 · WINNERS TICKER (MIDDLE) */
+function winnersTickerUI() {
+  const fakes = S.winnerData.slice(0, 25);
   const reals = (S.team || []).filter(x => Number(x.invested||0) > 0).slice(0, 5).map(x => ({ name: x.username || 'you', country: '🌍', amount: Number(x.invested || 0), period: 'WEEK', isReal: true }));
   const all = [...reals, ...fakes].sort((a,b) => b.amount - a.amount).slice(0, 20);
   const winnerItems = all.map((w, i) => {
     const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '🏅';
     return `<span style="display:inline-flex;align-items:center;gap:5px;padding:0 14px;border-right:1px solid rgba(255,215,0,0.2);font-size:11px;color:#fff"><span class="emoji-3d">${medal}</span><b style="color:#FFD700">${esc(w.name)}</b><span style="color:#888;font-size:10px">${w.country}</span><span class="mono" style="color:#00FF66;font-weight:900">$${fmt(w.amount)}</span><span style="font-size:9px;color:#FFD700;background:rgba(255,215,0,0.15);padding:1px 6px;border-radius:8px;font-weight:800">${w.period}</span></span>`;
   }).join('');
-  const newsItems = NEWS_LIST.map(n => esc(n)).join('  •  ');
-  /* CHANGE #4: News visible first by default */
-  return `<div class="combined-ticker" id="combinedTicker">
-    <div class="combined-row" id="cRowNews">
-      <span style="font-size:11px;font-weight:900;color:#00FF66;display:flex;align-items:center;gap:4px;flex-shrink:0">📢 ANNOUNCEMENT:</span>
-      <div style="flex:1;overflow:hidden"><div class="news-scroll mono" style="font-size:11px;color:#ddd">${newsItems}</div></div>
-    </div>
-    <div class="combined-row" id="cRowWinner" style="display:none">
+  return `<div class="combined-ticker">
+    <div class="combined-row">
       <span style="font-size:11px;font-weight:900;color:#FFD700;display:flex;align-items:center;gap:4px;flex-shrink:0">👑 WINNERS:</span>
       <div style="flex:1;overflow:hidden"><div class="winner-scroll mono">${winnerItems}${winnerItems}</div></div>
     </div>
   </div>`;
-}
-/* CHANGE #4: Announcement first (10s), then winners (5s) */
-function rotateCombinedTicker() {
-  if (TICKER_ACTIVE) return;
-  TICKER_ACTIVE = true;
-  const run = () => {
-    if (!S.user) { TICKER_ACTIVE = false; return; }
-    if (S.tab !== 'dashboard' || S.showProfile || S.showNotifs || S.page) { setTimeout(run, 3000); return; }
-    const w = $('cRowWinner'), n = $('cRowNews');
-    if (!w || !n) { setTimeout(run, 3000); return; }
-    n.style.display = 'flex'; w.style.display = 'none';
-    setTimeout(() => {
-      const w2 = $('cRowWinner'), n2 = $('cRowNews');
-      if (!w2 || !n2) { setTimeout(run, 3000); return; }
-      n2.style.display = 'none'; w2.style.display = 'flex';
-      setTimeout(run, 5000);
-    }, 10000);
-  };
-  run();
 }
 
 async function loadNotifs() {
@@ -1107,16 +1028,13 @@ async function loadNotifs() {
   try { const r = await sb.from('notifications').select('*').eq('user_id', S.user.user_id).order('id', {ascending:false}).limit(50); if (r.data) S.notifs = r.data; } catch(e) {}
 }
 const unread = () => S.notifs.filter(n => !n.is_read).length;
-/* BUG FIX #12: Auto mark read when modal closes */
-async function markRead(auto = false) {
+async function markRead() {
   if (!sb || !S.user) return;
-  if (!auto) haptic('medium');
-  for (const n of S.notifs.filter(x => !x.is_read)) {
-    try { await sb.from('notifications').update({is_read:true}).eq('id', n.id); } catch(e) {}
-  }
-  try { await sb.from('users').update({unread_count:0}).eq('user_id', S.user.user_id); } catch(e) {}
+  haptic('medium');
+  for (const n of S.notifs.filter(x => !x.is_read)) await sb.from('notifications').update({is_read:true}).eq('id', n.id);
+  await sb.from('users').update({unread_count:0}).eq('user_id', S.user.user_id);
   S.user.unread_count = 0; S.notifs.forEach(n => n.is_read = true);
-  save(); if (!auto) render();
+  save(); render();
 }
 
 async function checkTeamMilestones() {
@@ -1162,34 +1080,29 @@ function claimTelegramBonus() {
   }, '📢');
 }
 
-/* CHANGE #6 + SUGGESTION #1: Server-side spin tracking */
-function getLastSpinAt() {
-  if (S.user) {
-    if (S.user.last_spin_at) return Number(S.user.last_spin_at) || 0;
-    const ls = localStorage.getItem('x_last_spin_' + S.user.user_id);
-    if (ls) return Number(ls) || 0;
-  }
-  if (S.spin.lastSpin) return S.spin.lastSpin;
-  return 0;
+/* ✅ #5 · SPIN SERVER-SIDE (per user per day) */
+async function checkSpinServer() {
+  if (!sb || !S.user) return;
+  try {
+    const r = await sb.from('users').select('last_spin_at').eq('user_id', S.user.user_id).limit(1);
+    if (r.data && r.data[0] && r.data[0].last_spin_at) {
+      const serverTime = new Date(r.data[0].last_spin_at).getTime();
+      if (serverTime > (S.spin.lastSpin || 0)) {
+        S.spin.lastSpin = serverTime;
+        saveExtra();
+      }
+    }
+  } catch(e) { /* column may not exist */ }
+  S.spinServerChecked = true;
 }
-function setLastSpinAt(ts) {
-  S.spin.lastSpin = ts;
-  saveExtra();
-  if (S.user) {
-    S.user.last_spin_at = ts;
-    localStorage.setItem('x_last_spin_' + S.user.user_id, String(ts));
-    if (sb) { try { sb.from('users').update({last_spin_at: ts}).eq('user_id', S.user.user_id); } catch(e) {} }
-  }
-}
+
 function canSpin() {
-  const last = getLastSpinAt();
-  if (!last) return true;
-  return Date.now() - last >= DAY;
+  if (!S.spin.lastSpin) return true;
+  return Date.now() - S.spin.lastSpin >= DAY;
 }
 function timeUntilSpin() {
   if (canSpin()) return null;
-  const last = getLastSpinAt();
-  const rem = DAY - (Date.now() - last);
+  const rem = DAY - (Date.now() - S.spin.lastSpin);
   const h = Math.floor(rem / 3600000); const m = Math.floor((rem % 3600000) / 60000); const s = Math.floor((rem % 60000) / 1000);
   return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
@@ -1203,42 +1116,39 @@ async function spinWheel() {
   if (!S.user) return;
   if (SPIN_LOCK) return;
   if (!canSpin()) return customAlert('Wait', 'Come back later to spin again.', '⏳');
-  if (!navigator.onLine) return customAlert('Offline', 'You need internet to spin.', '📡');
   SPIN_LOCK = true;
+  // ✅ Re-check server first (anti-cheat)
+  if (sb) { await checkSpinServer(); if (!canSpin()) { SPIN_LOCK = false; return customAlert('Already Spun', 'You already spun today.\n\nCome back in 24 hours.', '⏳'); } }
   const idx = pickPrize(); const prize = SPIN_PRIZES[idx];
   const sliceAngle = 360 / SPIN_PRIZES.length;
   const targetAngle = 360 * 5 + (360 - sliceAngle * idx - sliceAngle / 2);
   const wheel = $('spinWheel');
   if (wheel) { wheel.style.transition = 'transform 4.5s cubic-bezier(0.15,0.9,0.25,1)'; wheel.style.transform = `rotate(${targetAngle}deg)`; }
   haptic('medium'); sound('spin');
+  const spinTime = Date.now();
   setTimeout(async () => {
-    /* SUGGESTION #1: Server-side verification — re-check spin availability */
-    if (sb) {
-      try {
-        const r = await sb.from('users').select('last_spin_at').eq('user_id', S.user.user_id).limit(1);
-        if (r.data && r.data[0] && r.data[0].last_spin_at) {
-          const serverLast = Number(r.data[0].last_spin_at) || 0;
-          if (serverLast && Date.now() - serverLast < DAY) {
-            SPIN_LOCK = false;
-            customAlert('Already Spun', 'You already spun on another device.', '⏳');
-            render();
-            return;
-          }
-        }
-      } catch(e) {}
-    }
-    const now = Date.now();
-    setLastSpinAt(now);
+    S.spin.lastSpin = spinTime;
     S.spin.totalSpins = (S.spin.totalSpins||0) + 1;
     if (prize.value > 0) {
       S.user.balance = Number(S.user.balance||0) + prize.value;
       S.tx.unshift({type:'spin', amount:prize.value, status:'success', method:'Spin & Win', date:new Date().toISOString()});
       save();
-      if (sb) { try { await sb.from('users').update({balance:S.user.balance}).eq('user_id', S.user.user_id); } catch(e) {} }
+      if (sb) {
+        try {
+          // ✅ Server-side spin lock + balance
+          await sb.from('users').update({balance:S.user.balance, last_spin_at: new Date(spinTime).toISOString()}).eq('user_id', S.user.user_id);
+        } catch(e) {
+          try { await sb.from('users').update({balance:S.user.balance}).eq('user_id', S.user.user_id); } catch(e2) {}
+        }
+      }
       haptic('success'); sound('coin'); showCoinAnim(prize.value);
       if (prize.value >= 0.20) { launchConfetti(); customAlert('🎉 YOU WON!', `+$${prize.value.toFixed(2)} added to your balance!`, '🏆'); }
       else customAlert('🎊 You Won!', `+$${prize.value.toFixed(2)} added!`, '💰');
-    } else { save(); customAlert('Try Again', 'Better luck next time!', '😅'); }
+    } else {
+      save();
+      if (sb) { try { await sb.from('users').update({last_spin_at: new Date(spinTime).toISOString()}).eq('user_id', S.user.user_id); } catch(e) {} }
+      customAlert('Try Again', 'Better luck next time!', '😅');
+    }
     SPIN_LOCK = false;
     render();
   }, 4600);
@@ -1277,15 +1187,15 @@ function spinUI() {
   </div>`;
 }
 
-/* BUG FIX #4: Signup bonus idempotency via achievements */
 async function applySignupBonus() {
   if (!S.user) return;
-  if (S.achievements.includes('welcome_bonus_claimed')) return;
-  S.achievements.push('welcome_bonus_claimed');
+  const key = 'x_signup_bonus_' + S.user.user_id;
+  if (localStorage.getItem(key)) return;
+  localStorage.setItem(key, '1');
   S.user.balance = Number(S.user.balance||0) + CFG.signupBonus;
   S.tx.unshift({type:'bonus', amount:CFG.signupBonus, status:'success', method:'Welcome Signup Bonus', date:new Date().toISOString()});
   save();
-  if (sb) { try { await sb.from('users').update({balance:S.user.balance, achievements: JSON.stringify(S.achievements)}).eq('user_id', S.user.user_id); } catch(e) {} }
+  if (sb) { try { await sb.from('users').update({balance:S.user.balance}).eq('user_id', S.user.user_id); } catch(e) {} }
   setTimeout(() => { launchConfetti(); sound('coin'); showCoinAnim(CFG.signupBonus); customAlert('🎁 Welcome Bonus!', `+$${CFG.signupBonus.toFixed(2)} FREE signup bonus credited!\n\nInvest to start earning daily rewards.`, '🎉'); }, 1500);
 }
 
@@ -1303,7 +1213,6 @@ async function checkAchievements() {
   if (!S.user) return;
   const unlocked = [];
   for (const a of ACHIEVEMENTS) {
-    if (a.hidden) continue;
     if (S.achievements.includes(a.id)) continue;
     try { if (a.check(S.user, S.team || [], S.plans || [])) { S.achievements.push(a.id); unlocked.push(a); } } catch(e) {}
   }
@@ -1387,44 +1296,18 @@ function showLive() {
   reschedule();
 }
 
-/* SUGGESTION #8: Skeleton loading components */
-function skeletonCard(lines = 3) {
-  let out = '<div class="glass-card" style="padding:18px">';
-  for (let i = 0; i < lines; i++) {
-    const w = [100, 70, 50, 85, 60][i % 5];
-    out += `<div class="skel" style="height:14px;width:${w}%;margin-bottom:12px;border-radius:6px"></div>`;
-  }
-  out += '</div>';
-  return out;
-}
-function skeletonList(count = 3) {
-  let out = '';
-  for (let i = 0; i < count; i++) out += skeletonCard(2);
-  return out;
-}
-function skeletonChart() {
-  return `<div class="glass-card"><div class="skel" style="height:12px;width:180px;margin-bottom:16px;border-radius:6px"></div><div style="display:flex;align-items:flex-end;gap:8px;height:80px">${[40,55,30,70,45,60,85].map(h => `<div class="skel" style="flex:1;height:${h}%;border-radius:6px"></div>`).join('')}</div></div>`;
-}
-
-/* ERROR BOUNDARY: Wrap render in try/catch */
 function render() {
-  try {
-    const a = $('app');
-    if (!a) return;
-    if (S.page) { a.innerHTML = renderPage(); return; }
-    if (!S.user) {
-      if (S.showForgot) { a.innerHTML = forgotPasswordUI(); return; }
-      a.innerHTML = S.tab === 'signin' ? loginUI() : signupUI();
-      return;
-    }
-    a.innerHTML = mainUI() + planModal() + profileModal() + notifsModal() + badgesModal() + shareModal() + winnerModal() + qrModal() + seeAllModals();
-    if (S.tab === 'wallet') setTimeout(loadSavedAddresses, 0);
-    if (S.tab === 'team') setTimeout(loadLeaderboardSafe, 150);
-    updateDyn();
-    if (S.tab === 'dashboard' && !TICKER_ACTIVE) setTimeout(rotateCombinedTicker, 400);
-  } catch (err) {
-    showErrorBoundary(err);
+  const a = $('app');
+  if (S.page) { a.innerHTML = renderPage(); return; }
+  if (!S.user) {
+    if (S.showForgot) { a.innerHTML = forgotPasswordUI(); return; }
+    a.innerHTML = S.tab === 'signin' ? loginUI() : signupUI();
+    return;
   }
+  a.innerHTML = mainUI() + planModal() + profileModal() + notifsModal() + badgesModal() + shareModal() + winnerModal() + qrModal() + seeAllModals();
+  if (S.tab === 'wallet') setTimeout(loadSavedAddresses, 0);
+  if (S.tab === 'team') setTimeout(loadLeaderboardSafe, 150);
+  updateDyn();
 }
 
 function updateDyn() {
@@ -1463,8 +1346,6 @@ async function claimReferralBalance() {
   if (refBal <= 0) return customAlert('No Balance', 'You have no pending referral earnings.', 'ℹ️');
   S.user.balance = Number(S.user.balance || 0) + refBal;
   S.user.referral_balance = 0;
-  /* Bug fix: log referral claim as tx so it appears in chart */
-  S.tx.unshift({type:'referral', amount:refBal, status:'success', method:'Referral Commission Claim', date:new Date().toISOString()});
   save();
   if (sb) { try { await sb.from('users').update({balance: S.user.balance, referral_balance: 0}).eq('user_id', S.user.user_id); } catch(e) {} }
   haptic('success'); sound('coin'); launchConfetti(); showCoinAnim(refBal);
@@ -1472,7 +1353,6 @@ async function claimReferralBalance() {
   render();
 }
 
-/* BUG FIX #1, #2, #7: Better plan merge + balance protection */
 async function syncUser() {
   if (!sb || !S.user) return;
   if (SYNC_LOCK) return;
@@ -1490,24 +1370,26 @@ async function syncUser() {
         SYNC_LOCK = false; S.syncing = false; return;
       }
       const oldB = Number(S.user.balance||0);
-      /* Bug fix #7: don't overwrite if local has higher (pending offline actions) */
-      const serverBal = Number(f.balance||0);
-      S.user.balance = Math.max(serverBal, oldB);
+      S.user.balance = Number(f.balance||0);
       S.user.referral_balance = Number(f.referral_balance||0);
       S.user.invested = Number(f.invested||0);
       S.user.earned = Number(f.earned||0);
       if (f.avatar) S.user.avatar = f.avatar;
       if (f.email) S.user.email = f.email;
-      if (f.last_spin_at) S.user.last_spin_at = Number(f.last_spin_at);
       if (f.milestones_claimed) { try { const p = JSON.parse(f.milestones_claimed); if (Array.isArray(p)) S.milestones.claimed = p; } catch(e) {} }
       if (f.achievements) { try { const p = JSON.parse(f.achievements); if (Array.isArray(p)) S.achievements = p; } catch(e) {} }
       if (f.auto_renew !== undefined && f.auto_renew !== null) { S.autoRenew = !!f.auto_renew; localStorage.setItem('t_autorenew', S.autoRenew ? '1' : '0'); }
+      // ✅ #5 · sync last_spin_at from server (if column exists)
+      if (f.last_spin_at) {
+        const serverSpin = new Date(f.last_spin_at).getTime();
+        if (serverSpin > (S.spin.lastSpin || 0)) { S.spin.lastSpin = serverSpin; saveExtra(); }
+      }
       save();
       if ($('bal') && oldB !== S.user.balance) animateCount($('bal'), oldB, S.user.balance);
     }
     const p = await sb.from('user_plans').select('*').eq('user_id', S.user.user_id).order('id', {ascending:false});
     if (p.data && Array.isArray(p.data)) {
-      const serverPlans = p.data.map(pl => {
+      S.plans = p.data.map(pl => {
         const days = Number(pl.days_collected) || 0;
         const started = new Date(pl.started_at).getTime();
         const expired = Date.now() >= started + 40 * DAY;
@@ -1517,14 +1399,6 @@ async function syncUser() {
         }
         return pl;
       });
-      /* BUG FIX #1: Merge local plans that don't exist on server yet */
-      const serverKey = (pl) => pl.plan_id + '|' + Math.floor(new Date(pl.started_at).getTime() / 60000);
-      const serverKeys = new Set(serverPlans.map(serverKey));
-      const localKeep = S.plans.filter(pl => {
-        if (!String(pl.id).startsWith('local_')) return false;
-        return !serverKeys.has(serverKey(pl));
-      });
-      S.plans = [...serverPlans, ...localKeep];
       if (S.autoRenew) {
         const renewedIds = JSON.parse(localStorage.getItem('t_renewed_plans') || '[]');
         const completedPlans = S.plans.filter(pl => pl.status === 'completed' && !renewedIds.includes(String(pl.id)) && Number(S.user.balance) >= Number(pl.deposit));
@@ -1560,10 +1434,7 @@ async function syncUser() {
       if (!finalList.find(x => String(x.id) === lid)) finalList.push({...local});
     });
     finalList.forEach(x => delete x._akey);
-    /* Bug fix: ensure date field */
-    finalList.forEach(x => { if (!x.date && x.created_at) x.date = x.created_at; });
-    /* CHANGE #5: latest first */
-    finalList.sort((a,b) => new Date(b.date || b.created_at || 0) - new Date(a.date || a.created_at || 0));
+    finalList.sort((a,b) => new Date(b.date) - new Date(a.date));
     S.tx.forEach(old => {
       if (old.type !== 'withdrawal' && old.type !== 'deposit') return;
       const updated = finalList.find(n => String(n.id) === String(old.id));
@@ -1624,7 +1495,8 @@ async function autoRenewCombined(completedPlans) {
       if (!planDef) continue;
       if (Number(S.user.balance) < Number(cp.deposit)) continue;
       const now = new Date();
-      const np = { user_id:S.user.user_id, username:S.user.username, plan_id:planDef.id, plan_name:planDef.n, deposit:planDef.d, daily:planDef.dly, total:planDef.t, days_collected:0, status:'active', started_at:now.toISOString(), expires_at:new Date(now.getTime() + 40 * DAY).toISOString(), last_collect_at: null };
+      // ✅ #6 · First collect immediate
+      const np = { user_id:S.user.user_id, username:S.user.username, plan_id:planDef.id, plan_name:planDef.n, deposit:planDef.d, daily:planDef.dly, total:planDef.t, days_collected:0, status:'active', started_at:now.toISOString(), expires_at:new Date(now.getTime() + 40 * DAY).toISOString(), last_collect_at: new Date(now.getTime() - DAY).toISOString() };
       S.user.balance -= planDef.d;
       S.user.invested = Number(S.user.invested||0) + planDef.d;
       S.tx.unshift({type:'deposit', amount:planDef.d, status:'success', method:'AUTO-RENEW · ' + planDef.n, date:new Date().toISOString()});
@@ -1640,7 +1512,7 @@ async function autoRenewCombined(completedPlans) {
     }
     localStorage.setItem('t_renewed_plans', JSON.stringify(renewedIds));
     save(); render();
-    if (renewedCount > 0) { haptic('success'); sound('success'); launchConfetti(); customAlert('🔄 Plans Renewed!', `${renewedCount} plan(s) have been auto-renewed!`, '🎉'); }
+    if (renewedCount > 0) { haptic('success'); sound('success'); launchConfetti(); customAlert('🔄 Plans Renewed!', `${renewedCount} plan(s) have been auto-renewed!\n\nFirst reward is ready to collect now!`, '🎉'); }
   }, '🔄');
   setTimeout(() => {
     const ids = JSON.parse(localStorage.getItem('t_renewed_plans') || '[]');
@@ -1706,7 +1578,7 @@ function forgotPasswordUI() {
       <h2 class="text-lg font-black mb-2">Reset your password</h2>
       <p class="text-xs text-gray-500 mb-4">Enter your registered Gmail to receive OTP.</p>
       <label style="font-size:10px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:4px">GMAIL ADDRESS</label>
-      <input id="fp_email" type="email" class="inp mb-3" placeholder="yourname@gmail.com" value="${esc(S.forgotEmail||'')}">
+      <input id="fp_email" type="email" class="inp mb-3" placeholder="yourname@gmail.com" value="${S.forgotEmail||''}">
       <button id="fpSendBtn" onclick="sendForgotOTP()" class="w-full btn-green py-2.5 rounded-xl text-xs mb-3">SEND OTP</button>
       <div id="fpOtpSection" style="display:${S.forgotOtp?'block':'none'};margin-bottom:12px">
         <label style="font-size:10px;color:#888;font-weight:700;letter-spacing:1px;display:block;margin-bottom:4px">ENTER OTP</label>
@@ -1723,7 +1595,7 @@ function forgotPasswordUI() {
   `);
 }
 
-/* CHANGE #1: toxicLogo called with 'left' alignment */
+/* ✅ #1 · TOXIC logo left side, attractive */
 function signupUI() {
   const step = S.step;
   const step1Active = step === 1;
@@ -1739,7 +1611,7 @@ function signupUI() {
       <img src="${CFG.banner}" class="signup-hero-img" alt="TOXIC">
       <div class="signup-hero-overlay"></div>
       <div class="signup-hero-glow"></div>
-      <div class="signup-hero-logo">${toxicLogo('lg', 'left')}</div>
+      <div class="signup-hero-logo">${toxicLogo('lg')}</div>
     </div>
     <div class="signup-back-row">
       <button class="signup-back-btn ${step === 1 ? 'hidden' : ''}" onclick="signupBack()">←</button>
@@ -1793,7 +1665,7 @@ function step1() {
     <label class="signup-field-label">Gmail Address</label>
     <div class="input-with-btn ${verified?'verified':''}">
       <span class="field-icon">✉️</span>
-      <input id="sd_email" type="email" placeholder="yourname@gmail.com" value="${esc(S.sd.email||'')}" ${emailDisabled}>
+      <input id="sd_email" type="email" placeholder="yourname@gmail.com" value="${S.sd.email||''}" ${emailDisabled}>
       ${verified
         ? `<span class="otp-verified-badge"><span class="check-dot">✓</span>VERIFIED</span>`
         : `<button id="sendOtpBtn" class="inline-btn" onclick="sendOTP()">SEND OTP</button>`}
@@ -1814,7 +1686,7 @@ function step1() {
   <div class="referral-mini">
     <span class="ref-icon">🎁</span>
     <span class="ref-label">Referral</span>
-    <input id="manualRef" placeholder="OPTIONAL" value="${esc(S.sd.referredBy||'')}" maxlength="20">
+    <input id="manualRef" placeholder="OPTIONAL" value="${S.sd.referredBy||''}" maxlength="20">
   </div>
 
   <button onclick="goStep2()" class="btn-green signup-next-btn" ${verified?'':'disabled'}>NEXT →</button>
@@ -1833,7 +1705,7 @@ function step2() {
     <label class="signup-field-label">Username</label>
     <div class="input-with-btn">
       <span class="field-icon">👤</span>
-      <input class="signup-input" id="un" placeholder="Choose a username" value="${esc(S.sd.username||'')}" style="padding-left:0;padding-top:10px;padding-bottom:10px">
+      <input class="signup-input" id="un" placeholder="Choose a username" value="${S.sd.username||''}" style="padding-left:0;padding-top:10px;padding-bottom:10px">
     </div>
   </div>
 
@@ -1984,11 +1856,8 @@ function logout() {
     S.otpVerified = false; S.otp = {code:'', email:'', expiry:0};
     S.forgotOtp = ''; S.forgotEmail = ''; S.forgotOtpVerified = false; S.forgotUserId = ''; S.forgotOtpExpiry = 0;
     S.popupQueue = []; S.popupActive = false;
-    S.toastQueue = []; S.toastActive = false;
     S.step = 1; S.sd = {country:'', email:'', username:'', password:'', referredBy:null};
     S.notifs = []; S.historyLimit = CFG.historyPageSize; S.txFilter = 'all';
-    S.offlineQueue = [];
-    TICKER_ACTIVE = false;
     if (otpResendInterval) { clearInterval(otpResendInterval); otpResendInterval = null; }
     if (fpResendInterval) { clearInterval(fpResendInterval); fpResendInterval = null; }
     render();
@@ -2032,7 +1901,7 @@ function nav(id, l, path) {
 }
 function setTab(t2) {
   S.tab = t2; S.selPlan = null;
-  /* Bug fix #15: only reset history when filter changes, not every tab switch */
+  if (t2 === 'history') S.historyLimit = CFG.historyPageSize;
   window.scrollTo(0, 0); render();
   if (S.user) syncUser().then(render);
   if (t2 === 'team') setTimeout(loadLeaderboardSafe, 200);
@@ -2047,17 +1916,18 @@ function renderTab() {
   return '';
 }
 
+/* ✅ #2 · Dashboard: Announcement → Winners → Crypto */
 function dashUI() {
   const u = S.user;
   const rl = refLink();
   const ap = S.plans.filter(p => Number(p.days_collected) < 40 && p.status !== 'completed');
   const badge = getVIPBadge(Number(u.invested||0));
   const bars = [20,35,28,50,42,65,55,80,70,95].map((h, i) => `<div style="flex:1;border-radius:4px 4px 0 0;height:${h}%;background:linear-gradient(180deg,#00FF66,rgba(0,255,102,0.15));opacity:${0.4+i*0.06}"></div>`).join('');
-  const unlockedCount = ACHIEVEMENTS.filter(a => !a.hidden && S.achievements.includes(a.id)).length;
-  const totalAch = ACHIEVEMENTS.filter(a => !a.hidden).length;
+  const unlockedCount = ACHIEVEMENTS.filter(a => S.achievements.includes(a.id)).length;
   return `<div style="display:flex;flex-direction:column;gap:14px">
+    ${announcementTickerUI()}
+    ${winnersTickerUI()}
     ${cryptoUI()}
-    ${combinedTickerUI()}
     <div style="position:relative;width:100%;height:180px;border-radius:24px;overflow:hidden;border:1px solid rgba(0,255,102,0.2)"><img src="${CFG.banner}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.2),rgba(5,9,7,0.96))"></div><div style="position:absolute;bottom:16px;left:12px"><p style="font-size:10px;font-weight:800;letter-spacing:3px;color:#00FF66;margin:0 0 2px;text-transform:uppercase;text-shadow:0 0 18px rgba(0,255,102,0.8)">${t().welcome}</p><h2 class="text-3d" style="font-size:24px;font-weight:900;margin:2px 0 0">${esc(u.username)}</h2><div style="display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:3px 10px;border-radius:12px;background:${badge.c}25;border:1px solid ${badge.c}66"><span style="font-size:11px" class="emoji-3d">${badge.icon}</span><span style="font-size:10px;font-weight:800;color:${badge.c}">${badge.name}</span></div></div></div>
     <div class="glass-card card-gradient">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><p style="font-size:10px;color:#10B981;font-weight:800;margin:0;letter-spacing:1.5px">💎 ${t().totalBal}</p><div style="display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;display:inline-block" class="bg-toxic pdot"></span><span style="font-size:9px;font-weight:800" class="text-toxic">LIVE</span></div></div>
@@ -2069,14 +1939,14 @@ function dashUI() {
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><button onclick="setTab('wallet')" class="btn-green" style="width:100%;padding:14px;border-radius:14px;font-size:11px">${t().withEarn}</button><button onclick="openPage('analytics')" style="width:100%;padding:14px;border-radius:14px;font-size:11px;font-weight:900;background:linear-gradient(135deg,#A855F7,#6366F1);color:#fff;border:none;cursor:pointer">📊 ANALYTICS</button></div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:10px">
-        <button onclick="S.showBadges=true;render()" class="ach-btn" style="background:linear-gradient(135deg,rgba(255,215,0,0.18),rgba(255,215,0,0.05));border-color:rgba(255,215,0,0.4);color:#FFD700"><span class="ach-emoji emoji-3d">🏆</span>Badges<span class="ach-sub">${unlockedCount}/${totalAch}</span></button>
+        <button onclick="S.showBadges=true;render()" class="ach-btn" style="background:linear-gradient(135deg,rgba(255,215,0,0.18),rgba(255,215,0,0.05));border-color:rgba(255,215,0,0.4);color:#FFD700"><span class="ach-emoji emoji-3d">🏆</span>Badges<span class="ach-sub">${unlockedCount}/${ACHIEVEMENTS.length}</span></button>
         <button onclick="S.showShare=true;render()" class="ach-btn" style="background:linear-gradient(135deg,rgba(0,255,102,0.15),rgba(0,255,102,0.03));border-color:rgba(0,255,102,0.35);color:#00FF66"><span class="ach-emoji emoji-3d">📸</span>Share<span class="ach-sub">+$0.10</span></button>
         <button onclick="S.showWinner=true;render()" class="ach-btn" style="background:linear-gradient(135deg,rgba(239,68,68,0.15),rgba(239,68,68,0.03));border-color:rgba(239,68,68,0.35);color:#EF4444"><span class="ach-emoji emoji-3d">👑</span>Winner<span class="ach-sub">Top 100</span></button>
       </div>
     </div>
     ${spinUI()}
     ${chartUI()}
-    <div class="glass-card"><p style="font-size:10px;color:#888;font-weight:800;margin:0 0 12px;letter-spacing:1.5px">🔗 YOUR REFERRAL LINK</p><div style="display:flex;gap:8px;align-items:center"><input readonly value="${esc(rl)}" class="mono" style="flex:1;font-size:10px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:13px;color:#10B981"><button onclick="S.showQR=true;render()" class="btn-green" style="padding:13px 12px;border-radius:12px;font-size:12px">QR</button><button onclick="copy('${esc(rl)}')" class="btn-green" style="padding:13px 14px;border-radius:12px;font-size:12px">📋</button></div></div>
+    <div class="glass-card"><p style="font-size:10px;color:#888;font-weight:800;margin:0 0 12px;letter-spacing:1.5px">🔗 YOUR REFERRAL LINK</p><div style="display:flex;gap:8px;align-items:center"><input readonly value="${rl}" class="mono" style="flex:1;font-size:10px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:13px;color:#10B981"><button onclick="S.showQR=true;render()" class="btn-green" style="padding:13px 12px;border-radius:12px;font-size:12px">QR</button><button onclick="copy('${rl}')" class="btn-green" style="padding:13px 14px;border-radius:12px;font-size:12px">📋</button></div></div>
     <div class="glass-card"><p style="font-size:10px;color:#888;font-weight:800;margin:0 0 12px;letter-spacing:1.5px">ℹ️ INFORMATION</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
       <button onclick="openPage('about')" style="padding:12px;border-radius:12px;background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.2);color:#fff;font-size:11px;font-weight:700;cursor:pointer">ℹ️ About Us</button>
       <button onclick="openPage('faq')" style="padding:12px;border-radius:12px;background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.25);color:#fff;font-size:11px;font-weight:700;cursor:pointer">❓ FAQ</button>
@@ -2086,21 +1956,15 @@ function dashUI() {
   </div>`;
 }
 
-/* CHANGE #3: Combined earnings chart */
+/* ✅ #3 · Combined earnings (chart + today + week) */
 function chartUI() {
-  const days = [];
-  const today = new Date(); today.setUTCHours(0, 0, 0, 0);
-  for (let i = 6; i >= 0; i--) { const d = new Date(today.getTime() - i * DAY); days.push({d:d, e:0}); }
-  const EARNING_TYPES = ['daily_collect', 'bonus', 'spin', 'milestone', 'referral'];
-  S.tx.forEach(tx => {
-    if (!EARNING_TYPES.includes(tx.type)) return;
-    const amt = Number(tx.amount || 0);
-    if (amt <= 0) return;
-    const txDate = new Date(tx.date || tx.created_at || 0);
-    if (isNaN(txDate.getTime())) return;
-    const day = new Date(txDate); day.setUTCHours(0, 0, 0, 0);
-    const bucket = days.find(d => d.d.getTime() === day.getTime());
-    if (bucket) bucket.e += amt;
+  const days = []; const today = new Date(); today.setUTCHours(0, 0, 0, 0);
+  for (let i = 6; i >= 0; i--) { const d = new Date(today.getTime() - i * DAY); days.push({d:d, e:0, count:0}); }
+  S.plans.forEach(pl => {
+    const start = new Date(pl.started_at); start.setUTCHours(0, 0, 0, 0);
+    const dailyEarn = Number(pl.dly || pl.daily) || 0;
+    const maxDays = Math.min(Number(pl.days_collected) || 0, 40);
+    days.forEach(day => { const diff = Math.floor((day.d.getTime() - start.getTime()) / DAY); if (diff >= 0 && diff < maxDays) { day.e += dailyEarn; day.count += 1; } });
   });
   const max = Math.max(...days.map(x => x.e), 0.01);
   const dayNames = ['S','M','T','W','T','F','S'];
@@ -2112,12 +1976,29 @@ function chartUI() {
   }).join('');
   const todayE = days[6].e;
   const weekE = days.reduce((a, b) => a + b.e, 0);
-  return `<div class="glass-card">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><p style="font-size:10px;color:#888;font-weight:800;margin:0;letter-spacing:1.5px">📊 PORTFOLIO · LAST 7 DAYS</p><p class="mono text-toxic" style="font-size:10px;font-weight:800;margin:0">+$${fmt(weekE)}</p></div>
-    <div style="display:flex;align-items:flex-end;gap:8px;min-width:100%;padding:0 4px">${bars}</div>
+  // Total combined earnings all-time from all collect transactions
+  const totalCombined = S.tx.filter(x => x.type === 'daily_collect' || x.type === 'spin' || x.type === 'bonus' || x.type === 'milestone').reduce((sum, x) => sum + Number(x.amount || 0), 0);
+  return `<div class="glass-card" style="border:1.5px solid rgba(0,255,102,0.3);box-shadow:0 0 24px rgba(0,255,102,0.1)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div>
+        <p style="font-size:10px;color:#10B981;font-weight:800;margin:0;letter-spacing:1.5px">📊 COMBINED EARNINGS</p>
+        <p style="font-size:11px;color:#888;margin:3px 0 0">All plans · Last 7 days</p>
+      </div>
+      <div style="text-align:right">
+        <p style="font-size:9px;color:#888;margin:0">TOTAL</p>
+        <p class="mono text-toxic" style="font-size:15px;font-weight:900;margin:2px 0 0">+$${fmt(totalCombined)}</p>
+      </div>
+    </div>
+    <div style="display:flex;align-items:flex-end;gap:8px;min-width:100%;padding:0 4px;margin-top:14px">${bars}</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px">
-      <div style="background:rgba(0,0,0,0.4);border-radius:14px;padding:12px;text-align:center"><p style="font-size:9px;color:#888;margin:0 0 4px">TODAY</p><p class="mono text-toxic" style="font-size:17px;font-weight:900;margin:0">+$${fmt(todayE)}</p></div>
-      <div style="background:rgba(0,0,0,0.4);border-radius:14px;padding:12px;text-align:center"><p style="font-size:9px;color:#888;margin:0 0 4px">WEEK</p><p class="mono" style="font-size:17px;font-weight:900;margin:0;color:#FFD700">+$${fmt(weekE)}</p></div>
+      <div style="background:linear-gradient(135deg,rgba(0,255,102,0.1),rgba(0,0,0,0.4));border:1px solid rgba(0,255,102,0.25);border-radius:14px;padding:14px;text-align:center">
+        <p style="font-size:9px;color:#888;margin:0 0 6px;letter-spacing:1px">TODAY</p>
+        <p class="mono text-toxic" style="font-size:22px;font-weight:900;margin:0">+$${fmt(todayE)}</p>
+      </div>
+      <div style="background:linear-gradient(135deg,rgba(255,215,0,0.1),rgba(0,0,0,0.4));border:1px solid rgba(255,215,0,0.3);border-radius:14px;padding:14px;text-align:center">
+        <p style="font-size:9px;color:#888;margin:0 0 6px;letter-spacing:1px">THIS WEEK</p>
+        <p class="mono" style="font-size:22px;font-weight:900;margin:0;color:#FFD700">+$${fmt(weekE)}</p>
+      </div>
     </div>
   </div>`;
 }
@@ -2162,7 +2043,7 @@ function plansUI() {
     const btn = active ? '<button class="btn-invest locked" disabled>🔒 ALREADY ACTIVE</button>' : `<button onclick="event.stopPropagation();quickInvest('${p.id}')" class="btn-invest" ${lockAttr}>⚡ INVEST NOW</button>`;
     return `<div class="plan-card ${active?'locked':''}" onclick="${active?'':`openPlan('${p.id}')`}">
       <div style="display:flex;justify-content:space-between;margin-bottom:10px"><p style="font-size:9px;color:#888;font-weight:800;margin:0;letter-spacing:1px">PLAN</p><div style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:${p.c}18;border:1px solid ${p.c}55"><span style="color:${p.c};font-size:11px">→</span></div></div>
-      <p style="font-size:11px;font-weight:900;color:${p.c};margin:0 0 8px"><span class="emoji-3d">${p.i}</span> ${esc(p.n)}</p>
+      <p style="font-size:11px;font-weight:900;color:${p.c};margin:0 0 8px"><span class="emoji-3d">${p.i}</span> ${p.n}</p>
       <p class="mono" style="font-size:26px;font-weight:900;margin:0 0 2px">$${p.d}.00</p>
       <p style="font-size:9px;color:#666;margin:0 0 10px">PLAN AMOUNT</p>
       <p class="mono text-toxic" style="font-size:11px;font-weight:800;margin:0 0 4px">💰 $${p.dly.toFixed(2)} / day</p>
@@ -2172,7 +2053,7 @@ function plansUI() {
     </div>`;
   }).join('');
   return `<div style="display:flex;flex-direction:column;gap:16px">
-    <div class="glass-card"><p style="font-size:10px;color:#10B981;font-weight:800;margin:0 0 8px;letter-spacing:1.5px">📈 INVESTMENT</p><h2 style="font-size:28px;font-weight:900;margin:0 0 4px">Choose your plan</h2><p style="font-size:12px;color:#666;margin:0">40-day cycle · Instant first collect ⚡</p><div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;align-items:center"><p style="font-size:10px;color:#888;margin:0">BALANCE</p><p class="mono text-toxic" style="font-size:16px;font-weight:900;margin:0">$${fmt(S.user.balance)}</p></div></div>
+    <div class="glass-card"><p style="font-size:10px;color:#10B981;font-weight:800;margin:0 0 8px;letter-spacing:1.5px">📈 INVESTMENT</p><h2 style="font-size:28px;font-weight:900;margin:0 0 4px">Choose your plan</h2><p style="font-size:12px;color:#666;margin:0">40-day cycle · First reward instant</p><div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;align-items:center"><p style="font-size:10px;color:#888;margin:0">BALANCE</p><p class="mono text-toxic" style="font-size:16px;font-weight:900;margin:0">$${fmt(S.user.balance)}</p></div></div>
     ${calcUI()}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">${cards}</div>
   </div>`;
@@ -2188,7 +2069,7 @@ function planModal() {
   return `<div style="position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px)" onclick="closePlan()">
     <div class="glass-card modal-in" onclick="event.stopPropagation()" style="width:100%;max-width:440px;border-color:${p.c}66;max-height:90vh;overflow-y:auto">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><span style="font-size:10px;color:#888;font-weight:800;letter-spacing:1px">PLAN DETAILS</span><button onclick="closePlan()" style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.05);border:none;color:#aaa;font-size:22px;cursor:pointer">×</button></div>
-      <div style="text-align:center;margin-bottom:20px"><div style="width:100px;height:100px;border-radius:26px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:52px;background:${p.c}25;border:1.5px solid ${p.c}66;box-shadow:0 0 60px ${p.c}55">${p.i}</div><h2 style="font-size:30px;font-weight:900;color:${p.c};margin:0">${esc(p.n)}</h2></div>
+      <div style="text-align:center;margin-bottom:20px"><div style="width:100px;height:100px;border-radius:26px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:52px;background:${p.c}25;border:1.5px solid ${p.c}66;box-shadow:0 0 60px ${p.c}55">${p.i}</div><h2 style="font-size:30px;font-weight:900;color:${p.c};margin:0">${p.n}</h2></div>
       <div style="background:linear-gradient(135deg,${p.c}25,transparent);border:1px solid ${p.c}55;border-radius:18px;padding:18px;text-align:center;margin-bottom:16px"><p style="font-size:10px;color:#888;margin:0 0 4px">TOTAL RETURN · 40 DAYS</p><p class="mono" style="font-size:34px;font-weight:900;margin:0">$${p.t.toFixed(2)}</p><p class="text-toxic" style="font-size:10px;margin:4px 0 0;font-weight:800">${roi}% ROI / day</p></div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
         <div style="display:flex;justify-content:space-between;padding:13px;background:rgba(0,0,0,0.45);border-radius:12px;font-size:12px"><span style="color:#888">💰 Deposit</span><span class="mono" style="font-weight:800">$${p.d.toFixed(2)}</span></div>
@@ -2207,6 +2088,8 @@ function quickInvest(id) {
   if (Number(S.user.balance) < p.d) { customConfirm('Add Funds?', `Required: $${p.d.toFixed(2)}\nCurrent: $${fmt(S.user.balance)}\n\nOpen wallet to deposit?`, () => setTab('wallet'), '💰'); return; }
   invest(id);
 }
+
+/* ✅ #6 · First collect immediate on plan buy */
 async function invest(id) {
   if (INVEST_LOCK) { haptic('warning'); toast('⏳ Please wait...'); return; }
   if (!navigator.onLine) return customAlert('Offline', 'You are offline. Please check your internet connection.', '📡');
@@ -2215,7 +2098,8 @@ async function invest(id) {
   if (Number(S.user.balance) < p.d) return customAlert('Low Balance', 'Required: $' + p.d.toFixed(2) + '\nCurrent: $' + fmt(S.user.balance), '💰');
   INVEST_LOCK = true; render();
   const now = new Date();
-  let np = {id: 'local_' + Date.now(), user_id:S.user.user_id, username:S.user.username, plan_id:p.id, plan_name:p.n, deposit:p.d, daily:p.dly, total:p.t, days_collected:0, status:'active', started_at:now.toISOString(), expires_at:new Date(now.getTime() + 40 * DAY).toISOString(), last_collect_at: null};
+  // ✅ First reward immediate: set last_collect_at = now - DAY so nextC = now
+  let np = {id: 'local_' + Date.now(), user_id:S.user.user_id, username:S.user.username, plan_id:p.id, plan_name:p.n, deposit:p.d, daily:p.dly, total:p.t, days_collected:0, status:'active', started_at:now.toISOString(), expires_at:new Date(now.getTime() + 40 * DAY).toISOString(), last_collect_at: new Date(now.getTime() - DAY).toISOString()};
   S.user.balance = Number(S.user.balance) - p.d;
   S.user.invested = Number(S.user.invested||0) + p.d;
   try {
@@ -2241,7 +2125,7 @@ async function invest(id) {
     haptic('success'); sound('success'); save();
     INVEST_LOCK = false;
     render();
-    customAlert('Investment Successful!', `Plan: ${p.n}\nInvested: $${p.d.toFixed(2)}\n\n⚡ FIRST COLLECT IS READY NOW!`, '🎉');
+    customAlert('Investment Successful!', `Plan: ${p.n}\nInvested: $${p.d.toFixed(2)}\n\n✅ First reward is READY to collect now!`, '🎉');
     setTimeout(() => { checkVIPBadgeChange(); checkAchievements(); }, 1500);
   } catch(e) {
     S.user.balance += p.d; S.user.invested -= p.d;
@@ -2273,13 +2157,12 @@ async function distributeReferralCommissions(planAmount, planName, investTxId) {
       const pct = COMMISSIONS[level-1] || 0;
       const comm = planAmount * pct;
       if (comm > 0) {
-        /* BUG FIX #6: idempotency key at end, not causing message truncation */
         const idempotencyKey = `comm_${txKey}_L${level}_${upline.user_id}`;
         try {
-          const existing = await sb.from('notifications').select('id').eq('user_id', upline.user_id).ilike('message', `%#${idempotencyKey}#%`).limit(1);
+          const existing = await sb.from('notifications').select('id').eq('user_id', upline.user_id).ilike('message', `%[${idempotencyKey}]%`).limit(1);
           if (!(existing.data && existing.data.length > 0)) {
             await sb.from('users').update({referral_balance:Number(upline.referral_balance||0) + comm}).eq('user_id', upline.user_id);
-            await sb.from('notifications').insert([{user_id:upline.user_id, title:`💎 Level ${level} Commission!`, message:`You earned $${comm.toFixed(2)} (${(pct*100).toFixed(0)}%) from ${S.user.username}'s ${planName} plan investment of $${planAmount.toFixed(2)} #${idempotencyKey}#`, type:'bonus', is_read:false}]);
+            await sb.from('notifications').insert([{user_id:upline.user_id, title:`💎 Level ${level} Commission!`, message:`You earned $${comm.toFixed(2)} (${(pct*100).toFixed(0)}%) from ${S.user.username}'s ${planName} plan investment of $${planAmount.toFixed(2)} [${idempotencyKey}]`, type:'bonus', is_read:false}]);
           }
         } catch(e) {}
       }
@@ -2289,19 +2172,12 @@ async function distributeReferralCommissions(planAmount, planName, investTxId) {
   }
 }
 
-/* CHANGE #2: First collect immediate + SUGGESTION #3 offline queue */
-async function collect(pid, silent = false) {
+async function collect(pid) {
   const pl = S.plans.find(x => String(x.id) === String(pid));
   if (!pl) return;
-  if (Date.now() < nextC(pl)) return;
-  if (Number(pl.days_collected) >= 40) return;
-  if (!navigator.onLine) {
-    const alreadyQueued = S.offlineQueue.some(a => a.type === 'collect' && String(a.planId) === String(pid));
-    if (alreadyQueued) { if (!silent) toast('Already queued for sync'); return; }
-    enqueueOfflineAction({type: 'collect', planId: pid});
-    if (!silent) customAlert('📡 Offline', 'Reward queued! Will auto-collect when you\'re back online.', '⏳');
-    return;
-  }
+  if (!navigator.onLine) return customAlert('Offline', 'You are offline. Please check your internet connection.', '📡');
+  if (Date.now() < nextC(pl)) return customAlert('Wait', 'Your daily reward is not ready yet.\n\nWait for the timer to complete.', '⏳');
+  if (Number(pl.days_collected) >= 40) return customAlert('Done', 'This plan cycle is completed.', '✅');
   const rw = Number(pl.dly || pl.daily);
   const nowIso = new Date().toISOString();
   S.user.balance = Number(S.user.balance||0) + rw;
@@ -2327,16 +2203,14 @@ async function collect(pid, silent = false) {
     } catch(e) {}
   }
   haptic('success'); sound('coin');
-  if (!silent) showCoinAnim(rw);
+  showCoinAnim(rw);
   if (done) {
-    if (!silent) {
-      launchConfetti();
-      sendPush('🎉 Plan Completed', `Your ${pl.plan_name} plan completed! Total: $${rw.toFixed(2)}`);
-      customAlert('Plan Completed!', `Total return collected: $${rw.toFixed(2)}`, '🎉');
-    }
+    launchConfetti();
+    sendPush('🎉 Plan Completed', `Your ${pl.plan_name} plan completed! Total: $${rw.toFixed(2)}`);
+    customAlert('Plan Completed!', `Total return collected: $${rw.toFixed(2)}`, '🎉');
   }
-  else if (!silent) customAlert('Reward Collected!', `Collected: $${rw.toFixed(2)}\nDay: ${pl.days_collected} / 40`, '💰');
-  save(); if (!silent) render();
+  else customAlert('Reward Collected!', `Collected: $${rw.toFixed(2)}\nDay: ${pl.days_collected} / 40`, '💰');
+  save(); render();
   checkAchievements();
 }
 
@@ -2352,7 +2226,7 @@ function activeUI() {
       <div style="display:flex;justify-content:space-between;margin-bottom:14px;position:relative;z-index:1">
         <div style="display:flex;gap:12px;align-items:center">
           <div style="width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;background:${p.c}25;border:1px solid ${p.c}66" class="emoji-3d-lg">${p.i}</div>
-          <div><p style="font-weight:900;color:${p.c};font-size:17px;margin:0;letter-spacing:0.3px">${esc(p.n)}</p><p style="font-size:10px;color:#888;margin:3px 0 0">$${fmt(pl.deposit)} invested · Day ${days}/40</p></div>
+          <div><p style="font-weight:900;color:${p.c};font-size:17px;margin:0;letter-spacing:0.3px">${p.n}</p><p style="font-size:10px;color:#888;margin:3px 0 0">$${fmt(pl.deposit)} invested · Day ${days}/40</p></div>
         </div>
         <div style="display:flex;align-items:center;gap:5px"><span style="width:6px;height:6px;border-radius:50%;display:inline-block" class="bg-toxic pdot"></span><span style="font-size:10px;font-weight:900" class="text-toxic">LIVE</span></div>
       </div>
@@ -2396,7 +2270,7 @@ function saveAddrIfChecked(addr, net, method) {
   localStorage.setItem('t_saved_addr', JSON.stringify(S.savedAddresses));
 }
 
-/* CHANGE #7: Min $2 both, UPI shows INR equivalent */
+/* ✅ #7 · Crypto: no ₹, only UPI shows ₹ */
 function walletUI() {
   const upiQR = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent('upi://pay?pa=' + CFG.upi + '&pn=' + CFG.upiName + '&cu=INR')}`;
   const m = ['UPI','USDT BEP20','USDT TRC20','BTC BEP20'];
@@ -2408,7 +2282,7 @@ function walletUI() {
     <div class="glass-card">
       <p style="font-size:10px;color:#10B981;font-weight:800;margin:0 0 12px;letter-spacing:1.5px">💳 DEPOSIT FUNDS</p>
       <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px" class="hide-scroll">${btns}</div>
-      <div id="minDepNote" style="background:rgba(0,255,102,0.06);border:1px solid rgba(0,255,102,0.2);border-radius:12px;padding:10px 14px;margin-bottom:14px"><p style="font-size:10px;color:#00FF66;font-weight:700;margin:0">💡 Min: $${CFG.minDepUPI.toFixed(2)} (₹${(CFG.minDepUPI * CFG.inrRate).toFixed(0)})</p></div>
+      <div style="background:rgba(0,255,102,0.06);border:1px solid rgba(0,255,102,0.2);border-radius:12px;padding:10px 14px;margin-bottom:14px"><p id="minDepText" style="font-size:10px;color:#00FF66;font-weight:700;margin:0">💡 Min: $${CFG.minDep} (₹${(CFG.minDep * CFG.inrRate).toFixed(0)})</p></div>
       <input type="number" id="depAmt" class="inp" placeholder="Enter Amount" style="margin-bottom:10px" oninput="convertAmt()">
       <div id="convBox" style="display:none;background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.3);border-radius:14px;padding:12px;margin-bottom:12px;text-align:center"><p style="font-size:10px;color:#888;margin:0">YOU WILL RECEIVE</p><p id="convUsd" class="mono text-toxic" style="font-size:20px;font-weight:900;margin:4px 0 0">$0.00 USDT</p></div>
       <div style="background:rgba(0,0,0,0.45);border:1px dashed rgba(0,255,102,0.25);border-radius:18px;padding:18px;text-align:center;margin-bottom:16px">
@@ -2490,8 +2364,8 @@ function selWdMethod(m) {
   }
   setTimeout(loadSavedAddresses, 50);
 }
-/* BUG FIX #8: sM passed as param, no stale closure */
 let sM = 0;
+/* ✅ #7 · UPI shows ₹, Crypto does not */
 function selM(i) {
   sM = i;
   document.querySelectorAll('[id^="m-"]').forEach((el, x) => { el.style.background = x === i ? '#00FF66' : 'rgba(255,255,255,0.05)'; el.style.color = x === i ? '#000' : '#888'; });
@@ -2500,25 +2374,24 @@ function selM(i) {
   $('payAddr').style.display = i === 0 ? 'none' : 'block';
   const data = i === 0 ? encodeURIComponent('upi://pay?pa=' + CFG.upi + '&pn=' + CFG.upiName + '&cu=INR') : addrs[i];
   $('qrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + data;
-  /* CHANGE #7: dynamic min note */
-  const note = $('minDepNote');
-  if (note) {
-    if (i === 0) note.innerHTML = `<p style="font-size:10px;color:#00FF66;font-weight:700;margin:0">💡 Min: $${CFG.minDepUPI.toFixed(2)} (₹${(CFG.minDepUPI * CFG.inrRate).toFixed(0)})</p>`;
-    else note.innerHTML = `<p style="font-size:10px;color:#00FF66;font-weight:700;margin:0">💡 Min: $${CFG.minDepCrypto.toFixed(2)}</p>`;
-  }
   if (i === 0) { $('utrWrap').style.display = 'block'; $('txWrap').style.display = 'none'; $('depBtn').innerText = 'Submit UTR'; $('rateNote').style.display = 'block'; }
   else { $('utrWrap').style.display = 'none'; $('txWrap').style.display = 'block'; $('depBtn').innerText = 'Submit TxHash'; $('rateNote').style.display = 'none'; }
-  convertAmt(i);
+  // ✅ #7 · Min display: UPI shows ₹, Crypto shows only $
+  const minText = $('minDepText');
+  if (minText) {
+    if (i === 0) minText.textContent = `💡 Min: $${CFG.minDep} (₹${(CFG.minDep * CFG.inrRate).toFixed(0)})`;
+    else minText.textContent = `💡 Min: $${CFG.minDep} USDT`;
+  }
+  convertAmt();
 }
-function convertAmt(idx) {
-  const currentIdx = typeof idx === 'number' ? idx : sM;
+function convertAmt() {
   const v = parseFloat($('depAmt').value || 0);
-  if (currentIdx === 0 && v > 0) {
+  if (sM === 0 && v > 0) {
     $('convBox').style.display = 'block';
     $('convUsd').innerText = '$' + (v / CFG.inrRate).toFixed(2) + ' USDT';
     const upiString = 'upi://pay?pa=' + CFG.upi + '&pn=' + CFG.upiName + '&am=' + v + '&cu=INR';
     $('qrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(upiString);
-  } else if (currentIdx === 0 && v === 0) {
+  } else if (sM === 0 && v === 0) {
     $('convBox').style.display = 'none';
     const upiString = 'upi://pay?pa=' + CFG.upi + '&pn=' + CFG.upiName + '&cu=INR';
     $('qrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(upiString);
@@ -2545,11 +2418,7 @@ async function subDep() {
   if (!amt) return customAlert('Missing Info', 'Please enter deposit amount.', '⚠️');
   const method = ['UPI','USDT BEP20','USDT TRC20','BTC BEP20'][sM];
   const usdAmt = isC ? amt : (amt / CFG.inrRate);
-  const minRequired = isC ? CFG.minDepCrypto : CFG.minDepUPI;
-  if (usdAmt < minRequired) {
-    if (isC) return customAlert('Minimum Limit', `Min: $${minRequired} USDT.\n\nYour: $${usdAmt.toFixed(2)}`, '⚠️');
-    return customAlert('Minimum Limit', `Min: $${minRequired} (₹${(minRequired*CFG.inrRate).toFixed(0)}).\n\nYour: ₹${amt}`, '⚠️');
-  }
+  if (usdAmt < CFG.minDep) return customAlert('Minimum Limit', `Min: $${CFG.minDep} (₹${CFG.minDep * CFG.inrRate}).\n\nYour: $${usdAmt.toFixed(2)}`, '⚠️');
   if (isC && !ref) return customAlert('Missing', 'Please enter TxHash.', '⚠️');
   if (!isC && !isValidUTR(utr)) { sound('error'); return customAlert('Invalid UTR', 'This UTR looks fake.\n\nPlease enter the REAL 12-digit UTR.\n\n❌ Same-digit not allowed\n❌ Sequential not allowed', '⚠️'); }
   const localId = 'dep_' + Date.now();
@@ -2643,28 +2512,51 @@ async function manualRefresh() {
   render(); setTimeout(() => toast('✅ Updated!'), 600);
 }
 
-/* SUGGESTION #8: Skeleton for history */
+/* ✅ #4 · History: latest top + combined summary + accurate date/time */
 function historyUI() {
-  if (S.syncing && S.tx.length === 0) return skeletonList(4);
-  let allTx = S.tx.filter(x => x.type === 'deposit' || x.type === 'withdrawal' || x.type === 'spin' || x.type === 'bonus' || x.type === 'daily_collect' || x.type === 'milestone' || x.type === 'referral');
+  let allTx = S.tx.filter(x => x.type === 'deposit' || x.type === 'withdrawal' || x.type === 'spin' || x.type === 'bonus' || x.type === 'daily_collect' || x.type === 'milestone');
+  // Ensure latest on top
+  allTx = [...allTx].sort((a, b) => new Date(b.date || b.created_at || 0).getTime() - new Date(a.date || a.created_at || 0).getTime());
   if (S.txFilter === 'deposit') allTx = allTx.filter(x => x.type === 'deposit');
   else if (S.txFilter === 'withdrawal') allTx = allTx.filter(x => x.type === 'withdrawal');
   else if (S.txFilter === 'pending') allTx = allTx.filter(x => (x.status||'').toLowerCase() === 'pending');
-  else if (S.txFilter === 'earning') allTx = allTx.filter(x => x.type === 'spin' || x.type === 'bonus' || x.type === 'daily_collect' || x.type === 'milestone' || x.type === 'referral');
-  /* CHANGE #5: ensure latest first */
-  allTx = [...allTx].sort((a,b) => new Date(b.date || b.created_at || 0) - new Date(a.date || a.created_at || 0));
+  else if (S.txFilter === 'earning') allTx = allTx.filter(x => x.type === 'spin' || x.type === 'bonus' || x.type === 'daily_collect' || x.type === 'milestone');
   const tx = allTx.slice(0, S.historyLimit);
   const hasMore = allTx.length > S.historyLimit;
-  const filterBar = `<div style="display:flex;gap:6px;margin-bottom:10px;overflow-x:auto" class="hide-scroll">${['all','earning','deposit','withdrawal','pending'].map(f => `<button onclick="S.txFilter='${f}';S.historyLimit=CFG.historyPageSize;render()" style="padding:8px 14px;border-radius:20px;font-size:11px;font-weight:800;white-space:nowrap;border:none;cursor:pointer;${S.txFilter===f?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.06);color:#888'}">${f==='all'?'📋 All':f==='earning'?'🎁 Earnings':f==='deposit'?'💳 Deposits':f==='withdrawal'?'💸 Withdrawals':'⏳ Pending'}</button>`).join('')}</div>`;
-  const h = `<div class="glass-card" style="text-align:center;margin-bottom:12px;position:relative"><button onclick="manualRefresh()" style="position:absolute;top:10px;right:10px;background:rgba(0,255,102,0.12);border:1px solid rgba(0,255,102,0.35);color:#00FF66;border-radius:10px;padding:6px 12px;font-size:10px;font-weight:800;cursor:pointer">🔄 REFRESH</button><p style="font-size:10px;color:#888;margin:0 0 8px;letter-spacing:1.5px">TOTAL TRANSACTIONS</p><p class="mono" style="font-size:34px;font-weight:900;margin:0">${allTx.length}</p><p style="font-size:9px;color:#00FF66;margin:8px 0 0;font-weight:700">● LIVE · Auto-updates every 30s</p></div>`;
+
+  // ✅ Combined summary
+  let totalDeposited = 0, totalWithdrawn = 0, totalEarned = 0;
+  S.tx.forEach(x => {
+    if (x.type === 'deposit' && ['approved','paid','success','completed'].includes(String(x.status||'').toLowerCase())) totalDeposited += Number(x.amount||0);
+    if (x.type === 'withdrawal' && ['approved','paid','success','completed'].includes(String(x.status||'').toLowerCase())) totalWithdrawn += Number(x.amount||0);
+    if (x.type === 'daily_collect' || x.type === 'spin' || x.type === 'bonus' || x.type === 'milestone') totalEarned += Number(x.amount||0);
+  });
+  const netBal = totalEarned + totalDeposited - totalWithdrawn;
+
+  const summaryCard = `<div class="glass-card" style="background:linear-gradient(135deg,rgba(0,255,102,0.1),rgba(9,14,11,0.99) 70%);border-color:rgba(0,255,102,0.35);margin-bottom:12px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <p style="font-size:10px;color:#00FF66;font-weight:900;letter-spacing:1.5px">📊 COMBINED SUMMARY</p>
+      <button onclick="manualRefresh()" style="background:rgba(0,255,102,0.12);border:1px solid rgba(0,255,102,0.35);color:#00FF66;border-radius:10px;padding:5px 10px;font-size:10px;font-weight:800;cursor:pointer">🔄 REFRESH</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+      <div style="background:rgba(0,0,0,0.45);border:1px solid rgba(0,255,102,0.2);border-radius:12px;padding:10px"><p style="font-size:9px;color:#888;margin:0 0 4px;letter-spacing:0.5px">TOTAL EARNED</p><p class="mono text-toxic" style="font-size:16px;font-weight:900;margin:0">+$${fmt(totalEarned)}</p></div>
+      <div style="background:rgba(0,0,0,0.45);border:1px solid rgba(255,215,0,0.2);border-radius:12px;padding:10px"><p style="font-size:9px;color:#888;margin:0 0 4px;letter-spacing:0.5px">DEPOSITED</p><p class="mono" style="font-size:16px;font-weight:900;margin:0;color:#FFD700">+$${fmt(totalDeposited)}</p></div>
+      <div style="background:rgba(0,0,0,0.45);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:10px"><p style="font-size:9px;color:#888;margin:0 0 4px;letter-spacing:0.5px">WITHDRAWN</p><p class="mono" style="font-size:16px;font-weight:900;margin:0;color:#EF4444">-$${fmt(totalWithdrawn)}</p></div>
+      <div style="background:rgba(0,255,102,0.12);border:1px solid rgba(0,255,102,0.4);border-radius:12px;padding:10px"><p style="font-size:9px;color:#00FF66;margin:0 0 4px;letter-spacing:0.5px">NET BALANCE</p><p class="mono text-toxic" style="font-size:16px;font-weight:900;margin:0">$${fmt(netBal)}</p></div>
+    </div>
+    <p style="font-size:9px;color:#00FF66;margin:0;text-align:center;font-weight:700">● ${allTx.length} TRANSACTIONS · Auto-updates every 30s</p>
+  </div>`;
+
+  const filterBar = `<div style="display:flex;gap:6px;margin-bottom:10px;overflow-x:auto" class="hide-scroll">${['all','earning','deposit','withdrawal','pending'].map(f => `<button onclick="S.txFilter='${f}';render()" style="padding:8px 14px;border-radius:20px;font-size:11px;font-weight:800;white-space:nowrap;border:none;cursor:pointer;${S.txFilter===f?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.06);color:#888'}">${f==='all'?'📋 All':f==='earning'?'🎁 Earnings':f==='deposit'?'💳 Deposits':f==='withdrawal'?'💸 Withdrawals':'⏳ Pending'}</button>`).join('')}</div>`;
+
   if (allTx.length === 0) {
-    return h + filterBar + `<div class="glass-card" style="text-align:center;padding:52px 20px"><div style="font-size:42px;opacity:0.4;margin-bottom:14px" class="emoji-3d">📋</div><p style="font-weight:900;font-size:17px;margin:0 0 6px">No transactions yet</p><p style="font-size:12px;color:#888;margin:0">Your history will appear here</p></div>`;
+    return summaryCard + filterBar + `<div class="glass-card" style="text-align:center;padding:52px 20px"><div style="font-size:42px;opacity:0.4;margin-bottom:14px" class="emoji-3d">📋</div><p style="font-weight:900;font-size:17px;margin:0 0 6px">No transactions yet</p><p style="font-size:12px;color:#888;margin:0">Your history will appear here</p></div>`;
   }
   const list = tx.map(x => {
-    const isWd = x.type === 'withdrawal'; const isSpin = x.type === 'spin'; const isBonus = x.type === 'bonus'; const isCollect = x.type === 'daily_collect'; const isMilestone = x.type === 'milestone'; const isReferral = x.type === 'referral';
+    const isWd = x.type === 'withdrawal'; const isSpin = x.type === 'spin'; const isBonus = x.type === 'bonus'; const isCollect = x.type === 'daily_collect'; const isMilestone = x.type === 'milestone';
     let icon = '💳'; let label = 'Deposit';
-    if (isWd) { icon = '💸'; label = 'Withdrawal'; } else if (isSpin) { icon = '🎡'; label = 'Spin'; } else if (isBonus) { icon = '🎁'; label = 'Bonus'; } else if (isCollect) { icon = '💰'; label = 'Daily Collect'; } else if (isMilestone) { icon = '🏆'; label = 'Milestone'; } else if (isReferral) { icon = '👥'; label = 'Referral'; }
-    const col = isWd ? 'text-red-400' : 'text-toxic'; const sign = isWd ? '-' : '+';
+    if (isWd) { icon = '💸'; label = 'Withdrawal'; } else if (isSpin) { icon = '🎡'; label = 'Spin'; } else if (isBonus) { icon = '🎁'; label = 'Bonus'; } else if (isCollect) { icon = '💰'; label = 'Daily Collect'; } else if (isMilestone) { icon = '🏆'; label = 'Milestone'; }
+    const col = isWd ? '#EF4444' : '#00FF66'; const sign = isWd ? '-' : '+';
     const st = (x.status || 'success').toLowerCase();
     let stBadge = 'background:rgba(0,255,102,0.15);color:#00FF66'; let stText = 'SUCCESS';
     if (st === 'pending') { stBadge = 'background:rgba(251,191,36,0.15);color:#FBBF24'; stText = 'PENDING'; }
@@ -2674,14 +2566,37 @@ function historyUI() {
     if (isWd && x.address && !subInfo.includes(x.address)) subInfo += ' • ' + esc(x.address);
     let dateTime = '—';
     if (x.date || x.created_at) {
-      try { const dt = new Date(x.date || x.created_at); if (!isNaN(dt.getTime())) { const dd = String(dt.getDate()).padStart(2, '0'); const mm = String(dt.getMonth() + 1).padStart(2, '0'); const yy = dt.getFullYear(); let hh = dt.getHours(); const ampm = hh >= 12 ? 'PM' : 'AM'; hh = hh % 12 || 12; const mi = String(dt.getMinutes()).padStart(2, '0'); dateTime = `${dd}/${mm}/${yy} • ${String(hh).padStart(2,'0')}:${mi} ${ampm}`; } } catch(e) {}
+      try {
+        const dt = new Date(x.date || x.created_at);
+        if (!isNaN(dt.getTime())) {
+          const dd = String(dt.getDate()).padStart(2, '0');
+          const mm = String(dt.getMonth() + 1).padStart(2, '0');
+          const yy = dt.getFullYear();
+          let hh = dt.getHours();
+          const ampm = hh >= 12 ? 'PM' : 'AM';
+          hh = hh % 12 || 12;
+          const mi = String(dt.getMinutes()).padStart(2, '0');
+          const ss = String(dt.getSeconds()).padStart(2, '0');
+          dateTime = `${dd}/${mm}/${yy} · ${String(hh).padStart(2,'0')}:${mi}:${ss} ${ampm}`;
+        }
+      } catch(e) {}
     }
-    return `<div class="glass-card" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:16px"><div style="flex:1;min-width:0"><p style="font-weight:800;font-size:13px;margin:0">${icon} ${label}</p>${subInfo ? `<p style="font-size:10px;color:#888;margin:4px 0 0;word-break:break-all">${subInfo}</p>` : ''}<p class="mono" style="font-size:9px;color:#666;margin:5px 0 0">🕐 ${dateTime}</p></div><div style="text-align:right;flex-shrink:0;margin-left:10px"><p class="mono font-black ${col}" style="margin:0;font-size:14px">${sign}$${fmt(x.amount)}</p><span style="font-size:9px;padding:3px 10px;border-radius:20px;${stBadge};font-weight:800;margin-top:6px;display:inline-block;text-transform:uppercase">${stText}</span></div></div>`;
+    return `<div class="glass-card" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:16px;border-left:3px solid ${col}33">
+      <div style="flex:1;min-width:0">
+        <p style="font-weight:800;font-size:13px;margin:0">${icon} ${label}</p>
+        ${subInfo ? `<p style="font-size:10px;color:#888;margin:4px 0 0;word-break:break-all">${subInfo}</p>` : ''}
+        <p class="mono" style="font-size:9px;color:#666;margin:5px 0 0">🕐 ${dateTime}</p>
+      </div>
+      <div style="text-align:right;flex-shrink:0;margin-left:10px">
+        <p class="mono" style="margin:0;font-size:14px;font-weight:900;color:${col}">${sign}$${fmt(x.amount)}</p>
+        <span style="font-size:9px;padding:3px 10px;border-radius:20px;${stBadge};font-weight:800;margin-top:6px;display:inline-block;text-transform:uppercase">${stText}</span>
+      </div>
+    </div>`;
   }).join('');
   let loadMoreHTML = '';
   if (hasMore) loadMoreHTML = `<button onclick="loadMoreHistory()" class="btn-green glow" style="width:100%;padding:14px;border-radius:14px;font-size:13px;margin-top:6px">⬇️ LOAD MORE (${allTx.length - S.historyLimit} remaining)</button>`;
   else if (allTx.length > CFG.historyPageSize) loadMoreHTML = `<p style="text-align:center;font-size:11px;color:#666;margin:14px 0 0">— End of history —</p>`;
-  return h + filterBar + list + loadMoreHTML;
+  return summaryCard + filterBar + list + loadMoreHTML;
 }
 function loadMoreHistory() { haptic('light'); S.historyLimit += CFG.historyPageSize; render(); }
 
@@ -2758,10 +2673,8 @@ async function loadLeaderboardSafe() {
   }
 }
 
-/* SUGGESTION #8: Skeleton for Team */
 function teamUI() {
   try {
-    if (S.syncing && !S.leaderboardLoaded && S.team.length === 0) return skeletonList(5);
     const rl = refLink();
     const myTeam = S.team || [];
     const refBal = Number(S.user.referral_balance || 0);
@@ -2837,17 +2750,16 @@ function seeAllModals() {
 function notifsModal() {
   if (!S.showNotifs) return '';
   const un = unread();
-  return `<div style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);overflow-y:auto" onclick="S.showNotifs=false;markRead(true);render()"><div class="glass-card modal-in" onclick="event.stopPropagation()" style="max-width:440px;margin:20px auto;max-height:90vh;overflow-y:auto"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px"><h2 style="font-size:18px;font-weight:900;margin:0">🔔 Notifications${un>0?` <span style="font-size:11px;background:#EF4444;color:#fff;padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:900">${un} NEW</span>`:''}</h2><button onclick="S.showNotifs=false;markRead(true);render()" style="background:none;border:none;color:#888;font-size:26px;cursor:pointer">×</button></div>${un>0?`<button onclick="markRead()" class="btn-green" style="width:100%;padding:11px;border-radius:12px;font-size:12px;margin-bottom:14px">✓ MARK ALL READ</button>`:''}${S.notifs.length === 0 ? `<div style="text-align:center;padding:44px 0;color:#666"><div style="font-size:44px;margin-bottom:12px;opacity:0.5">📭</div><p style="font-weight:700">No notifications</p></div>` : S.notifs.map(n => { const cls = n.type === 'warning' ? 'warning' : n.type === 'bonus' ? 'bonus' : n.type === 'update' ? 'update' : ''; return `<div class="nitem ${cls}${n.is_read?'':' unread'}"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><p style="font-weight:900;font-size:13px;margin:0">${esc(n.title||'Notification')}</p>${n.is_read?'':'<span style="font-size:9px;color:#EF4444;font-weight:900">● NEW</span>'}</div><p style="font-size:12px;color:#ddd;margin:0;line-height:1.5">${esc((n.message||'').replace(/#comm_[^#]+#/g, '').trim())}</p><p style="font-size:9px;color:#666;margin:8px 0 0">${n.created_at?String(n.created_at).slice(0,16).replace('T',' '):''}</p></div>`; }).join('')}</div></div>`;
+  return `<div style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);overflow-y:auto" onclick="S.showNotifs=false;render()"><div class="glass-card modal-in" onclick="event.stopPropagation()" style="max-width:440px;margin:20px auto;max-height:90vh;overflow-y:auto"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px"><h2 style="font-size:18px;font-weight:900;margin:0">🔔 Notifications${un>0?` <span style="font-size:11px;background:#EF4444;color:#fff;padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:900">${un} NEW</span>`:''}</h2><button onclick="S.showNotifs=false;render()" style="background:none;border:none;color:#888;font-size:26px;cursor:pointer">×</button></div>${un>0?`<button onclick="markRead()" class="btn-green" style="width:100%;padding:11px;border-radius:12px;font-size:12px;margin-bottom:14px">✓ MARK ALL READ</button>`:''}${S.notifs.length === 0 ? `<div style="text-align:center;padding:44px 0;color:#666"><div style="font-size:44px;margin-bottom:12px;opacity:0.5">📭</div><p style="font-weight:700">No notifications</p></div>` : S.notifs.map(n => { const cls = n.type === 'warning' ? 'warning' : n.type === 'bonus' ? 'bonus' : n.type === 'update' ? 'update' : ''; return `<div class="nitem ${cls}${n.is_read?'':' unread'}"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><p style="font-weight:900;font-size:13px;margin:0">${esc(n.title||'Notification')}</p>${n.is_read?'':'<span style="font-size:9px;color:#EF4444;font-weight:900">● NEW</span>'}</div><p style="font-size:12px;color:#ddd;margin:0;line-height:1.5">${esc((n.message||'').split('[')[0].trim())}</p><p style="font-size:9px;color:#666;margin:8px 0 0">${n.created_at?String(n.created_at).slice(0,16).replace('T',' '):''}</p></div>`; }).join('')}</div></div>`;
 }
 function badgesModal() {
   if (!S.showBadges) return '';
-  const visibleAch = ACHIEVEMENTS.filter(a => !a.hidden);
-  const unlockedCount = visibleAch.filter(a => S.achievements.includes(a.id)).length;
+  const unlockedCount = ACHIEVEMENTS.filter(a => S.achievements.includes(a.id)).length;
   return `<div style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);overflow-y:auto" onclick="S.showBadges=false;render()"><div class="glass-card modal-in" onclick="event.stopPropagation()" style="max-width:440px;margin:20px auto;max-height:90vh;overflow-y:auto">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h2 style="font-size:18px;font-weight:900;margin:0">🏆 Achievements</h2><button onclick="S.showBadges=false;render()" style="background:none;border:none;color:#888;font-size:26px;cursor:pointer">×</button></div>
-    <p style="font-size:12px;color:#888;margin:0 0 16px">Unlocked <b style="color:#00FF66">${unlockedCount}</b> of ${visibleAch.length}</p>
-    <div style="height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;margin-bottom:20px"><div style="height:100%;width:${(unlockedCount/visibleAch.length)*100}%;background:linear-gradient(90deg,#00FF66,#10B981);box-shadow:0 0 12px #00FF66"></div></div>
-    ${visibleAch.map(a => { const unlocked = S.achievements.includes(a.id); return `<div class="ach-card ${unlocked?'unlocked':'locked'}"><span class="ach-icon emoji-3d">${a.icon}</span><div style="flex:1"><p style="font-size:13px;font-weight:900;margin:0;color:${unlocked?'#00FF66':'#ccc'}">${a.name}</p><p style="font-size:11px;color:#888;margin:3px 0 0">${a.desc}</p></div>${unlocked?'<span style="font-size:20px" class="emoji-3d">✅</span>':'<span style="font-size:20px;opacity:0.5">🔒</span>'}</div>`; }).join('')}
+    <p style="font-size:12px;color:#888;margin:0 0 16px">Unlocked <b style="color:#00FF66">${unlockedCount}</b> of ${ACHIEVEMENTS.length}</p>
+    <div style="height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;margin-bottom:20px"><div style="height:100%;width:${(unlockedCount/ACHIEVEMENTS.length)*100}%;background:linear-gradient(90deg,#00FF66,#10B981);box-shadow:0 0 12px #00FF66"></div></div>
+    ${ACHIEVEMENTS.map(a => { const unlocked = S.achievements.includes(a.id); return `<div class="ach-card ${unlocked?'unlocked':'locked'}"><span class="ach-icon emoji-3d">${a.icon}</span><div style="flex:1"><p style="font-size:13px;font-weight:900;margin:0;color:${unlocked?'#00FF66':'#ccc'}">${a.name}</p><p style="font-size:11px;color:#888;margin:3px 0 0">${a.desc}</p></div>${unlocked?'<span style="font-size:20px" class="emoji-3d">✅</span>':'<span style="font-size:20px;opacity:0.5">🔒</span>'}</div>`; }).join('')}
   </div></div>`;
 }
 function shareModal() {
@@ -2859,7 +2771,7 @@ function shareModal() {
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 style="font-size:18px;font-weight:900;margin:0">📸 Share Bonus</h2><button onclick="S.showShare=false;render()" style="background:none;border:none;color:#888;font-size:26px;cursor:pointer">×</button></div>
     <div class="ach-card unlocked" style="padding:16px"><span class="ach-icon emoji-3d">💰</span><div style="flex:1"><p style="font-size:14px;font-weight:900;margin:0;color:#00FF66">+$${CFG.shareBonus.toFixed(2)} Bonus</p><p style="font-size:11px;color:#ccc;margin:3px 0 0">Share your link on Telegram and upload screenshot. Goes to our channel for verification.</p></div></div>
     ${!canShare ? `<div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:12px;padding:12px;margin-bottom:14px;text-align:center"><p style="font-size:11px;color:#FBBF24;font-weight:700;margin:0">⏳ Come back on ${nextTime ? nextTime.toLocaleDateString() : '-'}</p></div>` : ''}
-    <button onclick="copy('${esc(refLink())}');toast('✅ Link copied! Now share & screenshot');" class="btn-green" style="width:100%;padding:12px;border-radius:14px;font-size:12px;margin-bottom:10px">1️⃣ COPY REFERRAL LINK</button>
+    <button onclick="copy('${refLink()}');toast('✅ Link copied! Now share & screenshot');" class="btn-green" style="width:100%;padding:12px;border-radius:14px;font-size:12px;margin-bottom:10px">1️⃣ COPY REFERRAL LINK</button>
     <button onclick="shareTg()" style="width:100%;padding:12px;border-radius:14px;font-size:12px;font-weight:800;background:rgba(0,166,237,0.15);border:1px solid rgba(0,166,237,0.4);color:#00A6ED;cursor:pointer;margin-bottom:14px">2️⃣ SHARE ON TELEGRAM</button>
     <p style="font-size:10px;color:#888;margin:0 0 8px;letter-spacing:1px">3️⃣ UPLOAD SCREENSHOT</p>
     <input type="file" id="shareFileInput" accept="image/*" style="display:none" onchange="handleShareScreenshot(event)">
@@ -2916,8 +2828,8 @@ function qrModal() {
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 style="font-size:16px;font-weight:900;margin:0">📱 Referral QR</h2><button onclick="S.showQR=false;render()" style="background:none;border:none;color:#888;font-size:26px;cursor:pointer">×</button></div>
     <div style="background:#fff;padding:14px;border-radius:20px;display:inline-block;box-shadow:0 0 40px rgba(0,255,102,0.4)"><img src="${qr}" style="width:250px;height:250px;display:block" alt="QR"></div>
     <p style="font-size:10px;color:#888;margin:14px 0 6px;letter-spacing:1px">YOUR LINK</p>
-    <p class="mono" style="font-size:11px;color:#00FF66;word-break:break-all;margin:0 0 14px">${esc(rl)}</p>
-    <button onclick="copy('${esc(rl)}')" class="btn-green" style="width:100%;padding:12px;border-radius:14px;font-size:12px;margin-bottom:8px">📋 COPY LINK</button>
+    <p class="mono" style="font-size:11px;color:#00FF66;word-break:break-all;margin:0 0 14px">${rl}</p>
+    <button onclick="copy('${rl}')" class="btn-green" style="width:100%;padding:12px;border-radius:14px;font-size:12px;margin-bottom:8px">📋 COPY LINK</button>
     <button onclick="shareTg()" style="width:100%;padding:12px;border-radius:14px;font-size:12px;font-weight:800;background:rgba(0,166,237,0.15);border:1px solid rgba(0,166,237,0.4);color:#00A6ED;cursor:pointer">📤 SHARE</button>
   </div></div>`;
 }
@@ -2927,8 +2839,7 @@ function profileModal() {
   const u = S.user, lang = S.lang || 'en';
   const badge = getVIPBadge(Number(u.invested||0));
   const langs = [{code:'en', label:'🇬🇧 English'},{code:'hi', label:'🇮🇳 हिंदी'},{code:'ur', label:'🇵🇰 اردو'},{code:'ar', label:'🇸🇦 العربية'}];
-  const visibleAch = ACHIEVEMENTS.filter(a => !a.hidden);
-  const unlockedCount = visibleAch.filter(a => S.achievements.includes(a.id)).length;
+  const unlockedCount = ACHIEVEMENTS.filter(a => S.achievements.includes(a.id)).length;
   return `<div style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);overflow-y:auto" onclick="S.showProfile=false;render()"><div class="glass-card modal-in" onclick="event.stopPropagation()" style="max-width:440px;margin:20px auto;max-height:90vh;overflow-y:auto">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><span style="font-size:10px;color:#888;font-weight:800;letter-spacing:1.5px">MY PROFILE</span><button onclick="S.showProfile=false;render()" style="background:none;border:none;color:#888;font-size:26px;cursor:pointer">×</button></div>
     <div style="text-align:center;margin-bottom:24px">
@@ -2936,7 +2847,7 @@ function profileModal() {
       <h2 style="font-size:22px;font-weight:900;margin:14px 0 4px">${esc(u.username)}</h2>
       <div style="display:inline-flex;align-items:center;gap:5px;margin-top:6px;padding:5px 14px;border-radius:20px;background:${badge.c}25;border:1px solid ${badge.c}66"><span style="font-size:14px" class="emoji-3d">${badge.icon}</span><span style="font-size:11px;font-weight:900;color:${badge.c}">${badge.name}</span></div>
       <p style="font-size:10px;color:#888;margin:8px 0 0">ID: ${esc(u.user_id)}</p>
-      <p style="font-size:10px;color:#00FF66;margin:6px 0 0">🏆 ${unlockedCount}/${visibleAch.length} achievements</p>
+      <p style="font-size:10px;color:#00FF66;margin:6px 0 0">🏆 ${unlockedCount}/${ACHIEVEMENTS.length} achievements</p>
     </div>
     <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
       ${pRow('📧 Email', u.email||'—')}
@@ -3006,24 +2917,26 @@ window.addEventListener('beforeinstallprompt', (e) => {
 function installPWA() { if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then(() => { deferredPrompt = null; dismissPWA(); }); } else { customAlert('Install Manually', 'Tap browser menu → "Add to Home Screen".', '📲'); dismissPWA(); } }
 function dismissPWA() { const b = $('pwaBanner'); if (b) b.classList.remove('show'); localStorage.setItem('t_pwa_dismissed', '1'); }
 
-/* CHANGE #8: Pull-to-refresh as circle */
+/* ✅ #8 · Pull-to-refresh · professional circular ring */
 let pullStartY = 0; let pulling = false; let pullDist = 0;
-const PULL_THRESHOLD = 80;
+const PULL_THRESHOLD = 85;
+const RING_CIRC = 131.95; // 2*PI*21
 document.addEventListener('touchstart', (e) => {
   if (window.scrollY <= 2 && !S.showProfile && !S.showNotifs && !S.page && !S.showForgot && !S.showBadges && !S.showShare && !S.showWinner && !S.showQR && !S.showSeeAllLb && !S.showSeeAllTeam && S.user) { pullStartY = e.touches[0].clientY; pulling = true; pullDist = 0; }
 }, {passive:true});
 document.addEventListener('touchmove', (e) => {
   if (!pulling) return;
   pullDist = e.touches[0].clientY - pullStartY;
-  if (pullDist > 0 && pullDist < 200) {
+  if (pullDist > 0 && pullDist < 220) {
     const ind = $('pullIndicator');
     if (ind) {
       ind.classList.add('active');
-      const offset = Math.min(pullDist - 20, 60);
+      const offset = Math.min(pullDist - 30, 60);
       ind.style.transform = `translateX(-50%) translateY(${offset}px)`;
-      const progress = Math.min(pullDist / PULL_THRESHOLD, 1);
-      const ring = $('pullRing');
-      if (ring) ring.setAttribute('stroke-dashoffset', String(113 * (1 - progress)));
+      const pct = Math.min(pullDist / PULL_THRESHOLD, 1);
+      const ring = $('pullProgressRing');
+      if (ring) ring.style.strokeDashoffset = RING_CIRC * (1 - pct);
+      if (pct >= 1) ind.classList.add('ready'); else ind.classList.remove('ready');
     }
   }
 }, {passive:true});
@@ -3031,28 +2944,25 @@ document.addEventListener('touchend', async () => {
   if (!pulling) return;
   pulling = false;
   const ind = $('pullIndicator');
+  const icon = $('pullIcon');
   if (pullDist >= PULL_THRESHOLD && S.user) {
-    if (ind) { ind.classList.add('spin'); ind.style.transform = 'translateX(-50%) translateY(60px)'; }
+    if (ind) { ind.classList.add('spin'); ind.classList.remove('ready'); ind.style.transform = 'translateX(-50%) translateY(60px)'; }
+    if (icon) icon.textContent = '⟳';
     haptic('medium'); sound('tap');
     await loadSiteConfig(); await loadPlansFromDB(); await syncUser(); await loadPromoCodes(); await loadCryptoPrices();
     S.leaderboardLoaded = false; LB_CACHE = [];
     render();
     setTimeout(() => {
-      if (ind) {
-        ind.classList.remove('spin', 'active');
-        ind.style.transform = 'translateX(-50%) translateY(-90px)';
-        const ring = $('pullRing');
-        if (ring) ring.setAttribute('stroke-dashoffset', '113');
-      }
+      if (ind) { ind.classList.remove('spin', 'active'); ind.style.transform = 'translateX(-50%) translateY(-90px)'; }
+      if (icon) icon.textContent = '↓';
+      const ring = $('pullProgressRing');
+      if (ring) ring.style.strokeDashoffset = RING_CIRC;
       toast('✅ Updated!');
     }, 700);
   } else {
-    if (ind) {
-      ind.classList.remove('active');
-      ind.style.transform = 'translateX(-50%) translateY(-90px)';
-      const ring = $('pullRing');
-      if (ring) ring.setAttribute('stroke-dashoffset', '113');
-    }
+    if (ind) { ind.classList.remove('active', 'ready'); ind.style.transform = 'translateX(-50%) translateY(-90px)'; }
+    const ring = $('pullProgressRing');
+    if (ring) ring.style.strokeDashoffset = RING_CIRC;
   }
   pullDist = 0;
 });
@@ -3065,7 +2975,7 @@ window.addEventListener('popstate', () => {
   else if (S.showSeeAllLb) { S.showSeeAllLb = false; closed = true; }
   else if (S.showSeeAllTeam) { S.showSeeAllTeam = false; closed = true; }
   else if (S.showProfile) { S.showProfile = false; closed = true; }
-  else if (S.showNotifs) { S.showNotifs = false; markRead(true); closed = true; }
+  else if (S.showNotifs) { S.showNotifs = false; closed = true; }
   else if (S.selPlan) { S.selPlan = null; closed = true; }
   else if (S.page) { S.page = null; closed = true; }
   else if (S.showForgot) { S.showForgot = false; closed = true; }
@@ -3117,12 +3027,13 @@ function animateLoadingPct() {
   const failsafe = setTimeout(() => { hideLoading(); setTimeout(() => toast('⚠️ Slow connection.'), 500); }, 8000);
   try { await Promise.all([loadSiteConfig(), loadPlansFromDB(), loadPromoCodes(), loadCryptoPrices(), S.user ? syncUser() : Promise.resolve()]); } catch(e) {}
   clearTimeout(failsafe); render(); hideLoading();
-  /* SUGGESTION #3: Process offline queue on startup */
-  if (S.user && navigator.onLine) setTimeout(() => processOfflineQueue(), 2000);
   setTimeout(showLive, 3500);
-  if (S.tab === 'dashboard' && S.user) setTimeout(() => { if (!TICKER_ACTIVE) rotateCombinedTicker(); }, 500);
-  setTimeout(() => { if (S.user) { checkTeamMilestones(); checkVIPBadgeChange(); checkAchievements(); } }, 2000);
-  if (S.user) setTimeout(() => showTour(), 3500);
+  if (S.user) {
+    // ✅ #5 · server spin check on load
+    setTimeout(() => checkSpinServer(), 800);
+    setTimeout(() => { checkTeamMilestones(); checkVIPBadgeChange(); checkAchievements(); }, 2000);
+    setTimeout(() => showTour(), 3500);
+  }
   setInterval(loadCryptoPrices, 90000);
   setInterval(loadPromoCodes, 60000);
   setInterval(async () => { await loadSiteConfig(); await loadPlansFromDB(); }, 120000);
@@ -3141,9 +3052,6 @@ setInterval(async () => {
     if (before !== after && !typing && !S.showProfile && !S.showNotifs && !S.page && !S.selPlan && S.tab !== 'wallet' && !S.showForgot && !S.showBadges && !S.showShare && !S.showWinner && !S.showQR && !S.showSeeAllLb && !S.showSeeAllTeam) { render(); }
   }
 }, 30000);
-
-/* SUGGESTION #3: Auto-process offline queue when online */
-window.addEventListener('online', () => { setTimeout(processOfflineQueue, 1500); });
 </script>
 </body>
 </html>
