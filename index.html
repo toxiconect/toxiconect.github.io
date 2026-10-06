@@ -125,12 +125,13 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 #pullIndicator.ready { box-shadow: 0 0 30px rgba(0,255,102,0.85), 0 8px 24px rgba(0,0,0,0.7); border-color: #00FF66; }
 #pullIndicator.ready #pullIcon { transform: scale(1.15); }
 
-.cyber-ticker { position: relative; background: linear-gradient(135deg, rgba(0,20,10,0.95), rgba(0,10,5,0.98)); border: 1px solid rgba(0,255,102,0.35); border-radius: 14px; padding: 9px 0; overflow: hidden; box-shadow: 0 0 20px rgba(0,255,102,0.12), inset 0 0 20px rgba(0,255,102,0.04); }
+/* ================= CRYPTO TICKER (bigger) ================= */
+.cyber-ticker { position: relative; background: linear-gradient(135deg, rgba(0,20,10,0.95), rgba(0,10,5,0.98)); border: 1px solid rgba(0,255,102,0.35); border-radius: 14px; padding: 14px 0; overflow: hidden; box-shadow: 0 0 20px rgba(0,255,102,0.12), inset 0 0 20px rgba(0,255,102,0.04); }
 .cyber-ticker::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0, transparent 3px, rgba(0,255,102,0.04) 3px, rgba(0,255,102,0.04) 4px); pointer-events: none; z-index: 1; }
 .cyber-ticker::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,255,102,0.8), transparent); animation: scan 3s linear infinite; }
 @keyframes scan { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 .cyber-ticker > div { display: flex; white-space: nowrap; animation: scrollL 32s linear infinite; position: relative; z-index: 2; }
-.cyber-ticker > div > div { display: flex; align-items: center; gap: 8px; padding: 0 16px; border-right: 1px solid rgba(0,255,102,0.12); }
+.cyber-ticker > div > div { display: flex; align-items: center; gap: 10px; padding: 0 20px; border-right: 1px solid rgba(0,255,102,0.15); }
 @keyframes scrollL { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 .combined-ticker { position: relative; background: linear-gradient(135deg, rgba(30,20,0,0.75), rgba(5,10,5,0.98) 50%, rgba(0,20,10,0.75)); border: 1px solid rgba(255,215,0,0.35); border-radius: 14px; padding: 10px 14px; overflow: hidden; box-shadow: 0 0 22px rgba(255,215,0,0.12); }
 .combined-row { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; }
@@ -186,16 +187,13 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .signup-hero-img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; display: block; }
 .signup-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,9,7,0.15) 0%, rgba(5,9,7,0.35) 40%, rgba(5,9,7,0.85) 80%, #050907 100%); pointer-events: none; }
 .signup-hero-glow { position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%); width: 300px; height: 100px; background: radial-gradient(ellipse, rgba(0,255,102,0.35), transparent 70%); filter: blur(30px); pointer-events: none; z-index: 1; }
-/* ✅ CHANGED: TOXIC logo → bottom-left corner, small, attractive */
+/* ✅ CHANGED: TOXIC logo → further left, chipped to corner */
 .signup-hero-logo {
   position: absolute;
-  bottom: 12px;
-  left: 12px;
+  bottom: 4px;
+  left: 0px;
   z-index: 8;
   filter: drop-shadow(0 0 16px rgba(0,255,102,0.75)) drop-shadow(0 3px 8px rgba(0,0,0,0.95));
-  padding: 4px 8px;
-  background: radial-gradient(ellipse at left center, rgba(0,255,102,0.18), transparent 75%);
-  border-radius: 10px;
   animation: toxicGlow 2.5s ease-in-out infinite;
 }
 .signup-hero-logo .toxic-svg-logo { height: 34px !important; width: auto !important; }
@@ -338,12 +336,11 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 
 <script>
 /* ============================================================
-   TOXIC v3 · Final changes:
-   1. TOXIC logo → hero bottom-left corner, small + attractive
-   2. Announcement + Winners MERGED into one scrolling line
-   3. Portfolio chart counts ALL earnings (collect + spin + bonus + milestone)
-   4. History COMBINED SUMMARY card removed
-   5. Bug fixes: dead TICKER_ACTIVE code removed
+   TOXIC v4 · Final changes:
+   1. TOXIC logo → further left, chipped to corner (left:0, bottom:4)
+   2. Portfolio chart → purana design wapas (TOTAL label hataya, TODAY+WEEK cards), saari earnings count
+   3. Announcement ticker upar + Crypto picker size bada
+   4. Bug fixes retained (min-dep text update, spin server, first collect)
    ============================================================ */
 
 if ('serviceWorker' in navigator) {
@@ -993,18 +990,19 @@ async function loadCryptoPrices() {
     ];
   } catch(e) {}
 }
+/* ✅ Crypto ticker with bigger sizes */
 function cryptoUI() {
   if (!S.cryptoData || S.cryptoData.length === 0) {
-    return `<div class="cyber-ticker" style="padding:10px 14px"><div style="display:flex;gap:20px"><span class="skel" style="width:90px;height:14px;display:inline-block"></span><span class="skel" style="width:90px;height:14px;display:inline-block"></span></div></div>`;
+    return `<div class="cyber-ticker" style="padding:14px 18px"><div style="display:flex;gap:20px"><span class="skel" style="width:100px;height:16px;display:inline-block"></span><span class="skel" style="width:100px;height:16px;display:inline-block"></span></div></div>`;
   }
   const items = S.cryptoData.map(c => {
     const up = c.c >= 0;
-    return `<div><span style="font-size:13px;color:#00FF66;font-weight:900;text-shadow:0 0 8px rgba(0,255,102,0.6)">${c.sym}</span><span style="font-size:11px;font-weight:900;color:#fff;letter-spacing:0.5px">${c.s}</span><span class="mono" style="font-size:11px;color:#B4FF6A">$${Number(c.p).toLocaleString('en-US',{maximumFractionDigits:2})}</span><span class="mono" style="font-size:10px;font-weight:800;color:${up?'#00FF66':'#EF4444'}">${up?'▲':'▼'}${Math.abs(c.c).toFixed(2)}%</span></div>`;
+    return `<div><span style="font-size:15px;color:#00FF66;font-weight:900;text-shadow:0 0 8px rgba(0,255,102,0.6)">${c.sym}</span><span style="font-size:13px;font-weight:900;color:#fff;letter-spacing:0.5px">${c.s}</span><span class="mono" style="font-size:13px;color:#B4FF6A">$${Number(c.p).toLocaleString('en-US',{maximumFractionDigits:2})}</span><span class="mono" style="font-size:12px;font-weight:800;color:${up?'#00FF66':'#EF4444'}">${up?'▲':'▼'}${Math.abs(c.c).toFixed(2)}%</span></div>`;
   }).join('');
   return `<div class="cyber-ticker"><div>${items}${items}</div></div>`;
 }
 
-/* ✅ MERGED: Announcement + Winners in one scrolling line */
+/* ✅ Merged: Announcement + Winners in one scrolling line */
 function mergedTickerUI() {
   const fakes = S.winnerData.slice(0, 12);
   const reals = (S.team || []).filter(x => Number(x.invested||0) > 0).slice(0, 3).map(x => ({ name: x.username || 'you', country: '🌍', amount: Number(x.invested || 0), period: 'WEEK' }));
@@ -1917,7 +1915,7 @@ function renderTab() {
   return '';
 }
 
-/* ✅ Dashboard: Merged ticker + Crypto */
+/* ✅ Dashboard: Announcement upar (negative margin) + bigger crypto */
 function dashUI() {
   const u = S.user;
   const rl = refLink();
@@ -1925,7 +1923,7 @@ function dashUI() {
   const badge = getVIPBadge(Number(u.invested||0));
   const bars = [20,35,28,50,42,65,55,80,70,95].map((h, i) => `<div style="flex:1;border-radius:4px 4px 0 0;height:${h}%;background:linear-gradient(180deg,#00FF66,rgba(0,255,102,0.15));opacity:${0.4+i*0.06}"></div>`).join('');
   const unlockedCount = ACHIEVEMENTS.filter(a => S.achievements.includes(a.id)).length;
-  return `<div style="display:flex;flex-direction:column;gap:14px">
+  return `<div style="display:flex;flex-direction:column;gap:12px;margin-top:-8px">
     ${mergedTickerUI()}
     ${cryptoUI()}
     <div style="position:relative;width:100%;height:180px;border-radius:24px;overflow:hidden;border:1px solid rgba(0,255,102,0.2)"><img src="${CFG.banner}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.2),rgba(5,9,7,0.96))"></div><div style="position:absolute;bottom:16px;left:12px"><p style="font-size:10px;font-weight:800;letter-spacing:3px;color:#00FF66;margin:0 0 2px;text-transform:uppercase;text-shadow:0 0 18px rgba(0,255,102,0.8)">${t().welcome}</p><h2 class="text-3d" style="font-size:24px;font-weight:900;margin:2px 0 0">${esc(u.username)}</h2><div style="display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:3px 10px;border-radius:12px;background:${badge.c}25;border:1px solid ${badge.c}66"><span style="font-size:11px" class="emoji-3d">${badge.icon}</span><span style="font-size:10px;font-weight:800;color:${badge.c}">${badge.name}</span></div></div></div>
@@ -1956,7 +1954,7 @@ function dashUI() {
   </div>`;
 }
 
-/* ✅ Chart: Counts ALL earnings from tx (collect + spin + bonus + milestone) */
+/* ✅ Chart: PURANA DESIGN wapas (heading same, TOTAL hataya, TODAY+WEEK), saari earnings count */
 function chartUI() {
   const days = [];
   const today = new Date(); today.setUTCHours(0, 0, 0, 0);
@@ -1983,28 +1981,12 @@ function chartUI() {
   }).join('');
   const todayE = days[6].e;
   const weekE = days.reduce((a, b) => a + b.e, 0);
-  const totalCombined = S.tx.filter(x => ['daily_collect','spin','bonus','milestone'].includes(x.type)).reduce((sum, x) => sum + Number(x.amount || 0), 0);
-  return `<div class="glass-card" style="border:1.5px solid rgba(0,255,102,0.3);box-shadow:0 0 24px rgba(0,255,102,0.1)">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-      <div>
-        <p style="font-size:10px;color:#10B981;font-weight:800;margin:0;letter-spacing:1.5px">📊 PORTFOLIO · LAST 7 DAYS</p>
-        <p style="font-size:11px;color:#888;margin:3px 0 0">All earnings combined</p>
-      </div>
-      <div style="text-align:right">
-        <p style="font-size:9px;color:#888;margin:0">TOTAL</p>
-        <p class="mono text-toxic" style="font-size:15px;font-weight:900;margin:2px 0 0">+$${fmt(totalCombined)}</p>
-      </div>
-    </div>
-    <div style="display:flex;align-items:flex-end;gap:8px;min-width:100%;padding:0 4px;margin-top:14px">${bars}</div>
+  return `<div class="glass-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><p style="font-size:10px;color:#888;font-weight:800;margin:0;letter-spacing:1.5px">📊 PORTFOLIO · LAST 7 DAYS</p><p class="mono text-toxic" style="font-size:10px;font-weight:800;margin:0">+$${fmt(weekE)}</p></div>
+    <div style="display:flex;align-items:flex-end;gap:8px;min-width:100%;padding:0 4px">${bars}</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px">
-      <div style="background:linear-gradient(135deg,rgba(0,255,102,0.1),rgba(0,0,0,0.4));border:1px solid rgba(0,255,102,0.25);border-radius:14px;padding:14px;text-align:center">
-        <p style="font-size:9px;color:#888;margin:0 0 6px;letter-spacing:1px">TODAY</p>
-        <p class="mono text-toxic" style="font-size:22px;font-weight:900;margin:0">+$${fmt(todayE)}</p>
-      </div>
-      <div style="background:linear-gradient(135deg,rgba(255,215,0,0.1),rgba(0,0,0,0.4));border:1px solid rgba(255,215,0,0.3);border-radius:14px;padding:14px;text-align:center">
-        <p style="font-size:9px;color:#888;margin:0 0 6px;letter-spacing:1px">THIS WEEK</p>
-        <p class="mono" style="font-size:22px;font-weight:900;margin:0;color:#FFD700">+$${fmt(weekE)}</p>
-      </div>
+      <div style="background:rgba(0,0,0,0.4);border-radius:14px;padding:12px;text-align:center"><p style="font-size:9px;color:#888;margin:0 0 4px">TODAY</p><p class="mono text-toxic" style="font-size:17px;font-weight:900;margin:0">+$${fmt(todayE)}</p></div>
+      <div style="background:rgba(0,0,0,0.4);border-radius:14px;padding:12px;text-align:center"><p style="font-size:9px;color:#888;margin:0 0 4px">WEEK</p><p class="mono" style="font-size:17px;font-weight:900;margin:0;color:#FFD700">+$${fmt(weekE)}</p></div>
     </div>
   </div>`;
 }
@@ -2513,7 +2495,7 @@ async function manualRefresh() {
   render(); setTimeout(() => toast('✅ Updated!'), 600);
 }
 
-/* ✅ History: COMBINED SUMMARY card removed, latest on top, accurate date/time */
+/* ✅ History: COMBINED SUMMARY card hata diya, latest on top, accurate date/time */
 function historyUI() {
   let allTx = S.tx.filter(x => x.type === 'deposit' || x.type === 'withdrawal' || x.type === 'spin' || x.type === 'bonus' || x.type === 'daily_collect' || x.type === 'milestone');
   allTx = [...allTx].sort((a, b) => new Date(b.date || b.created_at || 0).getTime() - new Date(a.date || a.created_at || 0).getTime());
