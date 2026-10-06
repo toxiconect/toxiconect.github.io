@@ -133,10 +133,8 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .cyber-ticker > div > div { display: flex; align-items: center; gap: 8px; padding: 0 16px; border-right: 1px solid rgba(0,255,102,0.12); }
 @keyframes scrollL { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 .combined-ticker { position: relative; background: linear-gradient(135deg, rgba(30,20,0,0.75), rgba(5,10,5,0.98) 50%, rgba(0,20,10,0.75)); border: 1px solid rgba(255,215,0,0.35); border-radius: 14px; padding: 10px 14px; overflow: hidden; box-shadow: 0 0 22px rgba(255,215,0,0.12); }
-.combined-ticker.green-theme { border-color: rgba(0,255,102,0.4); box-shadow: 0 0 22px rgba(0,255,102,0.14); background: linear-gradient(135deg, rgba(0,30,15,0.75), rgba(5,10,5,0.98) 50%, rgba(0,25,12,0.75)); }
 .combined-row { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; }
-.winner-scroll { white-space: nowrap; display: inline-flex; animation: winnerAnim 45s linear infinite; }
-.announce-scroll { white-space: nowrap; display: inline-flex; animation: winnerAnim 40s linear infinite; }
+.winner-scroll { white-space: nowrap; display: inline-flex; animation: winnerAnim 55s linear infinite; }
 @keyframes winnerAnim { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 .emoji-3d { display: inline-block; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.7)) drop-shadow(0 0 6px rgba(0,255,102,0.25)); transform: translateY(-1px); }
 .ach-btn { padding: 5px 3px; border-radius: 9px; font-size: 8px; font-weight: 900; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 1px; border-width: 1px; border-style: solid; }
@@ -188,9 +186,23 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .signup-hero-img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; display: block; }
 .signup-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,9,7,0.15) 0%, rgba(5,9,7,0.35) 40%, rgba(5,9,7,0.85) 80%, #050907 100%); pointer-events: none; }
 .signup-hero-glow { position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%); width: 300px; height: 100px; background: radial-gradient(ellipse, rgba(0,255,102,0.35), transparent 70%); filter: blur(30px); pointer-events: none; z-index: 1; }
-/* TOXIC logo → left side, attractive, prominent */
-.signup-hero-logo { position: absolute; bottom: 22px; left: 18px; z-index: 6; filter: drop-shadow(0 0 22px rgba(0,255,102,0.55)) drop-shadow(0 4px 12px rgba(0,0,0,0.9)); }
-.signup-hero-logo .toxic-svg-logo { height: 56px; }
+/* ✅ CHANGED: TOXIC logo → bottom-left corner, small, attractive */
+.signup-hero-logo {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  z-index: 8;
+  filter: drop-shadow(0 0 16px rgba(0,255,102,0.75)) drop-shadow(0 3px 8px rgba(0,0,0,0.95));
+  padding: 4px 8px;
+  background: radial-gradient(ellipse at left center, rgba(0,255,102,0.18), transparent 75%);
+  border-radius: 10px;
+  animation: toxicGlow 2.5s ease-in-out infinite;
+}
+.signup-hero-logo .toxic-svg-logo { height: 34px !important; width: auto !important; }
+@keyframes toxicGlow {
+  0%, 100% { filter: drop-shadow(0 0 12px rgba(0,255,102,0.6)) drop-shadow(0 3px 8px rgba(0,0,0,0.95)); }
+  50% { filter: drop-shadow(0 0 22px rgba(0,255,102,0.95)) drop-shadow(0 3px 8px rgba(0,0,0,0.95)); }
+}
 
 .signup-back-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; max-width: 448px; margin: 0 auto; }
 .signup-back-btn { width: 40px; height: 40px; border-radius: 12px; background: rgba(0,255,102,0.1); border: 1.5px solid rgba(0,255,102,0.35); color: #00FF66; font-size: 18px; font-weight: 900; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
@@ -258,7 +270,7 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 .signup-terms { text-align: center; font-size: 10px; color: #666; margin-top: 14px; line-height: 1.6; padding: 0 8px; }
 .signup-terms span { color: #00FF66; font-weight: 700; cursor: pointer; }
 
-@media (min-width: 640px) { .signup-hero { height: 280px; border-radius: 0 0 24px 24px; } .signup-hero-logo .toxic-svg-logo { height: 64px; } }
+@media (min-width: 640px) { .signup-hero { height: 280px; border-radius: 0 0 24px 24px; } .signup-hero-logo .toxic-svg-logo { height: 40px !important; } }
 </style>
 </head>
 <body>
@@ -294,7 +306,6 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 
 <div class="toast" id="toast"></div>
 
-<!-- ✅ PULL-TO-REFRESH · PROFESSIONAL CIRCULAR RING -->
 <div id="pullIndicator">
   <svg viewBox="0 0 52 52">
     <circle id="pullRingBg" cx="26" cy="26" r="21"/>
@@ -327,15 +338,12 @@ body { background: #050907; background-image: radial-gradient(ellipse at top, rg
 
 <script>
 /* ============================================================
-   TOXIC v2 · Changes applied:
-   1. TOXIC logo left side + attractive (signup hero)
-   2. Announcement top → Winners → Crypto (order)
-   3. Chart combined earnings card
-   4. History combined + summary + accurate date/time
-   5. Spin server-side (per user per day)
-   6. First collect immediate after plan buy
-   7. Crypto min: no ₹ (only UPI shows ₹)
-   8. Pull-to-refresh circular ring
+   TOXIC v3 · Final changes:
+   1. TOXIC logo → hero bottom-left corner, small + attractive
+   2. Announcement + Winners MERGED into one scrolling line
+   3. Portfolio chart counts ALL earnings (collect + spin + bonus + milestone)
+   4. History COMBINED SUMMARY card removed
+   5. Bug fixes: dead TICKER_ACTIVE code removed
    ============================================================ */
 
 if ('serviceWorker' in navigator) {
@@ -563,7 +571,7 @@ let S = {
   winnerData: generateWinnerTicker(),
   leaderboardLoaded: false,
   tourStep: 0,
-  spinServerChecked: false // #5
+  spinServerChecked: false
 };
 
 try {
@@ -996,29 +1004,31 @@ function cryptoUI() {
   return `<div class="cyber-ticker"><div>${items}${items}</div></div>`;
 }
 
-/* ✅ #2 · ANNOUNCEMENT TICKER (TOP) */
-function announcementTickerUI() {
-  const newsItems = NEWS_LIST.map(n => `<span style="display:inline-flex;align-items:center;gap:6px;padding:0 18px;border-right:1px solid rgba(0,255,102,0.2);font-size:11px;color:#ddd;white-space:nowrap">${n}</span>`).join('');
-  return `<div class="combined-ticker green-theme">
-    <div class="combined-row">
-      <span style="font-size:11px;font-weight:900;color:#00FF66;display:flex;align-items:center;gap:4px;flex-shrink:0">📢 ANNOUNCEMENT:</span>
-      <div style="flex:1;overflow:hidden"><div class="announce-scroll mono">${newsItems}${newsItems}</div></div>
-    </div>
-  </div>`;
-}
-/* ✅ #2 · WINNERS TICKER (MIDDLE) */
-function winnersTickerUI() {
-  const fakes = S.winnerData.slice(0, 25);
-  const reals = (S.team || []).filter(x => Number(x.invested||0) > 0).slice(0, 5).map(x => ({ name: x.username || 'you', country: '🌍', amount: Number(x.invested || 0), period: 'WEEK', isReal: true }));
-  const all = [...reals, ...fakes].sort((a,b) => b.amount - a.amount).slice(0, 20);
-  const winnerItems = all.map((w, i) => {
-    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '🏅';
-    return `<span style="display:inline-flex;align-items:center;gap:5px;padding:0 14px;border-right:1px solid rgba(255,215,0,0.2);font-size:11px;color:#fff"><span class="emoji-3d">${medal}</span><b style="color:#FFD700">${esc(w.name)}</b><span style="color:#888;font-size:10px">${w.country}</span><span class="mono" style="color:#00FF66;font-weight:900">$${fmt(w.amount)}</span><span style="font-size:9px;color:#FFD700;background:rgba(255,215,0,0.15);padding:1px 6px;border-radius:8px;font-weight:800">${w.period}</span></span>`;
-  }).join('');
+/* ✅ MERGED: Announcement + Winners in one scrolling line */
+function mergedTickerUI() {
+  const fakes = S.winnerData.slice(0, 12);
+  const reals = (S.team || []).filter(x => Number(x.invested||0) > 0).slice(0, 3).map(x => ({ name: x.username || 'you', country: '🌍', amount: Number(x.invested || 0), period: 'WEEK' }));
+  const winners = [...reals, ...fakes].sort((a,b) => b.amount - a.amount).slice(0, 12);
+
+  const blocks = [];
+  const news = NEWS_LIST;
+  const maxLen = Math.max(news.length, winners.length);
+  for (let i = 0; i < maxLen; i++) {
+    if (news[i]) {
+      blocks.push(`<span class="emoji-3d" style="font-size:13px">📢</span><span style="color:#00FF66;font-weight:900">${esc(news[i])}</span>`);
+    }
+    if (winners[i]) {
+      const w = winners[i];
+      const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '🏅';
+      blocks.push(`<span class="emoji-3d" style="font-size:13px">${medal}</span><b style="color:#FFD700">${esc(w.name)}</b><span style="color:#888;font-size:10px">${w.country}</span><span class="mono" style="color:#00FF66;font-weight:900">$${fmt(w.amount)}</span><span style="font-size:9px;color:#FFD700;background:rgba(255,215,0,0.15);padding:1px 6px;border-radius:8px;font-weight:800">${w.period}</span>`);
+    }
+  }
+  const items = blocks.map(b => `<span style="display:inline-flex;align-items:center;gap:6px;padding:0 16px;border-right:1px solid rgba(255,215,0,0.2);font-size:11px;color:#fff">${b}</span>`).join('');
+
   return `<div class="combined-ticker">
     <div class="combined-row">
-      <span style="font-size:11px;font-weight:900;color:#FFD700;display:flex;align-items:center;gap:4px;flex-shrink:0">👑 WINNERS:</span>
-      <div style="flex:1;overflow:hidden"><div class="winner-scroll mono">${winnerItems}${winnerItems}</div></div>
+      <span style="font-size:11px;font-weight:900;color:#00FF66;display:flex;align-items:center;gap:4px;flex-shrink:0">📣 LIVE:</span>
+      <div style="flex:1;overflow:hidden"><div class="winner-scroll mono">${items}${items}</div></div>
     </div>
   </div>`;
 }
@@ -1080,7 +1090,6 @@ function claimTelegramBonus() {
   }, '📢');
 }
 
-/* ✅ #5 · SPIN SERVER-SIDE (per user per day) */
 async function checkSpinServer() {
   if (!sb || !S.user) return;
   try {
@@ -1092,7 +1101,7 @@ async function checkSpinServer() {
         saveExtra();
       }
     }
-  } catch(e) { /* column may not exist */ }
+  } catch(e) {}
   S.spinServerChecked = true;
 }
 
@@ -1117,7 +1126,6 @@ async function spinWheel() {
   if (SPIN_LOCK) return;
   if (!canSpin()) return customAlert('Wait', 'Come back later to spin again.', '⏳');
   SPIN_LOCK = true;
-  // ✅ Re-check server first (anti-cheat)
   if (sb) { await checkSpinServer(); if (!canSpin()) { SPIN_LOCK = false; return customAlert('Already Spun', 'You already spun today.\n\nCome back in 24 hours.', '⏳'); } }
   const idx = pickPrize(); const prize = SPIN_PRIZES[idx];
   const sliceAngle = 360 / SPIN_PRIZES.length;
@@ -1134,12 +1142,8 @@ async function spinWheel() {
       S.tx.unshift({type:'spin', amount:prize.value, status:'success', method:'Spin & Win', date:new Date().toISOString()});
       save();
       if (sb) {
-        try {
-          // ✅ Server-side spin lock + balance
-          await sb.from('users').update({balance:S.user.balance, last_spin_at: new Date(spinTime).toISOString()}).eq('user_id', S.user.user_id);
-        } catch(e) {
-          try { await sb.from('users').update({balance:S.user.balance}).eq('user_id', S.user.user_id); } catch(e2) {}
-        }
+        try { await sb.from('users').update({balance:S.user.balance, last_spin_at: new Date(spinTime).toISOString()}).eq('user_id', S.user.user_id); }
+        catch(e) { try { await sb.from('users').update({balance:S.user.balance}).eq('user_id', S.user.user_id); } catch(e2) {} }
       }
       haptic('success'); sound('coin'); showCoinAnim(prize.value);
       if (prize.value >= 0.20) { launchConfetti(); customAlert('🎉 YOU WON!', `+$${prize.value.toFixed(2)} added to your balance!`, '🏆'); }
@@ -1379,7 +1383,6 @@ async function syncUser() {
       if (f.milestones_claimed) { try { const p = JSON.parse(f.milestones_claimed); if (Array.isArray(p)) S.milestones.claimed = p; } catch(e) {} }
       if (f.achievements) { try { const p = JSON.parse(f.achievements); if (Array.isArray(p)) S.achievements = p; } catch(e) {} }
       if (f.auto_renew !== undefined && f.auto_renew !== null) { S.autoRenew = !!f.auto_renew; localStorage.setItem('t_autorenew', S.autoRenew ? '1' : '0'); }
-      // ✅ #5 · sync last_spin_at from server (if column exists)
       if (f.last_spin_at) {
         const serverSpin = new Date(f.last_spin_at).getTime();
         if (serverSpin > (S.spin.lastSpin || 0)) { S.spin.lastSpin = serverSpin; saveExtra(); }
@@ -1495,7 +1498,6 @@ async function autoRenewCombined(completedPlans) {
       if (!planDef) continue;
       if (Number(S.user.balance) < Number(cp.deposit)) continue;
       const now = new Date();
-      // ✅ #6 · First collect immediate
       const np = { user_id:S.user.user_id, username:S.user.username, plan_id:planDef.id, plan_name:planDef.n, deposit:planDef.d, daily:planDef.dly, total:planDef.t, days_collected:0, status:'active', started_at:now.toISOString(), expires_at:new Date(now.getTime() + 40 * DAY).toISOString(), last_collect_at: new Date(now.getTime() - DAY).toISOString() };
       S.user.balance -= planDef.d;
       S.user.invested = Number(S.user.invested||0) + planDef.d;
@@ -1595,7 +1597,6 @@ function forgotPasswordUI() {
   `);
 }
 
-/* ✅ #1 · TOXIC logo left side, attractive */
 function signupUI() {
   const step = S.step;
   const step1Active = step === 1;
@@ -1916,7 +1917,7 @@ function renderTab() {
   return '';
 }
 
-/* ✅ #2 · Dashboard: Announcement → Winners → Crypto */
+/* ✅ Dashboard: Merged ticker + Crypto */
 function dashUI() {
   const u = S.user;
   const rl = refLink();
@@ -1925,8 +1926,7 @@ function dashUI() {
   const bars = [20,35,28,50,42,65,55,80,70,95].map((h, i) => `<div style="flex:1;border-radius:4px 4px 0 0;height:${h}%;background:linear-gradient(180deg,#00FF66,rgba(0,255,102,0.15));opacity:${0.4+i*0.06}"></div>`).join('');
   const unlockedCount = ACHIEVEMENTS.filter(a => S.achievements.includes(a.id)).length;
   return `<div style="display:flex;flex-direction:column;gap:14px">
-    ${announcementTickerUI()}
-    ${winnersTickerUI()}
+    ${mergedTickerUI()}
     ${cryptoUI()}
     <div style="position:relative;width:100%;height:180px;border-radius:24px;overflow:hidden;border:1px solid rgba(0,255,102,0.2)"><img src="${CFG.banner}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.2),rgba(5,9,7,0.96))"></div><div style="position:absolute;bottom:16px;left:12px"><p style="font-size:10px;font-weight:800;letter-spacing:3px;color:#00FF66;margin:0 0 2px;text-transform:uppercase;text-shadow:0 0 18px rgba(0,255,102,0.8)">${t().welcome}</p><h2 class="text-3d" style="font-size:24px;font-weight:900;margin:2px 0 0">${esc(u.username)}</h2><div style="display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:3px 10px;border-radius:12px;background:${badge.c}25;border:1px solid ${badge.c}66"><span style="font-size:11px" class="emoji-3d">${badge.icon}</span><span style="font-size:10px;font-weight:800;color:${badge.c}">${badge.name}</span></div></div></div>
     <div class="glass-card card-gradient">
@@ -1956,15 +1956,22 @@ function dashUI() {
   </div>`;
 }
 
-/* ✅ #3 · Combined earnings (chart + today + week) */
+/* ✅ Chart: Counts ALL earnings from tx (collect + spin + bonus + milestone) */
 function chartUI() {
-  const days = []; const today = new Date(); today.setUTCHours(0, 0, 0, 0);
-  for (let i = 6; i >= 0; i--) { const d = new Date(today.getTime() - i * DAY); days.push({d:d, e:0, count:0}); }
-  S.plans.forEach(pl => {
-    const start = new Date(pl.started_at); start.setUTCHours(0, 0, 0, 0);
-    const dailyEarn = Number(pl.dly || pl.daily) || 0;
-    const maxDays = Math.min(Number(pl.days_collected) || 0, 40);
-    days.forEach(day => { const diff = Math.floor((day.d.getTime() - start.getTime()) / DAY); if (diff >= 0 && diff < maxDays) { day.e += dailyEarn; day.count += 1; } });
+  const days = [];
+  const today = new Date(); today.setUTCHours(0, 0, 0, 0);
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today.getTime() - i * DAY);
+    days.push({ d: d, e: 0, start: d.getTime(), end: d.getTime() + DAY });
+  }
+  const EARNING_TYPES = ['daily_collect', 'spin', 'bonus', 'milestone'];
+  S.tx.forEach(x => {
+    if (!EARNING_TYPES.includes(x.type)) return;
+    const ts = new Date(x.date || x.created_at || 0).getTime();
+    if (!ts) return;
+    days.forEach(day => {
+      if (ts >= day.start && ts < day.end) day.e += Number(x.amount || 0);
+    });
   });
   const max = Math.max(...days.map(x => x.e), 0.01);
   const dayNames = ['S','M','T','W','T','F','S'];
@@ -1976,13 +1983,12 @@ function chartUI() {
   }).join('');
   const todayE = days[6].e;
   const weekE = days.reduce((a, b) => a + b.e, 0);
-  // Total combined earnings all-time from all collect transactions
-  const totalCombined = S.tx.filter(x => x.type === 'daily_collect' || x.type === 'spin' || x.type === 'bonus' || x.type === 'milestone').reduce((sum, x) => sum + Number(x.amount || 0), 0);
+  const totalCombined = S.tx.filter(x => ['daily_collect','spin','bonus','milestone'].includes(x.type)).reduce((sum, x) => sum + Number(x.amount || 0), 0);
   return `<div class="glass-card" style="border:1.5px solid rgba(0,255,102,0.3);box-shadow:0 0 24px rgba(0,255,102,0.1)">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <div>
-        <p style="font-size:10px;color:#10B981;font-weight:800;margin:0;letter-spacing:1.5px">📊 COMBINED EARNINGS</p>
-        <p style="font-size:11px;color:#888;margin:3px 0 0">All plans · Last 7 days</p>
+        <p style="font-size:10px;color:#10B981;font-weight:800;margin:0;letter-spacing:1.5px">📊 PORTFOLIO · LAST 7 DAYS</p>
+        <p style="font-size:11px;color:#888;margin:3px 0 0">All earnings combined</p>
       </div>
       <div style="text-align:right">
         <p style="font-size:9px;color:#888;margin:0">TOTAL</p>
@@ -2089,7 +2095,6 @@ function quickInvest(id) {
   invest(id);
 }
 
-/* ✅ #6 · First collect immediate on plan buy */
 async function invest(id) {
   if (INVEST_LOCK) { haptic('warning'); toast('⏳ Please wait...'); return; }
   if (!navigator.onLine) return customAlert('Offline', 'You are offline. Please check your internet connection.', '📡');
@@ -2098,7 +2103,6 @@ async function invest(id) {
   if (Number(S.user.balance) < p.d) return customAlert('Low Balance', 'Required: $' + p.d.toFixed(2) + '\nCurrent: $' + fmt(S.user.balance), '💰');
   INVEST_LOCK = true; render();
   const now = new Date();
-  // ✅ First reward immediate: set last_collect_at = now - DAY so nextC = now
   let np = {id: 'local_' + Date.now(), user_id:S.user.user_id, username:S.user.username, plan_id:p.id, plan_name:p.n, deposit:p.d, daily:p.dly, total:p.t, days_collected:0, status:'active', started_at:now.toISOString(), expires_at:new Date(now.getTime() + 40 * DAY).toISOString(), last_collect_at: new Date(now.getTime() - DAY).toISOString()};
   S.user.balance = Number(S.user.balance) - p.d;
   S.user.invested = Number(S.user.invested||0) + p.d;
@@ -2270,7 +2274,6 @@ function saveAddrIfChecked(addr, net, method) {
   localStorage.setItem('t_saved_addr', JSON.stringify(S.savedAddresses));
 }
 
-/* ✅ #7 · Crypto: no ₹, only UPI shows ₹ */
 function walletUI() {
   const upiQR = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent('upi://pay?pa=' + CFG.upi + '&pn=' + CFG.upiName + '&cu=INR')}`;
   const m = ['UPI','USDT BEP20','USDT TRC20','BTC BEP20'];
@@ -2365,7 +2368,6 @@ function selWdMethod(m) {
   setTimeout(loadSavedAddresses, 50);
 }
 let sM = 0;
-/* ✅ #7 · UPI shows ₹, Crypto does not */
 function selM(i) {
   sM = i;
   document.querySelectorAll('[id^="m-"]').forEach((el, x) => { el.style.background = x === i ? '#00FF66' : 'rgba(255,255,255,0.05)'; el.style.color = x === i ? '#000' : '#888'; });
@@ -2376,7 +2378,6 @@ function selM(i) {
   $('qrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + data;
   if (i === 0) { $('utrWrap').style.display = 'block'; $('txWrap').style.display = 'none'; $('depBtn').innerText = 'Submit UTR'; $('rateNote').style.display = 'block'; }
   else { $('utrWrap').style.display = 'none'; $('txWrap').style.display = 'block'; $('depBtn').innerText = 'Submit TxHash'; $('rateNote').style.display = 'none'; }
-  // ✅ #7 · Min display: UPI shows ₹, Crypto shows only $
   const minText = $('minDepText');
   if (minText) {
     if (i === 0) minText.textContent = `💡 Min: $${CFG.minDep} (₹${(CFG.minDep * CFG.inrRate).toFixed(0)})`;
@@ -2512,10 +2513,9 @@ async function manualRefresh() {
   render(); setTimeout(() => toast('✅ Updated!'), 600);
 }
 
-/* ✅ #4 · History: latest top + combined summary + accurate date/time */
+/* ✅ History: COMBINED SUMMARY card removed, latest on top, accurate date/time */
 function historyUI() {
   let allTx = S.tx.filter(x => x.type === 'deposit' || x.type === 'withdrawal' || x.type === 'spin' || x.type === 'bonus' || x.type === 'daily_collect' || x.type === 'milestone');
-  // Ensure latest on top
   allTx = [...allTx].sort((a, b) => new Date(b.date || b.created_at || 0).getTime() - new Date(a.date || a.created_at || 0).getTime());
   if (S.txFilter === 'deposit') allTx = allTx.filter(x => x.type === 'deposit');
   else if (S.txFilter === 'withdrawal') allTx = allTx.filter(x => x.type === 'withdrawal');
@@ -2524,33 +2524,17 @@ function historyUI() {
   const tx = allTx.slice(0, S.historyLimit);
   const hasMore = allTx.length > S.historyLimit;
 
-  // ✅ Combined summary
-  let totalDeposited = 0, totalWithdrawn = 0, totalEarned = 0;
-  S.tx.forEach(x => {
-    if (x.type === 'deposit' && ['approved','paid','success','completed'].includes(String(x.status||'').toLowerCase())) totalDeposited += Number(x.amount||0);
-    if (x.type === 'withdrawal' && ['approved','paid','success','completed'].includes(String(x.status||'').toLowerCase())) totalWithdrawn += Number(x.amount||0);
-    if (x.type === 'daily_collect' || x.type === 'spin' || x.type === 'bonus' || x.type === 'milestone') totalEarned += Number(x.amount||0);
-  });
-  const netBal = totalEarned + totalDeposited - totalWithdrawn;
-
-  const summaryCard = `<div class="glass-card" style="background:linear-gradient(135deg,rgba(0,255,102,0.1),rgba(9,14,11,0.99) 70%);border-color:rgba(0,255,102,0.35);margin-bottom:12px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-      <p style="font-size:10px;color:#00FF66;font-weight:900;letter-spacing:1.5px">📊 COMBINED SUMMARY</p>
-      <button onclick="manualRefresh()" style="background:rgba(0,255,102,0.12);border:1px solid rgba(0,255,102,0.35);color:#00FF66;border-radius:10px;padding:5px 10px;font-size:10px;font-weight:800;cursor:pointer">🔄 REFRESH</button>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-      <div style="background:rgba(0,0,0,0.45);border:1px solid rgba(0,255,102,0.2);border-radius:12px;padding:10px"><p style="font-size:9px;color:#888;margin:0 0 4px;letter-spacing:0.5px">TOTAL EARNED</p><p class="mono text-toxic" style="font-size:16px;font-weight:900;margin:0">+$${fmt(totalEarned)}</p></div>
-      <div style="background:rgba(0,0,0,0.45);border:1px solid rgba(255,215,0,0.2);border-radius:12px;padding:10px"><p style="font-size:9px;color:#888;margin:0 0 4px;letter-spacing:0.5px">DEPOSITED</p><p class="mono" style="font-size:16px;font-weight:900;margin:0;color:#FFD700">+$${fmt(totalDeposited)}</p></div>
-      <div style="background:rgba(0,0,0,0.45);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:10px"><p style="font-size:9px;color:#888;margin:0 0 4px;letter-spacing:0.5px">WITHDRAWN</p><p class="mono" style="font-size:16px;font-weight:900;margin:0;color:#EF4444">-$${fmt(totalWithdrawn)}</p></div>
-      <div style="background:rgba(0,255,102,0.12);border:1px solid rgba(0,255,102,0.4);border-radius:12px;padding:10px"><p style="font-size:9px;color:#00FF66;margin:0 0 4px;letter-spacing:0.5px">NET BALANCE</p><p class="mono text-toxic" style="font-size:16px;font-weight:900;margin:0">$${fmt(netBal)}</p></div>
-    </div>
-    <p style="font-size:9px;color:#00FF66;margin:0;text-align:center;font-weight:700">● ${allTx.length} TRANSACTIONS · Auto-updates every 30s</p>
+  const headerCard = `<div class="glass-card" style="text-align:center;margin-bottom:12px;position:relative">
+    <button onclick="manualRefresh()" style="position:absolute;top:10px;right:10px;background:rgba(0,255,102,0.12);border:1px solid rgba(0,255,102,0.35);color:#00FF66;border-radius:10px;padding:6px 12px;font-size:10px;font-weight:800;cursor:pointer">🔄 REFRESH</button>
+    <p style="font-size:10px;color:#888;margin:0 0 8px;letter-spacing:1.5px">TOTAL TRANSACTIONS</p>
+    <p class="mono" style="font-size:34px;font-weight:900;margin:0">${allTx.length}</p>
+    <p style="font-size:9px;color:#00FF66;margin:8px 0 0;font-weight:700">● LIVE · Auto-updates every 30s</p>
   </div>`;
 
   const filterBar = `<div style="display:flex;gap:6px;margin-bottom:10px;overflow-x:auto" class="hide-scroll">${['all','earning','deposit','withdrawal','pending'].map(f => `<button onclick="S.txFilter='${f}';render()" style="padding:8px 14px;border-radius:20px;font-size:11px;font-weight:800;white-space:nowrap;border:none;cursor:pointer;${S.txFilter===f?'background:#00FF66;color:#000':'background:rgba(255,255,255,0.06);color:#888'}">${f==='all'?'📋 All':f==='earning'?'🎁 Earnings':f==='deposit'?'💳 Deposits':f==='withdrawal'?'💸 Withdrawals':'⏳ Pending'}</button>`).join('')}</div>`;
 
   if (allTx.length === 0) {
-    return summaryCard + filterBar + `<div class="glass-card" style="text-align:center;padding:52px 20px"><div style="font-size:42px;opacity:0.4;margin-bottom:14px" class="emoji-3d">📋</div><p style="font-weight:900;font-size:17px;margin:0 0 6px">No transactions yet</p><p style="font-size:12px;color:#888;margin:0">Your history will appear here</p></div>`;
+    return headerCard + filterBar + `<div class="glass-card" style="text-align:center;padding:52px 20px"><div style="font-size:42px;opacity:0.4;margin-bottom:14px" class="emoji-3d">📋</div><p style="font-weight:900;font-size:17px;margin:0 0 6px">No transactions yet</p><p style="font-size:12px;color:#888;margin:0">Your history will appear here</p></div>`;
   }
   const list = tx.map(x => {
     const isWd = x.type === 'withdrawal'; const isSpin = x.type === 'spin'; const isBonus = x.type === 'bonus'; const isCollect = x.type === 'daily_collect'; const isMilestone = x.type === 'milestone';
@@ -2596,7 +2580,7 @@ function historyUI() {
   let loadMoreHTML = '';
   if (hasMore) loadMoreHTML = `<button onclick="loadMoreHistory()" class="btn-green glow" style="width:100%;padding:14px;border-radius:14px;font-size:13px;margin-top:6px">⬇️ LOAD MORE (${allTx.length - S.historyLimit} remaining)</button>`;
   else if (allTx.length > CFG.historyPageSize) loadMoreHTML = `<p style="text-align:center;font-size:11px;color:#666;margin:14px 0 0">— End of history —</p>`;
-  return summaryCard + filterBar + list + loadMoreHTML;
+  return headerCard + filterBar + list + loadMoreHTML;
 }
 function loadMoreHistory() { haptic('light'); S.historyLimit += CFG.historyPageSize; render(); }
 
@@ -2917,10 +2901,9 @@ window.addEventListener('beforeinstallprompt', (e) => {
 function installPWA() { if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then(() => { deferredPrompt = null; dismissPWA(); }); } else { customAlert('Install Manually', 'Tap browser menu → "Add to Home Screen".', '📲'); dismissPWA(); } }
 function dismissPWA() { const b = $('pwaBanner'); if (b) b.classList.remove('show'); localStorage.setItem('t_pwa_dismissed', '1'); }
 
-/* ✅ #8 · Pull-to-refresh · professional circular ring */
 let pullStartY = 0; let pulling = false; let pullDist = 0;
 const PULL_THRESHOLD = 85;
-const RING_CIRC = 131.95; // 2*PI*21
+const RING_CIRC = 131.95;
 document.addEventListener('touchstart', (e) => {
   if (window.scrollY <= 2 && !S.showProfile && !S.showNotifs && !S.page && !S.showForgot && !S.showBadges && !S.showShare && !S.showWinner && !S.showQR && !S.showSeeAllLb && !S.showSeeAllTeam && S.user) { pullStartY = e.touches[0].clientY; pulling = true; pullDist = 0; }
 }, {passive:true});
@@ -3029,7 +3012,6 @@ function animateLoadingPct() {
   clearTimeout(failsafe); render(); hideLoading();
   setTimeout(showLive, 3500);
   if (S.user) {
-    // ✅ #5 · server spin check on load
     setTimeout(() => checkSpinServer(), 800);
     setTimeout(() => { checkTeamMilestones(); checkVIPBadgeChange(); checkAchievements(); }, 2000);
     setTimeout(() => showTour(), 3500);
