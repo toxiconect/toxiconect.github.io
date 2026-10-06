@@ -3,44 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>TOXIC Admin</title>
+<title>TOXIC Admin v2</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{background:#050807;color:#fff;font-family:Inter,sans-serif;margin:0;padding:0;min-height:100vh}
+body{background:#050807;color:#fff;font-family:Inter,system-ui,sans-serif;margin:0;padding:0;min-height:100vh}
 .card{background:linear-gradient(145deg,#0f1a14,#0a0f0c);border:1px solid rgba(0,255,102,0.12);border-radius:16px;padding:16px;margin-bottom:12px}
 .card:hover{border-color:rgba(0,255,102,0.25)}
-.btn{background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-weight:700;padding:12px;border-radius:12px;border:none;cursor:pointer;font-size:13px}
+.btn{background:linear-gradient(135deg,#00FF66,#10B981);color:#000;font-weight:700;padding:12px;border-radius:12px;border:none;cursor:pointer;font-size:13px;font-family:inherit}
 .btn:active{transform:scale(0.97)}
-.btn-sm{padding:8px 14px;font-size:12px;width:auto}
+.btn-sm{padding:8px 12px;font-size:11px;width:auto}
+.btn-xs{padding:5px 10px;font-size:10px;border-radius:8px;width:auto;border:none;cursor:pointer;font-weight:700;font-family:inherit}
 .btn-red{background:linear-gradient(135deg,#EF4444,#DC2626);color:#fff}
 .btn-yellow{background:linear-gradient(135deg,#FBBF24,#F59E0B);color:#000}
 .btn-blue{background:linear-gradient(135deg,#3B82F6,#2563EB);color:#fff}
 .btn-purple{background:linear-gradient(135deg,#A855F7,#7C3AED);color:#fff}
+.btn-pink{background:linear-gradient(135deg,#EC4899,#DB2777);color:#fff}
 .btn-gray{background:rgba(255,255,255,0.06);color:#ccc;border:1px solid rgba(255,255,255,0.1)}
+.btn-dark{background:linear-gradient(135deg,#1F2937,#111827);color:#fff}
 .inp{background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 12px;color:#fff;width:100%;font-size:13px;outline:none;font-family:inherit}
 .inp:focus{border-color:rgba(0,255,102,0.5);box-shadow:0 0 0 3px rgba(0,255,102,0.08)}
 textarea.inp{font-family:inherit;resize:vertical}
+select.inp{cursor:pointer}
 .mono{font-family:'Courier New',monospace;font-size:11px !important}
 .g{color:#00FF66}
-.tab{padding:10px 14px;border-radius:12px;font-size:11px;font-weight:700;border:none;cursor:pointer;margin-right:6px;margin-bottom:6px;background:rgba(255,255,255,0.04);color:#888;white-space:nowrap}
+.r{color:#EF4444}
+.y{color:#FBBF24}
+.b{color:#60A5FA}
+.p{color:#A855F7}
+.tab{padding:10px 14px;border-radius:12px;font-size:11px;font-weight:700;border:none;cursor:pointer;margin-right:6px;margin-bottom:6px;background:rgba(255,255,255,0.04);color:#888;white-space:nowrap;font-family:inherit}
 .tab.on{background:#00FF66;color:#000;box-shadow:0 0 15px rgba(0,255,102,0.4)}
 .stat{background:linear-gradient(145deg,rgba(0,255,102,0.06),rgba(0,0,0,0.3));border:1px solid rgba(0,255,102,0.15);border-radius:14px;padding:14px;text-align:center}
 .badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;display:inline-block}
 .bp{background:rgba(251,191,36,0.15);color:#FBBF24}
 .ba{background:rgba(0,255,102,0.15);color:#00FF66}
 .br{background:rgba(239,68,68,0.15);color:#EF4444}
+.bb{background:rgba(59,130,246,0.15);color:#60A5FA}
 .row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
 .lbl{font-size:10px;color:#666;margin:0}
 .val{font-size:12px;color:#ddd;margin:3px 0 0;font-weight:500}
 .divider{height:1px;background:rgba(255,255,255,0.05);margin:10px 0}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,0.9);backdrop-filter:blur(12px);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto}
-.modal-card{background:linear-gradient(145deg,#0f1a14,#0a0f0c);border:1px solid rgba(0,255,102,0.25);border-radius:20px;padding:20px;width:100%;max-width:520px;margin:20px auto}
-.filter-btn{padding:6px 12px;border-radius:8px;font-size:11px;background:rgba(255,255,255,0.05);color:#aaa;border:1px solid rgba(255,255,255,0.08);cursor:pointer;margin-right:4px;margin-bottom:4px}
+.modal-card{background:linear-gradient(145deg,#0f1a14,#0a0f0c);border:1px solid rgba(0,255,102,0.25);border-radius:20px;padding:20px;width:100%;max-width:560px;margin:20px auto}
+.filter-btn{padding:6px 12px;border-radius:8px;font-size:11px;background:rgba(255,255,255,0.05);color:#aaa;border:1px solid rgba(255,255,255,0.08);cursor:pointer;margin-right:4px;margin-bottom:4px;font-family:inherit}
 .filter-btn.on{background:#00FF66;color:#000;font-weight:700;border-color:#00FF66}
 .type-selector{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.type-btn{padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#ccc;font-size:11px;font-weight:700;cursor:pointer}
+.type-btn{padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#ccc;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
 .type-btn.on{background:rgba(0,255,102,0.15);border-color:#00FF66;color:#00FF66}
 .promo-card{background:linear-gradient(135deg,rgba(255,215,0,0.08),rgba(0,0,0,0.3));border:1px solid rgba(255,215,0,0.25);border-radius:14px;padding:14px;margin-bottom:10px}
 .promo-off{opacity:0.5}
@@ -55,6 +64,19 @@ textarea.inp{font-family:inherit;resize:vertical}
 .toggle-pill.on::after{left:22px}
 .hide-scroll::-webkit-scrollbar{display:none}
 .hide-scroll{-ms-overflow-style:none;scrollbar-width:none}
+.warn-box{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.4);border-radius:12px;padding:12px;margin-bottom:12px}
+.info-box{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.35);border-radius:12px;padding:10px 12px;margin-bottom:12px}
+.ok-box{background:rgba(0,255,102,0.08);border:1px solid rgba(0,255,102,0.3);border-radius:12px;padding:10px 12px;margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.grid4{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mini-stat{background:rgba(0,0,0,0.4);border-radius:12px;padding:10px;text-align:center}
+.mini-stat .l{font-size:9px;color:#888;margin:0 0 4px}
+.mini-stat .v{font-size:16px;font-weight:900;margin:0}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{background:rgba(0,255,102,0.08);color:#00FF66;padding:8px;text-align:left;font-weight:700;border-bottom:1px solid rgba(0,255,102,0.15);font-size:10px}
+td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.05);color:#ccc}
+tr:hover td{background:rgba(0,255,102,0.03)}
 </style>
 </head>
 <body>
@@ -68,120 +90,114 @@ var DEFAULT_PWD = '802301';
 var SESSION_HOURS = 24;
 var sb = null;
 
-function btoaSafe(s) {
-  try {
-    var bytes = new TextEncoder().encode(String(s));
-    var bin = '';
-    for (var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
-    return btoa(bin);
-  } catch(e) { return ''; }
-}
-function atobSafe(s) {
-  try {
-    var bin = atob(String(s));
-    var bytes = new Uint8Array(bin.length);
-    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-    return new TextDecoder().decode(bytes);
-  } catch(e) { return ''; }
-}
-function getAdminPwd() {
-  var s = localStorage.getItem('toxic_admin_pwd');
-  if (!s) { localStorage.setItem('toxic_admin_pwd', btoaSafe(DEFAULT_PWD)); return DEFAULT_PWD; }
-  return atobSafe(s) || DEFAULT_PWD;
-}
-function setAdminPwd(p) { localStorage.setItem('toxic_admin_pwd', btoaSafe(p)); }
-function checkSession() {
-  try {
-    var s = JSON.parse(localStorage.getItem('toxic_admin_session') || 'null');
-    if (s && s.exp > Date.now()) return true;
-    localStorage.removeItem('toxic_admin_session');
-    return false;
-  } catch(e) { return false; }
-}
-function startSession() { localStorage.setItem('toxic_admin_session', JSON.stringify({exp: Date.now() + SESSION_HOURS * 3600000})); }
-function endSession() { localStorage.removeItem('toxic_admin_session'); }
+function btoaSafe(s){try{var b=new TextEncoder().encode(String(s));var r='';for(var i=0;i<b.length;i++)r+=String.fromCharCode(b[i]);return btoa(r);}catch(e){return '';}}
+function atobSafe(s){try{var b=atob(String(s));var a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return new TextDecoder().decode(a);}catch(e){return '';}}
+function getAdminPwd(){var s=localStorage.getItem('toxic_admin_pwd');if(!s){localStorage.setItem('toxic_admin_pwd',btoaSafe(DEFAULT_PWD));return DEFAULT_PWD;}return atobSafe(s)||DEFAULT_PWD;}
+function setAdminPwd(p){localStorage.setItem('toxic_admin_pwd',btoaSafe(p));}
+function checkSession(){try{var s=JSON.parse(localStorage.getItem('toxic_admin_session')||'null');if(s&&s.exp>Date.now())return true;localStorage.removeItem('toxic_admin_session');return false;}catch(e){return false;}}
+function startSession(){localStorage.setItem('toxic_admin_session',JSON.stringify({exp:Date.now()+SESSION_HOURS*3600000}));}
+function endSession(){localStorage.removeItem('toxic_admin_session');}
+
+var DEFAULT_PLANS = {
+  'BRONZE':{id:'l1',deposit:1,daily:0.10,total:4.00},
+  'SILVER':{id:'l2',deposit:3,daily:0.36,total:14.40},
+  'GOLD':{id:'l3',deposit:5,daily:0.70,total:28.00},
+  'ELITE':{id:'l4',deposit:10,daily:1.60,total:64.00},
+  'ULTRA':{id:'l5',deposit:20,daily:3.50,total:140.00},
+  'LEGEND':{id:'l6',deposit:50,daily:9.00,total:360.00},
+  'MASTER':{id:'l7',deposit:100,daily:18.50,total:740.00},
+  'GRANDMASTER':{id:'l8',deposit:200,daily:38.00,total:1520.00},
+  'MYTHIC':{id:'l9',deposit:500,daily:97.50,total:3900.00},
+  'IMMORTAL':{id:'l10',deposit:1000,daily:200.00,total:8000.00},
+  'TITAN':{id:'l11',deposit:2000,daily:410.00,total:16400.00},
+  'GODFATHER':{id:'l12',deposit:5000,daily:1050.00,total:42000.00}
+};
 
 var CFG_SECTIONS = [
-  {id:'finance', icon:'💰', title:'Finance & Bonuses', fields:[
-    {k:'signup_bonus', l:'Signup Bonus ($)', t:'number', d:'0.50'},
-    {k:'telegram_bonus', l:'Telegram Bonus ($)', t:'number', d:'0.20'},
-    {k:'share_bonus', l:'Share Bonus ($)', t:'number', d:'0.10'},
-    {k:'min_deposit', l:'Minimum Deposit ($)', t:'number', d:'2'},
-    {k:'min_withdraw', l:'Minimum Withdrawal ($)', t:'number', d:'5'},
-    {k:'withdraw_fee', l:'Withdrawal Fee (%)', t:'number', d:'5'},
-    {k:'max_daily_withdrawals', l:'Max Daily Withdrawals', t:'number', d:'3'},
-    {k:'inr_rate', l:'INR Rate', t:'number', d:'90'},
-    {k:'history_page_size', l:'History Page Size', t:'number', d:'10'}
+  {id:'finance',icon:'💰',title:'Finance & Bonuses',fields:[
+    {k:'signup_bonus',l:'Signup Bonus ($)',t:'number',d:'0.50'},
+    {k:'telegram_bonus',l:'Telegram Bonus ($)',t:'number',d:'0.20'},
+    {k:'share_bonus',l:'Share Bonus ($)',t:'number',d:'0.10'},
+    {k:'min_deposit',l:'Min Deposit ($)',t:'number',d:'2'},
+    {k:'min_withdraw',l:'Min Withdrawal ($)',t:'number',d:'5'},
+    {k:'withdraw_fee',l:'Withdrawal Fee (%)',t:'number',d:'5'},
+    {k:'max_daily_withdrawals',l:'Max Daily Withdrawals',t:'number',d:'3'},
+    {k:'inr_rate',l:'INR Rate',t:'number',d:'90'},
+    {k:'history_page_size',l:'History Page Size',t:'number',d:'10'}
   ]},
-  {id:'payment', icon:'💳', title:'Payment Addresses', fields:[
-    {k:'upi_id', l:'UPI ID', t:'text', d:''},
-    {k:'upi_name', l:'UPI Name', t:'text', d:''},
-    {k:'usdt_bep20', l:'USDT BEP20', t:'text', d:''},
-    {k:'usdt_trc20', l:'USDT TRC20', t:'text', d:''},
-    {k:'btc_bep20', l:'BTC BEP20', t:'text', d:''}
+  {id:'payment',icon:'💳',title:'Payment Addresses',fields:[
+    {k:'upi_id',l:'UPI ID',t:'text',d:''},
+    {k:'upi_name',l:'UPI Name',t:'text',d:''},
+    {k:'usdt_bep20',l:'USDT BEP20',t:'text',d:''},
+    {k:'usdt_trc20',l:'USDT TRC20',t:'text',d:''},
+    {k:'btc_bep20',l:'BTC BEP20',t:'text',d:''}
   ]},
-  {id:'plans', icon:'💎', title:'Plan Settings', fields:[
-    {k:'plan_duration_days', l:'Plan Duration (days)', t:'number', d:'40'},
-    {k:'daily_collect_hours', l:'Collect Interval (hours)', t:'number', d:'24'}
+  {id:'plans',icon:'💎',title:'Plan Settings',fields:[
+    {k:'plan_duration_days',l:'Plan Duration (days)',t:'number',d:'40'},
+    {k:'daily_collect_hours',l:'Collect Interval (hours)',t:'number',d:'24'}
   ]},
-  {id:'games', icon:'🎮', title:'Games & Spin Wheel', fields:[
-    {k:'spin_enabled', l:'Spin Enabled', t:'toggle', d:'true'},
-    {k:'spin_cooldown_hours', l:'Spin Cooldown (hours)', t:'number', d:'24'},
-    {k:'spin_prizes', l:'Spin Prizes (JSON)', t:'json', d:'[{"label":"$0.01","value":0.01,"c":"#4B5563","w":18},{"label":"$0.05","value":0.05,"c":"#10B981","w":20},{"label":"$0.00","value":0,"c":"#1F2937","w":10},{"label":"$0.10","value":0.10,"c":"#22D3EE","w":15},{"label":"$0.02","value":0.02,"c":"#6B7280","w":18},{"label":"$0.20","value":0.20,"c":"#FFD700","w":9},{"label":"$0.03","value":0.03,"c":"#4B5563","w":8},{"label":"$0.50","value":0.50,"c":"#EF4444","w":2}]'}
+  {id:'games',icon:'🎮',title:'Games & Spin',fields:[
+    {k:'spin_enabled',l:'Spin Enabled',t:'toggle',d:'true'},
+    {k:'spin_cooldown_hours',l:'Spin Cooldown (hours)',t:'number',d:'24'},
+    {k:'spin_prizes',l:'Spin Prizes (JSON)',t:'json',d:'[{"label":"$0.01","value":0.01,"c":"#4B5563","w":18},{"label":"$0.05","value":0.05,"c":"#10B981","w":20},{"label":"$0.00","value":0,"c":"#1F2937","w":10},{"label":"$0.10","value":0.10,"c":"#22D3EE","w":15},{"label":"$0.02","value":0.02,"c":"#6B7280","w":18},{"label":"$0.20","value":0.20,"c":"#FFD700","w":9},{"label":"$0.03","value":0.03,"c":"#4B5563","w":8},{"label":"$0.50","value":0.50,"c":"#EF4444","w":2}]'}
   ]},
-  {id:'vip', icon:'🏆', title:'VIP Badges & Milestones', fields:[
-    {k:'vip_badges', l:'VIP Badges (JSON)', t:'json', d:'[{"min":0,"name":"Starter","icon":"🆕","c":"#666"},{"min":10,"name":"Bronze","icon":"🥉","c":"#CD7F32"},{"min":100,"name":"Silver","icon":"🥈","c":"#C0C0C0"},{"min":500,"name":"Gold","icon":"🥇","c":"#FFD700"},{"min":2000,"name":"Diamond","icon":"💎","c":"#22D3EE"},{"min":5000,"name":"VIP","icon":"👑","c":"#00FF66"}]'},
-    {k:'team_milestones', l:'Team Milestones (JSON)', t:'json', d:'[{"size":5,"reward":1,"label":"5 Members"},{"size":10,"reward":3,"label":"10 Members"},{"size":25,"reward":10,"label":"25 Members"},{"size":50,"reward":30,"label":"50 Members"},{"size":100,"reward":100,"label":"100 Members"}]'}
+  {id:'vip',icon:'🏆',title:'VIP & Milestones',fields:[
+    {k:'vip_badges',l:'VIP Badges (JSON)',t:'json',d:'[{"min":0,"name":"Starter","icon":"🆕","c":"#666"},{"min":10,"name":"Bronze","icon":"🥉","c":"#CD7F32"},{"min":100,"name":"Silver","icon":"🥈","c":"#C0C0C0"},{"min":500,"name":"Gold","icon":"🥇","c":"#FFD700"},{"min":2000,"name":"Diamond","icon":"💎","c":"#22D3EE"},{"min":5000,"name":"VIP","icon":"👑","c":"#00FF66"}]'},
+    {k:'team_milestones',l:'Team Milestones (JSON)',t:'json',d:'[{"size":5,"reward":1,"label":"5 Members"},{"size":10,"reward":3,"label":"10 Members"},{"size":25,"reward":10,"label":"25 Members"},{"size":50,"reward":30,"label":"50 Members"},{"size":100,"reward":100,"label":"100 Members"}]'}
   ]},
-  {id:'referral', icon:'👥', title:'Referral System', fields:[
-    {k:'commissions', l:'Commission % L1-L10 (JSON)', t:'json', d:'[10,5,2,1,1,1,1,1,1,1]'},
-    {k:'referral_lock_days', l:'Referral Lock (days)', t:'number', d:'30'}
+  {id:'referral',icon:'👥',title:'Referral System',fields:[
+    {k:'commissions',l:'Commission % L1-L10 (JSON)',t:'json',d:'[10,5,2,1,1,1,1,1,1,1]'},
+    {k:'referral_lock_days',l:'Referral Lock (days)',t:'number',d:'30'}
   ]},
-  {id:'content', icon:'📝', title:'Content & Text', fields:[
-    {k:'announcement', l:'Announcement', t:'textarea', d:'Welcome to TOXIC! Earn daily returns.'},
-    {k:'news_items', l:'News Ticker (JSON)', t:'json', d:'["Welcome to TOXIC!","Withdrawals 1-24 hours"]'},
-    {k:'tour_steps', l:'Tour Steps (JSON)', t:'json', d:'[{"icon":"👋","title":"Welcome","desc":"Start earning daily"}]'},
-    {k:'wd_notice', l:'Withdrawal Notice', t:'textarea', d:'Processed within 1-24 hours.'},
-    {k:'dep_notice', l:'Deposit Notice', t:'textarea', d:'Verified within 1-24 hours.'}
+  {id:'content',icon:'📝',title:'Content & Text',fields:[
+    {k:'announcement',l:'Announcement',t:'textarea',d:'Welcome to TOXIC!'},
+    {k:'news_items',l:'News Ticker (JSON)',t:'json',d:'["Welcome to TOXIC!","Withdrawals 1-24 hours"]'},
+    {k:'tour_steps',l:'Tour Steps (JSON)',t:'json',d:'[{"icon":"👋","title":"Welcome","desc":"Start earning daily"}]'},
+    {k:'wd_notice',l:'Withdrawal Notice',t:'textarea',d:'Processed within 1-24 hours.'},
+    {k:'dep_notice',l:'Deposit Notice',t:'textarea',d:'Verified within 1-24 hours.'}
   ]},
-  {id:'live', icon:'📡', title:'Live Feed', fields:[
-    {k:'live_names', l:'Names (JSON)', t:'json', d:'["Rahul","Priya","Ahmed","Sara","Vikram"]'},
-    {k:'live_locations', l:'Locations (JSON)', t:'json', d:'[{"city":"Mumbai","c":"🇮🇳"},{"city":"Dubai","c":"🇦🇪"}]'},
-    {k:'live_messages', l:'Messages (JSON)', t:'json', d:'[" just earned $0.50"," invested in GOLD"]'}
+  {id:'live',icon:'📡',title:'Live Feed',fields:[
+    {k:'live_names',l:'Names (JSON)',t:'json',d:'["Rahul","Priya","Ahmed","Sara"]'},
+    {k:'live_locations',l:'Locations (JSON)',t:'json',d:'[{"city":"Mumbai","c":"🇮🇳"},{"city":"Dubai","c":"🇦🇪"}]'},
+    {k:'live_messages',l:'Messages (JSON)',t:'json',d:'[" just earned $0.50"," invested in GOLD"]'}
   ]},
-  {id:'integration', icon:'🔗', title:'Integrations', fields:[
-    {k:'support_link', l:'Support Link', t:'text', d:''},
-    {k:'telegram_link', l:'Telegram Link', t:'text', d:''},
-    {k:'telegram_bot_token', l:'Bot Token', t:'text', d:''},
-    {k:'telegram_channel_id', l:'Channel ID', t:'text', d:''},
-    {k:'app_url', l:'App URL', t:'text', d:''},
-    {k:'banner_url', l:'Banner URL', t:'text', d:''}
+  {id:'integration',icon:'🔗',title:'Integrations',fields:[
+    {k:'support_link',l:'Support Link',t:'text',d:''},
+    {k:'telegram_link',l:'Telegram Link',t:'text',d:''},
+    {k:'telegram_bot_token',l:'Bot Token',t:'text',d:''},
+    {k:'telegram_channel_id',l:'Channel ID',t:'text',d:''},
+    {k:'app_url',l:'App URL',t:'text',d:''},
+    {k:'banner_url',l:'Banner URL',t:'text',d:''}
   ]},
-  {id:'features', icon:'🔧', title:'Feature Toggles', fields:[
-    {k:'signup_enabled', l:'Signup', t:'toggle', d:'true'},
-    {k:'upi_enabled', l:'UPI', t:'toggle', d:'true'},
-    {k:'usdt_enabled', l:'USDT', t:'toggle', d:'true'},
-    {k:'btc_enabled', l:'BTC', t:'toggle', d:'true'},
-    {k:'team_bonus_enabled', l:'Team Bonus', t:'toggle', d:'true'},
-    {k:'telegram_bonus_enabled', l:'TG Bonus', t:'toggle', d:'true'},
-    {k:'share_bonus_enabled', l:'Share Bonus', t:'toggle', d:'true'},
-    {k:'auto_renew_default', l:'Auto-Renew Default', t:'toggle', d:'false'}
+  {id:'features',icon:'🔧',title:'Feature Toggles',fields:[
+    {k:'signup_enabled',l:'Signup',t:'toggle',d:'true'},
+    {k:'deposits_enabled',l:'Deposits',t:'toggle',d:'true'},
+    {k:'withdrawals_enabled',l:'Withdrawals',t:'toggle',d:'true'},
+    {k:'upi_enabled',l:'UPI',t:'toggle',d:'true'},
+    {k:'usdt_enabled',l:'USDT',t:'toggle',d:'true'},
+    {k:'btc_enabled',l:'BTC',t:'toggle',d:'true'},
+    {k:'team_bonus_enabled',l:'Team Bonus',t:'toggle',d:'true'},
+    {k:'telegram_bonus_enabled',l:'TG Bonus',t:'toggle',d:'true'},
+    {k:'share_bonus_enabled',l:'Share Bonus',t:'toggle',d:'true'},
+    {k:'auto_renew_default',l:'Auto-Renew Default',t:'toggle',d:'false'}
   ]},
-  {id:'system', icon:'⚠️', title:'System', fields:[
-    {k:'maintenance_mode', l:'Maintenance Mode', t:'toggle', d:'false'},
-    {k:'maintenance_msg', l:'Maintenance Msg', t:'textarea', d:'Upgrading soon'},
-    {k:'force_update', l:'Force Update', t:'toggle', d:'false'},
-    {k:'force_update_msg', l:'Update Msg', t:'textarea', d:'Please update'}
+  {id:'system',icon:'⚠️',title:'System',fields:[
+    {k:'maintenance_mode',l:'Maintenance Mode',t:'toggle',d:'false'},
+    {k:'maintenance_msg',l:'Maintenance Msg',t:'textarea',d:'Upgrading soon'},
+    {k:'force_update',l:'Force Update',t:'toggle',d:'false'},
+    {k:'force_update_msg',l:'Update Msg',t:'textarea',d:'Please update'},
+    {k:'app_version',l:'App Version',t:'text',d:'1.0.0'}
   ]}
 ];
 
 var st = {
   login: checkSession(),
   users: [], deps: [], wd: [], userPlans: [], plansDB: [],
-  logs: [], notifications: [], promos: [], shareBonus: [], winners: [], siteConfig: {},
+  logs: [], userLogs: [], notifications: [], promos: [], promoCodesRedemptions: [],
+  shareBonus: [], winners: [], siteConfig: {},
   tab: 'dash',
-  search: '', depSearch: '', wdSearch: '', sbSearch: '',
-  depFilter: 'all', wdFilter: 'all', sbFilter: 'all', dateFilter: 'all',
+  userSearch: '', depSearch: '', wdSearch: '', sbSearch: '', notifSearch: '',
+  depFilter: 'all', wdFilter: 'all', sbFilter: 'all', userFilter: 'all',
   selectedUser: null,
   showSettings: false, showChangePwd: false,
   showMessage: false, msgUser: null, msgType: 'info',
@@ -189,1035 +205,1278 @@ var st = {
   showPromoModal: false,
   showPlanModal: false, editPlan: null,
   showWinnerModal: false, editWinner: null,
+  showAddDeposit: false, showAddWithdrawal: false,
+  showEditTx: false, editTx: null, editTxType: null,
+  showRefTree: false, refTreeUser: null,
+  showRawEdit: false, rawTable: '', rawRow: null,
+  showNewConfig: false,
+  showImportConfig: false,
+  showBulkPlan: false, bulkPlanType: '',
+  showRedemptions: false,
   expanded: {finance: true},
   lastRefresh: 0
 };
 
 try { st.logs = JSON.parse(localStorage.getItem('toxic_admin_logs') || '[]'); } catch(e) {}
+try { st.userLogs = JSON.parse(localStorage.getItem('toxic_admin_userlogs') || '[]'); } catch(e) {}
 
-function initSB() {
-  try {
-    if (window.supabase && window.supabase.createClient) {
-      sb = window.supabase.createClient(SB_URL, SB_KEY);
-      return true;
-    }
-  } catch(e) { console.log('SB init err:', e); }
-  return false;
-}
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function fmt(n) { return Number(n||0).toFixed(2); }
-function $(id) { return document.getElementById(id); }
+function initSB(){try{if(window.supabase&&window.supabase.createClient){sb=window.supabase.createClient(SB_URL,SB_KEY);return true;}}catch(e){}return false;}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmt(n){return Number(n||0).toFixed(2);}
+function $(id){return document.getElementById(id);}
 
-function toast(m, type) {
-  var el = $('toast');
-  if (!el) return;
-  el.textContent = m;
-  el.style.background = type === 'error' ? '#EF4444' : (type === 'warn' ? '#FBBF24' : '#00FF66');
-  el.style.color = type === 'error' ? '#fff' : '#000';
-  el.classList.add('show');
-  clearTimeout(window._tT);
-  window._tT = setTimeout(function() { el.classList.remove('show'); }, 3000);
+function toast(m,type){var el=$('toast');if(!el)return;el.textContent=m;el.style.background=type==='error'?'#EF4444':(type==='warn'?'#FBBF24':'#00FF66');el.style.color=type==='error'?'#fff':'#000';el.classList.add('show');clearTimeout(window._tT);window._tT=setTimeout(function(){el.classList.remove('show');},3000);}
+
+function logAction(a,d){var e={action:a,detail:d,time:new Date().toISOString()};st.logs.unshift(e);if(st.logs.length>200)st.logs=st.logs.slice(0,200);try{localStorage.setItem('toxic_admin_logs',JSON.stringify(st.logs.slice(0,100)));}catch(e){}}
+
+function downloadCSV(filename, rows){
+  var csv = rows.map(function(r){return r.map(function(c){return '"'+String(c==null?'':c).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
+  var blob = new Blob([csv], {type:'text/csv'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},100);
 }
 
-function logAction(a, d) {
-  var e = {action: a, detail: d, time: new Date().toISOString()};
-  st.logs.unshift(e);
-  if (st.logs.length > 100) st.logs = st.logs.slice(0, 100);
-  try { localStorage.setItem('toxic_admin_logs', JSON.stringify(st.logs.slice(0, 50))); } catch(e) {}
-}
+function render(){var el=$('app');if(!sb){el.innerHTML='<div style="padding:40px;text-align:center"><div class="card"><p class="r">Supabase load failed. Refresh.</p><button class="btn" style="margin-top:12px" onclick="location.reload()">Refresh</button></div></div>';return;}if(!st.login){el.innerHTML=loginScreen();return;}el.innerHTML='<div style="padding:16px;max-width:800px;margin:0 auto">'+panel()+modals()+'</div>';}
 
-function render() {
-  var el = $('app');
-  if (!sb) {
-    el.innerHTML = '<div style="padding:40px;text-align:center"><div class="card"><p style="color:#EF4444">Supabase load failed. Refresh.</p><button class="btn" style="margin-top:12px" onclick="location.reload()">Refresh</button></div></div>';
-    return;
-  }
-  if (!st.login) { el.innerHTML = loginScreen(); return; }
-  el.innerHTML = '<div style="padding:16px;max-width:700px;margin:0 auto">' + panel() + modals() + '</div>';
-}
-
-function loginScreen() {
-  return '<div style="padding:60px 20px;max-width:400px;margin:0 auto"><div class="card" style="padding:28px">' +
-    '<div style="text-align:center;margin-bottom:24px"><div style="width:64px;height:64px;background:#00FF66;border-radius:20px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:28px;color:#000">🔐</div>' +
-    '<h1 class="g" style="font-size:22px;font-weight:900;margin:0 0 4px">TOXIC</h1><p style="font-size:10px;color:#666;margin:0;letter-spacing:3px">ADMIN PANEL</p></div>' +
-    '<input type="password" id="pw" class="inp" placeholder="Admin Password" style="margin-bottom:12px" onkeypress="if(event.key===\'Enter\')login()">' +
-    '<button class="btn" style="width:100%" onclick="login()">ACCESS</button>' +
+function loginScreen(){
+  return '<div style="padding:60px 20px;max-width:400px;margin:0 auto"><div class="card" style="padding:28px">'+
+    '<div style="text-align:center;margin-bottom:24px"><div style="width:64px;height:64px;background:#00FF66;border-radius:20px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:28px;color:#000">🔐</div>'+
+    '<h1 class="g" style="font-size:22px;font-weight:900;margin:0 0 4px">TOXIC</h1><p style="font-size:10px;color:#666;margin:0;letter-spacing:3px">ADMIN CONTROL CENTER</p></div>'+
+    '<input type="password" id="pw" class="inp" placeholder="Admin Password" style="margin-bottom:12px" onkeypress="if(event.key===\'Enter\')login()">'+
+    '<button class="btn" style="width:100%" onclick="login()">ACCESS</button>'+
     '</div></div>';
 }
 
-function panel() {
-  var tu = st.users.length;
-  var pd = st.deps.filter(function(d) { return d.status === 'pending'; }).length;
-  var tw = st.wd.filter(function(d) { return d.status === 'pending'; }).length;
-  var psb = st.shareBonus.filter(function(s) { return s.status === 'pending'; }).length;
-  var ap = st.userPlans.filter(function(p) { return Number(p.days_collected) < 40 && p.status !== 'completed'; }).length;
-  var revenue = st.deps.filter(function(d) { return d.status === 'approved'; }).reduce(function(a,b) { return a + Number(b.amount||0); }, 0);
-  var paid = st.wd.filter(function(d) { return d.status === 'approved'; }).reduce(function(a,b) { return a + Number(b.amount||0); }, 0);
+function panel(){
+  var tu=st.users.length;
+  var pd=st.deps.filter(function(d){return d.status==='pending';}).length;
+  var tw=st.wd.filter(function(d){return d.status==='pending';}).length;
+  var psb=st.shareBonus.filter(function(s){return s.status==='pending';}).length;
+  var ap=st.userPlans.filter(function(p){return Number(p.days_collected)<40&&p.status!=='completed';}).length;
+  var revenue=st.deps.filter(function(d){return d.status==='approved';}).reduce(function(a,b){return a+Number(b.amount||0);},0);
+  var paid=st.wd.filter(function(d){return d.status==='approved';}).reduce(function(a,b){return a+Number(b.amount||0);},0);
+  var netBal=st.users.reduce(function(a,b){return a+Number(b.balance||0);},0);
 
-  var h = '<div class="row" style="margin-bottom:16px"><div><h1 class="g" style="font-size:18px;font-weight:900;margin:0">TOXIC ADMIN</h1><p style="font-size:10px;color:#666;margin:2px 0 0">Control Center</p></div>' +
+  var h='<div class="row" style="margin-bottom:16px"><div><h1 class="g" style="font-size:18px;font-weight:900;margin:0">TOXIC ADMIN</h1><p style="font-size:10px;color:#666;margin:2px 0 0">Full Control Center</p></div>'+
     '<div style="display:flex;gap:6px"><button class="btn btn-sm btn-purple" onclick="st.showSettings=true;render()">⚙️</button><button class="btn btn-sm btn-red" onclick="logout()">Logout</button></div></div>';
 
-  h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">';
-  h += '<div class="stat"><p style="font-size:9px;color:#666;margin:0 0 6px">USERS</p><p class="g" style="font-size:26px;font-weight:900;margin:0">' + tu + '</p></div>';
-  h += '<div class="stat"><p style="font-size:9px;color:#666;margin:0 0 6px">ACTIVE PLANS</p><p style="color:#22D3EE;font-size:26px;font-weight:900;margin:0">' + ap + '</p></div>';
-  h += '<div class="stat"><p style="font-size:9px;color:#666;margin:0 0 6px">REVENUE</p><p class="g" style="font-size:22px;font-weight:900;margin:0">$' + revenue.toFixed(0) + '</p></div>';
-  h += '<div class="stat"><p style="font-size:9px;color:#666;margin:0 0 6px">PAID OUT</p><p style="color:#EF4444;font-size:22px;font-weight:900;margin:0">$' + paid.toFixed(0) + '</p></div>';
-  h += '</div>';
+  h+='<div class="grid2" style="margin-bottom:16px">';
+  h+='<div class="stat"><p style="font-size:9px;color:#666;margin:0 0 6px">USERS</p><p class="g" style="font-size:24px;font-weight:900;margin:0">'+tu+'</p></div>';
+  h+='<div class="stat"><p style="font-size:9px;color:#666;margin:0 0 6px">ACTIVE PLANS</p><p class="b" style="font-size:24px;font-weight:900;margin:0">'+ap+'</p></div>';
+  h+='<div class="stat"><p style="font-size:9px;color:#666;margin:0 0 6px">REVENUE</p><p class="g" style="font-size:20px;font-weight:900;margin:0">$'+revenue.toFixed(0)+'</p></div>';
+  h+='<div class="stat"><p style="font-size:9px;color:#666;margin:0 0 6px">PAID OUT</p><p class="r" style="font-size:20px;font-weight:900;margin:0">$'+paid.toFixed(0)+'</p></div>';
+  h+='<div class="stat"><p style="font-size:9px;color:#666;margin:0 0 6px">NET BAL LIABILITY</p><p class="y" style="font-size:16px;font-weight:900;margin:0">$'+netBal.toFixed(0)+'</p></div>';
+  h+='<div class="stat"><p style="font-size:9px;color:#666;margin:0 0 6px">PROFIT</p><p class="g" style="font-size:16px;font-weight:900;margin:0">$'+(revenue-paid).toFixed(0)+'</p></div>';
+  h+='</div>';
 
-  if (pd > 0 || tw > 0 || psb > 0) {
-    h += '<div class="card" style="border-color:rgba(251,191,36,0.4);background:linear-gradient(145deg,rgba(251,191,36,0.08),rgba(0,0,0,0.3))">';
-    h += '<p style="font-size:11px;color:#FBBF24;font-weight:800;margin:0 0 8px">ACTION REQUIRED</p>';
-    if (pd > 0) h += '<button class="btn btn-yellow btn-sm" style="width:100%;margin-bottom:6px" onclick="sw(\'deps\')">' + pd + ' PENDING DEPOSITS</button>';
-    if (tw > 0) h += '<button class="btn btn-yellow btn-sm" style="width:100%;margin-bottom:6px" onclick="sw(\'wd\')">' + tw + ' PENDING WITHDRAWALS</button>';
-    if (psb > 0) h += '<button class="btn btn-yellow btn-sm" style="width:100%" onclick="sw(\'shareBonus\')">' + psb + ' PENDING SHARE BONUS</button>';
-    h += '</div>';
+  if(pd>0||tw>0||psb>0){
+    h+='<div class="card" style="border-color:rgba(251,191,36,0.4);background:linear-gradient(145deg,rgba(251,191,36,0.08),rgba(0,0,0,0.3))">';
+    h+='<p class="y" style="font-size:11px;font-weight:800;margin:0 0 8px">⚠️ ACTION REQUIRED</p>';
+    if(pd>0)h+='<button class="btn btn-yellow btn-sm" style="width:100%;margin-bottom:6px" onclick="sw(\'deps\')">'+pd+' PENDING DEPOSITS</button>';
+    if(tw>0)h+='<button class="btn btn-yellow btn-sm" style="width:100%;margin-bottom:6px" onclick="sw(\'wd\')">'+tw+' PENDING WITHDRAWALS</button>';
+    if(psb>0)h+='<button class="btn btn-yellow btn-sm" style="width:100%" onclick="sw(\'shareBonus\')">'+psb+' PENDING SHARE BONUS</button>';
+    h+='</div>';
   }
 
-  h += '<div style="overflow-x:auto;margin-bottom:16px;padding-bottom:4px" class="hide-scroll">';
-  h += '<button class="tab ' + (st.tab === 'dash' ? 'on' : '') + '" onclick="sw(\'dash\')">📊 Overview</button>';
-  h += '<button class="tab ' + (st.tab === 'users' ? 'on' : '') + '" onclick="sw(\'users\')">👥 Users (' + tu + ')</button>';
-  h += '<button class="tab ' + (st.tab === 'plans' ? 'on' : '') + '" onclick="sw(\'plans\')">💎 Active</button>';
-  h += '<button class="tab ' + (st.tab === 'plansDB' ? 'on' : '') + '" onclick="sw(\'plansDB\')">📋 Plans</button>';
-  h += '<button class="tab ' + (st.tab === 'deps' ? 'on' : '') + '" onclick="sw(\'deps\')">💰 Deposits' + (pd > 0 ? ' (' + pd + ')' : '') + '</button>';
-  h += '<button class="tab ' + (st.tab === 'wd' ? 'on' : '') + '" onclick="sw(\'wd\')">💸 Withdraw' + (tw > 0 ? ' (' + tw + ')' : '') + '</button>';
-  h += '<button class="tab ' + (st.tab === 'shareBonus' ? 'on' : '') + '" onclick="sw(\'shareBonus\')">📸 Share</button>';
-  h += '<button class="tab ' + (st.tab === 'promos' ? 'on' : '') + '" onclick="sw(\'promos\')">🎁 Promos</button>';
-  h += '<button class="tab ' + (st.tab === 'config' ? 'on' : '') + '" onclick="sw(\'config\')">⚙️ CONFIG</button>';
-  h += '<button class="tab ' + (st.tab === 'notifs' ? 'on' : '') + '" onclick="sw(\'notifs\')">🔔 Notifs</button>';
-  h += '<button class="tab ' + (st.tab === 'winners' ? 'on' : '') + '" onclick="sw(\'winners\')">👑 Winners</button>';
-  h += '<button class="tab ' + (st.tab === 'analytics' ? 'on' : '') + '" onclick="sw(\'analytics\')">📈 Analytics</button>';
-  h += '<button class="tab ' + (st.tab === 'logs' ? 'on' : '') + '" onclick="sw(\'logs\')">📝 Logs</button>';
-  h += '</div>';
+  h+='<div style="overflow-x:auto;margin-bottom:16px;padding-bottom:4px" class="hide-scroll">';
+  h+='<button class="tab '+(st.tab==='dash'?'on':'')+'" onclick="sw(\'dash\')">📊 Overview</button>';
+  h+='<button class="tab '+(st.tab==='users'?'on':'')+'" onclick="sw(\'users\')">👥 Users ('+tu+')</button>';
+  h+='<button class="tab '+(st.tab==='plans'?'on':'')+'" onclick="sw(\'plans\')">💎 Active Plans</button>';
+  h+='<button class="tab '+(st.tab==='plansDB'?'on':'')+'" onclick="sw(\'plansDB\')">📋 Plans DB</button>';
+  h+='<button class="tab '+(st.tab==='deps'?'on':'')+'" onclick="sw(\'deps\')">💰 Deposits'+(pd>0?' ('+pd+')':'')+'</button>';
+  h+='<button class="tab '+(st.tab==='wd'?'on':'')+'" onclick="sw(\'wd\')">💸 Withdraw'+(tw>0?' ('+tw+')':'')+'</button>';
+  h+='<button class="tab '+(st.tab==='shareBonus'?'on':'')+'" onclick="sw(\'shareBonus\')">📸 Share</button>';
+  h+='<button class="tab '+(st.tab==='promos'?'on':'')+'" onclick="sw(\'promos\')">🎁 Promos</button>';
+  h+='<button class="tab '+(st.tab==='config'?'on':'')+'" onclick="sw(\'config\')">⚙️ CONFIG</button>';
+  h+='<button class="tab '+(st.tab==='notifs'?'on':'')+'" onclick="sw(\'notifs\')">🔔 Notifs</button>';
+  h+='<button class="tab '+(st.tab==='winners'?'on':'')+'" onclick="sw(\'winners\')">👑 Winners</button>';
+  h+='<button class="tab '+(st.tab==='analytics'?'on':'')+'" onclick="sw(\'analytics\')">📈 Analytics</button>';
+  h+='<button class="tab '+(st.tab==='system'?'on':'')+'" onclick="sw(\'system\')">🔧 System</button>';
+  h+='<button class="tab '+(st.tab==='db'?'on':'')+'" onclick="sw(\'db\')">🗄️ Raw DB</button>';
+  h+='<button class="tab '+(st.tab==='logs'?'on':'')+'" onclick="sw(\'logs\')">📝 Logs</button>';
+  h+='</div>';
 
-  if (st.tab === 'dash') h += dashV();
-  if (st.tab === 'users') h += usersV();
-  if (st.tab === 'plans') h += plansV();
-  if (st.tab === 'plansDB') h += plansDBV();
-  if (st.tab === 'deps') h += depsV();
-  if (st.tab === 'wd') h += wdV();
-  if (st.tab === 'shareBonus') h += shareBonusV();
-  if (st.tab === 'promos') h += promosV();
-  if (st.tab === 'config') h += configV();
-  if (st.tab === 'notifs') h += notifsV();
-  if (st.tab === 'winners') h += winnersV();
-  if (st.tab === 'analytics') h += analyticsV();
-  if (st.tab === 'logs') h += logsV();
+  if(st.tab==='dash')h+=dashV();
+  if(st.tab==='users')h+=usersV();
+  if(st.tab==='plans')h+=plansV();
+  if(st.tab==='plansDB')h+=plansDBV();
+  if(st.tab==='deps')h+=depsV();
+  if(st.tab==='wd')h+=wdV();
+  if(st.tab==='shareBonus')h+=shareBonusV();
+  if(st.tab==='promos')h+=promosV();
+  if(st.tab==='config')h+=configV();
+  if(st.tab==='notifs')h+=notifsV();
+  if(st.tab==='winners')h+=winnersV();
+  if(st.tab==='analytics')h+=analyticsV();
+  if(st.tab==='system')h+=systemV();
+  if(st.tab==='db')h+=dbV();
+  if(st.tab==='logs')h+=logsV();
 
-  h += '<div style="display:flex;gap:8px;margin-top:12px">';
-  h += '<button class="btn btn-gray" style="flex:1" onclick="refresh()">🔄 Refresh</button>';
-  h += '<button class="btn btn-blue" style="flex:1" onclick="st.showBroadcast=true;render()">📢 Broadcast</button>';
-  h += '</div>';
-  if (st.lastRefresh) h += '<p style="font-size:9px;color:#555;text-align:center;margin-top:8px">Last: ' + new Date(st.lastRefresh).toLocaleTimeString() + '</p>';
+  h+='<div style="display:flex;gap:8px;margin-top:12px">';
+  h+='<button class="btn btn-gray" style="flex:1" onclick="refresh()">🔄 Refresh</button>';
+  h+='<button class="btn btn-blue" style="flex:1" onclick="st.showBroadcast=true;render()">📢 Broadcast</button>';
+  h+='</div>';
+  if(st.lastRefresh)h+='<p style="font-size:9px;color:#555;text-align:center;margin-top:8px">Last: '+new Date(st.lastRefresh).toLocaleTimeString()+'</p>';
   return h;
 }
 
-function configV() {
-  var cfg = st.siteConfig || {};
-  var h = '<div class="card" style="border-color:rgba(0,255,102,0.3)">';
-  h += '<p style="font-size:12px;color:#00FF66;font-weight:900;margin:0 0 6px;letter-spacing:2px">APP CONFIG</p>';
-  h += '<p style="font-size:11px;color:#888;margin:0">Changes here update the app within 1-2 minutes.</p>';
-  h += '</div>';
+/* ============== DASHBOARD ============== */
+function dashV(){
+  var days=[];
+  for(var i=6;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);d.setHours(0,0,0,0);days.push({date:d,dep:0,wd:0,users:0});}
+  st.deps.forEach(function(x){var dd=new Date(x.created_at);dd.setHours(0,0,0,0);for(var i=0;i<days.length;i++)if(days[i].date.toDateString()===dd.toDateString())days[i].dep+=Number(x.amount||0);});
+  st.wd.forEach(function(x){var dd=new Date(x.created_at);dd.setHours(0,0,0,0);for(var i=0;i<days.length;i++)if(days[i].date.toDateString()===dd.toDateString())days[i].wd+=Number(x.amount||0);});
+  st.users.forEach(function(x){if(!x.joined_at)return;var dd=new Date(x.joined_at);dd.setHours(0,0,0,0);for(var i=0;i<days.length;i++)if(days[i].date.toDateString()===dd.toDateString())days[i].users++;});
+  var maxD=Math.max.apply(null,days.map(function(d){return d.dep;}))||1;
+  var maxW=Math.max.apply(null,days.map(function(d){return d.wd;}))||1;
+  var maxU=Math.max.apply(null,days.map(function(d){return d.users;}))||1;
+  var h='<div class="card"><p style="font-size:11px;color:#00FF66;font-weight:700;margin:0 0 12px">📊 DEPOSITS · LAST 7 DAYS</p><div style="display:flex;align-items:flex-end;gap:6px;height:90px">';
+  days.forEach(function(d,i){var pct=(d.dep/maxD)*100;if(pct<5&&d.dep>0)pct=5;var td=i===6;h+='<div style="flex:1;text-align:center"><div style="height:'+pct+'%;background:'+(td?'#00FF66':'rgba(0,255,102,0.4)')+';border-radius:4px 4px 0 0"></div><p style="font-size:8px;color:'+(td?'#00FF66':'#555')+';margin:4px 0 0">'+['S','M','T','W','T','F','S'][d.date.getDay()]+'</p><p style="font-size:8px;color:#888;margin:2px 0 0">$'+d.dep.toFixed(0)+'</p></div>';});
+  h+='</div></div>';
 
-  CFG_SECTIONS.forEach(function(sec) {
-    var expanded = st.expanded[sec.id];
-    h += '<div class="card" style="padding:14px">';
-    h += '<div class="cfg-head" onclick="st.expanded[\'' + sec.id + '\']=!st.expanded[\'' + sec.id + '\'];render()">';
-    h += '<p style="font-size:12px;font-weight:900;color:#00FF66;margin:0">' + sec.icon + ' ' + sec.title + '</p>';
-    h += '<span class="chev">' + (expanded ? '▼' : '▶') + '</span>';
-    h += '</div>';
-    if (expanded) {
-      h += '<div style="margin-top:14px">';
-      sec.fields.forEach(function(f) {
-        var val = cfg[f.k] !== undefined ? cfg[f.k] : f.d;
-        h += '<p class="lbl" style="margin-top:12px;font-weight:700;color:#00FF66">' + f.l + '</p>';
-        if (f.t === 'toggle') {
-          var isOn = String(val).toLowerCase() === 'true';
-          h += '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:rgba(0,0,0,0.4);border-radius:10px;margin-top:4px">';
-          h += '<span id="lbl_' + f.k + '" style="font-size:11px;color:' + (isOn ? '#00FF66' : '#888') + ';font-weight:700">' + (isOn ? 'ENABLED' : 'DISABLED') + '</span>';
-          h += '<div class="toggle-pill ' + (isOn ? 'on' : '') + '" id="pill_' + f.k + '" onclick="toggleField(\'' + f.k + '\')"></div>';
-          h += '</div>';
-          h += '<input type="hidden" id="cfg_' + f.k + '" value="' + isOn + '">';
-        } else if (f.t === 'textarea') {
-          h += '<textarea id="cfg_' + f.k + '" class="inp" rows="3" style="margin-top:4px">' + esc(val) + '</textarea>';
-        } else if (f.t === 'json') {
-          h += '<textarea id="cfg_' + f.k + '" class="inp mono" rows="5" style="margin-top:4px;line-height:1.4">' + esc(val) + '</textarea>';
-          h += '<div style="display:flex;gap:6px;margin-top:6px"><button class="btn btn-sm btn-gray" style="flex:1;font-size:10px" onclick="formatJSON(\'cfg_' + f.k + '\')">Format</button><button class="btn btn-sm btn-gray" style="flex:1;font-size:10px" onclick="validateJSON(\'cfg_' + f.k + '\')">Validate</button></div>';
-        } else {
-          h += '<input type="' + f.t + '" id="cfg_' + f.k + '" class="inp" value="' + esc(val) + '" style="margin-top:4px">';
-        }
-      });
-      h += '</div>';
-    }
-    h += '</div>';
+  h+='<div class="card"><p style="font-size:11px;color:#EF4444;font-weight:700;margin:0 0 12px">📉 WITHDRAWALS · LAST 7 DAYS</p><div style="display:flex;align-items:flex-end;gap:6px;height:90px">';
+  days.forEach(function(d,i){var pct=(d.wd/maxW)*100;if(pct<5&&d.wd>0)pct=5;var td=i===6;h+='<div style="flex:1;text-align:center"><div style="height:'+pct+'%;background:'+(td?'#EF4444':'rgba(239,68,68,0.4)')+';border-radius:4px 4px 0 0"></div><p style="font-size:8px;color:'+(td?'#EF4444':'#555')+';margin:4px 0 0">'+['S','M','T','W','T','F','S'][d.date.getDay()]+'</p><p style="font-size:8px;color:#888;margin:2px 0 0">$'+d.wd.toFixed(0)+'</p></div>';});
+  h+='</div></div>';
+
+  h+='<div class="card"><p style="font-size:11px;color:#60A5FA;font-weight:700;margin:0 0 12px">👥 NEW USERS · LAST 7 DAYS</p><div style="display:flex;align-items:flex-end;gap:6px;height:70px">';
+  days.forEach(function(d,i){var pct=(d.users/maxU)*100;if(pct<5&&d.users>0)pct=5;var td=i===6;h+='<div style="flex:1;text-align:center"><div style="height:'+pct+'%;background:'+(td?'#60A5FA':'rgba(96,165,250,0.4)')+';border-radius:4px 4px 0 0"></div><p style="font-size:8px;color:'+(td?'#60A5FA':'#555')+';margin:4px 0 0">'+['S','M','T','W','T','F','S'][d.date.getDay()]+'</p><p style="font-size:8px;color:#888;margin:2px 0 0">'+d.users+'</p></div>';});
+  h+='</div></div>';
+
+  var top = st.users.slice().sort(function(a,b){return Number(b.balance||0)-Number(a.balance||0);}).slice(0,5);
+  h+='<div class="card"><p style="font-size:11px;color:#FFD700;font-weight:700;margin:0 0 12px">🏆 TOP 5 BY BALANCE</p>';
+  top.forEach(function(u,i){h+='<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)"><span style="font-size:11px">'+(i+1)+'. '+esc(u.username||'?')+'</span><span class="g mono" style="font-size:11px">$'+fmt(u.balance)+'</span></div>';});
+  h+='</div>';
+  return h;
+}
+
+/* ============== USERS ============== */
+function usersV(){
+  var list=st.users.slice();
+  if(st.userSearch)list=list.filter(function(u){return (u.username||'').toLowerCase().indexOf(st.userSearch.toLowerCase())>-1||String(u.user_id||'').indexOf(st.userSearch)>-1||(u.email||'').toLowerCase().indexOf(st.userSearch.toLowerCase())>-1;});
+  if(st.userFilter==='banned')list=list.filter(function(u){return u.is_banned;});
+  else if(st.userFilter==='active')list=list.filter(function(u){return Number(u.invested||0)>0;});
+  else if(st.userFilter==='rich')list=list.filter(function(u){return Number(u.balance||0)>=100;});
+  var h='<div class="grid2" style="margin-bottom:12px"><input class="inp" placeholder="Search username/id/email..." oninput="st.userSearch=this.value;render()" value="'+esc(st.userSearch)+'"><button class="btn btn-blue" onclick="exportUsers()">📥 Export Users CSV</button></div>';
+  h+='<div style="margin-bottom:12px">';
+  [['all','All'],['active','Invested'],['rich','High Bal'],['banned','Banned']].forEach(function(f){h+='<button class="filter-btn '+(st.userFilter===f[0]?'on':'')+'" onclick="st.userFilter=\''+f[0]+'\';render()">'+f[1]+'</button>';});
+  h+='</div>';
+  h+='<p style="font-size:10px;color:#666;margin:0 0 8px">Showing '+list.length+' of '+st.users.length+'</p>';
+  if(list.length===0)return h+'<div class="card" style="text-align:center;color:#666;padding:40px">No users</div>';
+  list.slice(0,100).forEach(function(u){
+    var up=st.userPlans.filter(function(p){return p.user_id===u.user_id;});
+    var act=up.find(function(p){return Number(p.days_collected)<40&&p.status!=='completed';});
+    h+='<div class="card" onclick="st.selectedUser=\''+esc(u.user_id)+'\';render()" style="cursor:pointer">';
+    h+='<div class="row"><div><p style="font-weight:800;margin:0;font-size:15px">'+esc(u.username||'?')+(u.is_banned?' <span class="badge br">BANNED</span>':'')+'</p><p class="lbl" style="margin:4px 0 0">'+esc(u.user_id)+'</p></div><div style="text-align:right"><p class="g" style="font-size:20px;font-weight:900;margin:0">$'+fmt(u.balance)+'</p><p style="font-size:9px;color:#888;margin:2px 0 0">Ref: $'+fmt(u.referral_balance)+'</p></div></div>';
+    h+='<div style="display:flex;gap:8px;margin-top:6px;font-size:10px;color:#888">';
+    h+='<span>📊 $'+fmt(u.invested)+'</span>';
+    h+='<span>💎 '+(up.length)+' plans</span>';
+    if(act)h+='<span class="g">▶ '+esc(act.plan_name)+' ('+Number(act.days_collected||0)+'/40)</span>';
+    h+='</div></div>';
   });
-
-  h += '<button class="btn" style="width:100%;margin-top:8px" onclick="saveAllConfig()">SAVE ALL SETTINGS</button>';
-  h += '<button class="btn btn-gray" style="width:100%;margin-top:8px" onclick="refreshConfig()">Reload from Server</button>';
   return h;
 }
 
-function toggleField(key) {
-  var el = $('cfg_' + key);
-  if (!el) return;
-  el.value = (el.value === 'true') ? 'false' : 'true';
-  var isOn = el.value === 'true';
-  var pill = $('pill_' + key);
-  if (pill) pill.classList.toggle('on', isOn);
-  var lbl = $('lbl_' + key);
-  if (lbl) { lbl.textContent = isOn ? 'ENABLED' : 'DISABLED'; lbl.style.color = isOn ? '#00FF66' : '#888'; }
+function exportUsers(){
+  var rows=[['user_id','username','email','balance','referral_balance','invested','earned','referral_code','referred_by','is_banned','joined_at']];
+  st.users.forEach(function(u){rows.push([u.user_id,u.username,u.email||'',u.balance||0,u.referral_balance||0,u.invested||0,u.earned||0,u.referral_code||'',u.referred_by||'',u.is_banned?'YES':'NO',u.joined_at||'']);});
+  downloadCSV('users_'+Date.now()+'.csv', rows);
+  toast('Exported '+st.users.length+' users');
 }
 
-function formatJSON(id) {
-  var el = $(id);
-  if (!el) return;
-  try { var obj = JSON.parse(el.value); el.value = JSON.stringify(obj, null, 2); toast('JSON formatted'); }
-  catch(e) { toast('Invalid JSON: ' + e.message, 'error'); }
+/* ============== USER DETAIL MODAL ============== */
+function userModalV(){
+  var u = st.users.find(function(x){return x.user_id===st.selectedUser;});
+  if(!u)return '';
+  var uPlans=st.userPlans.filter(function(p){return p.user_id===u.user_id;});
+  var uDeps=st.deps.filter(function(d){return d.user_id===u.user_id;});
+  var uWd=st.wd.filter(function(d){return d.user_id===u.user_id;});
+  var uRefs=st.users.filter(function(x){return x.referred_by===u.referral_code;});
+  var h='<div class="modal" onclick="st.selectedUser=null;render()"><div class="modal-card" onclick="event.stopPropagation()">';
+  h+='<div style="display:flex;justify-content:space-between;margin-bottom:16px"><h2 style="font-size:18px;font-weight:900;margin:0">👤 '+esc(u.username)+'</h2><button class="btn-xs btn-gray" onclick="st.selectedUser=null;render()">✕</button></div>';
+  if(u.is_banned)h+='<div class="warn-box"><p class="r" style="font-weight:900;margin:0;font-size:12px">🚫 BANNED</p></div>';
+  h+='<div class="card"><p class="lbl">USER ID</p><p class="val mono" style="word-break:break-all">'+esc(u.user_id)+'</p>';
+  h+='<p class="lbl" style="margin-top:8px">Email</p><input class="inp" id="uEmail" value="'+esc(u.email||'')+'" style="margin-top:4px">';
+  h+='<p class="lbl" style="margin-top:8px">Username</p><input class="inp" id="uUsername" value="'+esc(u.username||'')+'" style="margin-top:4px">';
+  h+='<p class="lbl" style="margin-top:8px">Referral Code</p><input class="inp mono" id="uRefCode" value="'+esc(u.referral_code||'')+'" style="margin-top:4px">';
+  h+='<p class="lbl" style="margin-top:8px">Referred By</p><input class="inp mono" id="uRefBy" value="'+esc(u.referred_by||'')+'" style="margin-top:4px">';
+  h+='<button class="btn btn-sm btn-blue" style="width:100%;margin-top:8px" onclick="saveUserMeta()">💾 Save Profile</button>';
+  h+='</div>';
+
+  h+='<div class="grid2" style="margin-bottom:12px">';
+  h+='<div class="mini-stat"><p class="l">BALANCE</p><p class="v g">$'+fmt(u.balance)+'</p></div>';
+  h+='<div class="mini-stat"><p class="l">REF BAL</p><p class="v g">$'+fmt(u.referral_balance)+'</p></div>';
+  h+='<div class="mini-stat"><p class="l">INVESTED</p><p class="v b">$'+fmt(u.invested)+'</p></div>';
+  h+='<div class="mini-stat"><p class="l">EARNED</p><p class="v y">$'+fmt(u.earned)+'</p></div>';
+  h+='</div>';
+
+  h+='<div class="card"><p style="font-size:11px;color:#00FF66;font-weight:700;margin:0 0 10px">💰 BALANCE CONTROL</p>';
+  h+='<p class="lbl">Set Main Balance</p><div style="display:flex;gap:6px;margin-top:4px"><input type="number" id="mBal" class="inp" value="'+Number(u.balance||0).toFixed(2)+'" step="0.01"><button class="btn btn-sm" onclick="adminSetBal(\''+esc(u.user_id)+'\')">SET</button></div>';
+  h+='<p class="lbl" style="margin-top:10px">Add/Subtract Balance</p><div style="display:flex;gap:6px;margin-top:4px"><input type="number" id="addBal" class="inp" placeholder="+/- amount" step="0.01"><button class="btn btn-sm btn-yellow" onclick="adminAddBal(\''+esc(u.user_id)+'\')">APPLY</button></div>';
+  h+='<p class="lbl" style="margin-top:10px">Set Referral Balance</p><div style="display:flex;gap:6px;margin-top:4px"><input type="number" id="mRefBal" class="inp" value="'+Number(u.referral_balance||0).toFixed(2)+'" step="0.01"><button class="btn btn-sm btn-yellow" onclick="adminSetRefBal(\''+esc(u.user_id)+'\')">SET</button></div>';
+  h+='</div>';
+
+  h+='<div class="card"><p style="font-size:11px;color:#A855F7;font-weight:700;margin:0 0 10px">🔐 AUTH CONTROL</p>';
+  h+='<p class="lbl">Password (Base64 stored)</p><input class="inp mono" id="viewPwd" value="'+(u.password_hash?atobSafe(u.password_hash)||'[invalid]':'(not set)')+'" style="margin-top:4px">';
+  h+='<div style="display:flex;gap:6px;margin-top:8px"><button class="btn btn-sm btn-blue" onclick="adminSetPwd(\''+esc(u.user_id)+'\')">🔑 Set Password</button><button class="btn btn-sm btn-gray" onclick="copyText(atobSafe(\''+esc(u.password_hash||'')+'\'))">📋 Copy</button></div>';
+  h+='</div>';
+
+  h+='<div class="card"><p style="font-size:11px;color:#FBBF24;font-weight:700;margin:0 0 10px">🎯 USER SETTINGS</p>';
+  h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(0,0,0,0.4);border-radius:10px;margin-bottom:6px"><span style="font-size:11px">Auto-Renew</span><div class="toggle-pill '+(u.auto_renew?'on':'')+'" onclick="adminToggleAutoRenew(\''+esc(u.user_id)+'\','+(u.auto_renew?'true':'false')+')"></div></div>';
+  h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(0,0,0,0.4);border-radius:10px;margin-bottom:6px"><span style="font-size:11px">Spin Cooldown Reset</span><button class="btn-xs btn-yellow" onclick="adminResetSpin(\''+esc(u.user_id)+'\')">RESET</button></div>';
+  h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(0,0,0,0.4);border-radius:10px"><span style="font-size:11px">Referral Lock Reset</span><button class="btn-xs btn-yellow" onclick="adminResetRefLock(\''+esc(u.user_id)+'\')">RESET</button></div>';
+  h+='</div>';
+
+  h+='<div class="card"><p style="font-size:11px;color:#EC4899;font-weight:700;margin:0 0 10px">⚡ QUICK ACTIONS</p>';
+  h+='<button class="btn btn-sm btn-blue" style="width:100%;margin-bottom:6px" onclick="openMessage(\''+esc(u.user_id)+'\')">💬 Send Message</button>';
+  h+='<button class="btn btn-sm btn-purple" style="width:100%;margin-bottom:6px" onclick="adminGivePlanPrompt(\''+esc(u.user_id)+'\')">💎 Give Plan</button>';
+  h+='<button class="btn btn-sm btn-yellow" style="width:100%;margin-bottom:6px" onclick="adminBonus(\''+esc(u.user_id)+'\')">🎁 Add Bonus</button>';
+  h+='<button class="btn btn-sm btn-dark" style="width:100%;margin-bottom:6px" onclick="openRefTree(\''+esc(u.user_id)+'\')">🌳 View Referral Tree ('+uRefs.length+')</button>';
+  h+='<button class="btn btn-sm '+(u.is_banned?'btn-green':'btn-red')+'" style="width:100%;margin-bottom:6px" onclick="toggleBan(\''+esc(u.user_id)+'\','+(u.is_banned?'true':'false')+')">'+(u.is_banned?'✅ UNBAN':'🚫 BAN')+'</button>';
+  h+='<button class="btn btn-sm btn-red" style="width:100%" onclick="adminDeleteUser(\''+esc(u.user_id)+'\',\''+esc(u.username)+'\')">🗑️ DELETE USER</button>';
+  h+='</div>';
+
+  h+='<div class="card"><p style="font-size:11px;color:#00FF66;font-weight:700;margin:0 0 10px">💎 PLANS ('+uPlans.length+')</p>';
+  if(uPlans.length===0)h+='<p style="font-size:11px;color:#666;text-align:center">No plans</p>';
+  uPlans.forEach(function(p){
+    h+='<div style="padding:10px;background:rgba(0,255,102,0.05);border:1px solid rgba(0,255,102,0.15);border-radius:10px;margin-bottom:6px">';
+    h+='<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="g" style="font-weight:700;font-size:12px">'+esc(p.plan_name)+'</span><span style="font-size:10px;color:#888">'+Number(p.days_collected||0)+'/40 · '+esc(p.status||'active')+'</span></div>';
+    h+='<div class="grid3" style="gap:4px"><button class="btn-xs btn-blue" onclick="planAddDays('+p.id+',1)">+1d</button><button class="btn-xs btn-blue" onclick="planAddDays('+p.id+',5)">+5d</button><button class="btn-xs btn-red" onclick="planAddDays('+p.id+',-1)">-1d</button></div>';
+    h+='<div class="grid3" style="gap:4px;margin-top:4px"><button class="btn-xs btn-yellow" onclick="planCollectNow('+p.id+')">Collect</button><button class="btn-xs btn-pink" onclick="planReset('+p.id+')">Reset</button><button class="btn-xs btn-gray" onclick="planCancel('+p.id+')">Cancel</button></div>';
+    h+='</div>';
+  });
+  h+='</div>';
+
+  h+='<div class="card"><p style="font-size:11px;color:#FBBF24;font-weight:700;margin:0 0 10px">💰 RECENT DEPOSITS ('+uDeps.length+')</p>';
+  uDeps.slice(0,5).forEach(function(d){h+='<div style="padding:6px 10px;background:rgba(0,0,0,0.3);border-radius:8px;margin-bottom:4px;font-size:11px;display:flex;justify-content:space-between"><span>$'+fmt(d.amount)+'</span><span style="color:#888">'+esc(d.status)+'</span></div>';});
+  h+='</div>';
+
+  h+='<div class="card"><p style="font-size:11px;color:#EF4444;font-weight:700;margin:0 0 10px">💸 RECENT WITHDRAWALS ('+uWd.length+')</p>';
+  uWd.slice(0,5).forEach(function(d){h+='<div style="padding:6px 10px;background:rgba(0,0,0,0.3);border-radius:8px;margin-bottom:4px;font-size:11px;display:flex;justify-content:space-between"><span>$'+fmt(d.amount)+'</span><span style="color:#888">'+esc(d.status)+'</span></div>';});
+  h+='</div>';
+
+  h+='</div></div>';
+  return h;
 }
 
-function validateJSON(id) {
-  var el = $(id);
-  if (!el) return;
-  try { JSON.parse(el.value); toast('Valid JSON'); }
-  catch(e) { toast(e.message, 'error'); }
-}
-
-async function saveAllConfig() {
-  var updates = [];
-  CFG_SECTIONS.forEach(function(sec) {
-    sec.fields.forEach(function(f) {
-      var el = $('cfg_' + f.k);
-      if (!el) return;
-      var val = String(el.value || '').trim();
-      if (f.t === 'json') {
-        try { var p = JSON.parse(val); val = JSON.stringify(p); }
-        catch(e) { return toast('Invalid JSON in "' + f.l + '": ' + e.message, 'error'); }
-      }
-      updates.push({key: f.k, value: val, updated_at: new Date().toISOString()});
+/* ============== REFERRAL TREE ============== */
+function refTreeV(){
+  if(!st.refTreeUser)return '';
+  var root = st.users.find(function(x){return x.user_id===st.refTreeUser;});
+  if(!root)return '';
+  var h='<div class="modal" onclick="st.showRefTree=false;st.refTreeUser=null;render()"><div class="modal-card" onclick="event.stopPropagation()">';
+  h+='<div style="display:flex;justify-content:space-between;margin-bottom:16px"><h2 style="font-size:16px;font-weight:900;margin:0">🌳 Referral Tree · '+esc(root.username)+'</h2><button class="btn-xs btn-gray" onclick="st.showRefTree=false;st.refTreeUser=null;render()">✕</button></div>';
+  // Walk up
+  var upChain=[root];
+  var cur=root;
+  var safety=0;
+  while(cur.referred_by && safety<15){
+    var p = st.users.find(function(x){return x.referral_code===cur.referred_by;});
+    if(!p)break;
+    upChain.unshift(p);
+    cur=p;
+    safety++;
+  }
+  h+='<p style="font-size:11px;color:#FBBF24;font-weight:700;margin:0 0 8px">⬆️ UPLINE CHAIN</p>';
+  upChain.forEach(function(u,i){
+    var isRoot = u.user_id===root.user_id;
+    h+='<div style="padding:8px 12px;background:'+(isRoot?'rgba(0,255,102,0.12)':'rgba(0,0,0,0.4)')+';border-radius:8px;margin-bottom:4px;font-size:11px;border:1px solid '+(isRoot?'rgba(0,255,102,0.4)':'rgba(255,255,255,0.08)')+'"><b>L'+i+'</b> · '+esc(u.username)+' <span style="color:#888">('+esc(u.referral_code)+')</span></div>';
+  });
+  // Down (L1-L10)
+  h+='<p style="font-size:11px;color:#00FF66;font-weight:700;margin:16px 0 8px">⬇️ DOWNLINE TREE</p>';
+  function getChildren(code){
+    return st.users.filter(function(x){return x.referred_by===code;});
+  }
+  function renderLevel(code, level){
+    if(level>10)return '';
+    var kids = getChildren(code);
+    if(kids.length===0)return '';
+    var out='';
+    kids.forEach(function(k){
+      out+='<div style="margin-left:'+(level*12)+'px;padding:6px 10px;background:rgba(0,255,102,0.04);border-left:2px solid rgba(0,255,102,0.3);border-radius:0 8px 8px 0;margin-bottom:4px;font-size:11px"><b class="g">L'+level+'</b> · '+esc(k.username)+' <span style="color:#888">$'+fmt(k.balance)+'</span></div>';
+      out+=renderLevel(k.referral_code, level+1);
     });
-  });
-  if (!confirm('Save ' + updates.length + ' settings?')) return;
-  toast('Saving...', 'warn');
-  var r = await sb.from('site_config').upsert(updates, {onConflict: 'key'});
-  if (r.error) return toast(r.error.message, 'error');
-  logAction('Save Config', updates.length + ' keys');
-  toast('All ' + updates.length + ' settings saved!');
-  await refreshConfig();
-}
-
-async function refreshConfig() {
-  var r = await sb.from('site_config').select('*');
-  if (r.data) {
-    var obj = {};
-    r.data.forEach(function(x) { obj[x.key] = x.value; });
-    st.siteConfig = obj;
+    return out;
   }
-  render();
+  var tree = renderLevel(root.referral_code, 1);
+  h+=tree||'<p style="font-size:11px;color:#666">No downline yet</p>';
+  h+='</div></div>';
+  return h;
 }
 
-function plansDBV() {
-  var list = (st.plansDB || []).slice().sort(function(a,b) { return (a.sort_order||0) - (b.sort_order||0); });
-  var h = '<button class="btn" style="width:100%;margin-bottom:12px" onclick="openPlanDBModal(null)">ADD NEW PLAN</button>';
-  if (list.length === 0) return h + '<div class="card" style="text-align:center;color:#666;padding:40px">No plans yet</div>';
-  list.forEach(function(p) {
-    var roi = Number(p.deposit) > 0 ? ((Number(p.daily)/Number(p.deposit))*100).toFixed(1) : 0;
-    h += '<div class="card" style="' + (p.is_active ? '' : 'opacity:0.6;') + '">';
-    h += '<div class="row"><div style="display:flex;gap:10px;align-items:center"><div style="width:44px;height:44px;border-radius:12px;background:' + p.color + '22;border:1px solid ' + p.color + '66;display:flex;align-items:center;justify-content:center;font-size:22px">' + p.icon + '</div><div><p style="font-weight:900;margin:0;font-size:15px;color:' + p.color + '">' + esc(p.name) + '</p><p class="lbl" style="margin:2px 0 0">Key: ' + esc(p.plan_key) + '</p></div></div><div style="text-align:right"><p class="g" style="font-size:18px;font-weight:900;margin:0">$' + fmt(p.deposit) + '</p><span class="badge ' + (p.is_active ? 'ba' : 'br') + '" style="margin-top:4px">' + (p.is_active ? 'ACTIVE' : 'OFF') + '</span></div></div>';
-    h += '<div class="divider"></div>';
-    h += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:11px"><div><p class="lbl">Daily</p><p class="val g">$' + fmt(p.daily) + '</p></div><div><p class="lbl">Total</p><p class="val g">$' + fmt(p.total) + '</p></div><div><p class="lbl">ROI</p><p class="val">' + roi + '%/d</p></div></div>';
-    h += '<div style="display:flex;gap:6px;margin-top:10px"><button class="btn btn-sm btn-blue" style="flex:1" onclick="openPlanDBModal(' + p.id + ')">Edit</button><button class="btn btn-sm ' + (p.is_active ? 'btn-yellow' : 'btn-green') + '" style="flex:1" onclick="togglePlanActive(' + p.id + ',' + (p.is_active ? 'true' : 'false') + ')">' + (p.is_active ? 'Off' : 'On') + '</button><button class="btn btn-sm btn-red" onclick="deletePlan(' + p.id + ',\'' + esc(p.name) + '\')">Del</button></div></div>';
+/* ============== ACTIVE PLANS ============== */
+function plansV(){
+  var list=st.userPlans.slice();
+  if(list.length===0)return '<div class="card" style="text-align:center;color:#666;padding:40px">No active plans</div>';
+  var h='<div class="info-box"><p style="font-size:11px;color:#60A5FA;margin:0">Total: '+list.length+' plans · Active: '+list.filter(function(p){return Number(p.days_collected)<40&&p.status!=='completed';}).length+'</p></div>';
+  list.slice(0,80).forEach(function(p){
+    var s=String(p.status||'active');
+    var isDone=Number(p.days_collected)>=40||s==='completed';
+    var bd=isDone?'ba':s==='cancelled'?'br':'bp';
+    h+='<div class="card"><div class="row"><div><p style="font-weight:800;margin:0;font-size:14px">'+esc(p.username||'?')+'</p><p class="lbl" style="margin:4px 0 0">'+esc(p.user_id)+'</p></div><div style="text-align:right"><p class="g" style="font-size:16px;font-weight:900;margin:0">'+esc(p.plan_name)+'</p><span class="badge '+bd+'" style="margin-top:4px">'+(isDone?'COMPLETED':s.toUpperCase())+'</span></div></div>';
+    h+='<div class="divider"></div><div class="grid2" style="font-size:11px"><div><p class="lbl">Invested</p><p class="val g">$'+fmt(p.deposit)+'</p></div><div><p class="lbl">Daily</p><p class="val g">$'+fmt(p.daily)+'</p></div><div><p class="lbl">Progress</p><p class="val">'+Number(p.days_collected||0)+' / 40</p></div><div><p class="lbl">Expires</p><p class="val">'+(p.expires_at?String(p.expires_at).slice(0,10):'-')+'</p></div></div>';
+    if(!isDone)h+='<div class="divider"></div><div class="grid3" style="gap:6px"><button class="btn-sm btn-blue" onclick="planAddDays('+p.id+',5)">+5d</button><button class="btn-sm btn-yellow" onclick="planCollectNow('+p.id+')">Collect</button><button class="btn-sm btn-red" onclick="planCancel('+p.id+')">Cancel</button></div>';
+    h+='</div>';
   });
   return h;
 }
 
-function openPlanDBModal(id) { st.editPlan = id; st.showPlanModal = true; render(); }
+/* ============== PLANS DB ============== */
+function plansDBV(){
+  var list=(st.plansDB||[]).slice().sort(function(a,b){return (a.sort_order||0)-(b.sort_order||0);});
+  var h='<div class="grid2" style="margin-bottom:12px"><button class="btn" onclick="openPlanDBModal(null)">+ ADD PLAN</button><button class="btn btn-blue" onclick="resetDefaultPlans()">🔄 Reset Defaults</button></div>';
+  if(list.length===0)return h+'<div class="card" style="text-align:center;color:#666;padding:40px">No plans yet</div>';
+  list.forEach(function(p){
+    var roi=Number(p.deposit)>0?((Number(p.daily)/Number(p.deposit))*100).toFixed(1):0;
+    h+='<div class="card" style="'+(p.is_active?'':'opacity:0.6;')+'">';
+    h+='<div class="row"><div style="display:flex;gap:10px;align-items:center"><div style="width:44px;height:44px;border-radius:12px;background:'+p.color+'22;border:1px solid '+p.color+'66;display:flex;align-items:center;justify-content:center;font-size:22px">'+p.icon+'</div><div><p style="font-weight:900;margin:0;font-size:15px;color:'+p.color+'">'+esc(p.name)+'</p><p class="lbl" style="margin:2px 0 0">Key: '+esc(p.plan_key)+'</p></div></div><div style="text-align:right"><p class="g" style="font-size:18px;font-weight:900;margin:0">$'+fmt(p.deposit)+'</p><span class="badge '+(p.is_active?'ba':'br')+'" style="margin-top:4px">'+(p.is_active?'ACTIVE':'OFF')+'</span></div></div>';
+    h+='<div class="divider"></div><div class="grid3" style="font-size:11px"><div><p class="lbl">Daily</p><p class="val g">$'+fmt(p.daily)+'</p></div><div><p class="lbl">Total</p><p class="val g">$'+fmt(p.total)+'</p></div><div><p class="lbl">ROI</p><p class="val">'+roi+'%/d</p></div></div>';
+    h+='<div style="display:flex;gap:6px;margin-top:10px"><button class="btn-sm btn-blue" style="flex:1" onclick="openPlanDBModal('+p.id+')">Edit</button><button class="btn-sm '+(p.is_active?'btn-yellow':'btn-green')+'" style="flex:1" onclick="togglePlanActive('+p.id+','+(p.is_active?'true':'false')+')">'+(p.is_active?'Off':'On')+'</button><button class="btn-sm btn-red" onclick="deletePlan('+p.id+',\''+esc(p.name)+'\')">Del</button></div></div>';
+  });
+  return h;
+}
 
-async function savePlanDB() {
-  var key = $('plKey').value.trim().toLowerCase();
-  var name = $('plName').value.trim().toUpperCase();
-  var dep = parseFloat($('plDep').value);
-  var daily = parseFloat($('plDaily').value);
-  var total = parseFloat($('plTotal').value);
-  var color = $('plColor').value.trim() || '#00FF66';
-  var icon = $('plIcon').value.trim() || '💎';
-  var sort = parseInt($('plSort').value) || 0;
-  var active = $('plActive').checked;
-  if (!key || key.length < 2) return toast('Enter plan key', 'error');
-  if (!name) return toast('Enter name', 'error');
-  if (!dep || dep <= 0) return toast('Enter valid deposit', 'error');
-  if (!daily || daily <= 0) return toast('Enter valid daily', 'error');
-  if (!total || total <= 0) return toast('Enter valid total', 'error');
-  var data = {plan_key: key, name: name, deposit: dep, daily: daily, total: total, color: color, icon: icon, is_active: active, sort_order: sort};
+async function resetDefaultPlans(){
+  if(!confirm('Reset plan defaults? Existing plans will NOT be deleted.'))return;
+  var arr=[];
+  Object.keys(DEFAULT_PLANS).forEach(function(name,i){
+    var p=DEFAULT_PLANS[name];
+    arr.push({plan_key:p.id,name:name,deposit:p.deposit,daily:p.daily,total:p.total,color:'#00FF66',icon:'💎',is_active:true,sort_order:i});
+  });
+  var r=await sb.from('investment_plans').upsert(arr,{onConflict:'plan_key'});
+  if(r.error)return toast(r.error.message,'error');
+  logAction('Reset Plans','Defaults');
+  toast('Defaults applied');
+  await refresh();
+}
+
+function openPlanDBModal(id){st.editPlan=id;st.showPlanModal=true;render();}
+async function savePlanDB(){
+  var key=$('plKey').value.trim().toLowerCase();
+  var name=$('plName').value.trim().toUpperCase();
+  var dep=parseFloat($('plDep').value);
+  var daily=parseFloat($('plDaily').value);
+  var total=parseFloat($('plTotal').value);
+  var color=$('plColor').value.trim()||'#00FF66';
+  var icon=$('plIcon').value.trim()||'💎';
+  var sort=parseInt($('plSort').value)||0;
+  var active=$('plActive').checked;
+  if(!key||key.length<2)return toast('Enter plan key','error');
+  if(!name)return toast('Enter name','error');
+  if(!dep||dep<=0)return toast('Invalid deposit','error');
+  if(!daily||daily<=0)return toast('Invalid daily','error');
+  if(!total||total<=0)return toast('Invalid total','error');
+  var data={plan_key:key,name:name,deposit:dep,daily:daily,total:total,color:color,icon:icon,is_active:active,sort_order:sort};
   var r;
-  if (st.editPlan) { delete data.plan_key; r = await sb.from('investment_plans').update(data).eq('id', st.editPlan); }
-  else { r = await sb.from('investment_plans').insert([data]); }
-  if (r.error) return toast(r.error.message, 'error');
-  logAction(st.editPlan ? 'Edit Plan' : 'Add Plan', name);
+  if(st.editPlan){delete data.plan_key;r=await sb.from('investment_plans').update(data).eq('id',st.editPlan);}
+  else{r=await sb.from('investment_plans').insert([data]);}
+  if(r.error)return toast(r.error.message,'error');
+  logAction(st.editPlan?'Edit Plan':'Add Plan',name);
   toast('Plan saved!');
-  st.showPlanModal = false; st.editPlan = null;
-  await refreshPlansDB();
-  render();
-}
-
-async function togglePlanActive(id, current) {
-  var r = await sb.from('investment_plans').update({is_active: !current}).eq('id', id);
-  if (!r.error) { logAction('Toggle Plan', '#' + id); await refreshPlansDB(); render(); }
-  else toast(r.error.message, 'error');
-}
-
-async function deletePlan(id, name) {
-  if (!confirm('Delete plan "' + name + '"?')) return;
-  var r = await sb.from('investment_plans').delete().eq('id', id);
-  if (!r.error) { logAction('Delete Plan', name); toast('Deleted'); await refreshPlansDB(); render(); }
-  else toast(r.error.message, 'error');
-}
-
-async function refreshPlansDB() {
-  var r = await sb.from('investment_plans').select('*').order('sort_order', {ascending: true});
-  if (r.data) st.plansDB = r.data;
-}
-
-function promosV() {
-  var h = '<button class="btn" style="width:100%;margin-bottom:12px" onclick="openPromoModal()">CREATE NEW PROMO</button>';
-  var totalRedeemed = st.promos.reduce(function(a,b) { return a + Number(b.used_count||0); }, 0);
-  var totalGiven = st.promos.reduce(function(a,b) { return a + (Number(b.used_count||0) * Number(b.amount||0)); }, 0);
-  h += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px"><div class="stat"><p style="font-size:9px;color:#666;margin:0 0 4px">CODES</p><p class="g" style="font-size:18px;font-weight:900;margin:0">' + st.promos.length + '</p></div><div class="stat"><p style="font-size:9px;color:#666;margin:0 0 4px">REDEEMED</p><p class="g" style="font-size:18px;font-weight:900;margin:0">' + totalRedeemed + '</p></div><div class="stat"><p style="font-size:9px;color:#666;margin:0 0 4px">GIVEN</p><p class="g" style="font-size:18px;font-weight:900;margin:0">$' + totalGiven.toFixed(0) + '</p></div></div>';
-  if (st.promos.length === 0) return h + '<div class="card" style="text-align:center;color:#666;padding:40px">No promo codes yet</div>';
-  var active = st.promos.filter(function(p) { return p.is_active; });
-  var inactive = st.promos.filter(function(p) { return !p.is_active; });
-  h += '<p style="font-size:10px;color:#00FF66;font-weight:700;margin:0 0 8px">ACTIVE (' + active.length + ')</p>';
-  active.forEach(function(p) { h += promoCardHTML(p); });
-  if (inactive.length > 0) {
-    h += '<p style="font-size:10px;color:#888;font-weight:700;margin:16px 0 8px">INACTIVE (' + inactive.length + ')</p>';
-    inactive.forEach(function(p) { h += promoCardHTML(p); });
-  }
-  return h;
-}
-
-function promoCardHTML(p) {
-  var used = Number(p.used_count || 0);
-  var max = Number(p.max_uses || 100);
-  var pct = max > 0 ? (used / max * 100) : 0;
-  var expired = used >= max;
-  var isActive = p.is_active && !expired;
-  return '<div class="promo-card ' + (isActive ? '' : 'promo-off') + '">' +
-    '<div class="row"><div><p style="font-weight:900;margin:0;font-size:16px;letter-spacing:1px;color:#FFD700">' + esc(p.code) + '</p><p class="lbl" style="margin:4px 0 0">' + esc(p.label || 'Bonus') + '</p></div><div style="text-align:right"><p class="g" style="font-size:20px;font-weight:900;margin:0">$' + fmt(p.amount) + '</p><span class="badge ' + (expired ? 'br' : p.is_active ? 'ba' : 'bp') + '" style="margin-top:4px">' + (expired ? 'EXPIRED' : p.is_active ? 'ACTIVE' : 'INACTIVE') + '</span></div></div>' +
-    '<div class="divider"></div>' +
-    '<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:10px;color:#888;margin-bottom:4px"><span>Used: ' + used + ' / ' + max + '</span><span>' + pct.toFixed(0) + '%</span></div><div style="height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:#FFD700"></div></div></div>' +
-    '<div style="display:flex;gap:6px"><button class="btn btn-sm btn-gray" style="flex:1" onclick="copyCode(\'' + esc(p.code) + '\')">Copy</button><button class="btn btn-sm ' + (p.is_active ? 'btn-yellow' : 'btn-green') + '" style="flex:1" onclick="togglePromo(' + p.id + ',' + (p.is_active ? 'true' : 'false') + ')">' + (p.is_active ? 'Disable' : 'Enable') + '</button><button class="btn btn-sm btn-red" onclick="deletePromo(' + p.id + ',\'' + esc(p.code) + '\')">Del</button></div></div>';
-}
-
-function openPromoModal() { st.showPromoModal = true; render(); }
-function copyCode(c) { try { navigator.clipboard.writeText(c); toast('Copied: ' + c); } catch(e) { prompt('Copy:', c); } }
-async function togglePromo(id, current) { var r = await sb.from('promo_codes').update({is_active: !current}).eq('id', id); if (!r.error) { toast('Done'); await refresh(); } else toast(r.error.message, 'error'); }
-async function deletePromo(id, code) { if (!confirm('Delete "' + code + '"?')) return; var r = await sb.from('promo_codes').delete().eq('id', id); if (!r.error) { toast('Deleted'); await refresh(); } else toast(r.error.message, 'error'); }
-
-async function createPromo() {
-  var code = $('pCode').value.trim().toUpperCase();
-  var amt = parseFloat($('pAmt').value);
-  var maxU = parseInt($('pMax').value) || 100;
-  var label = $('pLabel').value.trim() || 'Bonus';
-  if (!code || code.length < 3) return toast('Enter code', 'error');
-  if (!amt || amt <= 0) return toast('Enter amount', 'error');
-  var ex = st.promos.find(function(p) { return p.code === code; });
-  if (ex) return toast('Code exists', 'error');
-  var r = await sb.from('promo_codes').insert([{code: code, amount: amt, max_uses: maxU, used_count: 0, label: label, is_active: true}]);
-  if (r.error) return toast(r.error.message, 'error');
-  logAction('Create Promo', code);
-  toast('Created: ' + code);
-  st.showPromoModal = false;
+  st.showPlanModal=false;st.editPlan=null;
   await refresh();
 }
+async function togglePlanActive(id,current){var r=await sb.from('investment_plans').update({is_active:!current}).eq('id',id);if(!r.error){logAction('Toggle Plan','#'+id);await refresh();}else toast(r.error.message,'error');}
+async function deletePlan(id,name){if(!confirm('Delete plan "'+name+'"?'))return;var r=await sb.from('investment_plans').delete().eq('id',id);if(!r.error){logAction('Delete Plan',name);toast('Deleted');await refresh();}else toast(r.error.message,'error');}
 
-function shareBonusV() {
-  var list = st.shareBonus.slice();
-  if (st.sbFilter !== 'all') list = list.filter(function(s) { return s.status === st.sbFilter; });
-  var h = '<div style="margin-bottom:12px">';
-  ['all','pending','approved','rejected'].forEach(function(f) {
-    var cnt = f === 'all' ? st.shareBonus.length : st.shareBonus.filter(function(x) { return x.status === f; }).length;
-    h += '<button class="filter-btn ' + (st.sbFilter === f ? 'on' : '') + '" onclick="st.sbFilter=\'' + f + '\';render()">' + f.charAt(0).toUpperCase() + f.slice(1) + ' (' + cnt + ')</button>';
-  });
-  h += '</div>';
-  if (list.length === 0) return h + '<div class="card" style="text-align:center;color:#666;padding:40px">No submissions</div>';
-  list.forEach(function(s) {
-    var stt = s.status || 'pending';
-    var bd = stt === 'approved' ? 'ba' : stt === 'rejected' ? 'br' : 'bp';
-    h += '<div class="card"><div class="row"><div><p style="font-weight:700;margin:0;font-size:14px">' + esc(s.username || '?') + '</p><p class="lbl" style="margin:4px 0 0">' + esc(s.user_id) + '</p></div><div style="text-align:right"><span class="badge ' + bd + '">' + stt.toUpperCase() + '</span></div></div>';
-    if (s.screenshot) h += '<img src="' + s.screenshot + '" class="shot-img" onclick="window.open(this.src)">';
-    if (stt === 'pending') h += '<div class="divider"></div><div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="approveSB(' + s.id + ',\'' + esc(s.user_id) + '\',\'' + esc(s.username) + '\')">APPROVE</button><button class="btn btn-red btn-sm" onclick="rejectSBPrompt(' + s.id + ',\'' + esc(s.user_id) + '\')">REJECT</button></div>';
-    h += '</div>';
-  });
-  return h;
-}
-
-async function approveSB(id, uid, uname) {
-  if (!confirm('Approve for ' + uname + '?')) return;
-  var amt = parseFloat((st.siteConfig && st.siteConfig.share_bonus) || '0.10');
-  var r = await sb.from('share_bonus').update({status: 'approved'}).eq('id', id);
-  if (r.error) return toast(r.error.message, 'error');
-  var u = st.users.find(function(x) { return x.user_id === uid; });
-  if (u) {
-    var nb = Number(u.balance || 0) + amt;
-    await sb.from('users').update({balance: nb}).eq('user_id', uid);
-    await sb.from('notifications').insert([{user_id: uid, title: 'Share Bonus Approved', message: '+$' + amt.toFixed(2) + ' credited!', type: 'bonus', is_read: false}]);
-    await sb.from('users').update({unread_count: Number(u.unread_count || 0) + 1}).eq('user_id', uid);
-  }
-  logAction('Approve SB', uname);
-  toast('Approved + $' + amt);
-  await refresh();
-}
-
-function rejectSBPrompt(id, uid) {
-  var r = prompt('Reject reason:', 'Invalid screenshot');
-  if (r === null) return;
-  rejectSB(id, uid, r || 'No reason');
-}
-
-async function rejectSB(id, uid, reason) {
-  var r = await sb.from('share_bonus').update({status: 'rejected', admin_note: reason}).eq('id', id);
-  if (!r.error) {
-    await sb.from('notifications').insert([{user_id: uid, title: 'Share Bonus Rejected', message: 'Reason: ' + reason, type: 'warning', is_read: false}]);
-    var u = st.users.find(function(x) { return x.user_id === uid; });
-    if (u) await sb.from('users').update({unread_count: Number(u.unread_count || 0) + 1}).eq('user_id', uid);
-    toast('Rejected');
-    await refresh();
-  } else toast(r.error.message, 'error');
-}
-
-function winnersV() {
-  var h = '<button class="btn" style="width:100%;margin-bottom:12px" onclick="openWinnerModal(null)">ADD WINNER</button>';
-  if (st.winners.length === 0) return h + '<div class="card" style="text-align:center;color:#666;padding:40px">No winners yet</div>';
-  var sorted = st.winners.slice().sort(function(a,b) { return Number(b.amount || 0) - Number(a.amount || 0); });
-  sorted.forEach(function(w, i) {
-    var rank = i + 1;
-    var medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '🏅';
-    h += '<div class="card" style="padding:12px"><div class="row" style="margin-bottom:6px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:20px">' + medal + '</span><div><p style="font-weight:800;margin:0;font-size:14px">' + esc(w.name) + '</p><p class="lbl" style="margin:2px 0 0">' + esc(w.country || '🌍') + ' · ' + esc(w.period || 'WEEK') + '</p></div></div><div style="text-align:right"><p class="g" style="font-size:18px;font-weight:900;margin:0">$' + fmt(w.amount) + '</p></div></div><div style="display:flex;gap:6px;margin-top:8px"><button class="btn btn-sm btn-blue" style="flex:1" onclick="openWinnerModal(' + w.id + ')">Edit</button><button class="btn btn-sm btn-red" onclick="deleteWinner(' + w.id + ',\'' + esc(w.name) + '\')">Del</button></div></div>';
+/* ============== DEPOSITS ============== */
+function depsV(){
+  var list=st.deps.slice();
+  if(st.depFilter!=='all')list=list.filter(function(d){return d.status===st.depFilter;});
+  if(st.depSearch)list=list.filter(function(d){return (d.username||'').toLowerCase().indexOf(st.depSearch.toLowerCase())>-1||String(d.user_id||'').indexOf(st.depSearch)>-1||String(d.ref||'').indexOf(st.depSearch)>-1;});
+  var h='<div class="grid2" style="margin-bottom:12px"><button class="btn" onclick="st.showAddDeposit=true;render()">+ Manual Deposit</button><button class="btn btn-blue" onclick="exportDeps()">📥 Export CSV</button></div>';
+  h+='<input class="inp" placeholder="Search username/id/UTR..." oninput="st.depSearch=this.value;render()" value="'+esc(st.depSearch)+'" style="margin-bottom:8px">';
+  h+='<div style="margin-bottom:12px">';
+  ['all','pending','approved','rejected','expired'].forEach(function(f){var c=f==='all'?st.deps.length:st.deps.filter(function(x){return x.status===f;}).length;h+='<button class="filter-btn '+(st.depFilter===f?'on':'')+'" onclick="st.depFilter=\''+f+'\';render()">'+f.charAt(0).toUpperCase()+f.slice(1)+' ('+c+')</button>';});
+  h+='</div>';
+  var pc=list.filter(function(d){return d.status==='pending';}).length;
+  if(pc>1)h+='<button class="btn btn-sm" style="width:100%;margin-bottom:12px" onclick="bulkApprove()">✅ APPROVE ALL '+pc+' PENDING</button>';
+  if(list.length===0)return h+'<div class="card" style="text-align:center;color:#666;padding:40px">No deposits</div>';
+  list.slice(0,80).forEach(function(d){
+    var s=String(d.status||'pending');
+    var bd=s==='approved'?'ba':(s==='rejected'?'br':(s==='expired'?'bb':'bp'));
+    h+='<div class="card"><div class="row"><div><p style="font-weight:700;margin:0;font-size:14px">'+esc(d.username||'?')+'</p><p class="lbl" style="margin:4px 0 0">'+esc(d.user_id)+'</p></div><div style="text-align:right"><p class="g" style="font-size:22px;font-weight:900;margin:0">$'+fmt(d.amount)+'</p><span class="badge '+bd+'" style="margin-top:4px">'+s.toUpperCase()+'</span></div></div>';
+    h+='<div class="divider"></div><div style="font-size:11px"><p class="lbl">Method</p><p class="val">'+esc(d.method||'-')+'</p><p class="lbl" style="margin-top:6px">UTR / Ref</p><p class="val mono" style="word-break:break-all">'+esc(d.ref||'-')+'</p><p class="lbl" style="margin-top:6px">Date</p><p class="val">'+(d.created_at?String(d.created_at).slice(0,16).replace('T',' '):'-')+'</p></div>';
+    h+='<div class="divider"></div><div style="display:flex;gap:6px;flex-wrap:wrap">';
+    if(s==='pending'){h+='<button class="btn-sm" style="flex:1" onclick="appDep('+d.id+',\''+esc(d.user_id)+'\','+Number(d.amount)+')">✅ APPROVE</button><button class="btn-sm btn-red" onclick="rejDepPrompt('+d.id+')">❌ REJECT</button>';}
+    h+='<button class="btn-sm btn-blue" onclick="openEditTx(\'deposit\','+d.id+')">✏️ Edit</button><button class="btn-sm btn-red" onclick="deleteTx(\'deposits\','+d.id+')">🗑️</button>';
+    h+='</div></div>';
   });
   return h;
 }
 
-function openWinnerModal(id) { st.editWinner = id; st.showWinnerModal = true; render(); }
-
-async function saveWinner() {
-  var name = $('wName').value.trim();
-  var country = $('wCountry').value.trim() || '🌍';
-  var amount = parseFloat($('wAmount').value);
-  var period = $('wPeriod').value;
-  if (!name) return toast('Enter name', 'error');
-  if (!amount || amount <= 0) return toast('Enter amount', 'error');
-  var data = {name: name, country: country, amount: amount, period: period};
-  var r;
-  if (st.editWinner) r = await sb.from('fake_winners').update(data).eq('id', st.editWinner);
-  else r = await sb.from('fake_winners').insert([data]);
-  if (r.error) return toast(r.error.message, 'error');
-  toast('Saved');
-  st.showWinnerModal = false; st.editWinner = null;
-  await refreshWinners();
-  render();
+function exportDeps(){
+  var rows=[['id','user_id','username','amount','method','ref','status','created_at']];
+  st.deps.forEach(function(d){rows.push([d.id,d.user_id,d.username||'',d.amount,d.method||'',d.ref||'',d.status,d.created_at||'']);});
+  downloadCSV('deposits_'+Date.now()+'.csv',rows);
+  toast('Exported');
 }
 
-async function deleteWinner(id, name) { if (!confirm('Delete "' + name + '"?')) return; var r = await sb.from('fake_winners').delete().eq('id', id); if (!r.error) { toast('Deleted'); await refreshWinners(); render(); } else toast(r.error.message, 'error'); }
-
-async function refreshWinners() {
-  try { var r = await sb.from('fake_winners').select('*').order('id', {ascending: false}); if (r.data) st.winners = r.data; }
-  catch(e) { st.winners = []; }
-}
-
-function dashV() {
-  var h = '<div class="card"><p style="font-size:10px;color:#666;margin:0 0 12px">RECENT DEPOSITS</p>';
-  var days = [];
-  for (var i = 6; i >= 0; i--) {
-    var d = new Date(); d.setDate(d.getDate() - i); d.setHours(0,0,0,0);
-    days.push({date: d, count: 0, amount: 0});
+async function appDep(id,uid,amt){
+  if(!confirm('Approve $'+amt+'?'))return;
+  var r=await sb.from('deposits').update({status:'approved'}).eq('id',id);
+  if(r.error)return toast(r.error.message,'error');
+  var u=st.users.find(function(x){return x.user_id===uid;});
+  if(u){
+    var nb=Number(u.balance||0)+Number(amt);
+    await sb.from('users').update({balance:nb}).eq('user_id',uid);
+    await sb.from('notifications').insert([{user_id:uid,title:'Deposit Approved',message:'+$'+Number(amt).toFixed(2)+' credited!',type:'bonus',is_read:false}]);
+    await sb.from('users').update({unread_count:Number(u.unread_count||0)+1}).eq('user_id',uid);
   }
-  st.deps.forEach(function(dep) {
-    var dd = new Date(dep.created_at); dd.setHours(0,0,0,0);
-    for (var i = 0; i < days.length; i++) {
-      if (days[i].date.toDateString() === dd.toDateString()) { days[i].count++; days[i].amount += Number(dep.amount || 0); }
-    }
-  });
-  var max = Math.max.apply(null, days.map(function(d) { return d.count; })) || 1;
-  h += '<div style="display:flex;align-items:flex-end;gap:6px;height:100px;margin-bottom:8px">';
-  days.forEach(function(d, i) {
-    var pct = (d.count/max)*100; if (pct < 8 && d.count > 0) pct = 8;
-    var isToday = i === 6;
-    h += '<div style="flex:1;text-align:center"><div style="height:' + pct + '%;background:' + (isToday ? '#00FF66' : 'rgba(0,255,102,0.4)') + ';border-radius:4px 4px 0 0"></div><p style="font-size:9px;color:' + (isToday ? '#00FF66' : '#555') + ';margin:4px 0 0">' + ['S','M','T','W','T','F','S'][d.date.getDay()] + '</p></div>';
-  });
-  h += '</div></div>';
-  return h;
-}
-
-function usersV() {
-  var list = st.users.slice();
-  if (st.search) list = list.filter(function(u) { return (u.username || '').toLowerCase().indexOf(st.search.toLowerCase()) > -1 || String(u.user_id || '').indexOf(st.search) > -1; });
-  var h = '<input class="inp" placeholder="Search user..." style="margin-bottom:12px" oninput="st.search=this.value;render()" value="' + esc(st.search) + '">';
-  h += '<p style="font-size:10px;color:#666;margin:0 0 8px">Showing ' + list.length + ' of ' + st.users.length + '</p>';
-  if (list.length === 0) return h + '<div class="card" style="text-align:center;color:#666;padding:40px">No users</div>';
-  list.forEach(function(u) {
-    var userPlans = st.userPlans.filter(function(p) { return p.user_id === u.user_id; });
-    var activePlan = userPlans.find(function(p) { return Number(p.days_collected) < 40 && p.status !== 'completed'; });
-    var unread = Number(u.unread_count || 0);
-    h += '<div class="card" onclick="st.selectedUser=\'' + esc(u.user_id) + '\';render()" style="cursor:pointer">';
-    h += '<div class="row"><div><p style="font-weight:800;margin:0;font-size:15px">' + esc(u.username || '?') + (unread > 0 ? ' <span style="background:#EF4444;color:#fff;font-size:9px;padding:2px 6px;border-radius:10px">' + unread + '</span>' : '') + (u.is_banned ? ' <span class="badge br">BANNED</span>' : '') + '</p><p class="lbl" style="margin:4px 0 0">' + esc(u.user_id) + '</p></div><div style="text-align:right"><p class="g" style="font-size:22px;font-weight:900;margin:0">$' + fmt(u.balance) + '</p></div></div>';
-    if (activePlan) h += '<div style="margin-top:8px;padding:8px 10px;background:rgba(0,255,102,0.06);border-radius:10px;border:1px solid rgba(0,255,102,0.15);display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:#00FF66;font-weight:700">💎 ' + esc(activePlan.plan_name) + '</span><span style="font-size:10px;color:#666">' + Number(activePlan.days_collected || 0) + '/40</span></div>';
-    h += '</div>';
-  });
-  return h;
-}
-
-function plansV() {
-  var list = st.userPlans.slice();
-  if (list.length === 0) return '<div class="card" style="text-align:center;color:#666;padding:40px">No plans yet</div>';
-  var h = '';
-  list.forEach(function(p) {
-    var s = String(p.status || 'active');
-    var isDone = Number(p.days_collected) >= 40 || s === 'completed';
-    var bd = isDone ? 'ba' : s === 'cancelled' ? 'br' : 'bp';
-    h += '<div class="card"><div class="row"><div><p style="font-weight:800;margin:0;font-size:14px">' + esc(p.username || '?') + '</p><p class="lbl" style="margin:4px 0 0">' + esc(p.user_id) + '</p></div><div style="text-align:right"><p class="g" style="font-size:18px;font-weight:900;margin:0">' + esc(p.plan_name) + '</p><span class="badge ' + bd + '" style="margin-top:4px">' + (isDone ? 'COMPLETED' : s.toUpperCase()) + '</span></div></div>';
-    h += '<div class="divider"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px"><div><p class="lbl">Invested</p><p class="val g">$' + fmt(p.deposit) + '</p></div><div><p class="lbl">Daily</p><p class="val g">$' + fmt(p.daily) + '</p></div><div><p class="lbl">Progress</p><p class="val">' + Number(p.days_collected || 0) + ' / 40</p></div><div><p class="lbl">Expires</p><p class="val">' + (p.expires_at ? String(p.expires_at).slice(0,10) : '-') + '</p></div></div>';
-    if (!isDone) h += '<div class="divider"></div><div style="display:flex;gap:6px"><button class="btn btn-sm btn-blue" style="flex:1" onclick="extendPlan(' + p.id + ')">+5d</button><button class="btn btn-sm btn-red" style="flex:1" onclick="cancelPlan(' + p.id + ')">Cancel</button></div>';
-    h += '</div>';
-  });
-  return h;
-}
-
-async function extendPlan(id) {
-  var days = parseInt(prompt('Extend days?', '5'));
-  if (!days) return;
-  var p = st.userPlans.find(function(x) { return x.id === id; });
-  if (!p) return;
-  var n = new Date(new Date(p.expires_at).getTime() + days * 86400000).toISOString();
-  var r = await sb.from('user_plans').update({expires_at: n}).eq('id', id);
-  if (!r.error) { toast('Extended'); await refresh(); } else toast(r.error.message, 'error');
-}
-
-async function cancelPlan(id) {
-  if (!confirm('Cancel plan?')) return;
-  var r = await sb.from('user_plans').update({status: 'cancelled'}).eq('id', id);
-  if (!r.error) { toast('Cancelled'); await refresh(); } else toast(r.error.message, 'error');
-}
-
-function depsV() {
-  var list = st.deps.slice();
-  if (st.depFilter !== 'all') list = list.filter(function(d) { return d.status === st.depFilter; });
-  var h = '<div style="margin-bottom:12px">';
-  ['all','pending','approved','rejected'].forEach(function(f) {
-    h += '<button class="filter-btn ' + (st.depFilter === f ? 'on' : '') + '" onclick="st.depFilter=\'' + f + '\';render()">' + f.charAt(0).toUpperCase() + f.slice(1) + '</button>';
-  });
-  h += '</div>';
-  var pc = list.filter(function(d) { return d.status === 'pending'; }).length;
-  if (pc > 1) h += '<button class="btn btn-sm" style="width:100%;margin-bottom:12px" onclick="bulkApprove()">APPROVE ALL ' + pc + '</button>';
-  if (list.length === 0) return h + '<div class="card" style="text-align:center;color:#666;padding:40px">No deposits</div>';
-  list.forEach(function(d) {
-    var s = String(d.status || 'pending');
-    var bd = s === 'approved' ? 'ba' : s === 'rejected' ? 'br' : 'bp';
-    h += '<div class="card"><div class="row"><div><p style="font-weight:700;margin:0;font-size:14px">' + esc(d.username || '?') + '</p><p class="lbl" style="margin:4px 0 0">' + esc(d.user_id) + '</p></div><div style="text-align:right"><p class="g" style="font-size:22px;font-weight:900;margin:0">$' + fmt(d.amount) + '</p><span class="badge ' + bd + '" style="margin-top:4px">' + s.toUpperCase() + '</span></div></div>';
-    h += '<div class="divider"></div><div style="font-size:11px"><p class="lbl">Method</p><p class="val">' + esc(d.method || '-') + '</p><p class="lbl" style="margin-top:6px">UTR</p><p class="val" style="word-break:break-all">' + esc(d.ref || '-') + '</p><p class="lbl" style="margin-top:6px">Date</p><p class="val">' + (d.created_at ? String(d.created_at).slice(0,16).replace('T',' ') : '-') + '</p></div>';
-    if (s === 'pending') h += '<div class="divider"></div><div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="appDep(' + d.id + ',\'' + esc(d.user_id) + '\',' + Number(d.amount) + ')">APPROVE</button><button class="btn btn-red btn-sm" onclick="rejDepPrompt(' + d.id + ')">REJECT</button></div>';
-    h += '</div>';
-  });
-  return h;
-}
-
-function wdV() {
-  var list = st.wd.slice();
-  if (st.wdFilter !== 'all') list = list.filter(function(d) { return d.status === st.wdFilter; });
-  var h = '<div style="margin-bottom:12px">';
-  ['all','pending','approved','rejected'].forEach(function(f) {
-    h += '<button class="filter-btn ' + (st.wdFilter === f ? 'on' : '') + '" onclick="st.wdFilter=\'' + f + '\';render()">' + f.charAt(0).toUpperCase() + f.slice(1) + '</button>';
-  });
-  h += '</div>';
-  if (list.length === 0) return h + '<div class="card" style="text-align:center;color:#666;padding:40px">No withdrawals</div>';
-  list.forEach(function(d) {
-    var s = String(d.status || 'pending');
-    var bd = s === 'approved' ? 'ba' : s === 'rejected' ? 'br' : 'bp';
-    h += '<div class="card"><div class="row"><div><p style="font-weight:700;margin:0;font-size:14px">' + esc(d.username || '?') + '</p><p class="lbl" style="margin:4px 0 0">' + esc(d.user_id) + '</p></div><div style="text-align:right"><p style="color:#EF4444;font-size:22px;font-weight:900;margin:0">$' + fmt(d.amount) + '</p><span class="badge ' + bd + '" style="margin-top:4px">' + s.toUpperCase() + '</span></div></div>';
-    h += '<div class="divider"></div><div style="font-size:11px"><p class="lbl">Method</p><p class="val">' + esc(d.method || 'USDT') + '</p><p class="lbl" style="margin-top:6px">Address</p><p class="val" style="word-break:break-all">' + esc(d.address || '-') + '</p></div>';
-    if (s === 'pending') h += '<div class="divider"></div><div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="appWd(' + d.id + ')">MARK PAID</button><button class="btn btn-red btn-sm" onclick="rejWdPrompt(' + d.id + ')">REJECT</button></div>';
-    h += '</div>';
-  });
-  return h;
-}
-
-function notifsV() {
-  var list = st.notifications.slice(0, 50);
-  var h = '<button class="btn btn-blue" style="width:100%;margin-bottom:12px" onclick="st.showBroadcast=true;render()">Send Broadcast</button>';
-  if (list.length === 0) return h + '<div class="card" style="text-align:center;color:#666;padding:40px">No notifications</div>';
-  list.forEach(function(n) {
-    var tc = n.type === 'warning' ? '#FBBF24' : n.type === 'bonus' ? '#00FF66' : '#60A5FA';
-    h += '<div class="card" style="border-left:3px solid ' + tc + '"><div class="row"><div><p style="font-weight:700;margin:0;font-size:13px">' + esc(n.title || 'Message') + '</p><p class="lbl" style="margin:4px 0 0">To: ' + esc(n.user_id || '?') + '</p></div></div><p style="font-size:12px;color:#ccc;margin:8px 0;line-height:1.4">' + esc(n.message) + '</p></div>';
-  });
-  return h;
-}
-
-function analyticsV() {
-  var today = new Date(); today.setHours(0,0,0,0);
-  var td = st.deps.filter(function(d) { return d.status === 'approved' && new Date(d.created_at).toDateString() === today.toDateString(); });
-  var tw = st.wd.filter(function(d) { return d.status === 'approved' && new Date(d.created_at).toDateString() === today.toDateString(); });
-  var tu = st.users.filter(function(u) { return u.joined_at && new Date(u.joined_at).toDateString() === today.toDateString(); });
-  var h = '<div class="card"><p style="font-size:10px;color:#666;margin:0 0 12px">TODAY</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">';
-  h += '<div class="stat"><p style="font-size:9px;color:#666;margin:0 0 4px">NEW USERS</p><p class="g" style="font-size:20px;font-weight:900;margin:0">' + tu.length + '</p></div>';
-  h += '<div class="stat"><p style="font-size:9px;color:#666;margin:0 0 4px">DEPOSITS</p><p class="g" style="font-size:20px;font-weight:900;margin:0">$' + td.reduce(function(a,b) { return a + Number(b.amount); }, 0).toFixed(0) + '</p></div>';
-  h += '<div class="stat"><p style="font-size:9px;color:#666;margin:0 0 4px">PAID</p><p style="color:#EF4444;font-size:20px;font-weight:900;margin:0">$' + tw.reduce(function(a,b) { return a + Number(b.amount); }, 0).toFixed(0) + '</p></div>';
-  h += '</div></div>';
-  return h;
-}
-
-function logsV() {
-  if (st.logs.length === 0) return '<div class="card" style="text-align:center;color:#666;padding:40px">No logs</div>';
-  var h = '<button class="btn btn-sm btn-gray" style="width:100%;margin-bottom:12px" onclick="if(confirm(\'Clear logs?\')){st.logs=[];localStorage.removeItem(\'toxic_admin_logs\');render()}">Clear Logs</button>';
-  st.logs.slice(0, 50).forEach(function(l) {
-    h += '<div class="card" style="padding:10px 14px"><p style="font-size:11px;color:#00FF66;font-weight:700;margin:0 0 4px">' + esc(l.action) + '</p><p style="font-size:11px;color:#ccc;margin:0">' + esc(l.detail) + '</p></div>';
-  });
-  return h;
-}
-
-function modals() {
-  var h = '';
-
-  if (st.showPlanModal) {
-    var p = st.editPlan ? st.plansDB.find(function(x) { return x.id === st.editPlan; }) : null;
-    h += '<div class="modal" onclick="st.showPlanModal=false;st.editPlan=null;render()"><div class="modal-card" onclick="event.stopPropagation()">';
-    h += '<div style="display:flex;justify-content:space-between;margin-bottom:16px"><h2 style="font-size:18px;font-weight:900;margin:0">' + (p ? 'Edit' : 'Add') + ' Plan</h2><button onclick="st.showPlanModal=false;st.editPlan=null;render()" style="background:none;border:none;color:#888;font-size:24px;cursor:pointer">x</button></div>';
-    h += '<p class="lbl">Plan Key</p><input id="plKey" class="inp" value="' + esc(p ? p.plan_key : '') + '" style="margin:4px 0 10px"' + (p ? ' disabled' : '') + '>';
-    h += '<p class="lbl">Name</p><input id="plName" class="inp" value="' + esc(p ? p.name : '') + '" style="margin:4px 0 10px;text-transform:uppercase">';
-    h += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">';
-    h += '<div><p class="lbl">Deposit</p><input id="plDep" type="number" step="0.01" class="inp" value="' + (p ? p.deposit : '') + '" style="margin-top:4px"></div>';
-    h += '<div><p class="lbl">Daily</p><input id="plDaily" type="number" step="0.01" class="inp" value="' + (p ? p.daily : '') + '" style="margin-top:4px"></div>';
-    h += '<div><p class="lbl">Total</p><input id="plTotal" type="number" step="0.01" class="inp" value="' + (p ? p.total : '') + '" style="margin-top:4px"></div>';
-    h += '</div>';
-    h += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">';
-    h += '<div><p class="lbl">Color</p><input id="plColor" class="inp" value="' + esc(p ? p.color : '#00FF66') + '" style="margin-top:4px"></div>';
-    h += '<div><p class="lbl">Icon</p><input id="plIcon" class="inp" value="' + esc(p ? p.icon : '💎') + '" style="margin-top:4px"></div>';
-    h += '<div><p class="lbl">Sort</p><input id="plSort" type="number" class="inp" value="' + (p ? p.sort_order : 0) + '" style="margin-top:4px"></div>';
-    h += '</div>';
-    h += '<label style="display:flex;align-items:center;gap:8px;margin:12px 0;font-size:12px;color:#ccc"><input type="checkbox" id="plActive" ' + (p ? (p.is_active ? 'checked' : '') : 'checked') + '> Active</label>';
-    h += '<button class="btn" style="width:100%;margin-bottom:8px" onclick="savePlanDB()">SAVE</button>';
-    h += '<button class="btn btn-gray" style="width:100%" onclick="st.showPlanModal=false;st.editPlan=null;render()">Cancel</button>';
-    h += '</div></div>';
-  }
-
-  if (st.showPromoModal) {
-    h += '<div class="modal" onclick="st.showPromoModal=false;render()"><div class="modal-card" onclick="event.stopPropagation()">';
-    h += '<h2 style="font-size:18px;font-weight:900;margin:0 0 16px">Create Promo</h2>';
-    h += '<p class="lbl">Code</p><input id="pCode" class="inp" style="margin:4px 0 12px;text-transform:uppercase;font-weight:700">';
-    h += '<p class="lbl">Amount ($)</p><input id="pAmt" type="number" step="0.01" class="inp" style="margin:4px 0 12px">';
-    h += '<p class="lbl">Max Uses</p><input id="pMax" type="number" value="100" class="inp" style="margin:4px 0 12px">';
-    h += '<p class="lbl">Label</p><input id="pLabel" class="inp" placeholder="Welcome" style="margin:4px 0 12px">';
-    h += '<button class="btn" style="width:100%;margin-bottom:8px" onclick="createPromo()">CREATE</button>';
-    h += '<button class="btn btn-gray" style="width:100%" onclick="st.showPromoModal=false;render()">Cancel</button>';
-    h += '</div></div>';
-  }
-
-  if (st.showWinnerModal) {
-    var w = st.editWinner ? st.winners.find(function(x) { return x.id === st.editWinner; }) : null;
-    h += '<div class="modal" onclick="st.showWinnerModal=false;st.editWinner=null;render()"><div class="modal-card" onclick="event.stopPropagation()">';
-    h += '<h2 style="font-size:18px;font-weight:900;margin:0 0 16px">' + (w ? 'Edit' : 'Add') + ' Winner</h2>';
-    h += '<p class="lbl">Name</p><input id="wName" class="inp" value="' + esc(w ? w.name : '') + '" style="margin:4px 0 12px">';
-    h += '<p class="lbl">Country Flag</p><input id="wCountry" class="inp" value="' + esc(w ? w.country : '🌍') + '" style="margin:4px 0 12px">';
-    h += '<p class="lbl">Amount ($)</p><input id="wAmount" type="number" class="inp" value="' + (w ? w.amount : '') + '" style="margin:4px 0 12px">';
-    h += '<p class="lbl">Period</p><select id="wPeriod" class="inp" style="margin:4px 0 12px"><option value="WEEK"' + (w && w.period === 'WEEK' ? ' selected' : '') + '>WEEK</option><option value="MONTH"' + (w && w.period === 'MONTH' ? ' selected' : '') + '>MONTH</option></select>';
-    h += '<button class="btn" style="width:100%;margin-bottom:8px" onclick="saveWinner()">SAVE</button>';
-    h += '<button class="btn btn-gray" style="width:100%" onclick="st.showWinnerModal=false;st.editWinner=null;render()">Cancel</button>';
-    h += '</div></div>';
-  }
-
-  if (st.selectedUser) {
-    var u = st.users.find(function(x) { return x.user_id === st.selectedUser; });
-    if (u) {
-      var uPlans = st.userPlans.filter(function(p) { return p.user_id === u.user_id; });
-      var uDeps = st.deps.filter(function(d) { return d.user_id === u.user_id; });
-      var uWd = st.wd.filter(function(d) { return d.user_id === u.user_id; });
-      h += '<div class="modal" onclick="st.selectedUser=null;render()"><div class="modal-card" onclick="event.stopPropagation()">';
-      h += '<div style="display:flex;justify-content:space-between;margin-bottom:16px"><h2 style="font-size:18px;font-weight:900;margin:0">' + esc(u.username) + '</h2><button onclick="st.selectedUser=null;render()" style="background:none;border:none;color:#888;font-size:24px;cursor:pointer">x</button></div>';
-      if (u.is_banned) h += '<div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.4);border-radius:12px;padding:10px;margin-bottom:12px;text-align:center"><p style="color:#EF4444;font-weight:900;margin:0;font-size:12px">BANNED</p></div>';
-      h += '<div style="background:rgba(0,0,0,0.3);border-radius:12px;padding:12px;margin-bottom:12px">';
-      h += '<p class="lbl">ID</p><p class="val" style="word-break:break-all">' + esc(u.user_id) + '</p>';
-      h += '<p class="lbl" style="margin-top:8px">Email</p><p class="val">' + esc(u.email || '-') + '</p>';
-      h += '<p class="lbl" style="margin-top:8px">Ref Code</p><p class="val g">' + esc(u.referral_code || '-') + '</p>';
-      h += '<p class="lbl" style="margin-top:8px">Balance</p><p class="val g" style="font-size:16px;font-weight:900">$' + fmt(u.balance) + '</p>';
-      h += '<p class="lbl" style="margin-top:8px">Ref Balance</p><p class="val g" style="font-weight:700">$' + fmt(u.referral_balance) + '</p>';
-      h += '</div>';
-      h += '<button class="btn btn-blue" style="width:100%;margin-bottom:12px" onclick="openMessage(\'' + esc(u.user_id) + '\')">Send Message</button>';
-      h += '<p style="font-size:11px;color:#00FF66;font-weight:700;margin:0 0 8px">Plans (' + uPlans.length + ')</p>';
-      uPlans.slice(0, 5).forEach(function(p) {
-        h += '<div style="padding:6px 10px;background:rgba(0,255,102,0.05);border-radius:8px;margin-bottom:4px;font-size:11px;display:flex;justify-content:space-between"><span class="g">' + esc(p.plan_name) + '</span><span style="color:#666">' + Number(p.days_collected || 0) + '/40</span></div>';
-      });
-      h += '<p style="font-size:11px;color:#00FF66;font-weight:700;margin:12px 0 8px">Deposits (' + uDeps.length + ')</p>';
-      uDeps.slice(0, 3).forEach(function(d) {
-        h += '<div style="padding:6px 10px;background:rgba(0,0,0,0.3);border-radius:8px;margin-bottom:4px;font-size:11px;display:flex;justify-content:space-between"><span>$' + fmt(d.amount) + '</span><span>' + d.status + '</span></div>';
-      });
-      h += '<p style="font-size:11px;color:#00FF66;font-weight:700;margin:12px 0 8px">Withdrawals (' + uWd.length + ')</p>';
-      uWd.slice(0, 3).forEach(function(d) {
-        h += '<div style="padding:6px 10px;background:rgba(0,0,0,0.3);border-radius:8px;margin-bottom:4px;font-size:11px;display:flex;justify-content:space-between"><span>$' + fmt(d.amount) + '</span><span>' + d.status + '</span></div>';
-      });
-      h += '<div class="divider" style="margin:16px 0"></div>';
-      h += '<p style="font-size:11px;color:#00FF66;font-weight:700;margin:0 0 8px">ACTIONS</p>';
-      h += '<p class="lbl" style="margin-bottom:4px">Set Main Balance</p>';
-      h += '<input type="number" id="mBal" class="inp" value="' + Number(u.balance || 0).toFixed(2) + '" step="0.01" style="margin-bottom:6px">';
-      h += '<div style="display:flex;gap:6px;margin-bottom:8px"><button class="btn btn-sm" style="flex:1" onclick="adminSetBal(\'' + esc(u.user_id) + '\')">SET</button><button class="btn btn-sm btn-yellow" style="flex:1" onclick="adminBonus(\'' + esc(u.user_id) + '\')">+ BONUS</button></div>';
-      h += '<p class="lbl" style="margin-bottom:4px">Set Referral Balance</p>';
-      h += '<input type="number" id="mRefBal" class="inp" value="' + Number(u.referral_balance || 0).toFixed(2) + '" step="0.01" style="margin-bottom:6px">';
-      h += '<button class="btn btn-sm btn-yellow" style="width:100%;margin-bottom:8px" onclick="adminSetRefBal(\'' + esc(u.user_id) + '\')">SET REF BALANCE</button>';
-      h += '<div style="display:flex;gap:6px;margin-bottom:6px"><button class="btn btn-sm btn-blue" style="flex:1" onclick="adminGivePlan(\'' + esc(u.user_id) + '\')">GIVE PLAN</button><button class="btn btn-sm ' + (u.is_banned ? 'btn-green' : 'btn-red') + '" style="flex:1" onclick="toggleBan(\'' + esc(u.user_id) + '\',' + (u.is_banned ? 'true' : 'false') + ')">' + (u.is_banned ? 'UNBAN' : 'BAN') + '</button></div>';
-      h += '<button class="btn btn-sm btn-yellow" style="width:100%;margin-bottom:6px" onclick="adminResetPwd(\'' + esc(u.user_id) + '\')">RESET PASSWORD</button>';
-      h += '<button class="btn btn-sm btn-red" style="width:100%" onclick="adminDeleteUser(\'' + esc(u.user_id) + '\',\'' + esc(u.username) + '\')">DELETE USER</button>';
-      h += '</div></div>';
-    }
-  }
-
-  if (st.showMessage) {
-    h += '<div class="modal" onclick="st.showMessage=false;render()"><div class="modal-card" onclick="event.stopPropagation()">';
-    h += '<h2 style="font-size:18px;font-weight:900;margin:0 0 12px">Send Message</h2>';
-    h += '<p class="lbl">To</p><p class="val g" style="margin-bottom:12px">' + esc(st.msgUser || '') + '</p>';
-    h += '<div class="type-selector">';
-    ['info','bonus','warning','update'].forEach(function(ty) {
-      h += '<button class="type-btn ' + (st.msgType === ty ? 'on' : '') + '" onclick="st.msgType=\'' + ty + '\';render()">' + ty.toUpperCase() + '</button>';
-    });
-    h += '</div>';
-    h += '<p class="lbl">Title</p><input id="msgTitle" class="inp" style="margin:4px 0 12px">';
-    h += '<p class="lbl">Message</p><textarea id="msgBody" class="inp" rows="4" style="margin:4px 0 12px"></textarea>';
-    h += '<button class="btn" style="width:100%;margin-bottom:8px" onclick="sendMessage()">SEND</button>';
-    h += '<button class="btn btn-gray" style="width:100%" onclick="st.showMessage=false;render()">Cancel</button>';
-    h += '</div></div>';
-  }
-
-  if (st.showBroadcast) {
-    h += '<div class="modal" onclick="st.showBroadcast=false;render()"><div class="modal-card" onclick="event.stopPropagation()">';
-    h += '<h2 style="font-size:18px;font-weight:900;margin:0 0 12px">Broadcast</h2>';
-    h += '<p style="font-size:11px;color:#FBBF24;margin:0 0 12px">Will send to ALL ' + st.users.length + ' users</p>';
-    h += '<div class="type-selector">';
-    ['info','bonus','warning','update'].forEach(function(ty) {
-      h += '<button class="type-btn ' + (st.msgType === ty ? 'on' : '') + '" onclick="st.msgType=\'' + ty + '\';render()">' + ty.toUpperCase() + '</button>';
-    });
-    h += '</div>';
-    h += '<p class="lbl">Title</p><input id="bcTitle" class="inp" style="margin:4px 0 12px">';
-    h += '<p class="lbl">Message</p><textarea id="bcBody" class="inp" rows="4" style="margin:4px 0 12px"></textarea>';
-    h += '<button class="btn" style="width:100%;margin-bottom:8px" onclick="sendBroadcast()">SEND TO ALL</button>';
-    h += '<button class="btn btn-gray" style="width:100%" onclick="st.showBroadcast=false;render()">Cancel</button>';
-    h += '</div></div>';
-  }
-
-  if (st.showChangePwd) {
-    h += '<div class="modal" onclick="st.showChangePwd=false;render()"><div class="modal-card" onclick="event.stopPropagation()">';
-    h += '<h2 style="font-size:18px;font-weight:900;margin:0 0 12px">Change Password</h2>';
-    h += '<p class="lbl">Current</p><input type="password" id="oldPwd" class="inp" style="margin:4px 0 12px">';
-    h += '<p class="lbl">New</p><input type="password" id="newPwd" class="inp" style="margin:4px 0 12px">';
-    h += '<p class="lbl">Confirm</p><input type="password" id="newPwd2" class="inp" style="margin:4px 0 12px">';
-    h += '<button class="btn" style="width:100%;margin-bottom:8px" onclick="changeAdminPwd()">UPDATE</button>';
-    h += '<button class="btn btn-gray" style="width:100%" onclick="st.showChangePwd=false;render()">Cancel</button>';
-    h += '</div></div>';
-  }
-
-  if (st.showSettings) {
-    h += '<div class="modal" onclick="st.showSettings=false;render()"><div class="modal-card" onclick="event.stopPropagation()">';
-    h += '<h2 style="font-size:18px;font-weight:900;margin:0 0 12px">Settings</h2>';
-    h += '<button class="btn btn-purple" style="width:100%;margin-bottom:12px" onclick="st.showSettings=false;st.showChangePwd=true;render()">Change Admin Password</button>';
-    h += '<button class="btn btn-gray" style="width:100%" onclick="st.showSettings=false;render()">Close</button>';
-    h += '</div></div>';
-  }
-
-  return h;
-}
-
-function login() {
-  var p = $('pw').value;
-  if (p !== getAdminPwd()) return toast('Wrong password', 'error');
-  st.login = true;
-  startSession();
-  logAction('Login', 'Admin logged in');
-  refresh();
-}
-
-function logout() {
-  if (confirm('Logout?')) {
-    logAction('Logout', '');
-    st.login = false;
-    endSession();
-    render();
-  }
-}
-
-function sw(t) { st.tab = t; render(); }
-
-async function refresh() {
-  try {
-    var u = await sb.from('users').select('*').order('id', {ascending: false});
-    if (u.data) st.users = u.data;
-    var p = await sb.from('user_plans').select('*').order('id', {ascending: false});
-    if (p.data) st.userPlans = p.data;
-    var d = await sb.from('deposits').select('*').order('id', {ascending: false});
-    if (d.data) st.deps = d.data;
-    var w = await sb.from('withdrawals').select('*').order('id', {ascending: false});
-    if (w.data) st.wd = w.data;
-    var n = await sb.from('notifications').select('*').order('id', {ascending: false}).limit(100);
-    if (n.data) st.notifications = n.data;
-    var pc = await sb.from('promo_codes').select('*').order('id', {ascending: false});
-    if (pc.data) st.promos = pc.data;
-    var cfg = await sb.from('site_config').select('*');
-    if (cfg.data) {
-      var obj = {};
-      cfg.data.forEach(function(x) { obj[x.key] = x.value; });
-      st.siteConfig = obj;
-    }
-    var pl = await sb.from('investment_plans').select('*').order('sort_order', {ascending: true});
-    if (pl.data) st.plansDB = pl.data;
-    try { var sbr = await sb.from('share_bonus').select('*').order('id', {ascending: false}).limit(100); if (sbr.data) st.shareBonus = sbr.data; }
-    catch(e) { st.shareBonus = []; }
-    try { var wr = await sb.from('fake_winners').select('*').order('id', {ascending: false}).limit(100); if (wr.data) st.winners = wr.data; }
-    catch(e) { st.winners = []; }
-    st.lastRefresh = Date.now();
-  } catch(e) { console.log('Refresh err:', e); toast('Refresh: ' + e.message, 'error'); }
-  render();
-}
-
-function openMessage(uid) { st.msgUser = uid; st.msgType = 'info'; st.showMessage = true; render(); }
-
-async function sendMessage() {
-  var title = $('msgTitle').value.trim() || 'TOXIC';
-  var body = $('msgBody').value.trim();
-  if (!body) return toast('Type a message', 'error');
-  var r = await sb.from('notifications').insert([{user_id: st.msgUser, title: title, message: body, type: st.msgType, is_read: false}]);
-  if (r.error) return toast(r.error.message, 'error');
-  var u = st.users.find(function(x) { return x.user_id === st.msgUser; });
-  if (u) await sb.from('users').update({unread_count: Number(u.unread_count || 0) + 1}).eq('user_id', st.msgUser);
-  logAction('Send Message', st.msgUser);
-  toast('Sent!');
-  st.showMessage = false; st.msgUser = null;
-  await refresh();
-}
-
-async function sendBroadcast() {
-  var title = $('bcTitle').value.trim() || 'TOXIC';
-  var body = $('bcBody').value.trim();
-  if (!body) return toast('Type a message', 'error');
-  if (!confirm('Send to ALL ' + st.users.length + ' users?')) return;
-  toast('Sending...', 'warn');
-  var notifs = st.users.map(function(u) { return {user_id: u.user_id, title: title, message: body, type: st.msgType, is_read: false}; });
-  var r = await sb.from('notifications').insert(notifs);
-  if (r.error) return toast(r.error.message, 'error');
-  for (var i = 0; i < st.users.length; i++) {
-    await sb.from('users').update({unread_count: Number(st.users[i].unread_count || 0) + 1}).eq('user_id', st.users[i].user_id);
-  }
-  logAction('Broadcast', 'All users');
-  toast('Sent to ' + st.users.length);
-  st.showBroadcast = false;
-  await refresh();
-}
-
-async function adminSetBal(uid) {
-  var v = $('mBal').value;
-  if (v === '') return toast('Enter amount', 'error');
-  var r = await sb.from('users').update({balance: parseFloat(v)}).eq('user_id', uid);
-  if (!r.error) { logAction('Set Balance', uid + ' $' + v); toast('Updated'); st.selectedUser = null; await refresh(); }
-  else toast(r.error.message, 'error');
-}
-
-async function adminSetRefBal(uid) {
-  var v = $('mRefBal').value;
-  if (v === '') return toast('Enter amount', 'error');
-  var r = await sb.from('users').update({referral_balance: parseFloat(v)}).eq('user_id', uid);
-  if (!r.error) { logAction('Set Ref Bal', uid); toast('Updated'); st.selectedUser = null; await refresh(); }
-  else toast(r.error.message, 'error');
-}
-
-async function adminBonus(uid) {
-  var v = prompt('Bonus ($):');
-  if (!v) return;
-  var amt = parseFloat(v);
-  if (!amt || amt <= 0) return toast('Invalid', 'error');
-  var u = st.users.find(function(x) { return x.user_id === uid; });
-  if (!u) return;
-  var nb = Number(u.balance || 0) + amt;
-  var r = await sb.from('users').update({balance: nb}).eq('user_id', uid);
-  if (!r.error) {
-    await sb.from('notifications').insert([{user_id: uid, title: 'Bonus', message: '+$' + amt.toFixed(2) + ' credited!', type: 'bonus', is_read: false}]);
-    await sb.from('users').update({unread_count: Number(u.unread_count || 0) + 1}).eq('user_id', uid);
-    logAction('Bonus', uid + ' +$' + v);
-    toast('Added');
-    st.selectedUser = null;
-    await refresh();
-  } else toast(r.error.message, 'error');
-}
-
-async function adminResetPwd(uid) {
-  var p = prompt('New password (min 4):');
-  if (!p) return;
-  if (p.length < 4) return toast('Too short', 'error');
-  var r = await sb.from('users').update({password_hash: btoaSafe(p)}).eq('user_id', uid);
-  if (!r.error) {
-    await sb.from('notifications').insert([{user_id: uid, title: 'Password Reset', message: 'Your password was reset by admin.', type: 'warning', is_read: false}]);
-    logAction('Reset Pwd', uid);
-    toast('New pwd: ' + p);
-    st.selectedUser = null;
-    await refresh();
-  } else toast(r.error.message, 'error');
-}
-
-async function adminDeleteUser(uid, uname) {
-  if (!confirm('DELETE ' + uname + '?\n\nThis removes ALL data permanently!')) return;
-  if (!confirm('ABSOLUTELY SURE?')) return;
-  toast('Deleting...', 'warn');
-  try {
-    await sb.from('user_plans').delete().eq('user_id', uid);
-    await sb.from('deposits').delete().eq('user_id', uid);
-    await sb.from('withdrawals').delete().eq('user_id', uid);
-    await sb.from('notifications').delete().eq('user_id', uid);
-    var r = await sb.from('users').delete().eq('user_id', uid);
-    if (r.error) return toast(r.error.message, 'error');
-    logAction('Delete User', uname);
-    toast('Deleted');
-    st.selectedUser = null;
-    await refresh();
-  } catch(e) { toast(e.message, 'error'); }
-}
-
-async function adminGivePlan(uid) {
-  var plans = ['BRONZE','SILVER','GOLD','ELITE','ULTRA','LEGEND','MASTER','GRANDMASTER','MYTHIC','IMMORTAL','TITAN','GODFATHER'];
-  var plan = prompt('Plan name:\n' + plans.join(', '));
-  if (!plan) return;
-  plan = plan.toUpperCase();
-  var P = {'BRONZE':{deposit:1,daily:0.10,total:4.00},'SILVER':{deposit:3,daily:0.36,total:14.40},'GOLD':{deposit:5,daily:0.70,total:28.00},'ELITE':{deposit:10,daily:1.60,total:64.00},'ULTRA':{deposit:20,daily:3.50,total:140.00},'LEGEND':{deposit:50,daily:9.00,total:360.00},'MASTER':{deposit:100,daily:18.50,total:740.00},'GRANDMASTER':{deposit:200,daily:38.00,total:1520.00},'MYTHIC':{deposit:500,daily:97.50,total:3900.00},'IMMORTAL':{deposit:1000,daily:200.00,total:8000.00},'TITAN':{deposit:2000,daily:410.00,total:16400.00},'GODFATHER':{deposit:5000,daily:1050.00,total:42000.00}};
-  var p = P[plan];
-  if (!p) return toast('Invalid plan', 'error');
-  var u = st.users.find(function(x) { return x.user_id === uid; });
-  if (!u) return;
-  var now = new Date();
-  var np = {user_id: uid, username: u.username, plan_id: 'l' + (plans.indexOf(plan) + 1), plan_name: plan, deposit: p.deposit, daily: p.daily, total: p.total, days_collected: 0, status: 'active', started_at: now.toISOString(), expires_at: new Date(now.getTime() + 40 * 86400000).toISOString()};
-  var r = await sb.from('user_plans').insert([np]);
-  if (!r.error) {
-    await sb.from('notifications').insert([{user_id: uid, title: 'Plan Activated', message: plan + ' plan activated. Daily $' + p.daily, type: 'bonus', is_read: false}]);
-    logAction('Give Plan', uid + ' ' + plan);
-    toast('Given');
-    st.selectedUser = null;
-    await refresh();
-  } else toast(r.error.message, 'error');
-}
-
-async function toggleBan(uid, current) {
-  var r = await sb.from('users').update({is_banned: !current}).eq('user_id', uid);
-  if (!r.error) {
-    if (!current) await sb.from('notifications').insert([{user_id: uid, title: 'Suspended', message: 'Account suspended.', type: 'warning', is_read: false}]);
-    logAction(current ? 'Unban' : 'Ban', uid);
-    toast(current ? 'Unbanned' : 'Banned');
-    st.selectedUser = null;
-    await refresh();
-  } else toast(r.error.message, 'error');
-}
-
-async function appDep(id, uid, amt) {
-  if (!confirm('Approve $' + amt + '?')) return;
-  var r = await sb.from('deposits').update({status: 'approved'}).eq('id', id);
-  if (r.error) return toast(r.error.message, 'error');
-  var u = st.users.find(function(x) { return x.user_id === uid; });
-  if (u) {
-    var nb = Number(u.balance || 0) + Number(amt);
-    await sb.from('users').update({balance: nb}).eq('user_id', uid);
-    await sb.from('notifications').insert([{user_id: uid, title: 'Deposit Approved', message: '+$' + Number(amt).toFixed(2) + ' credited! Balance: $' + nb.toFixed(2), type: 'bonus', is_read: false}]);
-    await sb.from('users').update({unread_count: Number(u.unread_count || 0) + 1}).eq('user_id', uid);
-  }
-  logAction('Approve Dep', uid + ' $' + amt);
+  logAction('Approve Dep',uid+' $'+amt);
   toast('Approved');
   await refresh();
 }
 
-async function bulkApprove() {
-  var p = st.deps.filter(function(d) { return d.status === 'pending'; });
-  if (!confirm('Approve all ' + p.length + ' deposits?')) return;
-  toast('Approving ' + p.length + '...', 'warn');
-  var c = 0;
-  for (var i = 0; i < p.length; i++) {
-    var d = p[i];
-    await sb.from('deposits').update({status: 'approved'}).eq('id', d.id);
-    var u = st.users.find(function(x) { return x.user_id === d.user_id; });
-    if (u) {
-      var nb = Number(u.balance || 0) + Number(d.amount);
-      await sb.from('users').update({balance: nb}).eq('user_id', d.user_id);
-      await sb.from('notifications').insert([{user_id: d.user_id, title: 'Deposit Approved', message: '+$' + Number(d.amount).toFixed(2) + ' credited.', type: 'bonus', is_read: false}]);
-      c++;
-    }
+async function bulkApprove(){
+  var p=st.deps.filter(function(d){return d.status==='pending';});
+  if(!confirm('Approve all '+p.length+' deposits?'))return;
+  toast('Approving '+p.length+'...','warn');
+  var c=0;
+  for(var i=0;i<p.length;i++){
+    var d=p[i];
+    await sb.from('deposits').update({status:'approved'}).eq('id',d.id);
+    var u=st.users.find(function(x){return x.user_id===d.user_id;});
+    if(u){var nb=Number(u.balance||0)+Number(d.amount);await sb.from('users').update({balance:nb}).eq('user_id',d.user_id);await sb.from('notifications').insert([{user_id:d.user_id,title:'Deposit Approved',message:'+$'+Number(d.amount).toFixed(2)+' credited.',type:'bonus',is_read:false}]);c++;}
   }
-  logAction('Bulk Approve', c);
-  toast(c + ' approved');
+  logAction('Bulk Approve',c);
+  toast(c+' approved');
   await refresh();
 }
 
-function rejDepPrompt(id) {
-  var r = prompt('Reject reason:', '');
-  if (r === null) return;
-  rejDep(id, r || 'No reason');
-}
-
-async function rejDep(id, reason) {
-  var d = st.deps.find(function(x) { return x.id === id; });
-  var r = await sb.from('deposits').update({status: 'rejected', admin_note: reason}).eq('id', id);
-  if (!r.error) {
-    if (d) {
-      await sb.from('notifications').insert([{user_id: d.user_id, title: 'Deposit Rejected', message: 'Reason: ' + reason, type: 'warning', is_read: false}]);
-    }
-    logAction('Reject Dep', reason);
+function rejDepPrompt(id){var r=prompt('Reject reason:','');if(r===null)return;rejDep(id,r||'No reason');}
+async function rejDep(id,reason){
+  var d=st.deps.find(function(x){return x.id===id;});
+  var r=await sb.from('deposits').update({status:'rejected',admin_note:reason}).eq('id',id);
+  if(!r.error){
+    if(d)await sb.from('notifications').insert([{user_id:d.user_id,title:'Deposit Rejected',message:'Reason: '+reason,type:'warning',is_read:false}]);
+    logAction('Reject Dep',reason);
     toast('Rejected');
     await refresh();
-  } else toast(r.error.message, 'error');
+  }else toast(r.error.message,'error');
 }
 
-async function appWd(id) {
-  if (!confirm('Mark as paid?')) return;
-  var wd = st.wd.find(function(x) { return x.id === id; });
-  var r = await sb.from('withdrawals').update({status: 'approved'}).eq('id', id);
-  if (!r.error) {
-    if (wd) {
-      await sb.from('notifications').insert([{user_id: wd.user_id, title: 'Withdrawal Approved', message: '$' + Number(wd.amount).toFixed(2) + ' processed!', type: 'bonus', is_read: false}]);
-    }
-    logAction('Approve WD', '#' + id);
+/* ============== WITHDRAWALS ============== */
+function wdV(){
+  var list=st.wd.slice();
+  if(st.wdFilter!=='all')list=list.filter(function(d){return d.status===st.wdFilter;});
+  if(st.wdSearch)list=list.filter(function(d){return (d.username||'').toLowerCase().indexOf(st.wdSearch.toLowerCase())>-1||String(d.user_id||'').indexOf(st.wdSearch)>-1;});
+  var h='<div class="grid2" style="margin-bottom:12px"><button class="btn" onclick="st.showAddWithdrawal=true;render()">+ Manual WD</button><button class="btn btn-blue" onclick="exportWd()">📥 Export CSV</button></div>';
+  h+='<input class="inp" placeholder="Search username/id..." oninput="st.wdSearch=this.value;render()" value="'+esc(st.wdSearch)+'" style="margin-bottom:8px">';
+  h+='<div style="margin-bottom:12px">';
+  ['all','pending','approved','rejected'].forEach(function(f){var c=f==='all'?st.wd.length:st.wd.filter(function(x){return x.status===f;}).length;h+='<button class="filter-btn '+(st.wdFilter===f?'on':'')+'" onclick="st.wdFilter=\''+f+'\';render()">'+f.charAt(0).toUpperCase()+f.slice(1)+' ('+c+')</button>';});
+  h+='</div>';
+  if(list.length===0)return h+'<div class="card" style="text-align:center;color:#666;padding:40px">No withdrawals</div>';
+  list.slice(0,80).forEach(function(d){
+    var s=String(d.status||'pending');
+    var bd=s==='approved'?'ba':(s==='rejected'?'br':'bp');
+    h+='<div class="card"><div class="row"><div><p style="font-weight:700;margin:0;font-size:14px">'+esc(d.username||'?')+'</p><p class="lbl" style="margin:4px 0 0">'+esc(d.user_id)+'</p></div><div style="text-align:right"><p class="r" style="font-size:22px;font-weight:900;margin:0">$'+fmt(d.amount)+'</p><span class="badge '+bd+'" style="margin-top:4px">'+s.toUpperCase()+'</span></div></div>';
+    h+='<div class="divider"></div><div style="font-size:11px"><p class="lbl">Method</p><p class="val">'+esc(d.method||'USDT')+'</p><p class="lbl" style="margin-top:6px">Address</p><p class="val mono" style="word-break:break-all">'+esc(d.address||'-')+'</p></div>';
+    h+='<div class="divider"></div><div style="display:flex;gap:6px;flex-wrap:wrap">';
+    if(s==='pending'){h+='<button class="btn-sm" style="flex:1" onclick="appWd('+d.id+')">✅ MARK PAID</button><button class="btn-sm btn-red" onclick="rejWdPrompt('+d.id+')">❌ REJECT</button>';}
+    h+='<button class="btn-sm btn-blue" onclick="openEditTx(\'withdrawal\','+d.id+')">✏️ Edit</button><button class="btn-sm btn-red" onclick="deleteTx(\'withdrawals\','+d.id+')">🗑️</button>';
+    h+='</div></div>';
+  });
+  return h;
+}
+
+function exportWd(){var rows=[['id','user_id','username','amount','method','address','status','created_at']];st.wd.forEach(function(d){rows.push([d.id,d.user_id,d.username||'',d.amount,d.method||'',d.address||'',d.status,d.created_at||'']);});downloadCSV('withdrawals_'+Date.now()+'.csv',rows);toast('Exported');}
+
+async function appWd(id){
+  if(!confirm('Mark as paid?'))return;
+  var wd=st.wd.find(function(x){return x.id===id;});
+  var r=await sb.from('withdrawals').update({status:'approved'}).eq('id',id);
+  if(!r.error){
+    if(wd)await sb.from('notifications').insert([{user_id:wd.user_id,title:'Withdrawal Approved',message:'$'+Number(wd.amount).toFixed(2)+' processed!',type:'bonus',is_read:false}]);
+    logAction('Approve WD','#'+id);
     toast('Paid');
     await refresh();
-  } else toast(r.error.message, 'error');
+  }else toast(r.error.message,'error');
 }
 
-function rejWdPrompt(id) {
-  var r = prompt('Reject reason:', '');
-  if (r === null) return;
-  rejWd(id, r || 'No reason');
-}
-
-async function rejWd(id, reason) {
-  var wd = st.wd.find(function(x) { return x.id === id; });
-  var r = await sb.from('withdrawals').update({status: 'rejected', admin_note: reason}).eq('id', id);
-  if (!r.error) {
-    if (wd) {
-      var u = st.users.find(function(x) { return x.user_id === wd.user_id; });
-      if (u) {
-        var nb = Number(u.balance || 0) + Number(wd.amount);
-        await sb.from('users').update({balance: nb}).eq('user_id', wd.user_id);
-        await sb.from('notifications').insert([{user_id: wd.user_id, title: 'Withdrawal Rejected', message: 'Reason: ' + reason + '\nBalance refunded.', type: 'warning', is_read: false}]);
-      }
-    }
-    logAction('Reject WD', reason);
+function rejWdPrompt(id){var r=prompt('Reject reason:','');if(r===null)return;rejWd(id,r||'No reason');}
+async function rejWd(id,reason){
+  var wd=st.wd.find(function(x){return x.id===id;});
+  var r=await sb.from('withdrawals').update({status:'rejected',admin_note:reason}).eq('id',id);
+  if(!r.error){
+    if(wd){var u=st.users.find(function(x){return x.user_id===wd.user_id;});if(u){var nb=Number(u.balance||0)+Number(wd.amount);await sb.from('users').update({balance:nb}).eq('user_id',wd.user_id);await sb.from('notifications').insert([{user_id:wd.user_id,title:'Withdrawal Rejected',message:'Reason: '+reason+'\nBalance refunded.',type:'warning',is_read:false}]);}}
+    logAction('Reject WD',reason);
     toast('Rejected + refunded');
     await refresh();
-  } else toast(r.error.message, 'error');
+  }else toast(r.error.message,'error');
 }
 
-function changeAdminPwd() {
-  var o = $('oldPwd').value, n = $('newPwd').value, n2 = $('newPwd2').value;
-  if (o !== getAdminPwd()) return toast('Wrong current password', 'error');
-  if (!n || n.length < 4) return toast('Min 4 chars', 'error');
-  if (n !== n2) return toast('Passwords do not match', 'error');
+/* ============== SHARE BONUS ============== */
+function shareBonusV(){
+  var list=st.shareBonus.slice();
+  if(st.sbFilter!=='all')list=list.filter(function(s){return s.status===st.sbFilter;});
+  var h='<div style="margin-bottom:12px">';
+  ['all','pending','approved','rejected'].forEach(function(f){var c=f==='all'?st.shareBonus.length:st.shareBonus.filter(function(x){return x.status===f;}).length;h+='<button class="filter-btn '+(st.sbFilter===f?'on':'')+'" onclick="st.sbFilter=\''+f+'\';render()">'+f.charAt(0).toUpperCase()+f.slice(1)+' ('+c+')</button>';});
+  h+='</div>';
+  if(list.length===0)return h+'<div class="card" style="text-align:center;color:#666;padding:40px">No submissions</div>';
+  list.forEach(function(s){
+    var stt=s.status||'pending';
+    var bd=stt==='approved'?'ba':(stt==='rejected'?'br':'bp');
+    h+='<div class="card"><div class="row"><div><p style="font-weight:700;margin:0;font-size:14px">'+esc(s.username||'?')+'</p><p class="lbl" style="margin:4px 0 0">'+esc(s.user_id)+'</p></div><div style="text-align:right"><span class="badge '+bd+'">'+stt.toUpperCase()+'</span></div></div>';
+    if(s.screenshot)h+='<img src="'+s.screenshot+'" class="shot-img" onclick="window.open(this.src)">';
+    h+='<div style="display:flex;gap:6px;margin-top:8px">';
+    if(stt==='pending')h+='<button class="btn-sm" style="flex:1" onclick="approveSB('+s.id+',\''+esc(s.user_id)+'\',\''+esc(s.username)+'\')">✅ APPROVE</button>';
+    h+='<button class="btn-sm btn-red" style="flex:1" onclick="rejectSBPrompt('+s.id+',\''+esc(s.user_id)+'\')">❌ REJECT</button>';
+    h+='<button class="btn-sm btn-gray" onclick="deleteTx(\'share_bonus\','+s.id+')">🗑️</button></div>';
+    h+='</div>';
+  });
+  return h;
+}
+
+async function approveSB(id,uid,uname){
+  if(!confirm('Approve for '+uname+'?'))return;
+  var amt=parseFloat((st.siteConfig&&st.siteConfig.share_bonus)||'0.10');
+  var r=await sb.from('share_bonus').update({status:'approved'}).eq('id',id);
+  if(r.error)return toast(r.error.message,'error');
+  var u=st.users.find(function(x){return x.user_id===uid;});
+  if(u){
+    var nb=Number(u.balance||0)+amt;
+    await sb.from('users').update({balance:nb}).eq('user_id',uid);
+    await sb.from('notifications').insert([{user_id:uid,title:'Share Bonus Approved',message:'+$'+amt.toFixed(2)+' credited!',type:'bonus',is_read:false}]);
+    await sb.from('users').update({unread_count:Number(u.unread_count||0)+1}).eq('user_id',uid);
+  }
+  logAction('Approve SB',uname);
+  toast('Approved + $'+amt);
+  await refresh();
+}
+function rejectSBPrompt(id,uid){var r=prompt('Reject reason:','Invalid screenshot');if(r===null)return;rejectSB(id,uid,r||'No reason');}
+async function rejectSB(id,uid,reason){
+  var r=await sb.from('share_bonus').update({status:'rejected',admin_note:reason}).eq('id',id);
+  if(!r.error){
+    await sb.from('notifications').insert([{user_id:uid,title:'Share Bonus Rejected',message:'Reason: '+reason,type:'warning',is_read:false}]);
+    var u=st.users.find(function(x){return x.user_id===uid;});
+    if(u)await sb.from('users').update({unread_count:Number(u.unread_count||0)+1}).eq('user_id',uid);
+    toast('Rejected');
+    await refresh();
+  }else toast(r.error.message,'error');
+}
+
+/* ============== PROMOS ============== */
+function promosV(){
+  var h='<div class="grid2" style="margin-bottom:12px"><button class="btn" onclick="openPromoModal()">+ NEW PROMO</button><button class="btn btn-blue" onclick="st.showRedemptions=true;render()">👁️ Redemptions</button></div>';
+  var totalRedeemed=st.promos.reduce(function(a,b){return a+Number(b.used_count||0);},0);
+  var totalGiven=st.promos.reduce(function(a,b){return a+(Number(b.used_count||0)*Number(b.amount||0));},0);
+  h+='<div class="grid3" style="margin-bottom:12px"><div class="stat"><p style="font-size:9px;color:#666;margin:0 0 4px">CODES</p><p class="g" style="font-size:18px;font-weight:900;margin:0">'+st.promos.length+'</p></div><div class="stat"><p style="font-size:9px;color:#666;margin:0 0 4px">REDEEMED</p><p class="g" style="font-size:18px;font-weight:900;margin:0">'+totalRedeemed+'</p></div><div class="stat"><p style="font-size:9px;color:#666;margin:0 0 4px">GIVEN</p><p class="g" style="font-size:18px;font-weight:900;margin:0">$'+totalGiven.toFixed(0)+'</p></div></div>';
+  if(st.promos.length===0)return h+'<div class="card" style="text-align:center;color:#666;padding:40px">No promo codes</div>';
+  st.promos.forEach(function(p){h+=promoCardHTML(p);});
+  return h;
+}
+
+function promoCardHTML(p){
+  var used=Number(p.used_count||0);
+  var max=Number(p.max_uses||100);
+  var pct=max>0?(used/max*100):0;
+  var expired=used>=max;
+  var isActive=p.is_active&&!expired;
+  return '<div class="promo-card '+(isActive?'':'promo-off')+'">'+
+    '<div class="row"><div><p style="font-weight:900;margin:0;font-size:16px;letter-spacing:1px;color:#FFD700">'+esc(p.code)+'</p><p class="lbl" style="margin:4px 0 0">'+esc(p.label||'Bonus')+'</p></div><div style="text-align:right"><p class="g" style="font-size:20px;font-weight:900;margin:0">$'+fmt(p.amount)+'</p><span class="badge '+(expired?'br':(p.is_active?'ba':'bp'))+'" style="margin-top:4px">'+(expired?'EXPIRED':(p.is_active?'ACTIVE':'INACTIVE'))+'</span></div></div>'+
+    '<div class="divider"></div>'+
+    '<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:10px;color:#888;margin-bottom:4px"><span>Used: '+used+' / '+max+'</span><span>'+pct.toFixed(0)+'%</span></div><div style="height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:#FFD700"></div></div></div>'+
+    '<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn-xs btn-gray" onclick="copyCode(\''+esc(p.code)+'\')">📋 Copy</button><button class="btn-xs btn-blue" onclick="editPromoPrompt('+p.id+')">✏️ Edit</button><button class="btn-xs '+(p.is_active?'btn-yellow':'btn-green')+'" onclick="togglePromo('+p.id+','+(p.is_active?'true':'false')+')">'+(p.is_active?'Disable':'Enable')+'</button><button class="btn-xs btn-red" onclick="deletePromo('+p.id+',\''+esc(p.code)+'\')">🗑️</button></div></div>';
+}
+
+function openPromoModal(){st.showPromoModal=true;render();}
+function copyCode(c){try{navigator.clipboard.writeText(c);toast('Copied: '+c);}catch(e){prompt('Copy:',c);}}
+async function togglePromo(id,current){var r=await sb.from('promo_codes').update({is_active:!current}).eq('id',id);if(!r.error){toast('Done');await refresh();}else toast(r.error.message,'error');}
+async function deletePromo(id,code){if(!confirm('Delete "'+code+'"?'))return;var r=await sb.from('promo_codes').delete().eq('id',id);if(!r.error){toast('Deleted');await refresh();}else toast(r.error.message,'error');}
+async function editPromoPrompt(id){
+  var p=st.promos.find(function(x){return x.id===id;});
+  if(!p)return;
+  var amt=prompt('New amount ($):',p.amount);
+  if(amt===null)return;
+  var max=prompt('New max uses:',p.max_uses);
+  if(max===null)return;
+  var r=await sb.from('promo_codes').update({amount:parseFloat(amt),max_uses:parseInt(max)}).eq('id',id);
+  if(!r.error){toast('Updated');await refresh();}else toast(r.error.message,'error');
+}
+async function createPromo(){
+  var code=$('pCode').value.trim().toUpperCase();
+  var amt=parseFloat($('pAmt').value);
+  var maxU=parseInt($('pMax').value)||100;
+  var label=$('pLabel').value.trim()||'Bonus';
+  if(!code||code.length<3)return toast('Enter code','error');
+  if(!amt||amt<=0)return toast('Invalid amount','error');
+  var r=await sb.from('promo_codes').insert([{code:code,amount:amt,max_uses:maxU,used_count:0,label:label,is_active:true}]);
+  if(r.error)return toast(r.error.message,'error');
+  logAction('Create Promo',code);
+  toast('Created: '+code);
+  st.showPromoModal=false;
+  await refresh();
+}
+
+/* ============== CONFIG ============== */
+function configV(){
+  var cfg=st.siteConfig||{};
+  var h='<div class="card" style="border-color:rgba(0,255,102,0.3)"><p class="g" style="font-size:12px;font-weight:900;margin:0 0 6px;letter-spacing:2px">⚙️ APP CONFIG</p><p style="font-size:11px;color:#888;margin:0 0 12px">Changes update the app within 1-2 min.</p>';
+  h+='<div class="grid3"><button class="btn btn-sm" onclick="st.showNewConfig=true;render()">+ Key</button><button class="btn btn-sm btn-blue" onclick="exportConfig()">📥 Export</button><button class="btn btn-sm btn-yellow" onclick="st.showImportConfig=true;render()">📤 Import</button></div></div>';
+  CFG_SECTIONS.forEach(function(sec){
+    var expanded=st.expanded[sec.id];
+    h+='<div class="card" style="padding:14px"><div class="cfg-head" onclick="st.expanded[\''+sec.id+'\']=!st.expanded[\''+sec.id+'\'];render()"><p style="font-size:12px;font-weight:900;color:#00FF66;margin:0">'+sec.icon+' '+sec.title+'</p><span class="chev">'+(expanded?'▼':'▶')+'</span></div>';
+    if(expanded){
+      h+='<div style="margin-top:14px">';
+      sec.fields.forEach(function(f){
+        var val=cfg[f.k]!==undefined?cfg[f.k]:f.d;
+        h+='<p class="lbl" style="margin-top:12px;font-weight:700;color:#00FF66">'+f.l+'</p>';
+        if(f.t==='toggle'){
+          var isOn=String(val).toLowerCase()==='true';
+          h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:rgba(0,0,0,0.4);border-radius:10px;margin-top:4px"><span id="lbl_'+f.k+'" style="font-size:11px;color:'+(isOn?'#00FF66':'#888')+';font-weight:700">'+(isOn?'ENABLED':'DISABLED')+'</span><div class="toggle-pill '+(isOn?'on':'')+'" id="pill_'+f.k+'" onclick="toggleField(\''+f.k+'\')"></div></div>';
+          h+='<input type="hidden" id="cfg_'+f.k+'" value="'+isOn+'">';
+        }else if(f.t==='textarea'){
+          h+='<textarea id="cfg_'+f.k+'" class="inp" rows="3" style="margin-top:4px">'+esc(val)+'</textarea>';
+        }else if(f.t==='json'){
+          h+='<textarea id="cfg_'+f.k+'" class="inp mono" rows="5" style="margin-top:4px;line-height:1.4">'+esc(val)+'</textarea>';
+          h+='<div style="display:flex;gap:6px;margin-top:6px"><button class="btn-sm btn-gray" style="flex:1;font-size:10px" onclick="formatJSON(\'cfg_'+f.k+'\')">Format</button><button class="btn-sm btn-gray" style="flex:1;font-size:10px" onclick="validateJSON(\'cfg_'+f.k+'\')">Validate</button></div>';
+        }else{
+          h+='<input type="'+f.t+'" id="cfg_'+f.k+'" class="inp" value="'+esc(val)+'" style="margin-top:4px">';
+        }
+      });
+      h+='</div>';
+    }
+    h+='</div>';
+  });
+  h+='<button class="btn" style="width:100%;margin-top:8px" onclick="saveAllConfig()">💾 SAVE ALL SETTINGS</button>';
+  return h;
+}
+
+function toggleField(key){var el=$('cfg_'+key);if(!el)return;el.value=(el.value==='true')?'false':'true';var isOn=el.value==='true';var pill=$('pill_'+key);if(pill)pill.classList.toggle('on',isOn);var lbl=$('lbl_'+key);if(lbl){lbl.textContent=isOn?'ENABLED':'DISABLED';lbl.style.color=isOn?'#00FF66':'#888';}}
+function formatJSON(id){var el=$(id);if(!el)return;try{var obj=JSON.parse(el.value);el.value=JSON.stringify(obj,null,2);toast('Formatted');}catch(e){toast('Invalid: '+e.message,'error');}}
+function validateJSON(id){var el=$(id);if(!el)return;try{JSON.parse(el.value);toast('Valid JSON');}catch(e){toast(e.message,'error');}}
+
+async function saveAllConfig(){
+  var updates=[];
+  CFG_SECTIONS.forEach(function(sec){
+    sec.fields.forEach(function(f){
+      var el=$('cfg_'+f.k);
+      if(!el)return;
+      var val=String(el.value||'').trim();
+      if(f.t==='json'){try{var p=JSON.parse(val);val=JSON.stringify(p);}catch(e){return toast('Invalid JSON in "'+f.l+'": '+e.message,'error');}}
+      updates.push({key:f.k,value:val,updated_at:new Date().toISOString()});
+    });
+  });
+  if(!confirm('Save '+updates.length+' settings?'))return;
+  toast('Saving...','warn');
+  var r=await sb.from('site_config').upsert(updates,{onConflict:'key'});
+  if(r.error)return toast(r.error.message,'error');
+  logAction('Save Config',updates.length+' keys');
+  toast(updates.length+' saved!');
+  await refresh();
+}
+
+function exportConfig(){
+  var cfg=st.siteConfig||{};
+  var blob=new Blob([JSON.stringify(cfg,null,2)],{type:'application/json'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');a.href=url;a.download='toxic_config_'+Date.now()+'.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+  toast('Exported');
+}
+
+async function saveNewConfig(){
+  var k=$('ncKey').value.trim();
+  var v=$('ncVal').value.trim();
+  if(!k)return toast('Enter key','error');
+  var r=await sb.from('site_config').upsert([{key:k,value:v,updated_at:new Date().toISOString()}],{onConflict:'key'});
+  if(r.error)return toast(r.error.message,'error');
+  logAction('New Config',k);
+  toast('Added: '+k);
+  st.showNewConfig=false;
+  await refresh();
+}
+
+async function importConfig(){
+  var txt=$('importTxt').value.trim();
+  try{
+    var obj=JSON.parse(txt);
+    var updates=Object.keys(obj).map(function(k){return {key:k,value:obj[k],updated_at:new Date().toISOString()};});
+    var r=await sb.from('site_config').upsert(updates,{onConflict:'key'});
+    if(r.error)return toast(r.error.message,'error');
+    logAction('Import Config',updates.length);
+    toast(updates.length+' imported');
+    st.showImportConfig=false;
+    await refresh();
+  }catch(e){toast('Invalid JSON','error');}
+}
+
+/* ============== NOTIFICATIONS ============== */
+function notifsV(){
+  var list=st.notifications.slice(0,100);
+  if(st.notifSearch)list=list.filter(function(n){return (n.title||'').toLowerCase().indexOf(st.notifSearch.toLowerCase())>-1||(n.message||'').toLowerCase().indexOf(st.notifSearch.toLowerCase())>-1;});
+  var h='<button class="btn btn-blue" style="width:100%;margin-bottom:12px" onclick="st.showBroadcast=true;render()">📢 Send Broadcast</button>';
+  h+='<input class="inp" placeholder="Search..." oninput="st.notifSearch=this.value;render()" value="'+esc(st.notifSearch)+'" style="margin-bottom:12px">';
+  if(list.length===0)return h+'<div class="card" style="text-align:center;color:#666;padding:40px">No notifications</div>';
+  list.forEach(function(n){
+    var tc=n.type==='warning'?'#FBBF24':(n.type==='bonus'?'#00FF66':'#60A5FA');
+    h+='<div class="card" style="border-left:3px solid '+tc+'"><div class="row"><div><p style="font-weight:700;margin:0;font-size:13px">'+esc(n.title||'Message')+'</p><p class="lbl" style="margin:4px 0 0">To: '+esc(n.user_id||'?')+'</p></div><button class="btn-xs btn-red" onclick="deleteTx(\'notifications\','+n.id+')">🗑️</button></div><p style="font-size:12px;color:#ccc;margin:8px 0;line-height:1.4">'+esc(n.message)+'</p></div>';
+  });
+  return h;
+}
+
+/* ============== WINNERS ============== */
+function winnersV(){
+  var h='<div class="grid2" style="margin-bottom:12px"><button class="btn" onclick="openWinnerModal(null)">+ ADD</button><button class="btn btn-blue" onclick="bulkImportWinners()">📥 Bulk Import</button></div>';
+  if(st.winners.length===0)return h+'<div class="card" style="text-align:center;color:#666;padding:40px">No winners</div>';
+  var sorted=st.winners.slice().sort(function(a,b){return Number(b.amount||0)-Number(a.amount||0);});
+  sorted.forEach(function(w,i){
+    var rank=i+1;
+    var medal=rank===1?'🥇':(rank===2?'🥈':(rank===3?'🥉':'🏅'));
+    h+='<div class="card" style="padding:12px"><div class="row" style="margin-bottom:6px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:20px">'+medal+'</span><div><p style="font-weight:800;margin:0;font-size:14px">'+esc(w.name)+'</p><p class="lbl" style="margin:2px 0 0">'+esc(w.country||'🌍')+' · '+esc(w.period||'WEEK')+'</p></div></div><div style="text-align:right"><p class="g" style="font-size:18px;font-weight:900;margin:0">$'+fmt(w.amount)+'</p></div></div><div style="display:flex;gap:6px;margin-top:8px"><button class="btn-sm btn-blue" style="flex:1" onclick="openWinnerModal('+w.id+')">Edit</button><button class="btn-sm btn-red" onclick="deleteWinner('+w.id+',\''+esc(w.name)+'\')">Del</button></div></div>';
+  });
+  return h;
+}
+
+function bulkImportWinners(){
+  var txt=prompt('Paste CSV (name,country,amount,period):');
+  if(!txt)return;
+  var lines=txt.split('\n').filter(function(l){return l.trim();});
+  var arr=lines.map(function(l){var p=l.split(',');return {name:(p[0]||'').trim(),country:(p[1]||'🌍').trim(),amount:parseFloat(p[2])||0,period:(p[3]||'WEEK').trim()};});
+  sb.from('fake_winners').insert(arr).then(function(r){if(r.error)return toast(r.error.message,'error');toast(arr.length+' imported');refresh();});
+}
+
+function openWinnerModal(id){st.editWinner=id;st.showWinnerModal=true;render();}
+async function saveWinner(){
+  var name=$('wName').value.trim();
+  var country=$('wCountry').value.trim()||'🌍';
+  var amount=parseFloat($('wAmount').value);
+  var period=$('wPeriod').value;
+  if(!name)return toast('Enter name','error');
+  if(!amount||amount<=0)return toast('Enter amount','error');
+  var data={name:name,country:country,amount:amount,period:period};
+  var r;
+  if(st.editWinner)r=await sb.from('fake_winners').update(data).eq('id',st.editWinner);
+  else r=await sb.from('fake_winners').insert([data]);
+  if(r.error)return toast(r.error.message,'error');
+  toast('Saved');
+  st.showWinnerModal=false;st.editWinner=null;
+  await refresh();
+}
+async function deleteWinner(id,name){if(!confirm('Delete "'+name+'"?'))return;var r=await sb.from('fake_winners').delete().eq('id',id);if(!r.error){toast('Deleted');await refresh();}else toast(r.error.message,'error');}
+
+/* ============== ANALYTICS ============== */
+function analyticsV(){
+  var today=new Date();today.setHours(0,0,0,0);
+  var td=st.deps.filter(function(d){return d.status==='approved'&&new Date(d.created_at).toDateString()===today.toDateString();});
+  var tw=st.wd.filter(function(d){return d.status==='approved'&&new Date(d.created_at).toDateString()===today.toDateString();});
+  var tu=st.users.filter(function(u){return u.joined_at&&new Date(u.joined_at).toDateString()===today.toDateString();});
+  var h='<div class="card"><p class="g" style="font-size:11px;font-weight:700;margin:0 0 12px">📅 TODAY</p><div class="grid2">';
+  h+='<div class="mini-stat"><p class="l">NEW USERS</p><p class="v g">'+tu.length+'</p></div>';
+  h+='<div class="mini-stat"><p class="l">DEPOSITS</p><p class="v g">$'+td.reduce(function(a,b){return a+Number(b.amount);},0).toFixed(0)+'</p></div>';
+  h+='<div class="mini-stat"><p class="l">PAID</p><p class="v r">$'+tw.reduce(function(a,b){return a+Number(b.amount);},0).toFixed(0)+'</p></div>';
+  h+='<div class="mini-stat"><p class="l">NET</p><p class="v g">$'+(td.reduce(function(a,b){return a+Number(b.amount);},0)-tw.reduce(function(a,b){return a+Number(b.amount);},0)).toFixed(0)+'</p></div>';
+  h+='</div></div>';
+
+  var topInv=st.users.slice().sort(function(a,b){return Number(b.invested||0)-Number(a.invested||0);}).slice(0,10);
+  h+='<div class="card"><p class="y" style="font-size:11px;font-weight:700;margin:0 0 12px">🏆 TOP 10 INVESTORS</p>';
+  topInv.forEach(function(u,i){h+='<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)"><span style="font-size:11px">'+(i+1)+'. '+esc(u.username||'?')+'</span><span class="g mono" style="font-size:11px">$'+fmt(u.invested)+'</span></div>';});
+  h+='</div>';
+
+  var refCounts={};
+  st.users.forEach(function(u){if(u.referred_by)refCounts[u.referred_by]=(refCounts[u.referred_by]||0)+1;});
+  var topRef=Object.keys(refCounts).map(function(k){return {code:k,count:refCounts[k]};}).sort(function(a,b){return b.count-a.count;}).slice(0,10);
+  h+='<div class="card"><p class="y" style="font-size:11px;font-weight:700;margin:0 0 12px">👥 TOP 10 REFERRERS</p>';
+  topRef.forEach(function(r,i){
+    var u=st.users.find(function(x){return x.referral_code===r.code;});
+    h+='<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)"><span style="font-size:11px">'+(i+1)+'. '+esc(u?u.username:r.code)+'</span><span class="g mono" style="font-size:11px">'+r.count+' refs</span></div>';
+  });
+  h+='</div>';
+
+  // Plan distribution
+  var planCounts={};
+  st.userPlans.forEach(function(p){planCounts[p.plan_name]=(planCounts[p.plan_name]||0)+1;});
+  h+='<div class="card"><p class="b" style="font-size:11px;font-weight:700;margin:0 0 12px">💎 PLAN DISTRIBUTION</p>';
+  Object.keys(planCounts).sort(function(a,b){return planCounts[b]-planCounts[a];}).forEach(function(k){h+='<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)"><span style="font-size:11px">'+esc(k)+'</span><span class="b mono" style="font-size:11px">'+planCounts[k]+'</span></div>';});
+  h+='</div>';
+  return h;
+}
+
+/* ============== SYSTEM ============== */
+function systemV(){
+  var cfg=st.siteConfig||{};
+  var h='<div class="warn-box"><p class="r" style="font-weight:900;margin:0 0 4px;font-size:12px">⚠️ DANGER ZONE</p><p style="font-size:11px;color:#ccc;margin:0">Ye switches turant effect karte hai.</p></div>';
+  h+='<div class="card"><p class="g" style="font-size:11px;font-weight:700;margin:0 0 12px">🔧 KILL SWITCHES</p>';
+  var switches=[
+    {k:'maintenance_mode',l:'Maintenance Mode (app down)'},
+    {k:'signup_enabled',l:'Signups Enabled',inv:true},
+    {k:'deposits_enabled',l:'Deposits Enabled',inv:true},
+    {k:'withdrawals_enabled',l:'Withdrawals Enabled',inv:true},
+    {k:'spin_enabled',l:'Spin Wheel Enabled',inv:true}
+  ];
+  switches.forEach(function(s){
+    var v=String(cfg[s.k]||'false').toLowerCase()==='true';
+    var isOn=s.inv?!v:v;
+    h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(0,0,0,0.4);border-radius:10px;margin-bottom:6px"><div><span style="font-size:12px;color:#ccc;font-weight:700">'+s.l+'</span></div><div class="toggle-pill '+(isOn?'on':'')+'" onclick="quickToggle(\''+s.k+'\','+(v?'true':'false')+')"></div></div>';
+  });
+  h+='</div>';
+  h+='<div class="card"><p class="y" style="font-size:11px;font-weight:700;margin:0 0 12px">📢 UPDATE CONTROL</p>';
+  var fv=String(cfg.force_update||'false').toLowerCase()==='true';
+  h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(0,0,0,0.4);border-radius:10px;margin-bottom:6px"><span style="font-size:12px">Force Update</span><div class="toggle-pill '+(fv?'on':'')+'" onclick="quickToggle(\'force_update\','+(fv?'true':'false')+')"></div></div>';
+  h+='<p class="lbl" style="margin-top:8px">Update Message</p><input class="inp" id="fuMsg" value="'+esc(cfg.force_update_msg||'')+'" style="margin-top:4px">';
+  h+='<button class="btn btn-sm" style="width:100%;margin-top:8px" onclick="saveQuick(\'force_update_msg\',\'fuMsg\')">Save</button>';
+  h+='</div>';
+  return h;
+}
+
+async function quickToggle(k,current){
+  var nv = current==='true'?'false':'true';
+  var r=await sb.from('site_config').upsert([{key:k,value:nv,updated_at:new Date().toISOString()}],{onConflict:'key'});
+  if(r.error)return toast(r.error.message,'error');
+  st.siteConfig[k]=nv;
+  logAction('Toggle '+k,nv);
+  toast(k+' → '+nv);
+  render();
+}
+
+async function saveQuick(k,inputId){
+  var v=$(inputId).value;
+  var r=await sb.from('site_config').upsert([{key:k,value:v,updated_at:new Date().toISOString()}],{onConflict:'key'});
+  if(r.error)return toast(r.error.message,'error');
+  st.siteConfig[k]=v;
+  toast('Saved');
+}
+
+/* ============== RAW DB BROWSER ============== */
+function dbV(){
+  var tables=['users','user_plans','deposits','withdrawals','notifications','promo_codes','promo_redemptions','investment_plans','site_config','share_bonus','fake_winners'];
+  var h='<div class="card"><p class="g" style="font-size:11px;font-weight:700;margin:0 0 10px">🗄️ RAW TABLE BROWSER</p><p style="font-size:11px;color:#888;margin:0 0 12px">Direct read-only access. Use with caution.</p>';
+  h+='<p class="lbl">Table</p><select class="inp" id="rawTable" onchange="loadRaw()">';
+  tables.forEach(function(t){h+='<option value="'+t+'" '+(st.rawTable===t?'selected':'')+'>'+t+'</option>';});
+  h+='</select>';
+  h+='<button class="btn btn-sm" style="width:100%;margin-top:8px" onclick="loadRaw()">🔍 Load</button>';
+  h+='</div>';
+  if(st.rawTable&&window._rawData){
+    h+='<div class="card"><p style="font-size:11px;color:#00FF66;margin:0 0 8px">📊 '+st.rawTable+' ('+window._rawData.length+' rows)</p>';
+    h+='<div style="overflow-x:auto"><table><thead><tr>';
+    if(window._rawData[0])Object.keys(window._rawData[0]).slice(0,8).forEach(function(k){h+='<th>'+esc(k)+'</th>';});
+    h+='</tr></thead><tbody>';
+    window._rawData.slice(0,30).forEach(function(row){
+      h+='<tr>';
+      Object.keys(row).slice(0,8).forEach(function(k){var v=row[k];h+='<td style="font-size:10px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(String(v).slice(0,50))+'</td>';});
+      h+='</tr>';
+    });
+    h+='</tbody></table></div>';
+    h+='<button class="btn btn-sm btn-blue" style="width:100%;margin-top:10px" onclick="exportRaw()">📥 Export</button>';
+    h+='</div>';
+  }
+  return h;
+}
+
+async function loadRaw(){
+  var t=$('rawTable').value;
+  st.rawTable=t;
+  toast('Loading '+t+'...','warn');
+  var r=await sb.from(t).select('*').limit(500);
+  if(r.error)return toast(r.error.message,'error');
+  window._rawData=r.data||[];
+  toast('Loaded '+window._rawData.length);
+  render();
+}
+
+function exportRaw(){
+  if(!window._rawData||window._rawData.length===0)return;
+  var keys=Object.keys(window._rawData[0]);
+  var rows=[keys];
+  window._rawData.forEach(function(r){rows.push(keys.map(function(k){return r[k];}));});
+  downloadCSV(st.rawTable+'_'+Date.now()+'.csv',rows);
+  toast('Exported');
+}
+
+/* ============== LOGS ============== */
+function logsV(){
+  if(st.logs.length===0)return '<div class="card" style="text-align:center;color:#666;padding:40px">No logs</div>';
+  var h='<div class="grid2" style="margin-bottom:12px"><button class="btn btn-sm btn-blue" onclick="exportLogs()">📥 Export</button><button class="btn btn-sm btn-red" onclick="if(confirm(\'Clear?\')){st.logs=[];localStorage.removeItem(\'toxic_admin_logs\');render()}">🗑️ Clear</button></div>';
+  st.logs.slice(0,100).forEach(function(l){
+    h+='<div class="card" style="padding:10px 14px"><p class="g" style="font-size:11px;font-weight:700;margin:0 0 4px">'+esc(l.action)+'</p><p style="font-size:11px;color:#ccc;margin:0">'+esc(l.detail)+'</p><p style="font-size:9px;color:#666;margin:4px 0 0">'+new Date(l.time).toLocaleString()+'</p></div>';
+  });
+  return h;
+}
+
+function exportLogs(){
+  var rows=[['action','detail','time']];
+  st.logs.forEach(function(l){rows.push([l.action,l.detail,new Date(l.time).toISOString()]);});
+  downloadCSV('logs_'+Date.now()+'.csv',rows);
+  toast('Exported');
+}
+
+/* ============== MODALS ============== */
+function modals(){
+  var h='';
+  if(st.showPlanModal){
+    var p=st.editPlan?st.plansDB.find(function(x){return x.id===st.editPlan;}):null;
+    h+='<div class="modal" onclick="st.showPlanModal=false;st.editPlan=null;render()"><div class="modal-card" onclick="event.stopPropagation()">';
+    h+='<h2 style="font-size:18px;font-weight:900;margin:0 0 16px">'+(p?'Edit':'Add')+' Plan</h2>';
+    h+='<p class="lbl">Plan Key</p><input id="plKey" class="inp" value="'+esc(p?p.plan_key:'')+'" style="margin:4px 0 10px"'+(p?' disabled':'')+'>';
+    h+='<p class="lbl">Name</p><input id="plName" class="inp" value="'+esc(p?p.name:'')+'" style="margin:4px 0 10px;text-transform:uppercase">';
+    h+='<div class="grid3"><div><p class="lbl">Deposit</p><input id="plDep" type="number" step="0.01" class="inp" value="'+(p?p.deposit:'')+'" style="margin-top:4px"></div><div><p class="lbl">Daily</p><input id="plDaily" type="number" step="0.01" class="inp" value="'+(p?p.daily:'')+'" style="margin-top:4px"></div><div><p class="lbl">Total</p><input id="plTotal" type="number" step="0.01" class="inp" value="'+(p?p.total:'')+'" style="margin-top:4px"></div></div>';
+    h+='<div class="grid3" style="margin-top:10px"><div><p class="lbl">Color</p><input id="plColor" class="inp" value="'+esc(p?p.color:'#00FF66')+'" style="margin-top:4px"></div><div><p class="lbl">Icon</p><input id="plIcon" class="inp" value="'+esc(p?p.icon:'💎')+'" style="margin-top:4px"></div><div><p class="lbl">Sort</p><input id="plSort" type="number" class="inp" value="'+(p?p.sort_order:0)+'" style="margin-top:4px"></div></div>';
+    h+='<label style="display:flex;align-items:center;gap:8px;margin:12px 0;font-size:12px;color:#ccc"><input type="checkbox" id="plActive" '+(p?(p.is_active?'checked':''):'checked')+'> Active</label>';
+    h+='<button class="btn" style="width:100%;margin-bottom:8px" onclick="savePlanDB()">SAVE</button>';
+    h+='<button class="btn btn-gray" style="width:100%" onclick="st.showPlanModal=false;st.editPlan=null;render()">Cancel</button>';
+    h+='</div></div>';
+  }
+  if(st.showPromoModal){
+    h+='<div class="modal" onclick="st.showPromoModal=false;render()"><div class="modal-card" onclick="event.stopPropagation()">';
+    h+='<h2 style="font-size:18px;font-weight:900;margin:0 0 16px">Create Promo</h2>';
+    h+='<p class="lbl">Code</p><input id="pCode" class="inp" style="margin:4px 0 12px;text-transform:uppercase;font-weight:700">';
+    h+='<p class="lbl">Amount ($)</p><input id="pAmt" type="number" step="0.01" class="inp" style="margin:4px 0 12px">';
+    h+='<p class="lbl">Max Uses</p><input id="pMax" type="number" value="100" class="inp" style="margin:4px 0 12px">';
+    h+='<p class="lbl">Label</p><input id="pLabel" class="inp" placeholder="Welcome" style="margin:4px 0 12px">';
+    h+='<button class="btn" style="width:100%;margin-bottom:8px" onclick="createPromo()">CREATE</button>';
+    h+='<button class="btn btn-gray" style="width:100%" onclick="st.showPromoModal=false;render()">Cancel</button>';
+    h+='</div></div>';
+  }
+  if(st.showWinnerModal){
+    var w=st.editWinner?st.winners.find(function(x){return x.id===st.editWinner;}):null;
+    h+='<div class="modal" onclick="st.showWinnerModal=false;st.editWinner=null;render()"><div class="modal-card" onclick="event.stopPropagation()">';
+    h+='<h2 style="font-size:18px;font-weight:900;margin:0 0 16px">'+(w?'Edit':'Add')+' Winner</h2>';
+    h+='<p class="lbl">Name</p><input id="wName" class="inp" value="'+esc(w?w.name:'')+'" style="margin:4px 0 12px">';
+    h+='<p class="lbl">Country Flag</p><input id="wCountry" class="inp" value="'+esc(w?w.country:'🌍')+'" style="margin:4px 0 12px">';
+    h+='<p class="lbl">Amount ($)</p><input id="wAmount" type="number" class="inp" value="'+(w?w.amount:'')+'" style="margin:4px 0 12px">';
+    h+='<p class="lbl">Period</p><select id="wPeriod" class="inp" style="margin:4px 0 12px"><option value="WEEK"'+(w&&w.period==='WEEK'?' selected':'')+'>WEEK</option><option value="MONTH"'+(w&&w.period==='MONTH'?' selected':'')+'>MONTH</option></select>';
+    h+='<button class="btn" style="width:100%;margin-bottom:8px" onclick="saveWinner()">SAVE</button>';
+    h+='<button class="btn btn-gray" style="width:100%" onclick="st.showWinnerModal=false;st.editWinner=null;render()">Cancel</button>';
+    h+='</div></div>';
+  }
+  if(st.selectedUser)h+=userModalV();
+  if(st.showRefTree)h+=refTreeV();
+  if(st.showMessage){
+    h+='<div class="modal" onclick="st.showMessage=false;render()"><div class="modal-card" onclick="event.stopPropagation()">';
+    h+='<h2 style="font-size:18px;font-weight:900;margin:0 0 12px">Send Message</h2>';
+    h+='<p class="lbl">To</p><p class="val g" style="margin-bottom:12px">'+esc(st.msgUser||'')+'</p>';
+    h+='<div class="type-selector">';
+    ['info','bonus','warning','update'].forEach(function(ty){h+='<button class="type-btn '+(st.msgType===ty?'on':'')+'" onclick="st.msgType=\''+ty+'\';render()">'+ty.toUpperCase()+'</button>';});
+    h+='</div>';
+    h+='<p class="lbl">Title</p><input id="msgTitle" class="inp" style="margin:4px 0 12px">';
+    h+='<p class="lbl">Message</p><textarea id="msgBody" class="inp" rows="4" style="margin:4px 0 12px"></textarea>';
+    h+='<button class="btn" style="width:100%;margin-bottom:8px" onclick="sendMessage()">SEND</button>';
+    h+='<button class="btn btn-gray" style="width:100%" onclick="st.showMessage=false;render()">Cancel</button>';
+    h+='</div></div>';
+  }
+  if(st.showBroadcast){
+    h+='<div class="modal" onclick="st.showBroadcast=false;render()"><div class="modal-card" onclick="event.stopPropagation()">';
+    h+='<h2 style="font-size:18px;font-weight:900;margin:0 0 12px">📢 Broadcast</h2>';
+    h+='<p style="font-size:11px;color:#FBBF24;margin:0 0 12px">Send to ALL '+st.users.length+' users</p>';
+    h+='<div class="type-selector">';
+    ['info','bonus','warning','update'].forEach(function(ty){h+='<button class="type-btn '+(st.msgType===ty?'on':'')+'" onclick="st.msgType=\''+ty+'\';render()">'+ty.toUpperCase()+'</button>';});
+    h+='</div>';
+    h+='<p class="lbl">Title</p><input id="bcTitle" class="inp" style="margin:4px 0 12px">';
+    h+='<p class="lbl">Message</p><textarea id="bcBody" class="inp" rows="4" style="margin:4px 0 12px"></textarea>';
+    h+='<button class="btn" style="width:100%;margin-bottom:8px" onclick="sendBroadcast()">SEND TO ALL</button>';
+    h+='<button class="btn btn-gray" style="width:100%" onclick="st.showBroadcast=false;render()">Cancel</button>';
+    h+='</div></div>';
+  }
+  if(st.showAddDeposit){
+    h+='<div class="modal" onclick="st.showAddDeposit=false;render()"><div class="modal-card" onclick="event.stopPropagation()">';
+    h+='<h2 style="font-size:18px;font-weight:900;margin:0 0 12px">+ Manual Deposit</h2>';
+    h+='<p class="lbl">User ID</p><input id="mdUid" class="inp" placeholder="TG..." style="margin:4px 0 12px">';
+    h+='<p class="lbl">Amount ($)</p><input id="mdAmt" type="number" step="0.01" class="inp" style="margin:4px 0 12px">';
+    h+='<p class="lbl">Method</p><input id="mdMethod" class="inp" placeholder="Manual / Admin Credit" style="margin:4px 0 12px">';
+    h+='<label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#ccc;margin-bottom:12px"><input type="checkbox" id="mdCredit"> Credit balance immediately</label>';
+    h+='<button class="btn" style="width:100%;margin-bottom:8px" onclick="addManualDeposit()">ADD</button>';
+    h+='<button class="btn btn-gray" style="width:100%" onclick="st.showAddDeposit=false;render()">Cancel</button>';
+    h+='</div></div>';
+  }
+  if(st.showAddWithdrawal){
+    h+='<div class="modal" onclick="st.showAddWithdrawal=false;render()"><div class="modal-card" onclick="event.stopPropagation()">';
+    h+='<h2 style="font-size:18px;font-weight:900;margin:0 0 12px">+ Manual Withdrawal</h2>';
+    h+='<p class="lbl">User ID</p><input id="mwUid" class="inp" placeholder="TG..." style="margin:4px 0 12px">';
+    h+='<p class="lbl">Amount ($)</p><input id="mwAmt" type="number" step="0.01" class="inp" style="margin:4px 0 12px">';
+    h+='<p class="lbl">Method</p><input id="mwMethod" class="inp" value="USDT" style="margin:4px 0 12px">';
+    h+='<p class="lbl">Address</p><input id="mwAddr" class="inp" style="margin:4px 0 12px">';
+    h+='<label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#ccc;margin-bottom:12px"><input type="checkbox" id="mwDebit"> Debit from user balance</label>';
+    h+='<button class="btn" style="width:100%;margin-bottom:8px" onclick="addManualWithdrawal()">ADD</button>';
+    h+='<button class="btn btn-gray" style="width:100%" onclick="st.showAddWithdrawal=false;render()">Cancel</button>';
+    h+='</div></div>';
+  }
+  if(st.showEditTx){
+    h+='<div class="modal" onclick="st.showEditTx=false;st.editTx=null;render()"><div class="modal-card" onclick="event.stopPropagation()">';
+    h+='<h2 style="font-size:18px;font-weight:900;margin:0 0 12px">✏️ Edit Transaction</h2>';
+    h+='<p class="lbl">Amount</p><input id="etAmt" type="number" step="0.01" class="inp" style="margin:4px 0 12px">';
+    h+='<p class="lbl">Status</p><select id="etStatus" class="inp" style="margin:4px 0 12px"><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="expired">Expired</option></select>';
+    h+='<p class="lbl">Admin Note</p><input id="etNote" class="inp" style="margin:4px 0 12px">';
+    h+='<button class="btn" style="width:100%;margin-bottom:8px" onclick="saveEditTx()">SAVE</button>';
+    h+='<button class="btn btn-gray" style="width:100%" onclick="st.showEditTx=false;st.editTx=null;render()">Cancel</button>';
+    h+='</div></div>';
+  }
+  if(st.showNewConfig){
+    h+='<div class="modal" onclick="st.showNewConfig=false;render()"><div class="modal-card" onclick="event.stopPropagation()">';
+    h+='<h2 style="font-size:18px;font-weight:900;margin:0 0 12px">+ New Config Key</h2>';
+    h+='<p class="lbl">Key</p><input id="ncKey" class="inp" placeholder="my_key" style="margin:4px 0 12px">';
+    h+='<p class="lbl">Value</p><input id="ncVal" class="inp" style="margin:4px 0 12px">';
+    h+='<button class="btn" style="width:100%;margin-bottom:8px" onclick="saveNewConfig()">ADD</button>';
+    h+='<button class="btn btn-gray" style="width:100%" onclick="st.showNewConfig=false;render()">Cancel</button>';
+    h+='</div></div>';
+  }
+  if(st.showImportConfig){
+    h+='<div class="modal" onclick="st.showImportConfig=false;render()"><div class="modal-card" onclick="event.stopPropagation()">';
+    h+='<h2 style="font-size:18px;font-weight:900;margin:0 0 12px">📤 Import Config</h2>';
+    h+='<p class="lbl">Paste JSON</p><textarea id="importTxt" class="inp mono" rows="8" style="margin:4px 0 12px"></textarea>';
+    h+='<button class="btn" style="width:100%;margin-bottom:8px" onclick="importConfig()">IMPORT</button>';
+    h+='<button class="btn btn-gray" style="width:100%" onclick="st.showImportConfig=false;render()">Cancel</button>';
+    h+='</div></div>';
+  }
+  if(st.showRedemptions){
+    h+='<div class="modal" onclick="st.showRedemptions=false;render()"><div class="modal-card" onclick="event.stopPropagation()">';
+    h+='<h2 style="font-size:16px;font-weight:900;margin:0 0 12px">🎁 Recent Redemptions</h2>';
+    var reds=st.promoCodesRedemptions.slice(0,50);
+    if(reds.length===0)h+='<p style="text-align:center;color:#666;padding:20px">No redemptions</p>';
+    else reds.forEach(function(r){h+='<div style="padding:8px;background:rgba(0,0,0,0.3);border-radius:8px;margin-bottom:6px;font-size:11px"><b class="g">'+esc(r.code)+'</b> · '+esc(r.user_id)+' · $'+fmt(r.amount)+'</div>';});
+    h+='</div></div>';
+  }
+  if(st.showChangePwd){
+    h+='<div class="modal" onclick="st.showChangePwd=false;render()"><div class="modal-card" onclick="event.stopPropagation()">';
+    h+='<h2 style="font-size:18px;font-weight:900;margin:0 0 12px">Change Password</h2>';
+    h+='<p class="lbl">Current</p><input type="password" id="oldPwd" class="inp" style="margin:4px 0 12px">';
+    h+='<p class="lbl">New</p><input type="password" id="newPwd" class="inp" style="margin:4px 0 12px">';
+    h+='<p class="lbl">Confirm</p><input type="password" id="newPwd2" class="inp" style="margin:4px 0 12px">';
+    h+='<button class="btn" style="width:100%;margin-bottom:8px" onclick="changeAdminPwd()">UPDATE</button>';
+    h+='<button class="btn btn-gray" style="width:100%" onclick="st.showChangePwd=false;render()">Cancel</button>';
+    h+='</div></div>';
+  }
+  if(st.showSettings){
+    h+='<div class="modal" onclick="st.showSettings=false;render()"><div class="modal-card" onclick="event.stopPropagation()">';
+    h+='<h2 style="font-size:18px;font-weight:900;margin:0 0 12px">⚙️ Settings</h2>';
+    h+='<button class="btn btn-purple" style="width:100%;margin-bottom:12px" onclick="st.showSettings=false;st.showChangePwd=true;render()">🔐 Change Admin Password</button>';
+    h+='<button class="btn btn-blue" style="width:100%;margin-bottom:12px" onclick="st.showSettings=false;downloadCSV(\'backup_\'+Date.now()+\'.csv\',[[\'type\',\'count\']].concat([[\'users\',st.users.length],[\'deposits\',st.deps.length],[\'withdrawals\',st.wd.length],[\'plans\',st.userPlans.length]]))">📥 Quick Backup</button>';
+    h+='<button class="btn btn-gray" style="width:100%" onclick="st.showSettings=false;render()">Close</button>';
+    h+='</div></div>';
+  }
+  return h;
+}
+
+/* ============== ALL FUNCTIONS ============== */
+function login(){var p=$('pw').value;if(p!==getAdminPwd())return toast('Wrong password','error');st.login=true;startSession();logAction('Login','');refresh();}
+function logout(){if(confirm('Logout?')){logAction('Logout','');st.login=false;endSession();render();}}
+function sw(t){st.tab=t;render();}
+function openMessage(uid){st.msgUser=uid;st.msgType='info';st.showMessage=true;render();}
+function openRefTree(uid){st.refTreeUser=uid;st.showRefTree=true;st.selectedUser=null;render();}
+
+async function refresh(){
+  try{
+    var u=await sb.from('users').select('*').order('id',{ascending:false});
+    if(u.data)st.users=u.data;
+    var p=await sb.from('user_plans').select('*').order('id',{ascending:false});
+    if(p.data)st.userPlans=p.data;
+    var d=await sb.from('deposits').select('*').order('id',{ascending:false});
+    if(d.data)st.deps=d.data;
+    var w=await sb.from('withdrawals').select('*').order('id',{ascending:false});
+    if(w.data)st.wd=w.data;
+    var n=await sb.from('notifications').select('*').order('id',{ascending:false}).limit(200);
+    if(n.data)st.notifications=n.data;
+    var pc=await sb.from('promo_codes').select('*').order('id',{ascending:false});
+    if(pc.data)st.promos=pc.data;
+    try{var pr=await sb.from('promo_redemptions').select('*').order('id',{ascending:false}).limit(200);if(pr.data)st.promoCodesRedemptions=pr.data;}catch(e){}
+    var cfg=await sb.from('site_config').select('*');
+    if(cfg.data){var obj={};cfg.data.forEach(function(x){obj[x.key]=x.value;});st.siteConfig=obj;}
+    var pl=await sb.from('investment_plans').select('*').order('sort_order',{ascending:true});
+    if(pl.data)st.plansDB=pl.data;
+    try{var sbr=await sb.from('share_bonus').select('*').order('id',{ascending:false}).limit(200);if(sbr.data)st.shareBonus=sbr.data;}catch(e){st.shareBonus=[];}
+    try{var wr=await sb.from('fake_winners').select('*').order('id',{ascending:false}).limit(200);if(wr.data)st.winners=wr.data;}catch(e){st.winners=[];}
+    st.lastRefresh=Date.now();
+  }catch(e){console.log('Refresh err:',e);toast('Refresh: '+e.message,'error');}
+  render();
+}
+
+async function sendMessage(){
+  var title=$('msgTitle').value.trim()||'TOXIC';
+  var body=$('msgBody').value.trim();
+  if(!body)return toast('Type a message','error');
+  var r=await sb.from('notifications').insert([{user_id:st.msgUser,title:title,message:body,type:st.msgType,is_read:false}]);
+  if(r.error)return toast(r.error.message,'error');
+  var u=st.users.find(function(x){return x.user_id===st.msgUser;});
+  if(u)await sb.from('users').update({unread_count:Number(u.unread_count||0)+1}).eq('user_id',st.msgUser);
+  logAction('Message',st.msgUser);
+  toast('Sent!');
+  st.showMessage=false;st.msgUser=null;
+  await refresh();
+}
+
+async function sendBroadcast(){
+  var title=$('bcTitle').value.trim()||'TOXIC';
+  var body=$('bcBody').value.trim();
+  if(!body)return toast('Type a message','error');
+  if(!confirm('Send to ALL '+st.users.length+' users?'))return;
+  toast('Sending...','warn');
+  var notifs=st.users.map(function(u){return {user_id:u.user_id,title:title,message:body,type:st.msgType,is_read:false};});
+  var r=await sb.from('notifications').insert(notifs);
+  if(r.error)return toast(r.error.message,'error');
+  for(var i=0;i<st.users.length;i++){await sb.from('users').update({unread_count:Number(st.users[i].unread_count||0)+1}).eq('user_id',st.users[i].user_id);}
+  logAction('Broadcast','All');
+  toast('Sent to '+st.users.length);
+  st.showBroadcast=false;
+  await refresh();
+}
+
+async function saveUserMeta(){
+  var uid=st.selectedUser;
+  var email=$('uEmail').value.trim();
+  var un=$('uUsername').value.trim();
+  var rc=$('uRefCode').value.trim().toUpperCase();
+  var rb=$('uRefBy').value.trim().toUpperCase();
+  var r=await sb.from('users').update({email:email,username:un,referral_code:rc,referred_by:rb}).eq('user_id',uid);
+  if(r.error)return toast(r.error.message,'error');
+  logAction('Save User Meta',uid);
+  toast('Profile saved');
+  await refresh();
+  st.selectedUser=uid;
+}
+
+async function adminSetBal(uid){var v=$('mBal').value;if(v==='')return toast('Enter amount','error');var r=await sb.from('users').update({balance:parseFloat(v)}).eq('user_id',uid);if(!r.error){logAction('Set Balance',uid+' $'+v);toast('Updated');await refresh();st.selectedUser=uid;}else toast(r.error.message,'error');}
+async function adminAddBal(uid){var v=parseFloat($('addBal').value);if(!v)return toast('Enter amount','error');var u=st.users.find(function(x){return x.user_id===uid;});if(!u)return;var nb=Number(u.balance||0)+v;var r=await sb.from('users').update({balance:nb}).eq('user_id',uid);if(!r.error){logAction('Add Balance',uid+' '+(v>0?'+':'')+v);toast('Updated: $'+nb.toFixed(2));await refresh();st.selectedUser=uid;}else toast(r.error.message,'error');}
+async function adminSetRefBal(uid){var v=$('mRefBal').value;if(v==='')return toast('Enter amount','error');var r=await sb.from('users').update({referral_balance:parseFloat(v)}).eq('user_id',uid);if(!r.error){logAction('Set Ref Bal',uid);toast('Updated');await refresh();st.selectedUser=uid;}else toast(r.error.message,'error');}
+async function adminSetPwd(uid){var p=$('viewPwd').value;if(!p||p.length<4)return toast('Min 4 chars','error');var r=await sb.from('users').update({password_hash:btoaSafe(p)}).eq('user_id',uid);if(!r.error){logAction('Set Pwd',uid);toast('Password set');}else toast(r.error.message,'error');}
+function copyText(t){try{navigator.clipboard.writeText(t);toast('Copied');}catch(e){prompt('Copy:',t);}}
+
+async function adminToggleAutoRenew(uid,current){var r=await sb.from('users').update({auto_renew:!current}).eq('user_id',uid);if(!r.error){toast('Toggled');await refresh();st.selectedUser=uid;}}
+async function adminResetSpin(uid){var r=await sb.from('users').update({last_spin_at:null}).eq('user_id',uid);if(!r.error){toast('Spin reset');await refresh();st.selectedUser=uid;}}
+async function adminResetRefLock(uid){toast('Reset done (app side)');}
+
+async function adminBonus(uid){
+  var v=prompt('Bonus ($):');if(!v)return;
+  var amt=parseFloat(v);if(!amt||amt<=0)return toast('Invalid','error');
+  var u=st.users.find(function(x){return x.user_id===uid;});if(!u)return;
+  var nb=Number(u.balance||0)+amt;
+  var r=await sb.from('users').update({balance:nb}).eq('user_id',uid);
+  if(!r.error){
+    await sb.from('notifications').insert([{user_id:uid,title:'Bonus',message:'+$'+amt.toFixed(2)+' credited!',type:'bonus',is_read:false}]);
+    await sb.from('users').update({unread_count:Number(u.unread_count||0)+1}).eq('user_id',uid);
+    logAction('Bonus',uid+' +$'+v);
+    toast('Added');await refresh();st.selectedUser=uid;
+  }else toast(r.error.message,'error');
+}
+
+async function adminGivePlanPrompt(uid){await adminGivePlan(uid);}
+async function adminGivePlan(uid){
+  var plans=Object.keys(DEFAULT_PLANS);
+  var plan=prompt('Plan name:\n'+plans.join(', '));
+  if(!plan)return;
+  plan=plan.toUpperCase();
+  var p=DEFAULT_PLANS[plan];
+  if(!p)return toast('Invalid plan','error');
+  var u=st.users.find(function(x){return x.user_id===uid;});if(!u)return;
+  var now=new Date();
+  var np={user_id:uid,username:u.username,plan_id:p.id,plan_name:plan,deposit:p.deposit,daily:p.daily,total:p.total,days_collected:0,status:'active',started_at:now.toISOString(),expires_at:new Date(now.getTime()+40*86400000).toISOString(),last_collect_at:new Date(now.getTime()-86400000).toISOString()};
+  var r=await sb.from('user_plans').insert([np]);
+  if(!r.error){
+    await sb.from('notifications').insert([{user_id:uid,title:'Plan Activated',message:plan+' plan activated. Daily $'+p.daily,type:'bonus',is_read:false}]);
+    logAction('Give Plan',uid+' '+plan);
+    toast('Given');await refresh();st.selectedUser=uid;
+  }else toast(r.error.message,'error');
+}
+
+async function toggleBan(uid,current){var r=await sb.from('users').update({is_banned:!current}).eq('user_id',uid);if(!r.error){if(!current)await sb.from('notifications').insert([{user_id:uid,title:'Suspended',message:'Account suspended.',type:'warning',is_read:false}]);logAction(current?'Unban':'Ban',uid);toast(current?'Unbanned':'Banned');await refresh();st.selectedUser=uid;}else toast(r.error.message,'error');}
+
+async function adminDeleteUser(uid,uname){
+  if(!confirm('DELETE '+uname+'?\n\nThis removes ALL data!'))return;
+  if(!confirm('ABSOLUTELY SURE?'))return;
+  toast('Deleting...','warn');
+  try{
+    await sb.from('user_plans').delete().eq('user_id',uid);
+    await sb.from('deposits').delete().eq('user_id',uid);
+    await sb.from('withdrawals').delete().eq('user_id',uid);
+    await sb.from('notifications').delete().eq('user_id',uid);
+    var r=await sb.from('users').delete().eq('user_id',uid);
+    if(r.error)return toast(r.error.message,'error');
+    logAction('Delete User',uname);
+    toast('Deleted');
+    st.selectedUser=null;
+    await refresh();
+  }catch(e){toast(e.message,'error');}
+}
+
+async function planAddDays(id,days){
+  var p=st.userPlans.find(function(x){return x.id===id;});
+  if(!p)return;
+  var nc=Number(p.days_collected||0)+days;
+  if(nc<0)nc=0;
+  if(nc>40)nc=40;
+  var r=await sb.from('user_plans').update({days_collected:nc}).eq('id',id);
+  if(!r.error){toast('Days: '+nc);await refresh();if(st.selectedUser)st.selectedUser=st.selectedUser;}
+  else toast(r.error.message,'error');
+}
+async function planCollectNow(id){
+  var p=st.userPlans.find(function(x){return x.id===id;});
+  if(!p)return;
+  var r=await sb.from('user_plans').update({last_collect_at:new Date(Date.now()-86400000).toISOString()}).eq('id',id);
+  if(!r.error){toast('Collect ready');await refresh();}
+  else toast(r.error.message,'error');
+}
+async function planReset(id){if(!confirm('Reset days to 0?'))return;var r=await sb.from('user_plans').update({days_collected:0}).eq('id',id);if(!r.error){toast('Reset');await refresh();}}
+async function planCancel(id){if(!confirm('Cancel plan?'))return;var r=await sb.from('user_plans').update({status:'cancelled'}).eq('id',id);if(!r.error){toast('Cancelled');await refresh();}}
+
+async function addManualDeposit(){
+  var uid=$('mdUid').value.trim();
+  var amt=parseFloat($('mdAmt').value);
+  var method=$('mdMethod').value.trim()||'Manual';
+  var credit=$('mdCredit').checked;
+  if(!uid||!amt)return toast('Fill all fields','error');
+  var r=await sb.from('deposits').insert([{user_id:uid,amount:amt,method:method,status:credit?'approved':'pending'}]);
+  if(r.error)return toast(r.error.message,'error');
+  if(credit){var u=st.users.find(function(x){return x.user_id===uid;});if(u){await sb.from('users').update({balance:Number(u.balance||0)+amt}).eq('user_id',uid);}}
+  logAction('Manual Deposit',uid+' $'+amt);
+  toast('Added');
+  st.showAddDeposit=false;
+  await refresh();
+}
+
+async function addManualWithdrawal(){
+  var uid=$('mwUid').value.trim();
+  var amt=parseFloat($('mwAmt').value);
+  var method=$('mwMethod').value.trim();
+  var addr=$('mwAddr').value.trim();
+  var debit=$('mwDebit').checked;
+  if(!uid||!amt)return toast('Fill all fields','error');
+  var r=await sb.from('withdrawals').insert([{user_id:uid,amount:amt,method:method,address:addr,status:'approved'}]);
+  if(r.error)return toast(r.error.message,'error');
+  if(debit){var u=st.users.find(function(x){return x.user_id===uid;});if(u){await sb.from('users').update({balance:Number(u.balance||0)-amt}).eq('user_id',uid);}}
+  logAction('Manual WD',uid+' $'+amt);
+  toast('Added');
+  st.showAddWithdrawal=false;
+  await refresh();
+}
+
+function openEditTx(type,id){
+  st.editTxType = type === 'deposit' ? 'deposits' : 'withdrawals';
+  st.editTx = id;
+  st.showEditTx = true;
+  render();
+}
+async function saveEditTx(){
+  var amt=parseFloat($('etAmt').value);
+  var status=$('etStatus').value;
+  var note=$('etNote').value;
+  var r=await sb.from(st.editTxType).update({amount:amt,status:status,admin_note:note}).eq('id',st.editTx);
+  if(r.error)return toast(r.error.message,'error');
+  logAction('Edit Tx',st.editTxType+' #'+st.editTx);
+  toast('Saved');
+  st.showEditTx=false;st.editTx=null;
+  await refresh();
+}
+async function deleteTx(table,id){
+  if(!confirm('Delete this row permanently?'))return;
+  var r=await sb.from(table).delete().eq('id',id);
+  if(!r.error){logAction('Delete Row',table+' #'+id);toast('Deleted');await refresh();}
+  else toast(r.error.message,'error');
+}
+
+function changeAdminPwd(){
+  var o=$('oldPwd').value,n=$('newPwd').value,n2=$('newPwd2').value;
+  if(o!==getAdminPwd())return toast('Wrong current','error');
+  if(!n||n.length<4)return toast('Min 4 chars','error');
+  if(n!==n2)return toast('Do not match','error');
   setAdminPwd(n);
-  logAction('Change Admin Pwd', '');
-  st.showChangePwd = false;
+  logAction('Change Admin Pwd','');
+  st.showChangePwd=false;
   toast('Changed!');
   render();
 }
 
-function initApp() {
-  if (!initSB()) {
-    setTimeout(function() { initSB(); render(); }, 1500);
-    return;
-  }
-  render();
-}
-
+function initApp(){if(!initSB()){setTimeout(function(){initSB();render();},1500);return;}render();}
 initApp();
 </script>
 </body>
